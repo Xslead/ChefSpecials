@@ -4,11 +4,28 @@ import 'package:provider/provider.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_provider.dart';
+import '../../providers/favorite_provider.dart';
 import 'widgets/recipe_card.dart';
 import 'widgets/category_filter_bar.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final user = context.read<AuthProvider>().userModel;
+      if (user != null) {
+        context.read<FavoriteProvider>().listenToFavorites(user.uid);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +36,14 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(l10n.appTitle),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () => context.push('/search'),
+          ),
+          IconButton(
+            icon: const Icon(Icons.favorite_border),
+            onPressed: () => context.push('/favorites'),
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {

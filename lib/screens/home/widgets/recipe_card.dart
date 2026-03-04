@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../../config/theme.dart';
 import '../../../models/recipe.dart';
+import '../../../providers/favorite_provider.dart';
 
 class RecipeCard extends StatelessWidget {
   final Recipe recipe;
@@ -23,7 +25,16 @@ class RecipeCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildImage(),
+            Stack(
+              children: [
+                _buildImage(),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: _buildFavoriteButton(context),
+                ),
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -65,6 +76,31 @@ class RecipeCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFavoriteButton(BuildContext context) {
+    final favoriteProvider = context.watch<FavoriteProvider>();
+    final isFav = recipe.id != null && favoriteProvider.isFavorite(recipe.id!);
+
+    return GestureDetector(
+      onTap: () {
+        if (recipe.id != null) {
+          favoriteProvider.toggleFavorite(recipe.id!);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          isFav ? Icons.favorite : Icons.favorite_border,
+          color: isFav ? Colors.red : Colors.grey,
+          size: 22,
         ),
       ),
     );

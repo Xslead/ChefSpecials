@@ -14,6 +14,7 @@ class RecipeProvider extends ChangeNotifier {
   List<Recipe> get recipes => _selectedCategory == null
       ? _recipes
       : _recipes.where((r) => r.category == _selectedCategory).toList();
+  List<Recipe> get allRecipes => _recipes;
   String? get selectedCategory => _selectedCategory;
   bool get isLoading => _isLoading;
 

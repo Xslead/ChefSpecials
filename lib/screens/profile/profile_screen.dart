@@ -39,7 +39,12 @@ class ProfileScreen extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => authProvider.signOut(),
+            onPressed: () async {
+              await authProvider.signOut();
+              if (context.mounted) {
+                context.go('/login');
+              }
+            },
             tooltip: l10n.logout,
           ),
         ],

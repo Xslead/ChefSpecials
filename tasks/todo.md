@@ -139,7 +139,7 @@
 - [x] l10n updated (EN + TR): breakfast, lunch, dinner, snack, nutritionGoals, dailySummary, etc.
 - [x] Routes: /add-meal-entry, /nutrition-goals added
 - [x] Self-test: flutter analyze — 0 issues
-- **Status:** READY TO PUSH
+- **Status:** PUSHED ✅
 
 ---
 

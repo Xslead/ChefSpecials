@@ -58,7 +58,7 @@ class RecipeDetailScreen extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        context.push('/cooking/${recipe.id}');
+                        context.push('/cooking/${recipe.id}', extra: recipe);
                       },
                       icon: const Icon(Icons.restaurant),
                       label: Text(l10n.startCooking),

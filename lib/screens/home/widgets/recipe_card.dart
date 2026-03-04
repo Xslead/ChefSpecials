@@ -19,7 +19,7 @@ class RecipeCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: InkWell(
-        onTap: () => context.push('/recipe/${recipe.id}'),
+        onTap: () => context.push('/recipe/${recipe.id}', extra: recipe),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

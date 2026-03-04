@@ -47,6 +47,16 @@ class RecipeProvider extends ChangeNotifier {
     _listenToRecipes();
   }
 
+  void updateAuthorName(String authorId, String newName) {
+    _recipes = _recipes.map((r) {
+      if (r.authorId == authorId) {
+        return r.copyWith(authorName: newName);
+      }
+      return r;
+    }).toList();
+    notifyListeners();
+  }
+
   void setCategory(String? category) {
     _selectedCategory = category;
     notifyListeners();

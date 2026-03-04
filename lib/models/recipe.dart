@@ -66,6 +66,46 @@ class Recipe {
     );
   }
 
+  Recipe copyWith({
+    String? id,
+    String? title,
+    String? description,
+    String? authorId,
+    String? authorName,
+    String? category,
+    int? servings,
+    int? prepTimeMinutes,
+    int? cookTimeMinutes,
+    String? imageUrl,
+    List<Ingredient>? ingredients,
+    List<RecipeStep>? steps,
+    int? caloriesPerServing,
+    double? proteinGrams,
+    double? carbsGrams,
+    double? fatGrams,
+    DateTime? createdAt,
+  }) {
+    return Recipe(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      authorId: authorId ?? this.authorId,
+      authorName: authorName ?? this.authorName,
+      category: category ?? this.category,
+      servings: servings ?? this.servings,
+      prepTimeMinutes: prepTimeMinutes ?? this.prepTimeMinutes,
+      cookTimeMinutes: cookTimeMinutes ?? this.cookTimeMinutes,
+      imageUrl: imageUrl ?? this.imageUrl,
+      ingredients: ingredients ?? this.ingredients,
+      steps: steps ?? this.steps,
+      caloriesPerServing: caloriesPerServing ?? this.caloriesPerServing,
+      proteinGrams: proteinGrams ?? this.proteinGrams,
+      carbsGrams: carbsGrams ?? this.carbsGrams,
+      fatGrams: fatGrams ?? this.fatGrams,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'title': title,

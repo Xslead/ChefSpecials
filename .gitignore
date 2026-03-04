@@ -83,3 +83,8 @@ coverage/
 *.pid
 *.seed
 *.pid.lock
+
+# Scripts & docs (not part of the Flutter app)
+scripts/
+tasks/
+CLAUDE.md

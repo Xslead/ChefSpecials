@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/theme.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../services/recipe_service.dart';
@@ -73,7 +75,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (photoUrl != user.photoUrl) 'photoUrl': photoUrl,
     });
 
-    // Update author name on all user's recipes if name changed.
     if (newName != user.fullName) {
       await RecipeService().updateAuthorName(user.uid, newName);
       if (mounted) {
@@ -81,7 +82,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
     }
 
-    // Refresh the user model in AuthProvider.
     await authProvider.refreshUser();
 
     if (mounted) {
@@ -92,84 +92,186 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final user = context.read<AuthProvider>().userModel;
     final currentPhotoUrl = user?.photoUrl;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Profile')),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(24),
-          children: [
-            Center(
-              child: GestureDetector(
-                onTap: _pickImage,
-                child: Stack(
+      body: Column(
+        children: [
+          // Custom header
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                bottom: BorderSide(color: Colors.grey.shade100),
+              ),
+            ),
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+                child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: _imageFile != null
-                          ? FileImage(_imageFile!) as ImageProvider
-                          : (currentPhotoUrl != null &&
-                                  currentPhotoUrl.isNotEmpty
-                              ? NetworkImage(currentPhotoUrl)
-                              : null),
-                      child: (_imageFile == null &&
-                              (currentPhotoUrl == null ||
-                                  currentPhotoUrl.isEmpty))
-                          ? const Icon(Icons.person, size: 50)
-                          : null,
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () => Navigator.of(context).pop(),
+                      color: AppTheme.textPrimary,
                     ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primary,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.camera_alt,
-                          size: 16,
-                          color: Colors.white,
-                        ),
+                    const SizedBox(width: 4),
+                    Text(
+                      l10n.editProfile,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: -0.3,
                       ),
+                    ),
+                    const Spacer(),
+                    // Save button
+                    TextButton(
+                      onPressed: _isSaving ? null : _save,
+                      child: _isSaving
+                          ? const SizedBox(
+                              height: 18,
+                              width: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              l10n.save,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.primaryColor,
+                              ),
+                            ),
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 24),
-            TextFormField(
-              controller: _fullNameController,
-              decoration: const InputDecoration(labelText: 'Full Name'),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Name is required' : null,
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _bioController,
-              decoration: const InputDecoration(labelText: 'Bio'),
-              maxLines: 3,
-            ),
-            const SizedBox(height: 32),
-            FilledButton(
-              onPressed: _isSaving ? null : _save,
-              child: _isSaving
-                  ? const SizedBox(
-                      height: 18,
-                      width: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
+          ),
+          // Body
+          Expanded(
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                padding: const EdgeInsets.all(24),
+                children: [
+                  // Avatar
+                  Center(
+                    child: GestureDetector(
+                      onTap: _pickImage,
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AppTheme.primaryColor
+                                    .withValues(alpha: 0.2),
+                                width: 3,
+                              ),
+                            ),
+                            child: ClipOval(
+                              child: _imageFile != null
+                                  ? Image.file(_imageFile!, fit: BoxFit.cover)
+                                  : (currentPhotoUrl != null &&
+                                          currentPhotoUrl.isNotEmpty
+                                      ? Image.network(currentPhotoUrl,
+                                          fit: BoxFit.cover)
+                                      : Container(
+                                          color: AppTheme.primaryColor
+                                              .withValues(alpha: 0.1),
+                                          child: const Icon(
+                                            Icons.person,
+                                            size: 44,
+                                            color: AppTheme.primaryColor,
+                                          ),
+                                        )),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: AppTheme.primaryColor,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.camera_alt,
+                                size: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    )
-                  : const Text('Save'),
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  // Full Name field
+                  Text(
+                    l10n.fullName.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.grey.shade500,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _fullNameController,
+                    decoration: InputDecoration(
+                      hintText: l10n.fullName,
+                      prefixIcon: Icon(
+                        Icons.person_outline,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                    validator: (v) =>
+                        (v == null || v.trim().isEmpty) ? l10n.nameRequired : null,
+                  ),
+                  const SizedBox(height: 20),
+                  // Bio field
+                  Text(
+                    l10n.bio.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.grey.shade500,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _bioController,
+                    decoration: InputDecoration(
+                      hintText: l10n.bio,
+                      prefixIcon: Icon(
+                        Icons.info_outline,
+                        color: Colors.grey.shade400,
+                      ),
+                      alignLabelWithHint: true,
+                    ),
+                    maxLines: 3,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

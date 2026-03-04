@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/theme.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../models/food_item.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/food_item_provider.dart';
@@ -95,228 +97,582 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Food Item')),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            // Name
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                border: OutlineInputBorder(),
+      body: Column(
+        children: [
+          // Custom header
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                bottom: BorderSide(color: Colors.grey.shade100),
               ),
-              validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
-              onSaved: (v) => _name = v ?? '',
             ),
-            const SizedBox(height: 12),
-
-            // Brand (optional)
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Brand (optional)',
-                border: OutlineInputBorder(),
-              ),
-              onSaved: (v) =>
-                  _brand = (v != null && v.isNotEmpty) ? v : null,
-            ),
-            const SizedBox(height: 12),
-
-            // Category dropdown
-            DropdownButtonFormField<String>(
-              initialValue: _category,
-              decoration: const InputDecoration(
-                labelText: 'Category',
-                border: OutlineInputBorder(),
-              ),
-              items: _categories
-                  .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                  .toList(),
-              onChanged: (v) {
-                if (v != null) setState(() => _category = v);
-              },
-            ),
-            const SizedBox(height: 12),
-
-            // Unit toggle
-            DropdownButtonFormField<String>(
-              initialValue: _unit,
-              decoration: const InputDecoration(
-                labelText: 'Unit',
-                border: OutlineInputBorder(),
-              ),
-              items: _units
-                  .map((u) => DropdownMenuItem(value: u, child: Text(u)))
-                  .toList(),
-              onChanged: (v) {
-                if (v != null) setState(() => _unit = v);
-              },
-            ),
-            const SizedBox(height: 12),
-
-            // Packet size (required)
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Packet Size',
-                suffixText: 'g / mL',
-                hintText: 'e.g. 330 for a 330g packet',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              validator: (v) {
-                if (v == null || v.isEmpty) return 'Required';
-                if (double.tryParse(v) == null) return 'Invalid number';
-                return null;
-              },
-              onSaved: (v) =>
-                  _packetSize = double.tryParse(v ?? '') ?? 100,
-            ),
-            const SizedBox(height: 12),
-
-            // Barcode (optional)
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Barcode (optional)',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-              onSaved: (v) =>
-                  _barcode = (v != null && v.isNotEmpty) ? v : null,
-            ),
-            const SizedBox(height: 20),
-
-            // Nutrition section header
-            Text(
-              'Nutrition Values',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-
-            // Calories + Protein
-            Row(
-              children: [
-                Expanded(
-                  child: _buildNumberField(
-                    label: 'Calories',
-                    suffix: 'kcal',
-                    onSaved: (v) => _calories = double.tryParse(v ?? '') ?? 0,
-                  ),
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () => context.pop(),
+                      color: AppTheme.textPrimary,
+                    ),
+                    const SizedBox(width: 4),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppTheme.secondaryColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.add_circle_outline,
+                        color: AppTheme.secondaryColor,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Add Food Item',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: -0.3,
+                      ),
+                    ),
+                    const Spacer(),
+                    TextButton(
+                      onPressed: _isSubmitting ? null : _submit,
+                      child: _isSubmitting
+                          ? const SizedBox(
+                              height: 18,
+                              width: 18,
+                              child:
+                                  CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Text(
+                              l10n.save,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.primaryColor,
+                              ),
+                            ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _buildNumberField(
-                    label: 'Protein',
-                    suffix: 'g',
-                    onSaved: (v) => _protein = double.tryParse(v ?? '') ?? 0,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-
-            // Carbs + Fat
-            Row(
-              children: [
-                Expanded(
-                  child: _buildNumberField(
-                    label: 'Carbs',
-                    suffix: 'g',
-                    onSaved: (v) => _carbs = double.tryParse(v ?? '') ?? 0,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _buildNumberField(
-                    label: 'Fat',
-                    suffix: 'g',
-                    onSaved: (v) => _fat = double.tryParse(v ?? '') ?? 0,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-
-            // Fiber + Sugar
-            Row(
-              children: [
-                Expanded(
-                  child: _buildNumberField(
-                    label: 'Fiber',
-                    suffix: 'g',
-                    onSaved: (v) => _fiber = double.tryParse(v ?? '') ?? 0,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _buildNumberField(
-                    label: 'Sugar',
-                    suffix: 'g',
-                    onSaved: (v) => _sugar = double.tryParse(v ?? '') ?? 0,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-
-            // Sodium
-            _buildNumberField(
-              label: 'Sodium',
-              suffix: 'mg',
-              onSaved: (v) => _sodium = double.tryParse(v ?? '') ?? 0,
-            ),
-            const SizedBox(height: 16),
-
-            // Vegan toggle
-            SwitchListTile(
-              title: const Text('Vegan'),
-              value: _isVegan,
-              onChanged: (v) => setState(() => _isVegan = v),
-              contentPadding: EdgeInsets.zero,
-            ),
-            const SizedBox(height: 16),
-
-            // Submit button
-            SizedBox(
-              height: 48,
-              child: FilledButton(
-                onPressed: _isSubmitting ? null : _submit,
-                child: _isSubmitting
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Text('Save'),
               ),
             ),
-            const SizedBox(height: 24),
-          ],
-        ),
+          ),
+
+          // Body
+          Expanded(
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 40),
+                children: [
+                  // Basic Info Section
+                  _buildSectionHeader(
+                    icon: Icons.info_outline,
+                    color: AppTheme.primaryColor,
+                    label: 'BASIC INFO',
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Name field
+                  _buildSectionLabel('NAME'),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    decoration: _styledInputDecoration(
+                      hintText: 'Food item name',
+                      prefixIcon: Icons.restaurant,
+                    ),
+                    validator: (v) =>
+                        (v == null || v.isEmpty) ? 'Required' : null,
+                    onSaved: (v) => _name = v ?? '',
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Brand field
+                  _buildSectionLabel('BRAND'),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    decoration: _styledInputDecoration(
+                      hintText: 'Brand (optional)',
+                      prefixIcon: Icons.business,
+                    ),
+                    onSaved: (v) =>
+                        _brand = (v != null && v.isNotEmpty) ? v : null,
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Category & Unit row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionLabel(l10n.category),
+                            const SizedBox(height: 8),
+                            DropdownButtonFormField<String>(
+                              initialValue: _category,
+                              decoration: _styledInputDecoration(
+                                prefixIcon: Icons.category_outlined,
+                              ),
+                              items: _categories
+                                  .map((c) => DropdownMenuItem(
+                                      value: c, child: Text(c)))
+                                  .toList(),
+                              onChanged: (v) {
+                                if (v != null) setState(() => _category = v);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionLabel('UNIT'),
+                            const SizedBox(height: 8),
+                            DropdownButtonFormField<String>(
+                              initialValue: _unit,
+                              decoration: _styledInputDecoration(
+                                prefixIcon: Icons.straighten,
+                              ),
+                              items: _units
+                                  .map((u) => DropdownMenuItem(
+                                      value: u, child: Text(u)))
+                                  .toList(),
+                              onChanged: (v) {
+                                if (v != null) setState(() => _unit = v);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Packet size & Barcode row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionLabel('PACKET SIZE'),
+                            const SizedBox(height: 8),
+                            TextFormField(
+                              decoration: _styledInputDecoration(
+                                hintText: 'e.g. 330',
+                                prefixIcon: Icons.inventory_2_outlined,
+                                suffixText: 'g/mL',
+                              ),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
+                              validator: (v) {
+                                if (v == null || v.isEmpty) return 'Required';
+                                if (double.tryParse(v) == null) {
+                                  return 'Invalid';
+                                }
+                                return null;
+                              },
+                              onSaved: (v) =>
+                                  _packetSize =
+                                      double.tryParse(v ?? '') ?? 100,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionLabel('BARCODE'),
+                            const SizedBox(height: 8),
+                            TextFormField(
+                              decoration: _styledInputDecoration(
+                                hintText: 'Optional',
+                                prefixIcon: Icons.qr_code,
+                              ),
+                              keyboardType: TextInputType.number,
+                              onSaved: (v) => _barcode =
+                                  (v != null && v.isNotEmpty) ? v : null,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Nutrition Section
+                  _buildSectionHeader(
+                    icon: Icons.analytics_outlined,
+                    color: AppTheme.secondaryColor,
+                    label: 'NUTRITION VALUES',
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Calories - full width card
+                  _buildNutritionCard(
+                    icon: Icons.local_fire_department,
+                    color: AppTheme.primaryColor,
+                    label: l10n.calories,
+                    suffix: l10n.kcal,
+                    onSaved: (v) =>
+                        _calories = double.tryParse(v ?? '') ?? 0,
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Protein, Carbs, Fat row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildNutritionCard(
+                          icon: Icons.fitness_center,
+                          color: AppTheme.secondaryColor,
+                          label: l10n.protein,
+                          suffix: l10n.gram,
+                          compact: true,
+                          onSaved: (v) =>
+                              _protein = double.tryParse(v ?? '') ?? 0,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildNutritionCard(
+                          icon: Icons.grain,
+                          color: const Color(0xFFF59E0B),
+                          label: l10n.carbs,
+                          suffix: l10n.gram,
+                          compact: true,
+                          onSaved: (v) =>
+                              _carbs = double.tryParse(v ?? '') ?? 0,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildNutritionCard(
+                          icon: Icons.opacity,
+                          color: const Color(0xFFEF4444),
+                          label: l10n.fat,
+                          suffix: l10n.gram,
+                          compact: true,
+                          onSaved: (v) =>
+                              _fat = double.tryParse(v ?? '') ?? 0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Fiber, Sugar, Sodium row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildNutritionCard(
+                          icon: Icons.grass,
+                          color: const Color(0xFF22C55E),
+                          label: 'Fiber',
+                          suffix: l10n.gram,
+                          compact: true,
+                          onSaved: (v) =>
+                              _fiber = double.tryParse(v ?? '') ?? 0,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildNutritionCard(
+                          icon: Icons.cookie_outlined,
+                          color: const Color(0xFFA855F7),
+                          label: 'Sugar',
+                          suffix: l10n.gram,
+                          compact: true,
+                          onSaved: (v) =>
+                              _sugar = double.tryParse(v ?? '') ?? 0,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildNutritionCard(
+                          icon: Icons.water_drop_outlined,
+                          color: const Color(0xFF6366F1),
+                          label: 'Sodium',
+                          suffix: 'mg',
+                          compact: true,
+                          onSaved: (v) =>
+                              _sodium = double.tryParse(v ?? '') ?? 0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Vegan toggle card
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: Colors.grey.shade100),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.03),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF22C55E)
+                                .withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.eco,
+                            color: Color(0xFF22C55E),
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Text(
+                            'Vegan',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Switch(
+                          value: _isVegan,
+                          onChanged: (v) => setState(() => _isVegan = v),
+                          activeTrackColor:
+                              const Color(0xFF22C55E).withValues(alpha: 0.5),
+                          activeThumbColor: const Color(0xFF22C55E),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildNumberField({
+  Widget _buildSectionLabel(String label) {
+    return Text(
+      label.toUpperCase(),
+      style: TextStyle(
+        fontSize: 11,
+        fontWeight: FontWeight.w700,
+        color: Colors.grey.shade500,
+        letterSpacing: 0.8,
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader({
+    required IconData icon,
+    required Color color,
+    required String label,
+  }) {
+    return Row(
+      children: [
+        Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: color, size: 18),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          label.toUpperCase(),
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            color: Colors.grey.shade500,
+            letterSpacing: 0.8,
+          ),
+        ),
+      ],
+    );
+  }
+
+  InputDecoration _styledInputDecoration({
+    String? hintText,
+    IconData? prefixIcon,
+    String? suffixText,
+  }) {
+    return InputDecoration(
+      hintText: hintText,
+      hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+      prefixIcon: prefixIcon != null
+          ? Icon(prefixIcon, color: Colors.grey.shade400, size: 20)
+          : null,
+      suffixText: suffixText,
+      suffixStyle: TextStyle(
+        fontSize: 12,
+        color: Colors.grey.shade400,
+        fontWeight: FontWeight.w500,
+      ),
+      filled: true,
+      fillColor: Colors.grey.shade50,
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide:
+            const BorderSide(color: AppTheme.primaryColor, width: 1.5),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide:
+            const BorderSide(color: AppTheme.errorColor, width: 1.5),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide:
+            const BorderSide(color: AppTheme.errorColor, width: 1.5),
+      ),
+    );
+  }
+
+  Widget _buildNutritionCard({
+    required IconData icon,
+    required Color color,
     required String label,
     required String suffix,
     required FormFieldSetter<String> onSaved,
+    bool compact = false,
   }) {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: label,
-        suffixText: suffix,
-        border: const OutlineInputBorder(),
+    return Container(
+      padding: EdgeInsets.all(compact ? 10 : 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade100),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      validator: (v) {
-        if (v == null || v.isEmpty) return 'Required';
-        if (double.tryParse(v) == null) return 'Invalid number';
-        return null;
-      },
-      onSaved: onSaved,
+      child: Column(
+        children: [
+          Container(
+            width: compact ? 28 : 36,
+            height: compact ? 28 : 36,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(compact ? 7 : 10),
+            ),
+            child: Icon(icon, color: color, size: compact ? 16 : 20),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label.toUpperCase(),
+            style: TextStyle(
+              fontSize: compact ? 9 : 10,
+              fontWeight: FontWeight.w700,
+              color: Colors.grey.shade500,
+              letterSpacing: 0.5,
+            ),
+          ),
+          const SizedBox(height: 6),
+          TextFormField(
+            textAlign: TextAlign.center,
+            keyboardType:
+                const TextInputType.numberWithOptions(decimal: true),
+            style: TextStyle(
+              fontSize: compact ? 16 : 20,
+              fontWeight: FontWeight.w900,
+              color: color,
+            ),
+            decoration: InputDecoration(
+              hintText: '0',
+              hintStyle: TextStyle(
+                color: color.withValues(alpha: 0.3),
+                fontSize: compact ? 16 : 20,
+                fontWeight: FontWeight.w900,
+              ),
+              suffixText: suffix,
+              suffixStyle: TextStyle(
+                fontSize: compact ? 9 : 11,
+                color: Colors.grey.shade400,
+                fontWeight: FontWeight.w500,
+              ),
+              filled: true,
+              fillColor: Colors.grey.shade50,
+              contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 8, vertical: 8),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: color, width: 1.5),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                    color: AppTheme.errorColor, width: 1.5),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                    color: AppTheme.errorColor, width: 1.5),
+              ),
+            ),
+            validator: (v) {
+              if (v == null || v.isEmpty) return '';
+              if (double.tryParse(v) == null) return '';
+              return null;
+            },
+            onSaved: onSaved,
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../config/theme.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../models/food_item.dart';
 import '../../../providers/recipe_form_provider.dart';
@@ -17,82 +19,167 @@ class IngredientInputList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Section header
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              l10n.ingredients,
-              style: Theme.of(context).textTheme.titleMedium,
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: AppTheme.secondaryColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.egg_alt,
+                  color: AppTheme.secondaryColor, size: 18),
             ),
-            IconButton(
-              icon: const Icon(Icons.add_circle_outline),
-              onPressed: () => _showFoodItemPicker(context),
+            const SizedBox(width: 10),
+            Text(
+              l10n.ingredients.toUpperCase(),
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: Colors.grey.shade500,
+                letterSpacing: 0.8,
+              ),
+            ),
+            const Spacer(),
+            GestureDetector(
+              onTap: () => _showFoodItemPicker(context),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.add, size: 16, color: AppTheme.primaryColor),
+                    SizedBox(width: 4),
+                    Text(
+                      'Add',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.primaryColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
+        const SizedBox(height: 12),
         if (ingredients.isEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Text(
-              'Tap + to add ingredients from the materials database',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey,
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Colors.grey.shade100),
+            ),
+            child: Column(
+              children: [
+                Icon(Icons.egg_alt, size: 32, color: Colors.grey.shade300),
+                const SizedBox(height: 8),
+                Text(
+                  'Tap + to add ingredients',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey.shade400,
                   ),
+                ),
+              ],
             ),
           ),
-        const SizedBox(height: 8),
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: ingredients.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 8),
+          separatorBuilder: (_, _) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
             final ingredient = ingredients[index];
-            return Card(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            ingredient.name,
-                            style: const TextStyle(fontWeight: FontWeight.w600),
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade100),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          ingredient.name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
                           ),
-                          if (ingredient.caloriesPer100 != null)
-                            Text(
-                              '${ingredient.caloriesPer100!.toStringAsFixed(0)} kcal per 100${ingredient.unit ?? 'g'}',
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    SizedBox(
-                      width: 80,
-                      child: TextFormField(
-                        initialValue: ingredient.amount,
-                        decoration: InputDecoration(
-                          labelText: ingredient.unit ?? 'g',
-                          border: const OutlineInputBorder(),
-                          isDense: true,
                         ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) =>
-                            formProvider.updateIngredientAmount(index, value),
+                        if (ingredient.caloriesPer100 != null)
+                          Text(
+                            '${ingredient.caloriesPer100!.toStringAsFixed(0)} kcal / 100${ingredient.unit ?? 'g'}',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: 72,
+                    child: TextFormField(
+                      initialValue: ingredient.amount,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
                       ),
+                      decoration: InputDecoration(
+                        suffixText: ingredient.unit ?? 'g',
+                        suffixStyle: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey.shade400,
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 8),
+                        isDense: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                              color: AppTheme.primaryColor, width: 1.5),
+                        ),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) =>
+                          formProvider.updateIngredientAmount(index, value),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.remove_circle_outline, size: 20),
-                      onPressed: () => formProvider.removeIngredient(index),
+                  ),
+                  const SizedBox(width: 4),
+                  GestureDetector(
+                    onTap: () => formProvider.removeIngredient(index),
+                    child: Icon(
+                      Icons.close,
+                      size: 18,
+                      color: Colors.grey.shade400,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             );
           },
@@ -106,7 +193,7 @@ class IngredientInputList extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (sheetContext) => DraggableScrollableSheet(
         initialChildSize: 0.7,
@@ -125,26 +212,46 @@ class IngredientInputList extends StatelessWidget {
   }
 
   void _showAmountDialog(BuildContext context, FoodItem foodItem) {
+    final l10n = AppLocalizations.of(context)!;
     final amountController = TextEditingController(text: '100');
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text(foodItem.name),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          foodItem.name,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Per 100${foodItem.unit == "100g" ? "g" : "mL"}: '
-              '${foodItem.calories.toStringAsFixed(0)} kcal, '
-              '${foodItem.protein.toStringAsFixed(1)}g protein',
-              style: Theme.of(context).textTheme.bodySmall,
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                '${foodItem.calories.toStringAsFixed(0)} kcal, '
+                '${foodItem.protein.toStringAsFixed(1)}g protein / 100${foodItem.unit == "100g" ? "g" : "mL"}',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                ),
+              ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: amountController,
               decoration: InputDecoration(
-                labelText: 'Amount (${foodItem.unit == "100g" ? "g" : "mL"})',
-                border: const OutlineInputBorder(),
+                labelText:
+                    '${l10n.quantity} (${foodItem.unit == "100g" ? "g" : "mL"})',
+                prefixIcon: Icon(
+                  Icons.scale,
+                  color: Colors.grey.shade400,
+                ),
               ),
               keyboardType: TextInputType.number,
               autofocus: true,
@@ -154,7 +261,7 @@ class IngredientInputList extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () {
@@ -166,7 +273,10 @@ class IngredientInputList extends StatelessWidget {
                 Navigator.pop(dialogContext);
               }
             },
-            child: const Text('Add'),
+            style: FilledButton.styleFrom(
+              backgroundColor: AppTheme.primaryColor,
+            ),
+            child: Text(l10n.save),
           ),
         ],
       ),
@@ -236,56 +346,141 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
     return Column(
       children: [
         const SizedBox(height: 8),
-        Container(
-          width: 40,
-          height: 4,
-          decoration: BoxDecoration(
-            color: Colors.grey[300],
-            borderRadius: BorderRadius.circular(2),
+        Center(
+          child: Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(2),
+            ),
           ),
         ),
+        // Search bar
         Padding(
           padding: const EdgeInsets.all(16),
-          child: TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: 'Search materials...',
-              prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              isDense: true,
+          child: Container(
+            height: 48,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(14),
             ),
-            onChanged: _search,
+            child: Row(
+              children: [
+                const SizedBox(width: 14),
+                Icon(Icons.search, color: Colors.grey.shade400, size: 22),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search materials...',
+                      hintStyle: TextStyle(
+                        color: Colors.grey.shade400,
+                        fontSize: 14,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                      isDense: true,
+                    ),
+                    style: const TextStyle(fontSize: 14),
+                    onChanged: _search,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         Expanded(
           child: _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _filtered.isEmpty
-                  ? const Center(child: Text('No materials found.\nAdd materials in the Materials screen first.'))
+                  ? Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.kitchen,
+                              size: 48, color: Colors.grey.shade300),
+                          const SizedBox(height: 12),
+                          Text(
+                            'No materials found',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   : ListView.builder(
                       controller: widget.scrollController,
                       itemCount: _filtered.length,
                       itemBuilder: (context, index) {
                         final item = _filtered[index];
-                        return ListTile(
-                          title: Text(item.name),
-                          subtitle: Text(
-                            '${item.calories.toStringAsFixed(0)} kcal · '
-                            '${item.protein.toStringAsFixed(1)}g P · '
-                            '${item.carbs.toStringAsFixed(1)}g C · '
-                            '${item.fat.toStringAsFixed(1)}g F '
-                            'per ${item.unit}',
-                          ),
-                          trailing: Text(
-                            item.category,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 12,
+                        return GestureDetector(
+                          onTap: () => widget.onSelected(item),
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 4),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border:
+                                  Border.all(color: Colors.grey.shade100),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 36,
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.primaryColor
+                                        .withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Icon(
+                                    Icons.restaurant,
+                                    color: AppTheme.primaryColor,
+                                    size: 18,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item.name,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${item.calories.toStringAsFixed(0)} kcal · '
+                                        '${item.protein.toStringAsFixed(1)}g P · '
+                                        '${item.carbs.toStringAsFixed(1)}g C · '
+                                        '${item.fat.toStringAsFixed(1)}g F',
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: Colors.grey.shade500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  item.category,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.grey.shade400,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          onTap: () => widget.onSelected(item),
                         );
                       },
                     ),

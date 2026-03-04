@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/favorite_provider.dart';
@@ -30,141 +32,385 @@ class ProfileScreen extends StatelessWidget {
     final favoriteCount = favoriteProvider.favoriteRecipeIds.length;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.profile),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit_outlined),
-            onPressed: () => context.push('/edit-profile'),
+      body: Column(
+        children: [
+          _buildHeader(context, l10n),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.only(bottom: 100),
+              children: [
+                // Profile card
+                _buildProfileCard(context, l10n, user.photoUrl,
+                    user.fullName, user.email, user.bio, user.createdAt),
+                const SizedBox(height: 16),
+                // Stats row
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _buildStatCard(
+                          icon: Icons.menu_book,
+                          color: AppTheme.primaryColor,
+                          count: userRecipes.length,
+                          label: l10n.recipes,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildStatCard(
+                          icon: Icons.favorite,
+                          color: const Color(0xFFEF4444),
+                          count: favoriteCount,
+                          label: l10n.favorites,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // My Recipes header
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  child: Row(
+                    children: [
+                      Text(
+                        l10n.myRecipes,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          '${userRecipes.length}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: AppTheme.primaryColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Recipe list
+                if (userRecipes.isNotEmpty)
+                  ...userRecipes.map(
+                    (recipe) => Padding(
+                      padding: const EdgeInsets.only(bottom: 0),
+                      child: RecipeCard(recipe: recipe),
+                    ),
+                  )
+                else
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 40),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.menu_book,
+                            size: 64,
+                            color: Colors.grey.shade300,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            l10n.noRecipes,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.logout),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          bottom: BorderSide(color: Colors.grey.shade100),
+        ),
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.person,
+                  color: AppTheme.primaryColor,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                l10n.profile,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -0.3,
+                ),
+              ),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.edit_outlined),
+                onPressed: () => context.push('/edit-profile'),
+                color: AppTheme.textSecondary,
+              ),
+              IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () => _showLogoutDialog(context),
+                color: AppTheme.textSecondary,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(l10n.logout),
+        content: Text(l10n.logoutConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
             onPressed: () async {
-              await authProvider.signOut();
+              Navigator.of(ctx).pop();
+              await context.read<AuthProvider>().signOut();
               if (context.mounted) {
                 context.go('/login');
               }
             },
-            tooltip: l10n.logout,
+            style: TextButton.styleFrom(foregroundColor: AppTheme.errorColor),
+            child: Text(l10n.logout),
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 24),
+    );
+  }
+
+  Widget _buildProfileCard(
+    BuildContext context,
+    AppLocalizations l10n,
+    String? photoUrl,
+    String fullName,
+    String email,
+    String? bio,
+    DateTime createdAt,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey.shade100),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
         child: Column(
           children: [
-            _buildAvatar(user.photoUrl),
-            const SizedBox(height: 12),
+            // Avatar
+            Container(
+              width: 88,
+              height: 88,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: AppTheme.primaryColor.withValues(alpha: 0.2),
+                  width: 3,
+                ),
+              ),
+              child: ClipOval(
+                child: photoUrl != null && photoUrl.isNotEmpty
+                    ? CachedNetworkImage(
+                        imageUrl: photoUrl,
+                        fit: BoxFit.cover,
+                        placeholder: (_, _) => Container(
+                          color: Colors.grey.shade100,
+                          child: Icon(Icons.person,
+                              size: 40, color: Colors.grey.shade400),
+                        ),
+                        errorWidget: (_, _, _) => Container(
+                          color: Colors.grey.shade100,
+                          child: Icon(Icons.person,
+                              size: 40, color: Colors.grey.shade400),
+                        ),
+                      )
+                    : Container(
+                        color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                        child: const Icon(
+                          Icons.person,
+                          size: 40,
+                          color: AppTheme.primaryColor,
+                        ),
+                      ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Name
             Text(
-              user.fullName,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              fullName,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.3,
+              ),
             ),
             const SizedBox(height: 4),
+            // Email
             Text(
-              user.email,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: Colors.grey),
+              email,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade500,
+              ),
             ),
-            if (user.bio != null && user.bio!.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
-                  user.bio!,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
+            // Bio
+            if (bio != null && bio.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text(
+                bio,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.shade600,
+                  height: 1.4,
                 ),
+                textAlign: TextAlign.center,
               ),
             ],
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _StatCard(label: 'Recipes', count: userRecipes.length),
-                const SizedBox(width: 16),
-                _StatCard(label: 'Favorites', count: favoriteCount),
-              ],
-            ),
-            const SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'My Recipes',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+            const SizedBox(height: 12),
+            // Member since
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.calendar_today,
+                    size: 14,
+                    color: Colors.grey.shade400,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    l10n.memberSince(
+                      DateFormat('MMM yyyy').format(createdAt),
+                    ),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade500,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 8),
-            if (userRecipes.isNotEmpty)
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: userRecipes.length,
-                itemBuilder: (context, index) =>
-                    RecipeCard(recipe: userRecipes[index]),
-              )
-            else
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text(
-                  l10n.noRecipes,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(color: Colors.grey),
-                ),
-              ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildAvatar(String? photoUrl) {
-    if (photoUrl != null && photoUrl.isNotEmpty) {
-      return CircleAvatar(
-        radius: 50,
-        backgroundImage: CachedNetworkImageProvider(photoUrl),
-      );
-    }
-    return const CircleAvatar(
-      radius: 50,
-      child: Icon(Icons.person, size: 50),
-    );
-  }
-}
-
-class _StatCard extends StatelessWidget {
-  final String label;
-  final int count;
-
-  const _StatCard({required this.label, required this.count});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-        child: Column(
-          children: [
-            Text(
-              '$count',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
+  Widget _buildStatCard({
+    required IconData icon,
+    required Color color,
+    required int count,
+    required String label,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade100),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(10),
             ),
-            const SizedBox(height: 4),
-            Text(label, style: Theme.of(context).textTheme.bodyMedium),
-          ],
-        ),
+            child: Icon(icon, color: color, size: 22),
+          ),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '$count',
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w900,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+              Text(
+                label.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey.shade500,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

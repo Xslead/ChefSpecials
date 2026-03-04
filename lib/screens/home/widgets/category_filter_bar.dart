@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../config/constants.dart';
 import '../../../config/theme.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class CategoryFilterBar extends StatelessWidget {
   final String? selectedCategory;
@@ -15,43 +16,77 @@ class CategoryFilterBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return SizedBox(
-      height: 48,
+      height: 40,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
-          _buildChip(label: 'All', value: null),
+          _buildPill(
+            label: l10n.all,
+            value: null,
+          ),
           ...AppConstants.defaultCategories.map(
-            (category) => _buildChip(label: category, value: category),
+            (category) => _buildPill(
+              label: _localizeCategory(category, l10n),
+              value: category,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildChip({required String label, required String? value}) {
+  Widget _buildPill({required String label, required String? value}) {
     final isSelected = selectedCategory == value;
 
     return Padding(
       padding: const EdgeInsets.only(right: 8),
-      child: FilterChip(
-        label: Text(label),
-        selected: isSelected,
-        onSelected: (_) => onSelected(value),
-        selectedColor: AppTheme.primaryColor.withValues(alpha: 0.2),
-        checkmarkColor: AppTheme.primaryColor,
-        labelStyle: TextStyle(
-          color: isSelected ? AppTheme.primaryColor : AppTheme.textSecondary,
-          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-        ),
-        side: BorderSide(
-          color: isSelected ? AppTheme.primaryColor : Colors.grey.shade300,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+      child: GestureDetector(
+        onTap: () => onSelected(value),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? AppTheme.primaryColor
+                : Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(50),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: isSelected ? Colors.white : AppTheme.textSecondary,
+            ),
+          ),
         ),
       ),
     );
+  }
+
+  String _localizeCategory(String category, AppLocalizations l10n) {
+    switch (category) {
+      case 'Breakfast':
+        return l10n.breakfast;
+      case 'Lunch':
+        return l10n.lunch;
+      case 'Dinner':
+        return l10n.dinner;
+      case 'Dessert':
+        return l10n.dessert;
+      case 'Snack':
+        return l10n.snack;
+      case 'Drink':
+        return l10n.drink;
+      case 'Salad':
+        return l10n.salad;
+      case 'Soup':
+        return l10n.soup;
+      default:
+        return category;
+    }
   }
 }

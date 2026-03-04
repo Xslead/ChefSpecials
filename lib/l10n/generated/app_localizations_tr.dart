@@ -244,4 +244,102 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get ofLabel => '/';
+
+  @override
+  String get dessert => 'Tatli';
+
+  @override
+  String get drink => 'Icecek';
+
+  @override
+  String get salad => 'Salata';
+
+  @override
+  String get soup => 'Corba';
+
+  @override
+  String get searchRecipeOrIngredient => 'Tarif veya malzeme ara...';
+
+  @override
+  String get minuteShort => 'dk';
+
+  @override
+  String get popular => 'Populer';
+
+  @override
+  String get consumed => 'Alinan';
+
+  @override
+  String get target => 'Hedef';
+
+  @override
+  String get remainingKcal => 'Kalan kcal';
+
+  @override
+  String get todaysMeals => 'Bugunku Ogunler';
+
+  @override
+  String get viewAll => 'Hepsini Gor';
+
+  @override
+  String itemsAdded(Object count) {
+    return '$count urun eklendi';
+  }
+
+  @override
+  String get notAddedYet => 'Henuz eklenmedi';
+
+  @override
+  String get waterTracking => 'Su Takibi';
+
+  @override
+  String get carbsShort => 'Karb.';
+
+  @override
+  String get waterTarget => 'Su Hedefi';
+
+  @override
+  String recipeCount(Object count) {
+    return '$count tarif';
+  }
+
+  @override
+  String get searchFoodItems => 'Yiyecek ara...';
+
+  @override
+  String get noFoodItems => 'Henuz yiyecek yok';
+
+  @override
+  String get noResults => 'Sonuc bulunamadi';
+
+  @override
+  String get per100 => '100g basina';
+
+  @override
+  String itemCount(Object count) {
+    return '$count urun';
+  }
+
+  @override
+  String get editProfile => 'Profili Duzenle';
+
+  @override
+  String get bio => 'Hakkinda';
+
+  @override
+  String get nameRequired => 'Ad gerekli';
+
+  @override
+  String get recipes => 'Tarifler';
+
+  @override
+  String memberSince(Object date) {
+    return '$date tarihinden beri uye';
+  }
+
+  @override
+  String get logoutConfirm => 'Cikmak istediginize emin misiniz?';
+
+  @override
+  String get settings => 'Ayarlar';
 }

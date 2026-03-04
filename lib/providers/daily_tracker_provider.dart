@@ -93,6 +93,25 @@ class DailyTrackerProvider extends ChangeNotifier {
     await _service.updateDailyLog(_dailyLog!.id!, updated);
   }
 
+  Future<void> addWater(int ml) async {
+    if (_userId == null) return;
+    final currentWater = _dailyLog?.waterMl ?? 0;
+    final newWater = currentWater + ml;
+
+    if (_dailyLog?.id != null) {
+      final updated = _dailyLog!.copyWith(waterMl: newWater);
+      await _service.updateDailyLog(_dailyLog!.id!, updated);
+    } else {
+      final newLog = DailyLog(
+        userId: _userId!,
+        date: dateString,
+        meals: [],
+        waterMl: newWater,
+      );
+      await _service.createDailyLog(newLog);
+    }
+  }
+
   Future<void> saveNutritionGoal(NutritionGoal goal) async {
     await _service.setNutritionGoal(goal);
   }

@@ -36,168 +36,214 @@ class NutritionSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isExceeded = currentCalories > targetCalories;
+    final remaining = (targetCalories - currentCalories).toInt();
+    final isExceeded = remaining < 0;
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Text(
-              l10n.dailySummary,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
+    return Column(
+      children: [
+        // Circular calorie ring
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
+          child: Column(
+            children: [
+              SizedBox(
+                width: 192,
+                height: 192,
+                child: CustomPaint(
+                  painter: _CalorieRingPainter(
+                    progress: calorieProgress.clamp(0, 1.0),
+                    color: isExceeded ? AppTheme.errorColor : AppTheme.primaryColor,
+                    backgroundColor: Colors.grey.shade200,
                   ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: 140,
-              height: 140,
-              child: CustomPaint(
-                painter: _CalorieRingPainter(
-                  progress: calorieProgress.clamp(0, 1.0),
-                  color: isExceeded ? AppTheme.errorColor : AppTheme.primaryColor,
-                  backgroundColor: Colors.grey.shade200,
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        currentCalories.toInt().toString(),
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: isExceeded
-                                  ? AppTheme.errorColor
-                                  : AppTheme.primaryColor,
-                            ),
-                      ),
-                      Text(
-                        '${l10n.ofLabel} ${targetCalories.toInt()} ${l10n.kcal}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AppTheme.textSecondary,
-                            ),
-                      ),
-                    ],
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          isExceeded
+                              ? '+${(-remaining).toString()}'
+                              : remaining.toString(),
+                          style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.w900,
+                            color: isExceeded
+                                ? AppTheme.errorColor
+                                : AppTheme.textPrimary,
+                          ),
+                        ),
+                        Text(
+                          isExceeded
+                              ? '${l10n.exceeded} ${l10n.kcal}'
+                              : l10n.remainingKcal,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            if (isExceeded) ...[
-              const SizedBox(height: 4),
-              Text(
-                '${l10n.exceeded} ${(currentCalories - targetCalories).toInt()} ${l10n.kcal}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppTheme.errorColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-            ] else ...[
-              const SizedBox(height: 4),
-              Text(
-                '${(targetCalories - currentCalories).toInt()} ${l10n.kcal} ${l10n.remaining}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppTheme.textSecondary,
-                    ),
+              const SizedBox(height: 16),
+              // Consumed / Target row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildCalorieStat(
+                    l10n.consumed,
+                    '${currentCalories.toInt()} ${l10n.kcal}',
+                  ),
+                  Container(
+                    width: 1,
+                    height: 32,
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    color: Colors.grey.shade200,
+                  ),
+                  _buildCalorieStat(
+                    l10n.target,
+                    '${targetCalories.toInt()} ${l10n.kcal}',
+                  ),
+                ],
               ),
             ],
-            const SizedBox(height: 20),
-            _MacroProgressBar(
-              label: l10n.protein,
-              current: currentProtein,
-              target: targetProtein,
-              progress: proteinProgress,
-              color: AppTheme.secondaryColor,
-              unit: l10n.gram,
-            ),
-            const SizedBox(height: 12),
-            _MacroProgressBar(
-              label: l10n.carbs,
-              current: currentCarbs,
-              target: targetCarbs,
-              progress: carbsProgress,
-              color: const Color(0xFFF59E0B),
-              unit: l10n.gram,
-            ),
-            const SizedBox(height: 12),
-            _MacroProgressBar(
-              label: l10n.fat,
-              current: currentFat,
-              target: targetFat,
-              progress: fatProgress,
-              color: const Color(0xFFEF4444),
-              unit: l10n.gram,
-            ),
-          ],
+          ),
         ),
-      ),
+        const SizedBox(height: 20),
+        // Macro cards row
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: _MacroCard(
+                  label: l10n.protein,
+                  current: currentProtein,
+                  target: targetProtein,
+                  progress: proteinProgress,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _MacroCard(
+                  label: l10n.carbsShort,
+                  current: currentCarbs,
+                  target: targetCarbs,
+                  progress: carbsProgress,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _MacroCard(
+                  label: l10n.fat,
+                  current: currentFat,
+                  target: targetFat,
+                  progress: fatProgress,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCalorieStat(String label, String value) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey.shade400,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 }
 
-class _MacroProgressBar extends StatelessWidget {
+class _MacroCard extends StatelessWidget {
   final String label;
   final double current;
   final double target;
   final double progress;
-  final Color color;
-  final String unit;
 
-  const _MacroProgressBar({
+  const _MacroCard({
     required this.label,
     required this.current,
     required this.target,
     required this.progress,
-    required this.color,
-    required this.unit,
   });
 
   @override
   Widget build(BuildContext context) {
     final clampedProgress = progress.clamp(0.0, 1.0);
 
-    return Row(
-      children: [
-        SizedBox(
-          width: 56,
-          child: Text(
-            label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppTheme.textSecondary,
-                  fontWeight: FontWeight.w500,
-                ),
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade100),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label.toUpperCase(),
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              color: Colors.grey.shade500,
+              letterSpacing: 0.8,
+            ),
           ),
-        ),
-        Expanded(
-          child: ClipRRect(
+          const SizedBox(height: 6),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.textPrimary,
+              ),
+              children: [
+                TextSpan(text: '${current.toInt()}g '),
+                TextSpan(
+                  text: '/ ${target.toInt()}g',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey.shade400,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: clampedProgress,
               backgroundColor: Colors.grey.shade200,
               valueColor: AlwaysStoppedAnimation<Color>(
-                progress > 1.0 ? AppTheme.errorColor : color,
+                progress > 1.0 ? AppTheme.errorColor : AppTheme.primaryColor,
               ),
-              minHeight: 8,
+              minHeight: 6,
             ),
           ),
-        ),
-        const SizedBox(width: 8),
-        SizedBox(
-          width: 72,
-          child: Text(
-            '${current.toInt()}/${target.toInt()}$unit',
-            textAlign: TextAlign.end,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: progress > 1.0
-                      ? AppTheme.errorColor
-                      : AppTheme.textPrimary,
-                  fontWeight: FontWeight.w500,
-                ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -217,7 +263,7 @@ class _CalorieRingPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = min(size.width, size.height) / 2 - 8;
-    const strokeWidth = 10.0;
+    const strokeWidth = 12.0;
 
     final bgPaint = Paint()
       ..color = backgroundColor

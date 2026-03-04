@@ -571,6 +571,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'of'**
   String get ofLabel;
+
+  /// No description provided for @dessert.
+  ///
+  /// In en, this message translates to:
+  /// **'Dessert'**
+  String get dessert;
+
+  /// No description provided for @drink.
+  ///
+  /// In en, this message translates to:
+  /// **'Drink'**
+  String get drink;
+
+  /// No description provided for @salad.
+  ///
+  /// In en, this message translates to:
+  /// **'Salad'**
+  String get salad;
+
+  /// No description provided for @soup.
+  ///
+  /// In en, this message translates to:
+  /// **'Soup'**
+  String get soup;
+
+  /// No description provided for @searchRecipeOrIngredient.
+  ///
+  /// In en, this message translates to:
+  /// **'Search recipe or ingredient...'**
+  String get searchRecipeOrIngredient;
+
+  /// No description provided for @minuteShort.
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get minuteShort;
+
+  /// No description provided for @popular.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular'**
+  String get popular;
+
+  /// No description provided for @consumed.
+  ///
+  /// In en, this message translates to:
+  /// **'Consumed'**
+  String get consumed;
+
+  /// No description provided for @target.
+  ///
+  /// In en, this message translates to:
+  /// **'Target'**
+  String get target;
+
+  /// No description provided for @remainingKcal.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining kcal'**
+  String get remainingKcal;
+
+  /// No description provided for @todaysMeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Meals'**
+  String get todaysMeals;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get viewAll;
+
+  /// No description provided for @itemsAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items added'**
+  String itemsAdded(Object count);
+
+  /// No description provided for @notAddedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not added yet'**
+  String get notAddedYet;
+
+  /// No description provided for @waterTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Water Tracking'**
+  String get waterTracking;
+
+  /// No description provided for @carbsShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs'**
+  String get carbsShort;
+
+  /// No description provided for @waterTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Water Target'**
+  String get waterTarget;
+
+  /// No description provided for @recipeCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} recipes'**
+  String recipeCount(Object count);
+
+  /// No description provided for @searchFoodItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Search food items...'**
+  String get searchFoodItems;
+
+  /// No description provided for @noFoodItems.
+  ///
+  /// In en, this message translates to:
+  /// **'No food items yet'**
+  String get noFoodItems;
+
+  /// No description provided for @noResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResults;
+
+  /// No description provided for @per100.
+  ///
+  /// In en, this message translates to:
+  /// **'per 100g'**
+  String get per100;
+
+  /// No description provided for @itemCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items'**
+  String itemCount(Object count);
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// No description provided for @bio.
+  ///
+  /// In en, this message translates to:
+  /// **'Bio'**
+  String get bio;
+
+  /// No description provided for @nameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get nameRequired;
+
+  /// No description provided for @recipes.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipes'**
+  String get recipes;
+
+  /// No description provided for @memberSince.
+  ///
+  /// In en, this message translates to:
+  /// **'Member since {date}'**
+  String memberSince(Object date);
+
+  /// No description provided for @logoutConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to logout?'**
+  String get logoutConfirm;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
 }
 
 class _AppLocalizationsDelegate

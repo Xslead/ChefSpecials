@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_provider.dart';
@@ -34,53 +35,159 @@ class _HomeScreenState extends State<HomeScreen> {
     final recipeProvider = context.watch<RecipeProvider>();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.appTitle),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () => context.push('/search'),
-          ),
-          IconButton(
-            icon: const Icon(Icons.favorite_border),
-            onPressed: () => context.push('/favorites'),
-          ),
-        ],
-      ),
       body: Column(
         children: [
-          CategoryFilterBar(
-            selectedCategory: recipeProvider.selectedCategory,
-            onSelected: recipeProvider.setCategory,
-          ),
+          _buildHeader(context, l10n, recipeProvider),
           Expanded(
             child: recipeProvider.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : recipeProvider.recipes.isEmpty
                     ? Center(
-                        child: Text(
-                          l10n.noRecipes,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                color: Colors.grey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.restaurant_menu,
+                              size: 64,
+                              color: Colors.grey.shade300,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              l10n.noRecipes,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey.shade500,
                               ),
+                            ),
+                          ],
                         ),
                       )
                     : ListView.builder(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
                         itemCount: recipeProvider.recipes.length,
                         itemBuilder: (context, index) {
-                          return RecipeCard(
-                            recipe: recipeProvider.recipes[index],
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: RecipeCard(
+                              recipe: recipeProvider.recipes[index],
+                            ),
                           );
                         },
                       ),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'home_fab',
-        onPressed: () => context.push('/add-recipe'),
-        child: const Icon(Icons.add),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: FloatingActionButton(
+          heroTag: 'home_fab',
+          onPressed: () => context.push('/add-recipe'),
+          backgroundColor: AppTheme.primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 4,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add, size: 28),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(
+    BuildContext context,
+    AppLocalizations l10n,
+    RecipeProvider recipeProvider,
+  ) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Logo row
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.restaurant_menu,
+                      color: AppTheme.primaryColor,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  const Text(
+                    'ChefSpecials',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: -0.3,
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.favorite_outline),
+                    color: AppTheme.textSecondary,
+                    onPressed: () => context.push('/favorites'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              // Search bar
+              GestureDetector(
+                onTap: () => context.push('/search'),
+                child: Container(
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 14),
+                      Icon(
+                        Icons.search,
+                        color: Colors.grey.shade400,
+                        size: 22,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        l10n.searchRecipeOrIngredient,
+                        style: TextStyle(
+                          color: Colors.grey.shade400,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 14),
+              // Category filter
+              CategoryFilterBar(
+                selectedCategory: recipeProvider.selectedCategory,
+                onSelected: recipeProvider.setCategory,
+              ),
+              const SizedBox(height: 4),
+            ],
+          ),
+        ),
       ),
     );
   }

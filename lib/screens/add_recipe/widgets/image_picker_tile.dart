@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+
+import '../../../config/theme.dart';
 import '../../../providers/recipe_form_provider.dart';
 
 class ImagePickerTile extends StatelessWidget {
@@ -23,7 +25,6 @@ class ImagePickerTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final imageFile = context.watch<RecipeFormProvider>().imageFile;
-    final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
       onTap: () => _pickImage(context),
@@ -31,9 +32,14 @@ class ImagePickerTile extends StatelessWidget {
         height: 200,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: colorScheme.outline.withValues(alpha: 0.3)),
+          color: Colors.grey.shade50,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: imageFile != null
+                ? AppTheme.primaryColor.withValues(alpha: 0.3)
+                : Colors.grey.shade200,
+            width: imageFile != null ? 2 : 1,
+          ),
           image: imageFile != null
               ? DecorationImage(
                   image: FileImage(imageFile),
@@ -45,15 +51,27 @@ class ImagePickerTile extends StatelessWidget {
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.camera_alt_outlined,
-                    size: 48,
-                    color: colorScheme.onSurfaceVariant,
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: const Icon(
+                      Icons.camera_alt_outlined,
+                      size: 28,
+                      color: AppTheme.primaryColor,
+                    ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Text(
                     'Tap to add photo',
-                    style: TextStyle(color: colorScheme.onSurfaceVariant),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey.shade500,
+                    ),
                   ),
                 ],
               )

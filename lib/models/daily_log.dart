@@ -5,18 +5,21 @@ class DailyLog {
   final String userId;
   final String date; // "yyyy-MM-dd" format
   final List<MealEntry> meals;
+  final int waterMl;
 
   DailyLog({
     this.id,
     required this.userId,
     required this.date,
     required this.meals,
+    this.waterMl = 0,
   });
 
   double get totalCalories => meals.fold(0, (sum, m) => sum + m.calories);
   double get totalProtein => meals.fold(0, (sum, m) => sum + m.protein);
   double get totalCarbs => meals.fold(0, (sum, m) => sum + m.carbs);
   double get totalFat => meals.fold(0, (sum, m) => sum + m.fat);
+  int get totalWaterMl => waterMl;
 
   List<MealEntry> mealsOfType(MealType type) =>
       meals.where((m) => m.mealType == type).toList();
@@ -33,6 +36,7 @@ class DailyLog {
               ?.map((e) => MealEntry.fromMap(e as Map<String, dynamic>))
               .toList() ??
           [],
+      waterMl: (map['waterMl'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -41,15 +45,17 @@ class DailyLog {
       'userId': userId,
       'date': date,
       'meals': meals.map((e) => e.toMap()).toList(),
+      'waterMl': waterMl,
     };
   }
 
-  DailyLog copyWith({List<MealEntry>? meals}) {
+  DailyLog copyWith({List<MealEntry>? meals, int? waterMl}) {
     return DailyLog(
       id: id,
       userId: userId,
       date: date,
       meals: meals ?? this.meals,
+      waterMl: waterMl ?? this.waterMl,
     );
   }
 }

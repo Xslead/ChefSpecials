@@ -244,4 +244,102 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ofLabel => 'of';
+
+  @override
+  String get dessert => 'Dessert';
+
+  @override
+  String get drink => 'Drink';
+
+  @override
+  String get salad => 'Salad';
+
+  @override
+  String get soup => 'Soup';
+
+  @override
+  String get searchRecipeOrIngredient => 'Search recipe or ingredient...';
+
+  @override
+  String get minuteShort => 'min';
+
+  @override
+  String get popular => 'Popular';
+
+  @override
+  String get consumed => 'Consumed';
+
+  @override
+  String get target => 'Target';
+
+  @override
+  String get remainingKcal => 'Remaining kcal';
+
+  @override
+  String get todaysMeals => 'Today\'s Meals';
+
+  @override
+  String get viewAll => 'View All';
+
+  @override
+  String itemsAdded(Object count) {
+    return '$count items added';
+  }
+
+  @override
+  String get notAddedYet => 'Not added yet';
+
+  @override
+  String get waterTracking => 'Water Tracking';
+
+  @override
+  String get carbsShort => 'Carbs';
+
+  @override
+  String get waterTarget => 'Water Target';
+
+  @override
+  String recipeCount(Object count) {
+    return '$count recipes';
+  }
+
+  @override
+  String get searchFoodItems => 'Search food items...';
+
+  @override
+  String get noFoodItems => 'No food items yet';
+
+  @override
+  String get noResults => 'No results found';
+
+  @override
+  String get per100 => 'per 100g';
+
+  @override
+  String itemCount(Object count) {
+    return '$count items';
+  }
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get bio => 'Bio';
+
+  @override
+  String get nameRequired => 'Name is required';
+
+  @override
+  String get recipes => 'Recipes';
+
+  @override
+  String memberSince(Object date) {
+    return 'Member since $date';
+  }
+
+  @override
+  String get logoutConfirm => 'Are you sure you want to logout?';
+
+  @override
+  String get settings => 'Settings';
 }

@@ -4,6 +4,7 @@ class NutritionGoal {
   final double proteinTarget;
   final double carbsTarget;
   final double fatTarget;
+  final int waterTargetMl;
 
   NutritionGoal({
     required this.userId,
@@ -11,6 +12,7 @@ class NutritionGoal {
     required this.proteinTarget,
     required this.carbsTarget,
     required this.fatTarget,
+    this.waterTargetMl = 2500,
   });
 
   factory NutritionGoal.defaultGoal(String userId) {
@@ -20,6 +22,7 @@ class NutritionGoal {
       proteinTarget: 50,
       carbsTarget: 250,
       fatTarget: 65,
+      waterTargetMl: 2500,
     );
   }
 
@@ -30,6 +33,7 @@ class NutritionGoal {
       proteinTarget: (map['proteinTarget'] as num?)?.toDouble() ?? 50,
       carbsTarget: (map['carbsTarget'] as num?)?.toDouble() ?? 250,
       fatTarget: (map['fatTarget'] as num?)?.toDouble() ?? 65,
+      waterTargetMl: (map['waterTargetMl'] as num?)?.toInt() ?? 2500,
     );
   }
 
@@ -39,6 +43,7 @@ class NutritionGoal {
       'proteinTarget': proteinTarget,
       'carbsTarget': carbsTarget,
       'fatTarget': fatTarget,
+      'waterTargetMl': waterTargetMl,
     };
   }
 }

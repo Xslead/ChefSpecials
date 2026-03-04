@@ -53,6 +53,32 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
     }
   }
 
+  IconData _mealTypeIcon() {
+    switch (widget.mealType) {
+      case MealType.breakfast:
+        return Icons.wb_sunny;
+      case MealType.lunch:
+        return Icons.restaurant;
+      case MealType.dinner:
+        return Icons.dinner_dining;
+      case MealType.snack:
+        return Icons.cookie;
+    }
+  }
+
+  Color _mealTypeColor() {
+    switch (widget.mealType) {
+      case MealType.breakfast:
+        return Colors.orange;
+      case MealType.lunch:
+        return Colors.blue;
+      case MealType.dinner:
+        return Colors.indigo;
+      case MealType.snack:
+        return Colors.green;
+    }
+  }
+
   void _showFoodItemBottomSheet(FoodItem item) {
     final l10n = AppLocalizations.of(context)!;
     final quantityController = TextEditingController(text: '100');
@@ -74,15 +100,16 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
 
             return Padding(
               padding: EdgeInsets.only(
-                left: 24,
-                right: 24,
-                top: 24,
-                bottom: MediaQuery.of(ctx).viewInsets.bottom + 24,
+                left: 20,
+                right: 20,
+                top: 16,
+                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Handle
                   Center(
                     child: Container(
                       width: 40,
@@ -94,74 +121,132 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text(
-                    item.name,
-                    style: Theme.of(ctx).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.textPrimary,
+                  // Item info
+                  Row(
+                    children: [
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
                         ),
+                        child: const Icon(
+                          Icons.restaurant,
+                          color: AppTheme.primaryColor,
+                          size: 22,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.name,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            if (item.brand != null && item.brand!.isNotEmpty)
+                              Text(
+                                item.brand!,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.grey.shade500,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  if (item.brand != null && item.brand!.isNotEmpty) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      item.brand!,
-                      style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
-                            color: AppTheme.textSecondary,
-                          ),
-                    ),
-                  ],
                   const SizedBox(height: 20),
+                  // Quantity input
+                  Text(
+                    '${l10n.quantity} (${l10n.gram})'.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.grey.shade500,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   TextField(
                     controller: quantityController,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
                     ),
                     decoration: InputDecoration(
-                      labelText: '${l10n.quantity} (${l10n.gram})',
                       suffixText: l10n.gram,
+                      suffixStyle: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey.shade400,
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey.shade50,
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 14),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                            color: AppTheme.primaryColor, width: 2),
+                      ),
                     ),
                     onChanged: (_) => setSheetState(() {}),
                   ),
                   const SizedBox(height: 16),
+                  // Nutrition row
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade50,
-                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: Colors.grey.shade100),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _NutritionChip(
-                          label: l10n.calories,
-                          value: '${calcCalories.toInt()}',
-                          unit: l10n.kcal,
-                          color: AppTheme.primaryColor,
+                        _buildSheetNutrition(
+                          l10n.calories,
+                          '${calcCalories.toInt()}',
+                          l10n.kcal,
+                          AppTheme.primaryColor,
                         ),
-                        _NutritionChip(
-                          label: l10n.protein,
-                          value: calcProtein.toStringAsFixed(1),
-                          unit: l10n.gram,
-                          color: AppTheme.secondaryColor,
+                        _buildSheetNutrition(
+                          l10n.protein,
+                          calcProtein.toStringAsFixed(1),
+                          l10n.gram,
+                          AppTheme.secondaryColor,
                         ),
-                        _NutritionChip(
-                          label: l10n.carbs,
-                          value: calcCarbs.toStringAsFixed(1),
-                          unit: l10n.gram,
-                          color: const Color(0xFFF59E0B),
+                        _buildSheetNutrition(
+                          l10n.carbs,
+                          calcCarbs.toStringAsFixed(1),
+                          l10n.gram,
+                          const Color(0xFFF59E0B),
                         ),
-                        _NutritionChip(
-                          label: l10n.fat,
-                          value: calcFat.toStringAsFixed(1),
-                          unit: l10n.gram,
-                          color: const Color(0xFFEF4444),
+                        _buildSheetNutrition(
+                          l10n.fat,
+                          calcFat.toStringAsFixed(1),
+                          l10n.gram,
+                          const Color(0xFFEF4444),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 20),
+                  // Add button
                   SizedBox(
                     width: double.infinity,
+                    height: 52,
                     child: ElevatedButton(
                       onPressed: qty > 0
                           ? () {
@@ -183,7 +268,20 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                               context.pop();
                             }
                           : null,
-                      child: Text(l10n.addToMeal),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primaryColor,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      child: Text(
+                        l10n.addToMeal,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -192,6 +290,41 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
           },
         );
       },
+    );
+  }
+
+  Widget _buildSheetNutrition(
+      String label, String value, String unit, Color color) {
+    return Expanded(
+      child: Column(
+        children: [
+          Text(
+            label.toUpperCase(),
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade400,
+              letterSpacing: 0.3,
+            ),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          Text(
+            unit,
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.grey.shade400,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -220,26 +353,154 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final mealColor = _mealTypeColor();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('${l10n.addFood} - ${_mealTypeName(l10n)}'),
-        bottom: TabBar(
-          controller: _tabController,
-          labelColor: AppTheme.primaryColor,
-          unselectedLabelColor: AppTheme.textSecondary,
-          indicatorColor: AppTheme.primaryColor,
-          tabs: [
-            Tab(text: l10n.selectFoodItem),
-            Tab(text: l10n.selectRecipe),
-          ],
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
+      body: Column(
         children: [
-          _buildFoodItemsTab(l10n),
-          _buildRecipesTab(l10n),
+          // Custom header
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                bottom: BorderSide(color: Colors.grey.shade100),
+              ),
+            ),
+            child: SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(4, 8, 8, 0),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: () => context.pop(),
+                          color: AppTheme.textPrimary,
+                        ),
+                        const SizedBox(width: 4),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: mealColor.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            _mealTypeIcon(),
+                            color: mealColor,
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.addFood,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: -0.3,
+                              ),
+                            ),
+                            Text(
+                              _mealTypeName(l10n),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  // Tab bar
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.all(4),
+                    child: TabBar(
+                      controller: _tabController,
+                      indicator: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 4,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelColor: AppTheme.textPrimary,
+                      unselectedLabelColor: Colors.grey.shade500,
+                      labelStyle: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      unselectedLabelStyle: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      dividerHeight: 0,
+                      tabs: [
+                        Tab(
+                          height: 36,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.kitchen, size: 16),
+                              const SizedBox(width: 6),
+                              Flexible(
+                                child: Text(
+                                  l10n.selectFoodItem,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Tab(
+                          height: 36,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.menu_book, size: 16),
+                              const SizedBox(width: 6),
+                              Flexible(
+                                child: Text(
+                                  l10n.selectRecipe,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
+            ),
+          ),
+          // Tab content
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _buildFoodItemsTab(l10n),
+                _buildRecipesTab(l10n),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -247,86 +508,179 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
 
   Widget _buildFoodItemsTab(AppLocalizations l10n) {
     final foodProvider = context.watch<FoodItemProvider>();
-    final hasSearchQuery =
-        foodProvider.searchQuery.isNotEmpty;
+    final hasSearchQuery = foodProvider.searchQuery.isNotEmpty;
     final items =
         hasSearchQuery ? foodProvider.searchResults : foodProvider.foodItems;
 
     return Column(
       children: [
+        // Search bar
         Padding(
-          padding: const EdgeInsets.all(16),
-          child: TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: '${l10n.search}...',
-              prefixIcon: const Icon(Icons.search),
-              suffixIcon: _searchController.text.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        _searchController.clear();
-                        setState(() {});
-                        foodProvider.searchFoodItems('');
-                      },
-                    )
-                  : null,
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+          child: Container(
+            height: 48,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(14),
             ),
-            onChanged: (value) {
-              setState(() {});
-              foodProvider.searchFoodItems(value);
-            },
+            child: Row(
+              children: [
+                const SizedBox(width: 14),
+                Icon(Icons.search, color: Colors.grey.shade400, size: 22),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: '${l10n.search}...',
+                      hintStyle: TextStyle(
+                        color: Colors.grey.shade400,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                      isDense: true,
+                    ),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    onChanged: (value) {
+                      setState(() {});
+                      foodProvider.searchFoodItems(value);
+                    },
+                  ),
+                ),
+                if (_searchController.text.isNotEmpty)
+                  GestureDetector(
+                    onTap: () {
+                      _searchController.clear();
+                      setState(() {});
+                      foodProvider.searchFoodItems('');
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Icon(
+                        Icons.clear,
+                        size: 18,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
+        // List
         Expanded(
           child: foodProvider.isLoading
               ? const Center(child: CircularProgressIndicator())
               : items.isEmpty
                   ? Center(
-                      child: Text(
-                        l10n.noMealsYet,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: AppTheme.textSecondary,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.kitchen,
+                              size: 64, color: Colors.grey.shade300),
+                          const SizedBox(height: 16),
+                          Text(
+                            l10n.noResults,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey.shade500,
                             ),
+                          ),
+                        ],
                       ),
                     )
-                  : ListView.separated(
+                  : ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       itemCount: items.length,
-                      separatorBuilder: (_, _) => const Divider(height: 1),
                       itemBuilder: (context, index) {
                         final item = items[index];
-                        return ListTile(
-                          title: Text(
-                            item.name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: AppTheme.textPrimary,
-                            ),
-                          ),
-                          subtitle: Text(
-                            item.brand ?? item.category,
-                            style: TextStyle(
-                              color: AppTheme.textSecondary,
-                              fontSize: 12,
-                            ),
-                          ),
-                          trailing: Text(
-                            '${item.calories.toInt()} ${l10n.kcal}/100${l10n.gram}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(
-                                  color: AppTheme.primaryColor,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          ),
-                          onTap: () => _showFoodItemBottomSheet(item),
-                        );
+                        return _buildFoodItemTile(item, l10n);
                       },
                     ),
         ),
       ],
+    );
+  }
+
+  Widget _buildFoodItemTile(FoodItem item, AppLocalizations l10n) {
+    return GestureDetector(
+      onTap: () => _showFoodItemBottomSheet(item),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade100),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.restaurant,
+                color: AppTheme.primaryColor,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.name,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    item.brand ?? item.category,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '${item.calories.toInt()}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: AppTheme.primaryColor,
+                  ),
+                ),
+                Text(
+                  '${l10n.kcal}/100${l10n.gram}',
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.grey.shade400,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -340,94 +694,105 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
 
     if (recipes.isEmpty) {
       return Center(
-        child: Text(
-          l10n.noRecipes,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: AppTheme.textSecondary,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.menu_book, size: 64, color: Colors.grey.shade300),
+            const SizedBox(height: 16),
+            Text(
+              l10n.noRecipes,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey.shade500,
               ),
+            ),
+          ],
         ),
       );
     }
 
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
+    return ListView.builder(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
       itemCount: recipes.length,
-      separatorBuilder: (_, _) => const Divider(height: 1),
       itemBuilder: (context, index) {
         final recipe = recipes[index];
         final cals = recipe.caloriesPerServing ?? 0;
 
-        return ListTile(
-          title: Text(
-            recipe.title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              color: AppTheme.textPrimary,
-            ),
-          ),
-          subtitle: Text(
-            '${recipe.servings} ${l10n.servings}',
-            style: TextStyle(
-              color: AppTheme.textSecondary,
-              fontSize: 12,
-            ),
-          ),
-          trailing: Text(
-            '$cals ${l10n.kcal}/${l10n.servings}',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppTheme.primaryColor,
-                  fontWeight: FontWeight.w600,
-                ),
-          ),
+        return GestureDetector(
           onTap: () => _addRecipeToMeal(recipe),
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade100),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: AppTheme.secondaryColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.menu_book,
+                    color: AppTheme.secondaryColor,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        recipe.title,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '${recipe.servings} ${l10n.servings}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '$cals',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        color: AppTheme.primaryColor,
+                      ),
+                    ),
+                    Text(
+                      '${l10n.kcal}/${l10n.servings}',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         );
       },
-    );
-  }
-}
-
-class _NutritionChip extends StatelessWidget {
-  final String label;
-  final String value;
-  final String unit;
-  final Color color;
-
-  const _NutritionChip({
-    required this.label,
-    required this.value,
-    required this.unit,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
-        ),
-        Text(
-          unit,
-          style: TextStyle(
-            fontSize: 10,
-            color: AppTheme.textSecondary,
-          ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 11,
-            color: AppTheme.textSecondary,
-          ),
-        ),
-      ],
     );
   }
 }

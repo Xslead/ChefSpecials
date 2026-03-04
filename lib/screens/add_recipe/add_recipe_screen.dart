@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
 import '../../config/constants.dart';
+import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_form_provider.dart';
@@ -61,227 +63,425 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
     final formProvider = context.watch<RecipeFormProvider>();
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.addRecipe)),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            const ImagePickerTile(),
-            const SizedBox(height: 16),
-
-            // Title
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: l10n.recipeName,
-                border: const OutlineInputBorder(),
+      body: Column(
+        children: [
+          // Custom header
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                bottom: BorderSide(color: Colors.grey.shade100),
               ),
-              validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
-              onChanged: (v) => formProvider.title = v,
             ),
-            const SizedBox(height: 12),
-
-            // Description
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: l10n.description,
-                border: const OutlineInputBorder(),
-              ),
-              maxLines: 3,
-              validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
-              onChanged: (v) => formProvider.description = v,
-            ),
-            const SizedBox(height: 12),
-
-            // Category dropdown
-            DropdownButtonFormField<String>(
-              initialValue: formProvider.category,
-              decoration: InputDecoration(
-                labelText: l10n.category,
-                border: const OutlineInputBorder(),
-              ),
-              items: AppConstants.defaultCategories
-                  .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                  .toList(),
-              onChanged: (v) {
-                if (v != null) formProvider.category = v;
-              },
-            ),
-            const SizedBox(height: 12),
-
-            // Servings and Prep time
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    initialValue: formProvider.servings.toString(),
-                    decoration: InputDecoration(
-                      labelText: l10n.servings,
-                      border: const OutlineInputBorder(),
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () => context.pop(),
+                      color: AppTheme.textPrimary,
                     ),
-                    keyboardType: TextInputType.number,
+                    const SizedBox(width: 4),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.restaurant_menu,
+                        color: AppTheme.primaryColor,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      l10n.addRecipe,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: -0.3,
+                      ),
+                    ),
+                    const Spacer(),
+                    TextButton(
+                      onPressed: formProvider.isSubmitting ? null : _submit,
+                      child: formProvider.isSubmitting
+                          ? const SizedBox(
+                              height: 18,
+                              width: 18,
+                              child:
+                                  CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Text(
+                              l10n.save,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.primaryColor,
+                              ),
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // Body
+          Expanded(
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 40),
+                children: [
+                  // Image picker
+                  const ImagePickerTile(),
+                  const SizedBox(height: 20),
+
+                  // Recipe name
+                  _buildSectionLabel(l10n.recipeName),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: l10n.recipeName,
+                      prefixIcon: Icon(
+                        Icons.edit_outlined,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                    validator: (v) =>
+                        (v == null || v.isEmpty) ? 'Required' : null,
+                    onChanged: (v) => formProvider.title = v,
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Description
+                  _buildSectionLabel(l10n.description),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: l10n.description,
+                      prefixIcon: Icon(
+                        Icons.notes,
+                        color: Colors.grey.shade400,
+                      ),
+                      alignLabelWithHint: true,
+                    ),
+                    maxLines: 3,
+                    validator: (v) =>
+                        (v == null || v.isEmpty) ? 'Required' : null,
+                    onChanged: (v) => formProvider.description = v,
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Category
+                  _buildSectionLabel(l10n.category),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<String>(
+                    initialValue: formProvider.category,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.category_outlined,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                    items: AppConstants.defaultCategories
+                        .map((c) =>
+                            DropdownMenuItem(value: c, child: Text(c)))
+                        .toList(),
                     onChanged: (v) {
-                      final n = int.tryParse(v);
-                      if (n != null) formProvider.servings = n;
+                      if (v != null) formProvider.category = v;
                     },
                   ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade400),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.prepTime,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey.shade600,
+                  const SizedBox(height: 16),
+
+                  // Servings, Prep, Cook time row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildCompactCard(
+                          icon: Icons.people_outline,
+                          color: AppTheme.primaryColor,
+                          label: l10n.servings,
+                          child: TextFormField(
+                            initialValue: formProvider.servings.toString(),
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              color: AppTheme.primaryColor,
+                            ),
+                            decoration: _compactInputDecoration(),
+                            onChanged: (v) {
+                              final n = int.tryParse(v);
+                              if (n != null) formProvider.servings = n;
+                            },
                           ),
                         ),
-                        Text(
-                          '${formProvider.prepTimeMinutes} min',
-                          style: const TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildCompactCard(
+                          icon: Icons.timer_outlined,
+                          color: const Color(0xFFF59E0B),
+                          label: l10n.prepTime,
+                          child: Center(
+                            child: Text(
+                              '${formProvider.prepTimeMinutes} ${l10n.minuteShort}',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFFF59E0B),
+                              ),
+                            ),
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextFormField(
-                    initialValue: formProvider.cookTimeMinutes.toString(),
-                    decoration: InputDecoration(
-                      labelText: l10n.cookTime,
-                      border: const OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (v) {
-                      final n = int.tryParse(v);
-                      if (n != null) formProvider.cookTimeMinutes = n;
-                    },
-                  ),
-                ),
-              ],
-            ),
-            if (formProvider.cookTimeMinutes > 0 || formProvider.prepTimeMinutes > 0)
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(
-                  'Total: ${formProvider.prepTimeMinutes + formProvider.cookTimeMinutes} min',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey.shade700,
-                  ),
-                ),
-              ),
-            const SizedBox(height: 20),
-
-            // Ingredients (from materials database)
-            const IngredientInputList(),
-            const SizedBox(height: 20),
-
-            // Steps
-            const StepInputList(),
-            const SizedBox(height: 20),
-
-            // Auto-calculated nutrition
-            if (formProvider.ingredients.isNotEmpty) ...[
-              Text(
-                'Nutrition (auto-calculated per serving)',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _NutritionChip(
-                        label: l10n.calories,
-                        value: '${formProvider.caloriesPerServing ?? 0}',
-                        unit: 'kcal',
                       ),
-                      _NutritionChip(
-                        label: l10n.protein,
-                        value: '${formProvider.proteinGrams ?? 0}',
-                        unit: 'g',
-                      ),
-                      _NutritionChip(
-                        label: l10n.carbs,
-                        value: '${formProvider.carbsGrams ?? 0}',
-                        unit: 'g',
-                      ),
-                      _NutritionChip(
-                        label: l10n.fat,
-                        value: '${formProvider.fatGrams ?? 0}',
-                        unit: 'g',
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildCompactCard(
+                          icon: Icons.local_fire_department,
+                          color: const Color(0xFFEF4444),
+                          label: l10n.cookTime,
+                          child: TextFormField(
+                            initialValue:
+                                formProvider.cookTimeMinutes.toString(),
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xFFEF4444),
+                            ),
+                            decoration: _compactInputDecoration(),
+                            onChanged: (v) {
+                              final n = int.tryParse(v);
+                              if (n != null) formProvider.cookTimeMinutes = n;
+                            },
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ),
-              const SizedBox(height: 20),
-            ],
+                  const SizedBox(height: 24),
 
-            // Submit button
-            SizedBox(
-              height: 48,
-              child: FilledButton(
-                onPressed: formProvider.isSubmitting ? null : _submit,
-                child: formProvider.isSubmitting
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Text(l10n.save),
+                  // Ingredients
+                  const IngredientInputList(),
+                  const SizedBox(height: 24),
+
+                  // Steps
+                  const StepInputList(),
+                  const SizedBox(height: 24),
+
+                  // Auto-calculated nutrition
+                  if (formProvider.ingredients.isNotEmpty) ...[
+                    _buildNutritionCard(l10n, formProvider),
+                    const SizedBox(height: 24),
+                  ],
+                ],
               ),
             ),
-            const SizedBox(height: 24),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-}
 
-class _NutritionChip extends StatelessWidget {
-  final String label;
-  final String value;
-  final String unit;
+  Widget _buildSectionLabel(String label) {
+    return Text(
+      label.toUpperCase(),
+      style: TextStyle(
+        fontSize: 11,
+        fontWeight: FontWeight.w700,
+        color: Colors.grey.shade500,
+        letterSpacing: 0.8,
+      ),
+    );
+  }
 
-  const _NutritionChip({
-    required this.label,
-    required this.value,
-    required this.unit,
-  });
+  Widget _buildCompactCard({
+    required IconData icon,
+    required Color color,
+    required String label,
+    required Widget child,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade100),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, color: color, size: 18),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label.toUpperCase(),
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.w700,
+              color: Colors.grey.shade500,
+              letterSpacing: 0.5,
+            ),
+          ),
+          const SizedBox(height: 6),
+          child,
+        ],
+      ),
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+  InputDecoration _compactInputDecoration() {
+    return InputDecoration(
+      filled: true,
+      fillColor: Colors.grey.shade50,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide:
+            const BorderSide(color: AppTheme.primaryColor, width: 1.5),
+      ),
+    );
+  }
+
+  Widget _buildNutritionCard(
+      AppLocalizations l10n, RecipeFormProvider formProvider) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade100),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppTheme.secondaryColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.analytics_outlined,
+                    color: AppTheme.secondaryColor, size: 18),
               ),
-        ),
-        Text(unit, style: Theme.of(context).textTheme.bodySmall),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
+              const SizedBox(width: 10),
+              Text(
+                l10n.calories.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.grey.shade500,
+                  letterSpacing: 0.8,
+                ),
               ),
-        ),
-      ],
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              _buildNutritionStat(
+                l10n.calories,
+                '${formProvider.caloriesPerServing ?? 0}',
+                l10n.kcal,
+                AppTheme.primaryColor,
+              ),
+              _buildNutritionStat(
+                l10n.protein,
+                '${formProvider.proteinGrams ?? 0}',
+                l10n.gram,
+                AppTheme.secondaryColor,
+              ),
+              _buildNutritionStat(
+                l10n.carbs,
+                '${formProvider.carbsGrams ?? 0}',
+                l10n.gram,
+                const Color(0xFFF59E0B),
+              ),
+              _buildNutritionStat(
+                l10n.fat,
+                '${formProvider.fatGrams ?? 0}',
+                l10n.gram,
+                const Color(0xFFEF4444),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNutritionStat(
+      String label, String value, String unit, Color color) {
+    return Expanded(
+      child: Column(
+        children: [
+          Text(
+            label.toUpperCase(),
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade400,
+              letterSpacing: 0.3,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+              color: color,
+            ),
+          ),
+          Text(
+            unit,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey.shade400,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

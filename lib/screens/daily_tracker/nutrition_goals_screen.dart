@@ -21,6 +21,7 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
   late TextEditingController _proteinController;
   late TextEditingController _carbsController;
   late TextEditingController _fatController;
+  late TextEditingController _waterController;
   bool _isSaving = false;
 
   @override
@@ -39,6 +40,9 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
     _fatController = TextEditingController(
       text: (goal?.fatTarget ?? 65).toInt().toString(),
     );
+    _waterController = TextEditingController(
+      text: (goal?.waterTargetMl ?? 2500).toString(),
+    );
   }
 
   @override
@@ -47,6 +51,7 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
     _proteinController.dispose();
     _carbsController.dispose();
     _fatController.dispose();
+    _waterController.dispose();
     super.dispose();
   }
 
@@ -62,6 +67,7 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
       proteinTarget: double.tryParse(_proteinController.text) ?? 50,
       carbsTarget: double.tryParse(_carbsController.text) ?? 250,
       fatTarget: double.tryParse(_fatController.text) ?? 65,
+      waterTargetMl: int.tryParse(_waterController.text) ?? 2500,
     );
 
     await context.read<DailyTrackerProvider>().saveNutritionGoal(goal);
@@ -91,112 +97,239 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.nutritionGoals),
-      ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(24),
-          children: [
-            Icon(
-              Icons.track_changes,
-              size: 64,
-              color: AppTheme.primaryColor.withValues(alpha: 0.7),
+      body: Column(
+        children: [
+          // Custom header
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                bottom: BorderSide(color: Colors.grey.shade100),
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.nutritionGoals,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.textPrimary,
-                  ),
-            ),
-            const SizedBox(height: 32),
-            _GoalTextField(
-              controller: _calorieController,
-              label: l10n.calorieTarget,
-              suffix: l10n.kcal,
-              icon: Icons.local_fire_department,
-              color: AppTheme.primaryColor,
-              validator: _validateNumber,
-            ),
-            const SizedBox(height: 16),
-            _GoalTextField(
-              controller: _proteinController,
-              label: l10n.proteinTarget,
-              suffix: l10n.gram,
-              icon: Icons.fitness_center,
-              color: AppTheme.secondaryColor,
-              validator: _validateNumber,
-            ),
-            const SizedBox(height: 16),
-            _GoalTextField(
-              controller: _carbsController,
-              label: l10n.carbsTarget,
-              suffix: l10n.gram,
-              icon: Icons.grain,
-              color: const Color(0xFFF59E0B),
-              validator: _validateNumber,
-            ),
-            const SizedBox(height: 16),
-            _GoalTextField(
-              controller: _fatController,
-              label: l10n.fatTarget,
-              suffix: l10n.gram,
-              icon: Icons.water_drop,
-              color: const Color(0xFFEF4444),
-              validator: _validateNumber,
-            ),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: _isSaving ? null : _saveGoals,
-              child: _isSaving
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(4, 8, 8, 8),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () => context.pop(),
+                      color: AppTheme.textPrimary,
+                    ),
+                    const SizedBox(width: 4),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                    )
-                  : Text(l10n.save),
+                      child: const Icon(
+                        Icons.track_changes,
+                        color: AppTheme.primaryColor,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      l10n.nutritionGoals,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: -0.3,
+                      ),
+                    ),
+                    const Spacer(),
+                    // Save button
+                    TextButton(
+                      onPressed: _isSaving ? null : _saveGoals,
+                      child: _isSaving
+                          ? const SizedBox(
+                              height: 18,
+                              width: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Text(
+                              l10n.save,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.primaryColor,
+                              ),
+                            ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ],
-        ),
+          ),
+          // Body
+          Expanded(
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(16, 20, 16, 40),
+                children: [
+                  // Calorie goal card
+                  _buildGoalCard(
+                    icon: Icons.local_fire_department,
+                    color: AppTheme.primaryColor,
+                    label: l10n.calorieTarget,
+                    suffix: l10n.kcal,
+                    controller: _calorieController,
+                  ),
+                  const SizedBox(height: 12),
+                  // Macro goals row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildGoalCard(
+                          icon: Icons.fitness_center,
+                          color: AppTheme.secondaryColor,
+                          label: l10n.protein,
+                          suffix: l10n.gram,
+                          controller: _proteinController,
+                          compact: true,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildGoalCard(
+                          icon: Icons.grain,
+                          color: const Color(0xFFF59E0B),
+                          label: l10n.carbsShort,
+                          suffix: l10n.gram,
+                          controller: _carbsController,
+                          compact: true,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildGoalCard(
+                          icon: Icons.water_drop,
+                          color: const Color(0xFFEF4444),
+                          label: l10n.fat,
+                          suffix: l10n.gram,
+                          controller: _fatController,
+                          compact: true,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  // Water goal card
+                  _buildGoalCard(
+                    icon: Icons.local_drink,
+                    color: Colors.blue,
+                    label: l10n.waterTarget,
+                    suffix: l10n.ml,
+                    controller: _waterController,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
-}
 
-class _GoalTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String label;
-  final String suffix;
-  final IconData icon;
-  final Color color;
-  final String? Function(String?)? validator;
-
-  const _GoalTextField({
-    required this.controller,
-    required this.label,
-    required this.suffix,
-    required this.icon,
-    required this.color,
-    this.validator,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      validator: validator,
-      decoration: InputDecoration(
-        labelText: label,
-        suffixText: suffix,
-        prefixIcon: Icon(icon, color: color),
+  Widget _buildGoalCard({
+    required IconData icon,
+    required Color color,
+    required String label,
+    required String suffix,
+    required TextEditingController controller,
+    bool compact = false,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(compact ? 12 : 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade100),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Icon + label row
+          Row(
+            children: [
+              Container(
+                width: compact ? 32 : 40,
+                height: compact ? 32 : 40,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(compact ? 8 : 10),
+                ),
+                child: Icon(icon, color: color, size: compact ? 18 : 22),
+              ),
+              SizedBox(width: compact ? 8 : 12),
+              Expanded(
+                child: Text(
+                  label.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: compact ? 9 : 11,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.grey.shade500,
+                    letterSpacing: 0.8,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: compact ? 10 : 14),
+          // Input field
+          TextFormField(
+            controller: controller,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            validator: _validateNumber,
+            style: TextStyle(
+              fontSize: compact ? 20 : 28,
+              fontWeight: FontWeight.w900,
+              color: color,
+            ),
+            textAlign: compact ? TextAlign.center : TextAlign.left,
+            decoration: InputDecoration(
+              suffixText: suffix,
+              suffixStyle: TextStyle(
+                fontSize: compact ? 12 : 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey.shade400,
+              ),
+              filled: true,
+              fillColor: Colors.grey.shade50,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: compact ? 10 : 16,
+                vertical: compact ? 10 : 14,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: color, width: 2),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: AppTheme.errorColor),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

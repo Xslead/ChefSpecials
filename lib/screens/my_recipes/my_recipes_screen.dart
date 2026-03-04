@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import '../../config/theme.dart';
+import '../../config/constants.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/recipe.dart';
 import '../../providers/auth_provider.dart';
@@ -37,6 +39,29 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
     return filtered;
   }
 
+  String _localizeCategory(String category, AppLocalizations l10n) {
+    switch (category) {
+      case 'Breakfast':
+        return l10n.breakfast;
+      case 'Lunch':
+        return l10n.lunch;
+      case 'Dinner':
+        return l10n.dinner;
+      case 'Dessert':
+        return l10n.dessert;
+      case 'Snack':
+        return l10n.snack;
+      case 'Drink':
+        return l10n.drink;
+      case 'Salad':
+        return l10n.salad;
+      case 'Soup':
+        return l10n.soup;
+      default:
+        return category;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -50,91 +75,198 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
 
     final userRecipes =
         recipeProvider.allRecipes.where((r) => r.authorId == user.uid).toList();
-    final categories =
-        userRecipes.map((r) => r.category).toSet().toList()..sort();
     final displayedRecipes = _filterAndSort(userRecipes);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.myRecipes),
-        actions: [
-          PopupMenuButton<_SortOption>(
-            icon: const Icon(Icons.sort),
-            tooltip: l10n.sortBy,
-            onSelected: (option) => setState(() => _sortOption = option),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: _SortOption.newest,
-                child: Text(l10n.newest),
-              ),
-              PopupMenuItem(
-                value: _SortOption.oldest,
-                child: Text(l10n.oldest),
-              ),
-              PopupMenuItem(
-                value: _SortOption.category,
-                child: Text(l10n.category),
-              ),
-            ],
-          ),
-        ],
-      ),
       body: Column(
         children: [
-          if (categories.isNotEmpty)
-            SizedBox(
-              height: 48,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: FilterChip(
-                      label: Text(l10n.all),
-                      selected: _selectedCategory == null,
-                      onSelected: (_) =>
-                          setState(() => _selectedCategory = null),
-                    ),
-                  ),
-                  ...categories.map(
-                    (cat) => Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: FilterChip(
-                        label: Text(cat),
-                        selected: _selectedCategory == cat,
-                        onSelected: (_) =>
-                            setState(() => _selectedCategory = cat),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          _buildHeader(context, l10n, userRecipes.length),
           Expanded(
             child: displayedRecipes.isEmpty
                 ? Center(
-                    child: Text(
-                      l10n.noRecipes,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.copyWith(color: Colors.grey),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.menu_book,
+                          size: 64,
+                          color: Colors.grey.shade300,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          l10n.noRecipes,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
                     ),
                   )
                 : ListView.builder(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
                     itemCount: displayedRecipes.length,
-                    itemBuilder: (context, index) =>
-                        RecipeCard(recipe: displayedRecipes[index]),
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: RecipeCard(recipe: displayedRecipes[index]),
+                      );
+                    },
                   ),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'my_recipes_fab',
-        onPressed: () => context.push('/add-recipe'),
-        child: const Icon(Icons.add),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: FloatingActionButton(
+          heroTag: 'my_recipes_fab',
+          onPressed: () => context.push('/add-recipe'),
+          backgroundColor: AppTheme.primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 4,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add, size: 28),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, AppLocalizations l10n, int totalCount) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title row
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.menu_book,
+                      color: AppTheme.primaryColor,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.myRecipes,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: -0.3,
+                        ),
+                      ),
+                      Text(
+                        l10n.recipeCount(totalCount),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  PopupMenuButton<_SortOption>(
+                    icon: Icon(
+                      Icons.sort,
+                      color: AppTheme.textSecondary,
+                    ),
+                    tooltip: l10n.sortBy,
+                    onSelected: (option) => setState(() => _sortOption = option),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: _SortOption.newest,
+                        child: Text(l10n.newest),
+                      ),
+                      PopupMenuItem(
+                        value: _SortOption.oldest,
+                        child: Text(l10n.oldest),
+                      ),
+                      PopupMenuItem(
+                        value: _SortOption.category,
+                        child: Text(l10n.category),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              // Category filter pills
+              SizedBox(
+                height: 40,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    _buildPill(
+                      label: l10n.all,
+                      isSelected: _selectedCategory == null,
+                      onTap: () => setState(() => _selectedCategory = null),
+                    ),
+                    ...AppConstants.defaultCategories.map(
+                      (category) => _buildPill(
+                        label: _localizeCategory(category, l10n),
+                        isSelected: _selectedCategory == category,
+                        onTap: () =>
+                            setState(() => _selectedCategory = category),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 4),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPill({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? AppTheme.primaryColor : Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(50),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: isSelected ? Colors.white : AppTheme.textSecondary,
+            ),
+          ),
+        ),
       ),
     );
   }

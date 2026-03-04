@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1036058299740",
+    "project_id": "se380-food-tracker",
+    "storage_bucket": "se380-food-tracker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1036058299740:android:77de2cce57a37aa6dcc599",
+        "android_client_info": {
+          "package_name": "com.chefspecials.chef_specials"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKQycZs9UIB8OKKenpJlTlah9XxQzME1M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

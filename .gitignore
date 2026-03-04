@@ -1,0 +1,86 @@
+# Flutter
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+pubspec.lock
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+lib/generated_plugin_registrant.dart
+lib/firebase_options.dart
+
+# Firebase
+firebase-debug.log
+firebase-debug.*.log
+.firebase/
+.firebaserc
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.project
+.settings/
+.classpath
+
+# macOS
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Android
+**/android/**/gradle-wrapper.jar
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+**/android/key.properties
+*.jks
+
+# iOS
+**/ios/**/*.mode1v3
+**/ios/**/*.mode2v3
+**/ios/**/*.moved-aside
+**/ios/**/*.pbxuser
+**/ios/**/*.perspectivev3
+**/ios/**/project.xcworkspace/
+**/ios/**/xcuserdata
+**/ios/.generated/
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Pods/
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# Environment
+.env
+.env.*
+
+# Plan/architecture files
+architecture-plan.md
+todo.md
+
+# Coverage
+coverage/
+*.lcov
+
+# Misc
+*.log
+*.pid
+*.seed
+*.pid.lock

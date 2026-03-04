@@ -37,6 +37,11 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(l10n.appTitle),
         actions: [
           IconButton(
+            icon: const Icon(Icons.kitchen_outlined),
+            tooltip: 'Materials',
+            onPressed: () => context.push('/food-items'),
+          ),
+          IconButton(
             icon: const Icon(Icons.search),
             onPressed: () => context.push('/search'),
           ),

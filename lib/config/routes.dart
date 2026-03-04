@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../models/recipe.dart';
+import '../models/food_item.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/home/home_screen.dart';
@@ -11,6 +12,9 @@ import '../screens/search/search_screen.dart';
 import '../screens/favorites/favorites_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/profile/edit_profile_screen.dart';
+import '../screens/food_items/food_item_list_screen.dart';
+import '../screens/food_items/add_food_item_screen.dart';
+import '../screens/food_items/food_item_detail_screen.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/login',
@@ -55,6 +59,24 @@ final GoRouter router = GoRouter(
           return const Scaffold(body: Center(child: Text('Recipe not found')));
         }
         return RecipeDetailScreen(recipe: recipe);
+      },
+    ),
+    GoRoute(
+      path: '/food-items',
+      builder: (context, state) => const FoodItemListScreen(),
+    ),
+    GoRoute(
+      path: '/add-food-item',
+      builder: (context, state) => const AddFoodItemScreen(),
+    ),
+    GoRoute(
+      path: '/food-item/:id',
+      builder: (context, state) {
+        final foodItem = state.extra as FoodItem?;
+        if (foodItem == null) {
+          return const Scaffold(body: Center(child: Text('Food item not found')));
+        }
+        return FoodItemDetailScreen(foodItem: foodItem);
       },
     ),
     GoRoute(

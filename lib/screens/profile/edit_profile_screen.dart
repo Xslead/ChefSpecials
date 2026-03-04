@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../services/recipe_service.dart';
 import '../../services/storage_service.dart';
 import '../../services/user_service.dart';
 
@@ -63,11 +64,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       photoUrl = await _storageService.uploadUserAvatar(_imageFile!);
     }
 
+    final newName = _fullNameController.text.trim();
+
     await _userService.updateUser(user.uid, {
-      'fullName': _fullNameController.text.trim(),
+      'fullName': newName,
       'bio': _bioController.text.trim(),
       if (photoUrl != user.photoUrl) 'photoUrl': photoUrl,
     });
+
+    // Update author name on all user's recipes if name changed.
+    if (newName != user.fullName) {
+      await RecipeService().updateAuthorName(user.uid, newName);
+    }
 
     // Refresh the user model in AuthProvider.
     await authProvider.refreshUser();

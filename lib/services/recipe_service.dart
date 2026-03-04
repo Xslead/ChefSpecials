@@ -54,4 +54,14 @@ class RecipeService {
             .map((doc) => Recipe.fromMap(doc.data(), doc.id))
             .toList());
   }
+
+  Future<void> updateAuthorName(String userId, String newName) async {
+    final snapshot =
+        await _recipesRef.where('authorId', isEqualTo: userId).get();
+    final batch = _firestore.batch();
+    for (final doc in snapshot.docs) {
+      batch.update(doc.reference, {'authorName': newName});
+    }
+    await batch.commit();
+  }
 }

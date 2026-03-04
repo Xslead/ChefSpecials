@@ -80,18 +80,23 @@
 ---
 
 ## Push 6: Ingredient Database (Materials)
-- [ ] **Model:** FoodItem (name, unit: "100g" or "mL", calories, protein, carbs, fat, fiber, sugar, etc.)
-- [ ] **Firestore collection:** `food_items` — shared database all users can browse
-- [ ] **Service:** FoodItemService (CRUD + search)
-- [ ] **Provider:** FoodItemProvider
-- [ ] **Screens:**
-  - [ ] FoodItemListScreen — browse/search all materials in the database
-  - [ ] AddFoodItemScreen — any user can add a new material with nutrition per 100g or mL
-  - [ ] FoodItemDetailScreen — view full nutrition breakdown of a material
-- [ ] **Widgets:** FoodItemCard, NutritionFactsTable
-- [ ] Seed Firestore with common items (chicken breast, rice, egg, milk, olive oil, etc.)
-- [ ] Self-test: flutter analyze + build
-- **Status:** PENDING
+- [x] **Model:** FoodItem (name, brand, packetSize, barcode, isVegan, unit: "100g" or "mL", calories, protein, carbs, fat, fiber, sugar, sodium)
+- [x] **Firestore collection:** `food_items` — shared database all users can browse
+- [x] **Service:** FoodItemService (CRUD + search)
+- [x] **Provider:** FoodItemProvider
+- [x] **Screens:**
+  - [x] FoodItemListScreen — browse/search all materials with category filter
+  - [x] AddFoodItemScreen — any user can add a new material with nutrition per 100g or mL
+  - [x] FoodItemDetailScreen — view full nutrition breakdown (per 100g + per packet)
+- [x] **Widgets:** FoodItemCard, NutritionFactsTable
+- [x] Seed Firestore with 28 real food items (real brands, nutrition data from Open Food Facts/USDA)
+- [x] Firestore security rules for food_items collection deployed
+- [x] Recipe ingredients now link to materials database (food item picker instead of free-text)
+- [x] Auto-calculate recipe nutrition from ingredient quantities
+- [x] Cook time auto-calculated from step timers (sum of all step timerSeconds)
+- [x] Materials accessible from Home screen AppBar (kitchen icon)
+- [x] Self-test: flutter analyze — 0 issues
+- **Status:** READY TO PUSH
 
 ---
 

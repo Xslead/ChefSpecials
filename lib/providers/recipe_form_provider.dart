@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/ingredient.dart';
 import '../models/recipe_step.dart';
 import '../models/recipe.dart';
+import '../models/food_item.dart';
 import '../services/storage_service.dart';
 
 class RecipeFormProvider extends ChangeNotifier {
@@ -13,9 +14,9 @@ class RecipeFormProvider extends ChangeNotifier {
   String category = 'Breakfast';
   int servings = 1;
   int prepTimeMinutes = 10;
-  int cookTimeMinutes = 15;
+  int cookTimeMinutes = 0;
   File? imageFile;
-  List<Ingredient> ingredients = [Ingredient(name: '', amount: '')];
+  List<Ingredient> ingredients = [];
   List<RecipeStep> steps = [RecipeStep(order: 1, instruction: '')];
   int? caloriesPerServing;
   double? proteinGrams;
@@ -23,25 +24,63 @@ class RecipeFormProvider extends ChangeNotifier {
   double? fatGrams;
   bool isSubmitting = false;
 
-  void addIngredient() {
-    ingredients.add(Ingredient(name: '', amount: ''));
+  void addIngredientFromFoodItem(FoodItem foodItem, String amount) {
+    ingredients.add(Ingredient(
+      name: foodItem.name,
+      amount: amount,
+      unit: foodItem.unit == '100g' ? 'g' : 'mL',
+      foodItemId: foodItem.id,
+      caloriesPer100: foodItem.calories,
+      proteinPer100: foodItem.protein,
+      carbsPer100: foodItem.carbs,
+      fatPer100: foodItem.fat,
+    ));
+    _recalculateNutrition();
+    notifyListeners();
+  }
+
+  void updateIngredientAmount(int index, String amount) {
+    final old = ingredients[index];
+    ingredients[index] = Ingredient(
+      name: old.name,
+      amount: amount,
+      unit: old.unit,
+      foodItemId: old.foodItemId,
+      caloriesPer100: old.caloriesPer100,
+      proteinPer100: old.proteinPer100,
+      carbsPer100: old.carbsPer100,
+      fatPer100: old.fatPer100,
+    );
+    _recalculateNutrition();
     notifyListeners();
   }
 
   void removeIngredient(int index) {
-    if (ingredients.length > 1) {
-      ingredients.removeAt(index);
-      notifyListeners();
-    }
+    ingredients.removeAt(index);
+    _recalculateNutrition();
+    notifyListeners();
   }
 
-  void updateIngredient(int index, {String? name, String? amount, String? unit}) {
-    final old = ingredients[index];
-    ingredients[index] = Ingredient(
-      name: name ?? old.name,
-      amount: amount ?? old.amount,
-      unit: unit ?? old.unit,
-    );
+  void _recalculateNutrition() {
+    double totalCalories = 0;
+    double totalProtein = 0;
+    double totalCarbs = 0;
+    double totalFat = 0;
+
+    for (final ing in ingredients) {
+      final grams = double.tryParse(ing.amount) ?? 0;
+      final ratio = grams / 100.0;
+      totalCalories += (ing.caloriesPer100 ?? 0) * ratio;
+      totalProtein += (ing.proteinPer100 ?? 0) * ratio;
+      totalCarbs += (ing.carbsPer100 ?? 0) * ratio;
+      totalFat += (ing.fatPer100 ?? 0) * ratio;
+    }
+
+    final s = servings > 0 ? servings : 1;
+    caloriesPerServing = (totalCalories / s).round();
+    proteinGrams = double.parse((totalProtein / s).toStringAsFixed(1));
+    carbsGrams = double.parse((totalCarbs / s).toStringAsFixed(1));
+    fatGrams = double.parse((totalFat / s).toStringAsFixed(1));
   }
 
   void addStep() {
@@ -60,6 +99,7 @@ class RecipeFormProvider extends ChangeNotifier {
           timerSeconds: steps[i].timerSeconds,
         );
       }
+      _recalculateCookTime();
       notifyListeners();
     }
   }
@@ -72,6 +112,16 @@ class RecipeFormProvider extends ChangeNotifier {
       imageUrl: old.imageUrl,
       timerSeconds: timerSeconds ?? old.timerSeconds,
     );
+    _recalculateCookTime();
+    notifyListeners();
+  }
+
+  void _recalculateCookTime() {
+    int totalSeconds = 0;
+    for (final step in steps) {
+      totalSeconds += step.timerSeconds ?? 0;
+    }
+    cookTimeMinutes = (totalSeconds / 60).ceil();
   }
 
   void setImage(File file) {
@@ -125,9 +175,9 @@ class RecipeFormProvider extends ChangeNotifier {
     category = 'Breakfast';
     servings = 1;
     prepTimeMinutes = 10;
-    cookTimeMinutes = 15;
+    cookTimeMinutes = 0;
     imageFile = null;
-    ingredients = [Ingredient(name: '', amount: '')];
+    ingredients = [];
     steps = [RecipeStep(order: 1, instruction: '')];
     caloriesPerServing = null;
     proteinGrams = null;

@@ -109,7 +109,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
             ),
             const SizedBox(height: 12),
 
-            // Servings, Prep time, Cook time
+            // Servings and Prep time
             Row(
               children: [
                 Expanded(
@@ -143,24 +143,46 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: TextFormField(
-                    initialValue: formProvider.cookTimeMinutes.toString(),
-                    decoration: InputDecoration(
-                      labelText: l10n.cookTime,
-                      border: const OutlineInputBorder(),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade400),
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (v) {
-                      final n = int.tryParse(v);
-                      if (n != null) formProvider.cookTimeMinutes = n;
-                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.cookTime,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        Text(
+                          '${formProvider.cookTimeMinutes} min',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
+            if (formProvider.cookTimeMinutes > 0 || formProvider.prepTimeMinutes > 0)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  'Total: ${formProvider.prepTimeMinutes + formProvider.cookTimeMinutes} min',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
+              ),
             const SizedBox(height: 20),
 
-            // Ingredients
+            // Ingredients (from materials database)
             const IngredientInputList(),
             const SizedBox(height: 20),
 
@@ -168,71 +190,45 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
             const StepInputList(),
             const SizedBox(height: 20),
 
-            // Nutrition section
-            Text(
-              'Nutrition',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: l10n.calories,
-                      border: const OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (v) =>
-                        formProvider.caloriesPerServing = int.tryParse(v),
+            // Auto-calculated nutrition
+            if (formProvider.ingredients.isNotEmpty) ...[
+              Text(
+                'Nutrition (auto-calculated per serving)',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _NutritionChip(
+                        label: l10n.calories,
+                        value: '${formProvider.caloriesPerServing ?? 0}',
+                        unit: 'kcal',
+                      ),
+                      _NutritionChip(
+                        label: l10n.protein,
+                        value: '${formProvider.proteinGrams ?? 0}',
+                        unit: 'g',
+                      ),
+                      _NutritionChip(
+                        label: l10n.carbs,
+                        value: '${formProvider.carbsGrams ?? 0}',
+                        unit: 'g',
+                      ),
+                      _NutritionChip(
+                        label: l10n.fat,
+                        value: '${formProvider.fatGrams ?? 0}',
+                        unit: 'g',
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: l10n.protein,
-                      border: const OutlineInputBorder(),
-                    ),
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    onChanged: (v) =>
-                        formProvider.proteinGrams = double.tryParse(v),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: l10n.carbs,
-                      border: const OutlineInputBorder(),
-                    ),
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    onChanged: (v) =>
-                        formProvider.carbsGrams = double.tryParse(v),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: l10n.fat,
-                      border: const OutlineInputBorder(),
-                    ),
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    onChanged: (v) =>
-                        formProvider.fatGrams = double.tryParse(v),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
+              ),
+              const SizedBox(height: 20),
+            ],
 
             // Submit button
             SizedBox(
@@ -252,6 +248,40 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _NutritionChip extends StatelessWidget {
+  final String label;
+  final String value;
+  final String unit;
+
+  const _NutritionChip({
+    required this.label,
+    required this.value,
+    required this.unit,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        Text(unit, style: Theme.of(context).textTheme.bodySmall),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Colors.grey[600],
+              ),
+        ),
+      ],
     );
   }
 }

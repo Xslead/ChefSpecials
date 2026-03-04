@@ -166,4 +166,82 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get comingSoon => 'Yakında';
+
+  @override
+  String get breakfast => 'Kahvaltı';
+
+  @override
+  String get lunch => 'Öğle Yemeği';
+
+  @override
+  String get dinner => 'Akşam Yemeği';
+
+  @override
+  String get snack => 'Atıştırmalık';
+
+  @override
+  String get addFood => 'Yiyecek Ekle';
+
+  @override
+  String get addRecipeToMeal => 'Tarif Ekle';
+
+  @override
+  String get nutritionGoals => 'Beslenme Hedefleri';
+
+  @override
+  String get dailySummary => 'Günlük Özet';
+
+  @override
+  String get calorieTarget => 'Kalori Hedefi';
+
+  @override
+  String get proteinTarget => 'Protein Hedefi';
+
+  @override
+  String get carbsTarget => 'Karbonhidrat Hedefi';
+
+  @override
+  String get fatTarget => 'Yağ Hedefi';
+
+  @override
+  String get kcal => 'kcal';
+
+  @override
+  String get gram => 'g';
+
+  @override
+  String get ml => 'mL';
+
+  @override
+  String get quantity => 'Miktar';
+
+  @override
+  String get selectFoodItem => 'Yiyecek Seç';
+
+  @override
+  String get selectRecipe => 'Tarif Seç';
+
+  @override
+  String get mealType => 'Öğün Türü';
+
+  @override
+  String get noMealsYet => 'Henüz öğün kaydedilmedi';
+
+  @override
+  String get addToMeal => 'Öğüne Ekle';
+
+  @override
+  String get goalsSaved => 'Hedefler kaydedildi';
+
+  @override
+  String get today => 'Bugün';
+
+  @override
+  String get remaining => 'Kalan';
+
+  @override
+  String get exceeded => 'Aşıldı';
+
+  @override
+  String get ofLabel => '/';
 }

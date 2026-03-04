@@ -415,6 +415,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Coming Soon'**
   String get comingSoon;
+
+  /// No description provided for @breakfast.
+  ///
+  /// In en, this message translates to:
+  /// **'Breakfast'**
+  String get breakfast;
+
+  /// No description provided for @lunch.
+  ///
+  /// In en, this message translates to:
+  /// **'Lunch'**
+  String get lunch;
+
+  /// No description provided for @dinner.
+  ///
+  /// In en, this message translates to:
+  /// **'Dinner'**
+  String get dinner;
+
+  /// No description provided for @snack.
+  ///
+  /// In en, this message translates to:
+  /// **'Snack'**
+  String get snack;
+
+  /// No description provided for @addFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Food'**
+  String get addFood;
+
+  /// No description provided for @addRecipeToMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Recipe'**
+  String get addRecipeToMeal;
+
+  /// No description provided for @nutritionGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition Goals'**
+  String get nutritionGoals;
+
+  /// No description provided for @dailySummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Summary'**
+  String get dailySummary;
+
+  /// No description provided for @calorieTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Calorie Target'**
+  String get calorieTarget;
+
+  /// No description provided for @proteinTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein Target'**
+  String get proteinTarget;
+
+  /// No description provided for @carbsTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs Target'**
+  String get carbsTarget;
+
+  /// No description provided for @fatTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Fat Target'**
+  String get fatTarget;
+
+  /// No description provided for @kcal.
+  ///
+  /// In en, this message translates to:
+  /// **'kcal'**
+  String get kcal;
+
+  /// No description provided for @gram.
+  ///
+  /// In en, this message translates to:
+  /// **'g'**
+  String get gram;
+
+  /// No description provided for @ml.
+  ///
+  /// In en, this message translates to:
+  /// **'mL'**
+  String get ml;
+
+  /// No description provided for @quantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get quantity;
+
+  /// No description provided for @selectFoodItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Food Item'**
+  String get selectFoodItem;
+
+  /// No description provided for @selectRecipe.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Recipe'**
+  String get selectRecipe;
+
+  /// No description provided for @mealType.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal Type'**
+  String get mealType;
+
+  /// No description provided for @noMealsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No meals logged yet'**
+  String get noMealsYet;
+
+  /// No description provided for @addToMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Meal'**
+  String get addToMeal;
+
+  /// No description provided for @goalsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Goals saved'**
+  String get goalsSaved;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @remaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get remaining;
+
+  /// No description provided for @exceeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Exceeded'**
+  String get exceeded;
+
+  /// No description provided for @ofLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'of'**
+  String get ofLabel;
 }
 
 class _AppLocalizationsDelegate

@@ -128,21 +128,6 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: TextFormField(
-                    initialValue: formProvider.prepTimeMinutes.toString(),
-                    decoration: InputDecoration(
-                      labelText: l10n.prepTime,
-                      border: const OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (v) {
-                      final n = int.tryParse(v);
-                      if (n != null) formProvider.prepTimeMinutes = n;
-                    },
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
                     decoration: BoxDecoration(
@@ -153,18 +138,33 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          l10n.cookTime,
+                          l10n.prepTime,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey.shade600,
                           ),
                         ),
                         Text(
-                          '${formProvider.cookTimeMinutes} min',
+                          '${formProvider.prepTimeMinutes} min',
                           style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextFormField(
+                    initialValue: formProvider.cookTimeMinutes.toString(),
+                    decoration: InputDecoration(
+                      labelText: l10n.cookTime,
+                      border: const OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (v) {
+                      final n = int.tryParse(v);
+                      if (n != null) formProvider.cookTimeMinutes = n;
+                    },
                   ),
                 ),
               ],

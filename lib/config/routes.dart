@@ -18,6 +18,9 @@ import '../screens/favorites/favorites_screen.dart';
 import '../screens/profile/edit_profile_screen.dart';
 import '../screens/food_items/add_food_item_screen.dart';
 import '../screens/food_items/food_item_detail_screen.dart';
+import '../screens/daily_tracker/add_meal_entry_screen.dart';
+import '../screens/daily_tracker/nutrition_goals_screen.dart';
+import '../models/meal_entry.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -135,6 +138,19 @@ final GoRouter router = GoRouter(
         }
         return FoodItemDetailScreen(foodItem: foodItem);
       },
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/add-meal-entry',
+      builder: (context, state) {
+        final mealType = state.extra as MealType? ?? MealType.snack;
+        return AddMealEntryScreen(mealType: mealType);
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/nutrition-goals',
+      builder: (context, state) => const NutritionGoalsScreen(),
     ),
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,

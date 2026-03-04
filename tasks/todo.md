@@ -96,7 +96,7 @@
 - [x] Cook time auto-calculated from step timers (sum of all step timerSeconds)
 - [x] Materials accessible from Home screen AppBar (kitchen icon)
 - [x] Self-test: flutter analyze — 0 issues
-- **Status:** READY TO PUSH
+- **Status:** PUSHED ✅
 
 ---
 
@@ -116,27 +116,30 @@
 - [x] l10n updated (EN + TR): myRecipes, dailyTracker, materials, sortBy, newest, oldest, all, comingSoon
 - [x] Sub-screens (add-recipe, recipe detail, cooking mode, etc.) push on top of shell via parentNavigatorKey
 - [x] Self-test: flutter analyze — 0 issues
-- **Status:** READY TO PUSH
+- **Status:** PUSHED ✅
 
 ---
 
 ## Push 8: Daily Tracker + Nutrition Goals
-- [ ] **Models:** DailyLog, MealEntry (breakfast, lunch, dinner, snack), NutritionGoal
-- [ ] **Services:** DailyTrackerService (Firestore CRUD)
-- [ ] **Providers:** DailyTrackerProvider
-- [ ] **DailyTrackerScreen** — date picker + meal sections
-- [ ] Meal sections: Breakfast, Lunch, Dinner, Snack
-- [ ] Add food items (from materials DB) or full recipes to a meal slot
-- [ ] Specify quantity (e.g. 150g chicken, 200mL milk)
-- [ ] Auto-calculate nutrition based on quantity × per-100g values
-- [ ] Daily nutrition summary: total calories, protein, carbs, fat
-- [ ] Per-meal nutrition breakdown
-- [ ] Circular/bar charts for macro visualization
-- [ ] **Nutrition Goals:** set daily calorie/protein/carbs/fat targets
-- [ ] Progress rings showing current vs target on Daily Tracker
-- [ ] DailyTrackerProvider added to MultiProvider
-- [ ] Self-test: flutter analyze + build
-- **Status:** PENDING
+- [x] **Models:** DailyLog, MealEntry (breakfast, lunch, dinner, snack), NutritionGoal
+- [x] **Services:** DailyTrackerService (Firestore CRUD)
+- [x] **Providers:** DailyTrackerProvider
+- [x] **DailyTrackerScreen** — date picker + meal sections
+- [x] Meal sections: Breakfast, Lunch, Dinner, Snack
+- [x] Add food items (from materials DB) or full recipes to a meal slot
+- [x] Specify quantity (e.g. 150g chicken, 200mL milk)
+- [x] Auto-calculate nutrition based on quantity × per-100g values
+- [x] Daily nutrition summary: total calories, protein, carbs, fat
+- [x] Per-meal nutrition breakdown
+- [x] Circular/bar charts for macro visualization (fl_chart BarChart + custom CalorieRingPainter)
+- [x] **Nutrition Goals:** set daily calorie/protein/carbs/fat targets
+- [x] Progress rings showing current vs target on Daily Tracker
+- [x] DailyTrackerProvider added to MultiProvider
+- [x] Firestore security rules deployed (daily_logs, nutrition_goals)
+- [x] l10n updated (EN + TR): breakfast, lunch, dinner, snack, nutritionGoals, dailySummary, etc.
+- [x] Routes: /add-meal-entry, /nutrition-goals added
+- [x] Self-test: flutter analyze — 0 issues
+- **Status:** READY TO PUSH
 
 ---
 

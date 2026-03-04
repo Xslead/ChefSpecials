@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/recipe.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/recipe_provider.dart';
 import 'widgets/ingredient_list_view.dart';
 import 'widgets/step_overview_list.dart';
 
@@ -74,10 +77,48 @@ class RecipeDetailScreen extends StatelessWidget {
     );
   }
 
+  bool _isOwner(BuildContext context) {
+    final userId = context.read<AuthProvider>().userModel?.uid;
+    return userId != null && userId == recipe.authorId;
+  }
+
+  Future<void> _deleteRecipe(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.delete),
+        content: Text('${l10n.delete} "${recipe.title}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: Text(l10n.delete),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && context.mounted) {
+      await context.read<RecipeProvider>().deleteRecipe(recipe.id!);
+      if (context.mounted) context.pop();
+    }
+  }
+
   Widget _buildSliverAppBar(BuildContext context) {
     return SliverAppBar(
       expandedHeight: 280,
       pinned: true,
+      actions: [
+        if (_isOwner(context))
+          IconButton(
+            icon: const Icon(Icons.delete_outline),
+            onPressed: () => _deleteRecipe(context),
+          ),
+      ],
       flexibleSpace: FlexibleSpaceBar(
         background: recipe.imageUrl != null
             ? CachedNetworkImage(

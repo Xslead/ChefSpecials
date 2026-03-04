@@ -43,6 +43,10 @@ class RecipeProvider extends ChangeNotifier {
     );
   }
 
+  void refresh() {
+    _listenToRecipes();
+  }
+
   void setCategory(String? category) {
     _selectedCategory = category;
     notifyListeners();

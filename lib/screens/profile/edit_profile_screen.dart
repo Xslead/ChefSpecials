@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../providers/recipe_provider.dart';
 import '../../services/recipe_service.dart';
 import '../../services/storage_service.dart';
 import '../../services/user_service.dart';
@@ -75,6 +76,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     // Update author name on all user's recipes if name changed.
     if (newName != user.fullName) {
       await RecipeService().updateAuthorName(user.uid, newName);
+      if (mounted) {
+        context.read<RecipeProvider>().refresh();
+      }
     }
 
     // Refresh the user model in AuthProvider.

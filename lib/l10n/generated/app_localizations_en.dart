@@ -166,4 +166,82 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get comingSoon => 'Coming Soon';
+
+  @override
+  String get breakfast => 'Breakfast';
+
+  @override
+  String get lunch => 'Lunch';
+
+  @override
+  String get dinner => 'Dinner';
+
+  @override
+  String get snack => 'Snack';
+
+  @override
+  String get addFood => 'Add Food';
+
+  @override
+  String get addRecipeToMeal => 'Add Recipe';
+
+  @override
+  String get nutritionGoals => 'Nutrition Goals';
+
+  @override
+  String get dailySummary => 'Daily Summary';
+
+  @override
+  String get calorieTarget => 'Calorie Target';
+
+  @override
+  String get proteinTarget => 'Protein Target';
+
+  @override
+  String get carbsTarget => 'Carbs Target';
+
+  @override
+  String get fatTarget => 'Fat Target';
+
+  @override
+  String get kcal => 'kcal';
+
+  @override
+  String get gram => 'g';
+
+  @override
+  String get ml => 'mL';
+
+  @override
+  String get quantity => 'Quantity';
+
+  @override
+  String get selectFoodItem => 'Select Food Item';
+
+  @override
+  String get selectRecipe => 'Select Recipe';
+
+  @override
+  String get mealType => 'Meal Type';
+
+  @override
+  String get noMealsYet => 'No meals logged yet';
+
+  @override
+  String get addToMeal => 'Add to Meal';
+
+  @override
+  String get goalsSaved => 'Goals saved';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get remaining => 'Remaining';
+
+  @override
+  String get exceeded => 'Exceeded';
+
+  @override
+  String get ofLabel => 'of';
 }

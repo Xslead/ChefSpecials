@@ -99,7 +99,7 @@ class RecipeFormProvider extends ChangeNotifier {
           timerSeconds: steps[i].timerSeconds,
         );
       }
-      _recalculateCookTime();
+      _recalculatePrepTime();
       notifyListeners();
     }
   }
@@ -112,16 +112,16 @@ class RecipeFormProvider extends ChangeNotifier {
       imageUrl: old.imageUrl,
       timerSeconds: timerSeconds ?? old.timerSeconds,
     );
-    _recalculateCookTime();
+    _recalculatePrepTime();
     notifyListeners();
   }
 
-  void _recalculateCookTime() {
+  void _recalculatePrepTime() {
     int totalSeconds = 0;
     for (final step in steps) {
       totalSeconds += step.timerSeconds ?? 0;
     }
-    cookTimeMinutes = (totalSeconds / 60).ceil();
+    prepTimeMinutes = (totalSeconds / 60).ceil();
   }
 
   void setImage(File file) {

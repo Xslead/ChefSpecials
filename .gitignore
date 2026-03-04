@@ -73,7 +73,6 @@ firebase-debug.*.log
 
 # Plan/architecture files
 architecture-plan.md
-todo.md
 
 # Coverage
 coverage/

@@ -13,11 +13,20 @@ class FoodItemProvider extends ChangeNotifier {
   String _searchQuery = '';
   StreamSubscription? _subscription;
 
+  bool _initialized = false;
+
   List<FoodItem> get foodItems => _foodItems;
   List<FoodItem> get searchResults => _searchResults;
   String get selectedCategory => _selectedCategory;
   bool get isLoading => _isLoading;
   String get searchQuery => _searchQuery;
+
+  void ensureInitialized() {
+    if (!_initialized) {
+      _initialized = true;
+      listenToFoodItems();
+    }
+  }
 
   void listenToFoodItems() {
     _isLoading = true;
@@ -27,11 +36,17 @@ class FoodItemProvider extends ChangeNotifier {
         ? _foodItemService.getFoodItems()
         : _foodItemService.getFoodItemsByCategory(_selectedCategory);
 
-    _subscription = stream.listen((items) {
-      _foodItems = items;
-      _isLoading = false;
-      notifyListeners();
-    });
+    _subscription = stream.listen(
+      (items) {
+        _foodItems = items;
+        _isLoading = false;
+        notifyListeners();
+      },
+      onError: (error) {
+        _isLoading = false;
+        notifyListeners();
+      },
+    );
   }
 
   void setCategory(String category) {

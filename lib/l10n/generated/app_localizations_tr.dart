@@ -142,4 +142,28 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get turkish => 'Türkçe';
+
+  @override
+  String get myRecipes => 'Tariflerim';
+
+  @override
+  String get dailyTracker => 'Günlük Takip';
+
+  @override
+  String get materials => 'Malzemeler';
+
+  @override
+  String get sortBy => 'Sırala';
+
+  @override
+  String get newest => 'En Yeni';
+
+  @override
+  String get oldest => 'En Eski';
+
+  @override
+  String get all => 'Tümü';
+
+  @override
+  String get comingSoon => 'Yakında';
 }

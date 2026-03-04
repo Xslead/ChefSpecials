@@ -11,6 +11,8 @@ class RecipeProvider extends ChangeNotifier {
   bool _isLoading = false;
   StreamSubscription? _subscription;
 
+  bool _initialized = false;
+
   List<Recipe> get recipes => _selectedCategory == null
       ? _recipes
       : _recipes.where((r) => r.category == _selectedCategory).toList();
@@ -18,17 +20,27 @@ class RecipeProvider extends ChangeNotifier {
   String? get selectedCategory => _selectedCategory;
   bool get isLoading => _isLoading;
 
-  RecipeProvider() {
-    _listenToRecipes();
+  void ensureInitialized() {
+    if (!_initialized) {
+      _initialized = true;
+      _listenToRecipes();
+    }
   }
 
   void _listenToRecipes() {
     _isLoading = true;
-    _subscription = _recipeService.getRecipesStream().listen((recipes) {
-      _recipes = recipes;
-      _isLoading = false;
-      notifyListeners();
-    });
+    _subscription?.cancel();
+    _subscription = _recipeService.getRecipesStream().listen(
+      (recipes) {
+        _recipes = recipes;
+        _isLoading = false;
+        notifyListeners();
+      },
+      onError: (error) {
+        _isLoading = false;
+        notifyListeners();
+      },
+    );
   }
 
   void setCategory(String? category) {

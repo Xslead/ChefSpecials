@@ -142,4 +142,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get turkish => 'Turkish';
+
+  @override
+  String get myRecipes => 'My Recipes';
+
+  @override
+  String get dailyTracker => 'Daily Tracker';
+
+  @override
+  String get materials => 'Materials';
+
+  @override
+  String get sortBy => 'Sort by';
+
+  @override
+  String get newest => 'Newest';
+
+  @override
+  String get oldest => 'Oldest';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get comingSoon => 'Coming Soon';
 }

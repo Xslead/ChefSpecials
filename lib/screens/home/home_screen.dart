@@ -20,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<RecipeProvider>().ensureInitialized();
       final user = context.read<AuthProvider>().userModel;
       if (user != null) {
         context.read<FavoriteProvider>().listenToFavorites(user.uid);
@@ -37,21 +38,12 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(l10n.appTitle),
         actions: [
           IconButton(
-            icon: const Icon(Icons.kitchen_outlined),
-            tooltip: 'Materials',
-            onPressed: () => context.push('/food-items'),
-          ),
-          IconButton(
             icon: const Icon(Icons.search),
             onPressed: () => context.push('/search'),
           ),
           IconButton(
             icon: const Icon(Icons.favorite_border),
             onPressed: () => context.push('/favorites'),
-          ),
-          IconButton(
-            icon: const Icon(Icons.person_outline),
-            onPressed: () => context.push('/profile'),
           ),
         ],
       ),
@@ -86,6 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'home_fab',
         onPressed: () => context.push('/add-recipe'),
         child: const Icon(Icons.add),
       ),

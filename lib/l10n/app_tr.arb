@@ -44,5 +44,13 @@
   "searchHint": "Tarif ara...",
   "language": "Dil",
   "english": "İngilizce",
-  "turkish": "Türkçe"
+  "turkish": "Türkçe",
+  "myRecipes": "Tariflerim",
+  "dailyTracker": "Günlük Takip",
+  "materials": "Malzemeler",
+  "sortBy": "Sırala",
+  "newest": "En Yeni",
+  "oldest": "En Eski",
+  "all": "Tümü",
+  "comingSoon": "Yakında"
 }

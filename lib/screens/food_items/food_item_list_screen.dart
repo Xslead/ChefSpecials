@@ -18,28 +18,22 @@ const List<String> _foodItemCategories = [
   'Other',
 ];
 
-class FoodItemListScreen extends StatelessWidget {
+class FoodItemListScreen extends StatefulWidget {
   const FoodItemListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => FoodItemProvider()..listenToFoodItems(),
-      child: const _FoodItemListBody(),
-    );
-  }
+  State<FoodItemListScreen> createState() => _FoodItemListScreenState();
 }
 
-class _FoodItemListBody extends StatefulWidget {
-  const _FoodItemListBody();
-
-  @override
-  State<_FoodItemListBody> createState() => _FoodItemListBodyState();
-}
-
-class _FoodItemListBodyState extends State<_FoodItemListBody> {
+class _FoodItemListScreenState extends State<FoodItemListScreen> {
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<FoodItemProvider>().ensureInitialized();
+  }
 
   @override
   void dispose() {
@@ -104,6 +98,7 @@ class _FoodItemListBodyState extends State<_FoodItemListBody> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'materials_fab',
         onPressed: () => context.push('/add-food-item'),
         child: const Icon(Icons.add),
       ),

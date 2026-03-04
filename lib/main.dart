@@ -6,6 +6,7 @@ import 'providers/auth_provider.dart';
 import 'providers/locale_provider.dart';
 import 'providers/recipe_provider.dart';
 import 'providers/favorite_provider.dart';
+import 'providers/food_item_provider.dart';
 import 'app.dart';
 
 void main() async {
@@ -20,6 +21,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
         ChangeNotifierProvider(create: (_) => RecipeProvider()),
         ChangeNotifierProvider(create: (_) => FavoriteProvider()),
+        ChangeNotifierProvider(create: (_) => FoodItemProvider()),
       ],
       child: const ChefSpecialsApp(),
     ),

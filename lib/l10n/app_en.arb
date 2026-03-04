@@ -44,5 +44,13 @@
   "searchHint": "Search recipes...",
   "language": "Language",
   "english": "English",
-  "turkish": "Turkish"
+  "turkish": "Turkish",
+  "myRecipes": "My Recipes",
+  "dailyTracker": "Daily Tracker",
+  "materials": "Materials",
+  "sortBy": "Sort by",
+  "newest": "Newest",
+  "oldest": "Oldest",
+  "all": "All",
+  "comingSoon": "Coming Soon"
 }

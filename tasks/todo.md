@@ -101,18 +101,22 @@
 ---
 
 ## Push 7: Bottom Navigation + My Recipes
-- [ ] **Bottom Navigation Bar** (5 tabs): Home, My Recipes, Daily Tracker, Materials, Profile
-- [ ] ShellScreen with BottomNavigationBar + IndexedStack
-- [ ] GoRouter updated to ShellRoute with bottom nav tabs
-- [ ] **My Recipes Tab:**
-  - [ ] MyRecipesScreen — only logged-in user's recipes
-  - [ ] Filter/sort options (by date, category)
-  - [ ] FAB to add new recipe
-- [ ] Profile tab — existing ProfileScreen moved into bottom nav
-- [ ] Materials tab — FoodItemListScreen in bottom nav
-- [ ] Providers updated if needed
-- [ ] Self-test: flutter analyze + build
-- **Status:** PENDING
+- [x] **Bottom Navigation Bar** (5 tabs): Home, My Recipes, Daily Tracker, Materials, Profile
+- [x] ShellScreen with NavigationBar + StatefulShellRoute.indexedStack
+- [x] GoRouter updated to StatefulShellRoute with 5 branches
+- [x] **My Recipes Tab:**
+  - [x] MyRecipesScreen — only logged-in user's recipes
+  - [x] Filter/sort options (by date, category)
+  - [x] FAB to add new recipe
+- [x] Profile tab — existing ProfileScreen moved into bottom nav
+- [x] Materials tab — FoodItemListScreen in bottom nav
+- [x] FoodItemProvider moved to global MultiProvider
+- [x] HomeScreen AppBar cleaned (removed Materials + Profile icons, kept Search + Favorites)
+- [x] DailyTrackerScreen placeholder created
+- [x] l10n updated (EN + TR): myRecipes, dailyTracker, materials, sortBy, newest, oldest, all, comingSoon
+- [x] Sub-screens (add-recipe, recipe detail, cooking mode, etc.) push on top of shell via parentNavigatorKey
+- [x] Self-test: flutter analyze — 0 issues
+- **Status:** READY TO PUSH
 
 ---
 

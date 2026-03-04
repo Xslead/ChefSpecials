@@ -9,6 +9,8 @@ import '../screens/recipe_detail/recipe_detail_screen.dart';
 import '../screens/cooking_mode/cooking_mode_screen.dart';
 import '../screens/search/search_screen.dart';
 import '../screens/favorites/favorites_screen.dart';
+import '../screens/profile/profile_screen.dart';
+import '../screens/profile/edit_profile_screen.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/login',
@@ -36,6 +38,14 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/favorites',
       builder: (context, state) => const FavoritesScreen(),
+    ),
+    GoRoute(
+      path: '/profile',
+      builder: (context, state) => const ProfileScreen(),
+    ),
+    GoRoute(
+      path: '/edit-profile',
+      builder: (context, state) => const EditProfileScreen(),
     ),
     GoRoute(
       path: '/recipe/:id',

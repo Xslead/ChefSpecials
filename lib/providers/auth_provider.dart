@@ -87,6 +87,13 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> refreshUser() async {
+    if (_firebaseUser != null) {
+      _userModel = await _userService.getUser(_firebaseUser!.uid);
+      notifyListeners();
+    }
+  }
+
   Future<void> signOut() async {
     await _authService.signOut();
   }

@@ -45,13 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () => context.push('/favorites'),
           ),
           IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await context.read<AuthProvider>().signOut();
-              if (context.mounted) {
-                context.go('/login');
-              }
-            },
+            icon: const Icon(Icons.person_outline),
+            onPressed: () => context.push('/profile'),
           ),
         ],
       ),

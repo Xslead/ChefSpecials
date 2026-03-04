@@ -20,6 +20,14 @@ class StorageService {
     return await ref.getDownloadURL();
   }
 
+  Future<String> uploadUserAvatar(File file) async {
+    final ref = _storage
+        .ref()
+        .child('user_avatars/${DateTime.now().millisecondsSinceEpoch}.jpg');
+    await ref.putFile(file);
+    return await ref.getDownloadURL();
+  }
+
   Future<void> deleteImage(String url) async {
     try {
       final ref = _storage.refFromURL(url);

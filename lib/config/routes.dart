@@ -11,6 +11,7 @@ import '../screens/daily_tracker/daily_tracker_screen.dart';
 import '../screens/food_items/food_item_list_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/add_recipe/add_recipe_screen.dart';
+import '../screens/edit_recipe/edit_recipe_screen.dart';
 import '../screens/recipe_detail/recipe_detail_screen.dart';
 import '../screens/cooking_mode/cooking_mode_screen.dart';
 import '../screens/search/search_screen.dart';
@@ -95,6 +96,17 @@ final GoRouter router = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/add-recipe',
       builder: (context, state) => const AddRecipeScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/edit-recipe/:id',
+      builder: (context, state) {
+        final recipe = state.extra as Recipe?;
+        if (recipe == null) {
+          return const Scaffold(body: Center(child: Text('Recipe not found')));
+        }
+        return EditRecipeScreen(recipe: recipe);
+      },
     ),
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,

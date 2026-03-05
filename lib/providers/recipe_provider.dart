@@ -66,6 +66,10 @@ class RecipeProvider extends ChangeNotifier {
     return await _recipeService.createRecipe(recipe);
   }
 
+  Future<void> updateRecipe(String id, Map<String, dynamic> data) async {
+    await _recipeService.updateRecipe(id, data);
+  }
+
   Future<void> deleteRecipe(String id) async {
     await _recipeService.deleteRecipe(id);
   }

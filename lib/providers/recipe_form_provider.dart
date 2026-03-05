@@ -16,6 +16,7 @@ class RecipeFormProvider extends ChangeNotifier {
   int prepTimeMinutes = 10;
   int cookTimeMinutes = 0;
   File? imageFile;
+  String? existingImageUrl;
   List<Ingredient> ingredients = [];
   List<RecipeStep> steps = [RecipeStep(order: 1, instruction: '')];
   int? caloriesPerServing;
@@ -129,11 +130,30 @@ class RecipeFormProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void loadFromRecipe(Recipe recipe) {
+    title = recipe.title;
+    description = recipe.description;
+    category = recipe.category;
+    servings = recipe.servings;
+    prepTimeMinutes = recipe.prepTimeMinutes;
+    cookTimeMinutes = recipe.cookTimeMinutes;
+    existingImageUrl = recipe.imageUrl;
+    ingredients = List.from(recipe.ingredients);
+    steps = recipe.steps.isNotEmpty
+        ? List.from(recipe.steps)
+        : [RecipeStep(order: 1, instruction: '')];
+    caloriesPerServing = recipe.caloriesPerServing;
+    proteinGrams = recipe.proteinGrams;
+    carbsGrams = recipe.carbsGrams;
+    fatGrams = recipe.fatGrams;
+    notifyListeners();
+  }
+
   Future<Recipe> buildRecipe(String authorId, String authorName) async {
     isSubmitting = true;
     notifyListeners();
 
-    String? imageUrl;
+    String? imageUrl = existingImageUrl;
     if (imageFile != null) {
       imageUrl = await _storageService.uploadRecipeImage(imageFile!);
     }
@@ -177,6 +197,7 @@ class RecipeFormProvider extends ChangeNotifier {
     prepTimeMinutes = 10;
     cookTimeMinutes = 0;
     imageFile = null;
+    existingImageUrl = null;
     ingredients = [];
     steps = [RecipeStep(order: 1, instruction: '')];
     caloriesPerServing = null;

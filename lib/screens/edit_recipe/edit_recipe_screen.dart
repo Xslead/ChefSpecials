@@ -5,33 +5,38 @@ import 'package:provider/provider.dart';
 import '../../config/constants.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../models/recipe.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_form_provider.dart';
 import '../../providers/recipe_provider.dart';
-import 'widgets/image_picker_tile.dart';
-import 'widgets/ingredient_input_list.dart';
-import 'widgets/step_input_list.dart';
+import '../add_recipe/widgets/image_picker_tile.dart';
+import '../add_recipe/widgets/ingredient_input_list.dart';
+import '../add_recipe/widgets/step_input_list.dart';
 
-class AddRecipeScreen extends StatelessWidget {
-  const AddRecipeScreen({super.key});
+class EditRecipeScreen extends StatelessWidget {
+  final Recipe recipe;
+
+  const EditRecipeScreen({super.key, required this.recipe});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => RecipeFormProvider(),
-      child: const _AddRecipeForm(),
+      create: (_) => RecipeFormProvider()..loadFromRecipe(recipe),
+      child: _EditRecipeForm(recipe: recipe),
     );
   }
 }
 
-class _AddRecipeForm extends StatefulWidget {
-  const _AddRecipeForm();
+class _EditRecipeForm extends StatefulWidget {
+  final Recipe recipe;
+
+  const _EditRecipeForm({required this.recipe});
 
   @override
-  State<_AddRecipeForm> createState() => _AddRecipeFormState();
+  State<_EditRecipeForm> createState() => _EditRecipeFormState();
 }
 
-class _AddRecipeFormState extends State<_AddRecipeForm> {
+class _EditRecipeFormState extends State<_EditRecipeForm> {
   final _formKey = GlobalKey<FormState>();
 
   Future<void> _submit() async {
@@ -43,11 +48,11 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
     final user = authProvider.userModel!;
 
     try {
-      final recipe = await formProvider.buildRecipe(user.uid, user.fullName);
-      await recipeProvider.createRecipe(recipe);
-      if (mounted) {
-        context.go('/home');
-      }
+      final updatedRecipe =
+          await formProvider.buildRecipe(user.uid, user.fullName);
+      await recipeProvider.updateRecipe(
+          widget.recipe.id!, updatedRecipe.toMap());
+      if (mounted) context.pop();
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -65,7 +70,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
     return Scaffold(
       body: Column(
         children: [
-          // Custom header
+          // Header
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -92,15 +97,15 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Icon(
-                        Icons.restaurant_menu,
+                        Icons.edit_outlined,
                         color: AppTheme.primaryColor,
                         size: 20,
                       ),
                     ),
                     const SizedBox(width: 10),
-                    Text(
-                      l10n.addRecipe,
-                      style: const TextStyle(
+                    const Text(
+                      'Edit Recipe',
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         letterSpacing: -0.3,
@@ -113,8 +118,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                           ? const SizedBox(
                               height: 18,
                               width: 18,
-                              child:
-                                  CircularProgressIndicator(strokeWidth: 2),
+                              child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : Text(
                               l10n.save,
@@ -137,14 +141,13 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 40),
                 children: [
-                  // Image picker
                   const ImagePickerTile(),
                   const SizedBox(height: 20),
 
-                  // Recipe name
                   _buildSectionLabel(l10n.recipeName),
                   const SizedBox(height: 8),
                   TextFormField(
+                    initialValue: formProvider.title,
                     decoration: InputDecoration(
                       hintText: l10n.recipeName,
                       prefixIcon: Icon(
@@ -158,10 +161,10 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Description
                   _buildSectionLabel(l10n.description),
                   const SizedBox(height: 8),
                   TextFormField(
+                    initialValue: formProvider.description,
                     decoration: InputDecoration(
                       hintText: l10n.description,
                       prefixIcon: Icon(
@@ -177,7 +180,6 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Category
                   _buildSectionLabel(l10n.category),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
@@ -275,15 +277,12 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Ingredients
                   const IngredientInputList(),
                   const SizedBox(height: 24),
 
-                  // Steps
                   const StepInputList(),
                   const SizedBox(height: 24),
 
-                  // Auto-calculated nutrition
                   if (formProvider.ingredients.isNotEmpty) ...[
                     _buildNutritionCard(l10n, formProvider),
                     const SizedBox(height: 24),

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -24,21 +25,25 @@ class ImagePickerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageFile = context.watch<RecipeFormProvider>().imageFile;
+    final provider = context.watch<RecipeFormProvider>();
+    final imageFile = provider.imageFile;
+    final existingImageUrl = provider.existingImageUrl;
+    final hasImage = imageFile != null || existingImageUrl != null;
 
     return GestureDetector(
       onTap: () => _pickImage(context),
       child: Container(
         height: 200,
         width: double.infinity,
+        clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           color: Colors.grey.shade50,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: imageFile != null
+            color: hasImage
                 ? AppTheme.primaryColor.withValues(alpha: 0.3)
                 : Colors.grey.shade200,
-            width: imageFile != null ? 2 : 1,
+            width: hasImage ? 2 : 1,
           ),
           image: imageFile != null
               ? DecorationImage(
@@ -47,36 +52,48 @@ class ImagePickerTile extends StatelessWidget {
                 )
               : null,
         ),
-        child: imageFile == null
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 56,
-                    height: 56,
-                    decoration: BoxDecoration(
-                      color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    child: const Icon(
-                      Icons.camera_alt_outlined,
-                      size: 28,
-                      color: AppTheme.primaryColor,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Tap to add photo',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey.shade500,
-                    ),
-                  ),
-                ],
-              )
-            : null,
+        child: imageFile != null
+            ? null
+            : existingImageUrl != null
+                ? CachedNetworkImage(
+                    imageUrl: existingImageUrl,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) =>
+                        Container(color: Colors.grey.shade200),
+                    errorWidget: (context, url, error) => _placeholder(),
+                  )
+                : _placeholder(),
       ),
+    );
+  }
+
+  Widget _placeholder() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            color: AppTheme.primaryColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: const Icon(
+            Icons.camera_alt_outlined,
+            size: 28,
+            color: AppTheme.primaryColor,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          'Tap to add photo',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey.shade500,
+          ),
+        ),
+      ],
     );
   }
 }

@@ -108,16 +108,46 @@ class RecipeDetailScreen extends StatelessWidget {
     }
   }
 
+  Widget _buildCircleIconButton({
+    required IconData icon,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 6),
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          width: 36,
+          height: 36,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, color: color, size: 20),
+        ),
+      ),
+    );
+  }
+
   Widget _buildSliverAppBar(BuildContext context) {
     return SliverAppBar(
       expandedHeight: 280,
       pinned: true,
       actions: [
-        if (_isOwner(context))
-          IconButton(
-            icon: const Icon(Icons.delete_outline),
+        if (_isOwner(context)) ...[
+          _buildCircleIconButton(
+            icon: Icons.edit_outlined,
+            color: Colors.blue.shade700,
+            onPressed: () =>
+                context.push('/edit-recipe/${recipe.id}', extra: recipe),
+          ),
+          _buildCircleIconButton(
+            icon: Icons.delete_outline,
+            color: Colors.red.shade600,
             onPressed: () => _deleteRecipe(context),
           ),
+        ],
       ],
       flexibleSpace: FlexibleSpaceBar(
         background: recipe.imageUrl != null

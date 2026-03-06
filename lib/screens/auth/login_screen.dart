@@ -151,7 +151,25 @@ class _LoginScreenState extends State<LoginScreen> {
                           )
                         : Text(l10n.signIn),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: authProvider.isLoading
+                        ? null
+                        : () async {
+                            final success = await authProvider.signIn(
+                              'test@chefspecials.com',
+                              'test123456',
+                            );
+                            if (success && mounted) context.go('/home');
+                          },
+                    icon: const Icon(Icons.bolt, size: 18),
+                    label: const Text('Quick Login (Test)'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.grey.shade600,
+                      side: BorderSide(color: Colors.grey.shade400),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
                   TextButton(
                     onPressed: () => context.go('/register'),
                     child: Text(l10n.noAccount),

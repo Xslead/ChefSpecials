@@ -206,7 +206,11 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                                       return;
                                     }
                                   }
-                                  _closeSearch();
+                                  // Delay so list item taps are processed first
+                                  Future.delayed(
+                                    const Duration(milliseconds: 200),
+                                    () { if (mounted) _closeSearch(); },
+                                  );
                                 },
                               ),
                             ),

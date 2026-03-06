@@ -21,11 +21,28 @@ class MyRecipesScreen extends StatefulWidget {
 class _MyRecipesScreenState extends State<MyRecipesScreen> {
   String? _selectedCategory;
   _SortOption _sortOption = _SortOption.newest;
+  bool _isSearching = false;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   List<Recipe> _filterAndSort(List<Recipe> recipes) {
-    var filtered = _selectedCategory != null
-        ? recipes.where((r) => r.category == _selectedCategory).toList()
-        : recipes;
+    var filtered = recipes;
+
+    // Search filter
+    if (_searchQuery.isNotEmpty) {
+      filtered = filtered.where((r) => r.title.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
+    }
+
+    // Category filter
+    if (_selectedCategory != null) {
+      filtered = filtered.where((r) => r.category == _selectedCategory).toList();
+    }
 
     switch (_sortOption) {
       case _SortOption.newest:
@@ -187,6 +204,18 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                     ],
                   ),
                   const Spacer(),
+                  if (_isSearching)
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      color: AppTheme.textSecondary,
+                      onPressed: () {
+                        setState(() {
+                          _isSearching = false;
+                          _searchQuery = '';
+                          _searchController.clear();
+                        });
+                      },
+                    ),
                   PopupMenuButton<_SortOption>(
                     icon: Icon(
                       Icons.sort,
@@ -210,6 +239,92 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                     ],
                   ),
                 ],
+              ),
+              const SizedBox(height: 14),
+              // Search bar
+              GestureDetector(
+                onTap: () {
+                  if (!_isSearching) {
+                    setState(() => _isSearching = true);
+                  }
+                },
+                child: Container(
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: _isSearching
+                      ? Row(
+                          children: [
+                            const SizedBox(width: 14),
+                            Icon(
+                              Icons.search,
+                              color: Colors.grey.shade400,
+                              size: 22,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: TextField(
+                                controller: _searchController,
+                                autofocus: true,
+                                decoration: InputDecoration(
+                                  hintText: l10n.searchRecipeOrIngredient,
+                                  hintStyle: TextStyle(
+                                    color: Colors.grey.shade400,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.zero,
+                                  isDense: true,
+                                ),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                onChanged: (value) {
+                                  setState(() => _searchQuery = value);
+                                },
+                              ),
+                            ),
+                            if (_searchController.text.isNotEmpty)
+                              GestureDetector(
+                                onTap: () {
+                                  _searchController.clear();
+                                  setState(() => _searchQuery = '');
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Icon(
+                                    Icons.clear,
+                                    size: 18,
+                                    color: Colors.grey.shade400,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            const SizedBox(width: 14),
+                            Icon(
+                              Icons.search,
+                              color: Colors.grey.shade400,
+                              size: 22,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              l10n.searchRecipeOrIngredient,
+                              style: TextStyle(
+                                color: Colors.grey.shade400,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                ),
               ),
               const SizedBox(height: 14),
               // Category filter pills

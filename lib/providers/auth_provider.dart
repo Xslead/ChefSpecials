@@ -56,7 +56,19 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> register(String email, String password, String fullName) async {
+  Future<bool> register(
+    String email,
+    String password,
+    String firstName,
+    String lastName,
+    String phoneNumber, {
+    required DateTime birthDate,
+    String? gender,
+    double? heightCm,
+    double? weightKg,
+    String? activityLevel,
+    String? cookingSkillLevel,
+  }) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -66,8 +78,16 @@ class AuthProvider extends ChangeNotifier {
       final user = UserModel(
         uid: credential.user!.uid,
         email: email,
-        fullName: fullName,
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
         createdAt: DateTime.now(),
+        birthDate: birthDate,
+        gender: gender,
+        heightCm: heightCm,
+        weightKg: weightKg,
+        activityLevel: activityLevel,
+        cookingSkillLevel: cookingSkillLevel,
       );
       await _userService.createUser(user);
       _userModel = user;

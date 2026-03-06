@@ -23,12 +23,33 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
   _SortOption _sortOption = _SortOption.newest;
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
+  final GlobalKey _searchBarKey = GlobalKey();
   String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _searchFocusNode.addListener(() {
+      if (!_searchFocusNode.hasFocus && _isSearching) {
+        setState(() {
+          _isSearching = false;
+          _searchQuery = '';
+          _searchController.clear();
+        });
+      }
+    });
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
+  }
+
+  void _closeSearch() {
+    _searchFocusNode.unfocus();
   }
 
   List<Recipe> _filterAndSort(List<Recipe> recipes) {
@@ -204,18 +225,6 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                     ],
                   ),
                   const Spacer(),
-                  if (_isSearching)
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      color: AppTheme.textSecondary,
-                      onPressed: () {
-                        setState(() {
-                          _isSearching = false;
-                          _searchQuery = '';
-                          _searchController.clear();
-                        });
-                      },
-                    ),
                   PopupMenuButton<_SortOption>(
                     icon: Icon(
                       Icons.sort,
@@ -249,6 +258,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                   }
                 },
                 child: Container(
+                  key: _searchBarKey,
                   height: 48,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade100,
@@ -267,6 +277,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                             Expanded(
                               child: TextField(
                                 controller: _searchController,
+                                focusNode: _searchFocusNode,
                                 autofocus: true,
                                 decoration: InputDecoration(
                                   hintText: l10n.searchRecipeOrIngredient,
@@ -286,23 +297,38 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                                 onChanged: (value) {
                                   setState(() => _searchQuery = value);
                                 },
+                                onTapOutside: (event) {
+                                  final box = _searchBarKey.currentContext
+                                      ?.findRenderObject() as RenderBox?;
+                                  if (box != null) {
+                                    final localPos =
+                                        box.globalToLocal(event.position);
+                                    if (box.paintBounds.contains(localPos)) {
+                                      return;
+                                    }
+                                  }
+                                  _closeSearch();
+                                },
                               ),
                             ),
-                            if (_searchController.text.isNotEmpty)
-                              GestureDetector(
-                                onTap: () {
+                            GestureDetector(
+                              onTap: () {
+                                if (_searchController.text.isEmpty) {
+                                  _closeSearch();
+                                } else {
                                   _searchController.clear();
                                   setState(() => _searchQuery = '');
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Icon(
-                                    Icons.clear,
-                                    size: 18,
-                                    color: Colors.grey.shade400,
-                                  ),
+                                }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Icon(
+                                  Icons.clear,
+                                  size: 18,
+                                  color: Colors.grey.shade400,
                                 ),
                               ),
+                            ),
                           ],
                         )
                       : Row(

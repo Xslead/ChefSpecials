@@ -29,17 +29,33 @@ class FoodItemListScreen extends StatefulWidget {
 class _FoodItemListScreenState extends State<FoodItemListScreen> {
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
+  final GlobalKey _searchBarKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     context.read<FoodItemProvider>().ensureInitialized();
+    _searchFocusNode.addListener(() {
+      if (!_searchFocusNode.hasFocus && _isSearching) {
+        setState(() {
+          _isSearching = false;
+          _searchController.clear();
+        });
+        context.read<FoodItemProvider>().searchFoodItems('');
+      }
+    });
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
+  }
+
+  void _closeSearch() {
+    _searchFocusNode.unfocus();
   }
 
   @override
@@ -129,18 +145,6 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                     ],
                   ),
                   const Spacer(),
-                  if (_isSearching)
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      color: AppTheme.textSecondary,
-                      onPressed: () {
-                        setState(() {
-                          _isSearching = false;
-                          _searchController.clear();
-                        });
-                        provider.searchFoodItems('');
-                      },
-                    ),
                 ],
               ),
               const SizedBox(height: 14),
@@ -152,6 +156,7 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                   }
                 },
                 child: Container(
+                  key: _searchBarKey,
                   height: 48,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade100,
@@ -170,6 +175,7 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                             Expanded(
                               child: TextField(
                                 controller: _searchController,
+                                focusNode: _searchFocusNode,
                                 autofocus: true,
                                 decoration: InputDecoration(
                                   hintText: l10n.searchFoodItems,
@@ -188,25 +194,41 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                                 ),
                                 onChanged: (value) {
                                   provider.searchFoodItems(value);
+                                  setState(() {});
+                                },
+                                onTapOutside: (event) {
+                                  final box = _searchBarKey.currentContext
+                                      ?.findRenderObject() as RenderBox?;
+                                  if (box != null) {
+                                    final localPos =
+                                        box.globalToLocal(event.position);
+                                    if (box.paintBounds.contains(localPos)) {
+                                      return;
+                                    }
+                                  }
+                                  _closeSearch();
                                 },
                               ),
                             ),
-                            if (_searchController.text.isNotEmpty)
-                              GestureDetector(
-                                onTap: () {
+                            GestureDetector(
+                              onTap: () {
+                                if (_searchController.text.isEmpty) {
+                                  _closeSearch();
+                                } else {
                                   _searchController.clear();
                                   provider.searchFoodItems('');
                                   setState(() {});
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Icon(
-                                    Icons.clear,
-                                    size: 18,
-                                    color: Colors.grey.shade400,
-                                  ),
+                                }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Icon(
+                                  Icons.clear,
+                                  size: 18,
+                                  color: Colors.grey.shade400,
                                 ),
                               ),
+                            ),
                           ],
                         )
                       : Row(

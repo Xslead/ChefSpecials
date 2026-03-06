@@ -1,31 +1,68 @@
 class UserModel {
   final String uid;
   final String email;
-  final String fullName;
+  final String firstName;
+  final String lastName;
+  final String? phoneNumber;
   final String? photoUrl;
   final String? bio;
   final String role;
   final DateTime createdAt;
+  final DateTime? birthDate;
+  final String? gender;
+  final double? heightCm;
+  final double? weightKg;
+  final String? activityLevel;
+  final String? cookingSkillLevel;
 
   UserModel({
     required this.uid,
     required this.email,
-    required this.fullName,
+    required this.firstName,
+    required this.lastName,
+    this.phoneNumber,
     this.photoUrl,
     this.bio,
     this.role = 'user',
     required this.createdAt,
+    this.birthDate,
+    this.gender,
+    this.heightCm,
+    this.weightKg,
+    this.activityLevel,
+    this.cookingSkillLevel,
   });
 
+  String get fullName => '$firstName $lastName'.trim();
+
   factory UserModel.fromMap(Map<String, dynamic> map) {
+    // Support legacy documents that only have fullName stored
+    final firstName = map['firstName'] as String? ??
+        (map['fullName'] as String? ?? '').split(' ').first;
+    final lastName = map['lastName'] as String? ??
+        () {
+          final parts = (map['fullName'] as String? ?? '').split(' ');
+          return parts.length > 1 ? parts.sublist(1).join(' ') : '';
+        }();
+
     return UserModel(
       uid: map['uid'] as String,
       email: map['email'] as String,
-      fullName: map['fullName'] as String,
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: map['phoneNumber'] as String?,
       photoUrl: map['photoUrl'] as String?,
       bio: map['bio'] as String?,
       role: map['role'] as String? ?? 'user',
       createdAt: DateTime.parse(map['createdAt'] as String),
+      birthDate: map['birthDate'] != null
+          ? DateTime.parse(map['birthDate'] as String)
+          : null,
+      gender: map['gender'] as String?,
+      heightCm: (map['heightCm'] as num?)?.toDouble(),
+      weightKg: (map['weightKg'] as num?)?.toDouble(),
+      activityLevel: map['activityLevel'] as String?,
+      cookingSkillLevel: map['cookingSkillLevel'] as String?,
     );
   }
 
@@ -33,28 +70,53 @@ class UserModel {
     return {
       'uid': uid,
       'email': email,
-      'fullName': fullName,
+      'firstName': firstName,
+      'lastName': lastName,
+      'fullName': fullName, // kept for backward compatibility
+      'phoneNumber': phoneNumber,
       'photoUrl': photoUrl,
       'bio': bio,
       'role': role,
       'createdAt': createdAt.toIso8601String(),
+      'birthDate': birthDate?.toIso8601String(),
+      'gender': gender,
+      'heightCm': heightCm,
+      'weightKg': weightKg,
+      'activityLevel': activityLevel,
+      'cookingSkillLevel': cookingSkillLevel,
     };
   }
 
   UserModel copyWith({
-    String? fullName,
+    String? firstName,
+    String? lastName,
+    String? phoneNumber,
     String? photoUrl,
     String? bio,
     String? role,
+    DateTime? birthDate,
+    String? gender,
+    double? heightCm,
+    double? weightKg,
+    String? activityLevel,
+    String? cookingSkillLevel,
   }) {
     return UserModel(
       uid: uid,
       email: email,
-      fullName: fullName ?? this.fullName,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
       photoUrl: photoUrl ?? this.photoUrl,
       bio: bio ?? this.bio,
       role: role ?? this.role,
       createdAt: createdAt,
+      birthDate: birthDate ?? this.birthDate,
+      gender: gender ?? this.gender,
+      heightCm: heightCm ?? this.heightCm,
+      weightKg: weightKg ?? this.weightKg,
+      activityLevel: activityLevel ?? this.activityLevel,
+      cookingSkillLevel: cookingSkillLevel ?? this.cookingSkillLevel,
     );
   }
 }

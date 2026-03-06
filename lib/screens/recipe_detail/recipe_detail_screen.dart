@@ -18,26 +18,31 @@ class RecipeDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    // Always use the latest version from the provider so edits are reflected immediately
+    final liveRecipe = context
+        .watch<RecipeProvider>()
+        .allRecipes
+        .firstWhere((r) => r.id == recipe.id, orElse: () => recipe);
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          _buildSliverAppBar(context),
+          _buildSliverAppBar(context, liveRecipe),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildTitleSection(context, l10n, theme),
+                  _buildTitleSection(context, l10n, theme, liveRecipe),
                   const SizedBox(height: 16),
-                  _buildTimeRow(context, l10n, theme),
-                  if (_hasNutrition) ...[
+                  _buildTimeRow(context, l10n, theme, liveRecipe),
+                  if (_hasNutrition(liveRecipe)) ...[
                     const SizedBox(height: 16),
-                    _buildNutritionCard(context, l10n, theme),
+                    _buildNutritionCard(context, l10n, theme, liveRecipe),
                   ],
                   const SizedBox(height: 16),
-                  _buildServingsInfo(context, l10n, theme),
+                  _buildServingsInfo(context, l10n, theme, liveRecipe),
                   const SizedBox(height: 24),
                   Text(
                     l10n.ingredients,
@@ -46,7 +51,7 @@ class RecipeDetailScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  IngredientListView(ingredients: recipe.ingredients),
+                  IngredientListView(ingredients: liveRecipe.ingredients),
                   const SizedBox(height: 24),
                   Text(
                     l10n.steps,
@@ -55,13 +60,13 @@ class RecipeDetailScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  StepOverviewList(steps: recipe.steps),
+                  StepOverviewList(steps: liveRecipe.steps),
                   const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        context.push('/cooking/${recipe.id}', extra: recipe);
+                        context.push('/cooking/${liveRecipe.id}', extra: liveRecipe);
                       },
                       icon: const Icon(Icons.restaurant),
                       label: Text(l10n.startCooking),
@@ -77,18 +82,18 @@ class RecipeDetailScreen extends StatelessWidget {
     );
   }
 
-  bool _isOwner(BuildContext context) {
+  bool _isOwner(BuildContext context, Recipe r) {
     final userId = context.read<AuthProvider>().userModel?.uid;
-    return userId != null && userId == recipe.authorId;
+    return userId != null && userId == r.authorId;
   }
 
-  Future<void> _deleteRecipe(BuildContext context) async {
+  Future<void> _deleteRecipe(BuildContext context, Recipe r) async {
     final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(l10n.delete),
-        content: Text('${l10n.delete} "${recipe.title}"?'),
+        content: Text('${l10n.delete} "${r.title}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -103,7 +108,7 @@ class RecipeDetailScreen extends StatelessWidget {
       ),
     );
     if (confirmed == true && context.mounted) {
-      await context.read<RecipeProvider>().deleteRecipe(recipe.id!);
+      await context.read<RecipeProvider>().deleteRecipe(r.id!);
       if (context.mounted) context.pop();
     }
   }
@@ -130,29 +135,29 @@ class RecipeDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSliverAppBar(BuildContext context) {
+  Widget _buildSliverAppBar(BuildContext context, Recipe r) {
     return SliverAppBar(
       expandedHeight: 280,
       pinned: true,
       actions: [
-        if (_isOwner(context)) ...[
+        if (_isOwner(context, r)) ...[
           _buildCircleIconButton(
             icon: Icons.edit_outlined,
             color: Colors.blue.shade700,
             onPressed: () =>
-                context.push('/edit-recipe/${recipe.id}', extra: recipe),
+                context.push('/edit-recipe/${r.id}', extra: r),
           ),
           _buildCircleIconButton(
             icon: Icons.delete_outline,
             color: Colors.red.shade600,
-            onPressed: () => _deleteRecipe(context),
+            onPressed: () => _deleteRecipe(context, r),
           ),
         ],
       ],
       flexibleSpace: FlexibleSpaceBar(
-        background: recipe.imageUrl != null
+        background: r.imageUrl != null
             ? CachedNetworkImage(
-                imageUrl: recipe.imageUrl!,
+                imageUrl: r.imageUrl!,
                 fit: BoxFit.cover,
                 placeholder: (context, url) => Container(
                   color: Colors.grey.shade200,
@@ -178,12 +183,13 @@ class RecipeDetailScreen extends StatelessWidget {
     BuildContext context,
     AppLocalizations l10n,
     ThemeData theme,
+    Recipe r,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          recipe.title,
+          r.title,
           style: theme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -192,14 +198,14 @@ class RecipeDetailScreen extends StatelessWidget {
         Row(
           children: [
             Text(
-              recipe.authorName,
+              r.authorName,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: Colors.grey.shade600,
               ),
             ),
             const SizedBox(width: 12),
             Chip(
-              label: Text(recipe.category),
+              label: Text(r.category),
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               visualDensity: VisualDensity.compact,
               padding: EdgeInsets.zero,
@@ -215,20 +221,21 @@ class RecipeDetailScreen extends StatelessWidget {
     BuildContext context,
     AppLocalizations l10n,
     ThemeData theme,
+    Recipe r,
   ) {
     return Row(
       children: [
         _buildTimeItem(
           icon: Icons.hourglass_top,
           label: l10n.prepTime,
-          value: '${recipe.prepTimeMinutes} min',
+          value: '${r.prepTimeMinutes} min',
           theme: theme,
         ),
         const SizedBox(width: 24),
         _buildTimeItem(
           icon: Icons.local_fire_department,
           label: l10n.cookTime,
-          value: '${recipe.cookTimeMinutes} min',
+          value: '${r.cookTimeMinutes} min',
           theme: theme,
         ),
       ],
@@ -266,16 +273,17 @@ class RecipeDetailScreen extends StatelessWidget {
     );
   }
 
-  bool get _hasNutrition =>
-      recipe.caloriesPerServing != null ||
-      recipe.proteinGrams != null ||
-      recipe.carbsGrams != null ||
-      recipe.fatGrams != null;
+  bool _hasNutrition(Recipe r) =>
+      r.caloriesPerServing != null ||
+      r.proteinGrams != null ||
+      r.carbsGrams != null ||
+      r.fatGrams != null;
 
   Widget _buildNutritionCard(
     BuildContext context,
     AppLocalizations l10n,
     ThemeData theme,
+    Recipe r,
   ) {
     return Card(
       child: Padding(
@@ -283,31 +291,31 @@ class RecipeDetailScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            if (recipe.caloriesPerServing != null)
+            if (r.caloriesPerServing != null)
               _buildNutritionItem(
                 label: l10n.calories,
-                value: '${recipe.caloriesPerServing}',
+                value: '${r.caloriesPerServing}',
                 unit: 'kcal',
                 theme: theme,
               ),
-            if (recipe.proteinGrams != null)
+            if (r.proteinGrams != null)
               _buildNutritionItem(
                 label: l10n.protein,
-                value: recipe.proteinGrams!.toStringAsFixed(1),
+                value: r.proteinGrams!.toStringAsFixed(1),
                 unit: 'g',
                 theme: theme,
               ),
-            if (recipe.carbsGrams != null)
+            if (r.carbsGrams != null)
               _buildNutritionItem(
                 label: l10n.carbs,
-                value: recipe.carbsGrams!.toStringAsFixed(1),
+                value: r.carbsGrams!.toStringAsFixed(1),
                 unit: 'g',
                 theme: theme,
               ),
-            if (recipe.fatGrams != null)
+            if (r.fatGrams != null)
               _buildNutritionItem(
                 label: l10n.fat,
-                value: recipe.fatGrams!.toStringAsFixed(1),
+                value: r.fatGrams!.toStringAsFixed(1),
                 unit: 'g',
                 theme: theme,
               ),
@@ -352,13 +360,14 @@ class RecipeDetailScreen extends StatelessWidget {
     BuildContext context,
     AppLocalizations l10n,
     ThemeData theme,
+    Recipe r,
   ) {
     return Row(
       children: [
         Icon(Icons.people_outline, size: 20, color: theme.colorScheme.primary),
         const SizedBox(width: 6),
         Text(
-          '${l10n.servings}: ${recipe.servings}',
+          '${l10n.servings}: ${r.servings}',
           style: theme.textTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.w600,
           ),

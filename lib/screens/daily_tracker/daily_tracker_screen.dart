@@ -142,6 +142,9 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                         onAdd: (ml) {
                           provider.addWater(ml);
                         },
+                        onRemove: (ml) {
+                          provider.removeWater(ml);
+                        },
                       ),
                       const SizedBox(height: 24),
                     ],
@@ -149,18 +152,6 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                 ),
               ],
             ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: FloatingActionButton(
-          heroTag: 'tracker_fab',
-          onPressed: () => _navigateToAddMeal(MealType.snack),
-          backgroundColor: AppTheme.primaryColor,
-          foregroundColor: Colors.white,
-          elevation: 4,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.add, size: 28),
-        ),
-      ),
     );
   }
 

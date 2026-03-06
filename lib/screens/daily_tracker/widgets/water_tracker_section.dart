@@ -5,18 +5,20 @@ class WaterTrackerSection extends StatelessWidget {
   final int currentMl;
   final int targetMl;
   final Function(int) onAdd;
+  final Function(int) onRemove;
 
   const WaterTrackerSection({
     super.key,
     required this.currentMl,
     required this.targetMl,
     required this.onAdd,
+    required this.onRemove,
   });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final glassSize = 250;
+    const glassSize = 250;
     final totalGlasses = (targetMl / glassSize).ceil();
     final filledGlasses = (currentMl / glassSize).floor();
 
@@ -36,11 +38,7 @@ class WaterTrackerSection extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(
-                    Icons.water_drop,
-                    color: Colors.blue.shade500,
-                    size: 22,
-                  ),
+                  Icon(Icons.water_drop, color: Colors.blue.shade500, size: 22),
                   const SizedBox(width: 8),
                   Text(
                     l10n.waterTracking,
@@ -61,35 +59,54 @@ class WaterTrackerSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          // Glass icons
+          // Glass icons — tap a filled glass to remove it
           Wrap(
             spacing: 6,
             runSpacing: 6,
             children: List.generate(totalGlasses, (index) {
               final isFilled = index < filledGlasses;
-              return Icon(
-                Icons.local_drink,
-                size: 24,
-                color: isFilled
-                    ? Colors.blue.shade500
-                    : Colors.grey.shade300,
+              return GestureDetector(
+                onTap: isFilled
+                    ? () => onRemove(glassSize)
+                    : () => onAdd(glassSize),
+                child: Icon(
+                  Icons.local_drink,
+                  size: 24,
+                  color: isFilled ? Colors.blue.shade500 : Colors.grey.shade300,
+                ),
               );
             }),
           ),
           const SizedBox(height: 16),
-          // Add buttons
+          // Add / remove buttons
           Row(
             children: [
               Expanded(
                 child: _WaterButton(
-                  label: '+ 250${l10n.ml}',
+                  label: '− 250 ${l10n.ml}',
+                  color: Colors.red.shade400,
+                  borderColor: Colors.red.shade200,
+                  enabled: currentMl >= 250,
+                  onTap: () => onRemove(250),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _WaterButton(
+                  label: '+ 250 ${l10n.ml}',
+                  color: Colors.blue.shade600,
+                  borderColor: Colors.blue.shade200,
+                  enabled: true,
                   onTap: () => onAdd(250),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 8),
               Expanded(
                 child: _WaterButton(
-                  label: '+ 500${l10n.ml}',
+                  label: '+ 500 ${l10n.ml}',
+                  color: Colors.blue.shade600,
+                  borderColor: Colors.blue.shade200,
+                  enabled: true,
                   onTap: () => onAdd(500),
                 ),
               ),
@@ -103,31 +120,39 @@ class WaterTrackerSection extends StatelessWidget {
 
 class _WaterButton extends StatelessWidget {
   final String label;
+  final Color color;
+  final Color borderColor;
+  final bool enabled;
   final VoidCallback onTap;
 
   const _WaterButton({
     required this.label,
+    required this.color,
+    required this.borderColor,
+    required this.enabled,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: enabled ? onTap : null,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.blue.shade200),
+          border: Border.all(
+            color: enabled ? borderColor : Colors.grey.shade200,
+          ),
         ),
         child: Center(
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: FontWeight.bold,
-              color: Colors.blue.shade600,
+              color: enabled ? color : Colors.grey.shade400,
             ),
           ),
         ),

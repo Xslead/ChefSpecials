@@ -64,7 +64,7 @@ class NutritionSummaryCard extends StatelessWidget {
                               ? '+${(-remaining).toString()}'
                               : remaining.toString(),
                           style: TextStyle(
-                            fontSize: 36,
+                            fontSize: 40,
                             fontWeight: FontWeight.w900,
                             color: isExceeded
                                 ? AppTheme.errorColor
@@ -76,7 +76,7 @@ class NutritionSummaryCard extends StatelessWidget {
                               ? '${l10n.exceeded} ${l10n.kcal}'
                               : l10n.remainingKcal,
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: 15,
                             fontWeight: FontWeight.w500,
                             color: Colors.grey.shade500,
                           ),
@@ -155,7 +155,7 @@ class NutritionSummaryCard extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            fontSize: 13,
+            fontSize: 15,
             fontWeight: FontWeight.w500,
             color: Colors.grey.shade400,
           ),
@@ -164,7 +164,7 @@ class NutritionSummaryCard extends StatelessWidget {
         Text(
           value,
           style: const TextStyle(
-            fontSize: 14,
+            fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -203,7 +203,7 @@ class _MacroCard extends StatelessWidget {
           Text(
             label.toUpperCase(),
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 12,
               fontWeight: FontWeight.w700,
               color: Colors.grey.shade500,
               letterSpacing: 0.8,
@@ -213,7 +213,7 @@ class _MacroCard extends StatelessWidget {
           RichText(
             text: TextSpan(
               style: const TextStyle(
-                fontSize: 17,
+                fontSize: 19,
                 fontWeight: FontWeight.bold,
                 color: AppTheme.textPrimary,
               ),
@@ -222,7 +222,7 @@ class _MacroCard extends StatelessWidget {
                 TextSpan(
                   text: '/ ${target.toInt()}g',
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: 13,
                     fontWeight: FontWeight.normal,
                     color: Colors.grey.shade400,
                   ),

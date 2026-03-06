@@ -43,7 +43,7 @@ class WaterTrackerSection extends StatelessWidget {
                   Text(
                     l10n.waterTracking,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -52,7 +52,7 @@ class WaterTrackerSection extends StatelessWidget {
               Text(
                 '$currentMl / $targetMl ${l10n.ml}',
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -150,7 +150,7 @@ class _WaterButton extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
               color: enabled ? color : Colors.grey.shade400,
             ),

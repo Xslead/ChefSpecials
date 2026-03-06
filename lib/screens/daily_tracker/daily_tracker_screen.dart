@@ -187,7 +187,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                     _formatDate(provider.selectedDate, l10n),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -228,7 +228,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
           Text(
             l10n.todaysMeals,
             style: const TextStyle(
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),

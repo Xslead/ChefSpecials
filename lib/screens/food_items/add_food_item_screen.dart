@@ -141,7 +141,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                 child: Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.arrow_back),
+                      icon: const Icon(Icons.arrow_back_ios_new_rounded),
                       onPressed: () => context.pop(),
                       color: AppTheme.textPrimary,
                     ),
@@ -153,7 +153,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Icon(
-                        Icons.add_circle_outline,
+                        Icons.add_box_outlined,
                         color: AppTheme.secondaryColor,
                         size: 20,
                       ),
@@ -201,7 +201,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                 children: [
                   // Basic Info Section
                   _buildSectionHeader(
-                    icon: Icons.info_outline,
+                    icon: Icons.info_outlined,
                     color: AppTheme.primaryColor,
                     label: 'BASIC INFO',
                   ),
@@ -213,7 +213,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                   TextFormField(
                     decoration: _styledInputDecoration(
                       hintText: 'Food item name',
-                      prefixIcon: Icons.restaurant,
+                      prefixIcon: Icons.label_outlined,
                     ),
                     validator: (v) =>
                         (v == null || v.isEmpty) ? 'Required' : null,
@@ -227,7 +227,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                   TextFormField(
                     decoration: _styledInputDecoration(
                       hintText: 'Brand (optional)',
-                      prefixIcon: Icons.business,
+                      prefixIcon: Icons.storefront_outlined,
                     ),
                     onSaved: (v) =>
                         _brand = (v != null && v.isNotEmpty) ? v : null,
@@ -269,7 +269,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             DropdownButtonFormField<String>(
                               initialValue: _unit,
                               decoration: _styledInputDecoration(
-                                prefixIcon: Icons.straighten,
+                                prefixIcon: Icons.straighten_outlined,
                               ),
                               items: _units
                                   .map((u) => DropdownMenuItem(
@@ -328,7 +328,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             TextFormField(
                               decoration: _styledInputDecoration(
                                 hintText: 'Optional',
-                                prefixIcon: Icons.qr_code,
+                                prefixIcon: Icons.qr_code_2_outlined,
                               ),
                               keyboardType: TextInputType.number,
                               onSaved: (v) => _barcode =
@@ -351,7 +351,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
 
                   // Calories - full width card
                   _buildNutritionCard(
-                    icon: Icons.local_fire_department,
+                    icon: Icons.whatshot_outlined,
                     color: AppTheme.primaryColor,
                     label: l10n.calories,
                     suffix: l10n.kcal,
@@ -365,7 +365,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                     children: [
                       Expanded(
                         child: _buildNutritionCard(
-                          icon: Icons.fitness_center,
+                          icon: Icons.fitness_center_outlined,
                           color: AppTheme.secondaryColor,
                           label: l10n.protein,
                           suffix: l10n.gram,
@@ -377,7 +377,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: _buildNutritionCard(
-                          icon: Icons.grain,
+                          icon: Icons.bakery_dining_outlined,
                           color: const Color(0xFFF59E0B),
                           label: l10n.carbs,
                           suffix: l10n.gram,
@@ -389,7 +389,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: _buildNutritionCard(
-                          icon: Icons.opacity,
+                          icon: Icons.water_drop_outlined,
                           color: const Color(0xFFEF4444),
                           label: l10n.fat,
                           suffix: l10n.gram,
@@ -407,7 +407,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                     children: [
                       Expanded(
                         child: _buildNutritionCard(
-                          icon: Icons.grass,
+                          icon: Icons.grass_outlined,
                           color: const Color(0xFF22C55E),
                           label: 'Fiber',
                           suffix: l10n.gram,
@@ -449,7 +449,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                     children: [
                       Expanded(
                         child: _buildNutritionCard(
-                          icon: Icons.water_drop,
+                          icon: Icons.opacity_outlined,
                           color: const Color(0xFFEC4899),
                           label: 'Sat. Fat',
                           suffix: l10n.gram,
@@ -461,7 +461,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: _buildNutritionCard(
-                          icon: Icons.warning_amber,
+                          icon: Icons.warning_amber_outlined,
                           color: const Color(0xFFF97316),
                           label: 'Trans Fat',
                           suffix: l10n.gram,
@@ -491,7 +491,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                     children: [
                       Expanded(
                         child: _buildNutritionCard(
-                          icon: Icons.grain,
+                          icon: Icons.scatter_plot_outlined,
                           color: const Color(0xFF0EA5E9),
                           label: 'Salt',
                           suffix: l10n.gram,
@@ -507,7 +507,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
 
                   // Additional Info Section
                   _buildSectionHeader(
-                    icon: Icons.tune,
+                    icon: Icons.tune_outlined,
                     color: const Color(0xFF8B5CF6),
                     label: 'ADDITIONAL INFO',
                   ),
@@ -608,7 +608,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             TextFormField(
                               decoration: _styledInputDecoration(
                                 hintText: 'Optional',
-                                prefixIcon: Icons.public,
+                                prefixIcon: Icons.public_outlined,
                               ),
                               onSaved: (v) => _origin =
                                   (v != null && v.isNotEmpty) ? v : null,
@@ -626,7 +626,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                   TextFormField(
                     decoration: _styledInputDecoration(
                       hintText: 'List of ingredients (optional)',
-                      prefixIcon: Icons.list_alt,
+                      prefixIcon: Icons.receipt_long_outlined,
                     ),
                     maxLines: 3,
                     onSaved: (v) => _ingredientsText =
@@ -714,7 +714,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const Icon(
-                            Icons.eco,
+                            Icons.eco_outlined,
                             color: Color(0xFF22C55E),
                             size: 20,
                           ),
@@ -762,7 +762,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const Icon(
-                            Icons.spa,
+                            Icons.spa_outlined,
                             color: Color(0xFFF97316),
                             size: 20,
                           ),
@@ -810,7 +810,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const Icon(
-                            Icons.no_food,
+                            Icons.no_food_outlined,
                             color: AppTheme.primaryColor,
                             size: 20,
                           ),

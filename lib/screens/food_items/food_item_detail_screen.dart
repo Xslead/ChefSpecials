@@ -125,7 +125,7 @@ class FoodItemDetailScreen extends StatelessWidget {
     return Container(
       color: AppTheme.warmCream,
       child: const Center(
-        child: Icon(Icons.restaurant, size: 80, color: AppTheme.textTertiary),
+        child: Icon(Icons.restaurant_outlined, size: 80, color: AppTheme.textTertiary),
       ),
     );
   }
@@ -183,7 +183,7 @@ class FoodItemDetailScreen extends StatelessWidget {
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.verified, size: 14, color: Color(0xFF10B981)),
+                    Icon(Icons.verified_outlined, size: 14, color: Color(0xFF10B981)),
                     SizedBox(width: 4),
                     Text(
                       'Verified',
@@ -227,7 +227,7 @@ class FoodItemDetailScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             children: [
-              const Icon(Icons.qr_code, size: 16, color: AppTheme.textSecondary),
+              const Icon(Icons.qr_code_2_outlined, size: 16, color: AppTheme.textSecondary),
               const SizedBox(width: 4),
               Text(
                 foodItem.barcode!,

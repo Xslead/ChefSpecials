@@ -91,7 +91,7 @@ class FoodItemCard extends StatelessWidget {
                             if (foodItem.isVerified) ...[
                               const SizedBox(width: 4),
                               const Icon(
-                                Icons.verified,
+                                Icons.verified_outlined,
                                 size: 14,
                                 color: AppTheme.primaryColor,
                               ),
@@ -230,21 +230,21 @@ class FoodItemCard extends StatelessWidget {
   IconData _iconForCategory(String category) {
     switch (category) {
       case 'Protein':
-        return Icons.egg_alt;
+        return Icons.egg_outlined;
       case 'Dairy':
-        return Icons.water_drop;
+        return Icons.water_drop_outlined;
       case 'Grains':
-        return Icons.grain;
+        return Icons.bakery_dining_outlined;
       case 'Vegetables':
-        return Icons.eco;
+        return Icons.eco_outlined;
       case 'Fruits':
-        return Icons.apple;
+        return Icons.park_outlined;
       case 'Oils & Fats':
-        return Icons.opacity;
+        return Icons.oil_barrel_outlined;
       case 'Beverages':
-        return Icons.local_drink;
+        return Icons.local_cafe_outlined;
       default:
-        return Icons.restaurant;
+        return Icons.restaurant_outlined;
     }
   }
 }

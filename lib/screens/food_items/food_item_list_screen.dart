@@ -112,7 +112,7 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(
-                      Icons.shopping_basket,
+                      Icons.inventory_2_outlined,
                       color: AppTheme.primaryColor,
                       size: 24,
                     ),
@@ -161,7 +161,7 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                           children: [
                             const SizedBox(width: 14),
                             const Icon(
-                              Icons.search,
+                              Icons.search_outlined,
                               color: AppTheme.textTertiary,
                               size: 22,
                             ),
@@ -221,7 +221,7 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                               child: const Padding(
                                 padding: EdgeInsets.all(12),
                                 child: Icon(
-                                  Icons.clear,
+                                  Icons.close_rounded,
                                   size: 18,
                                   color: AppTheme.textTertiary,
                                 ),
@@ -233,7 +233,7 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                           children: [
                             const SizedBox(width: 14),
                             const Icon(
-                              Icons.search,
+                              Icons.search_outlined,
                               color: AppTheme.textTertiary,
                               size: 22,
                             ),
@@ -313,7 +313,7 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.shopping_basket,
+              Icons.inventory_2_outlined,
               size: 64,
               color: AppTheme.warmBeige,
             ),

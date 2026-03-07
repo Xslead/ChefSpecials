@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -21,29 +22,61 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _fullNameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _bioController = TextEditingController();
+  final _heightController = TextEditingController();
+  final _weightController = TextEditingController();
   final _picker = ImagePicker();
   final _storageService = StorageService();
   final _userService = UserService();
 
   File? _imageFile;
   bool _isSaving = false;
+  DateTime? _birthDate;
+  String? _gender;
+  String? _activityLevel;
+  String? _cookingSkillLevel;
+
+  static const _genderOptions = ['Male', 'Female', 'Other', 'Prefer not to say'];
+  static const _activityOptions = [
+    'Sedentary',
+    'Lightly Active',
+    'Moderately Active',
+    'Very Active',
+    'Extra Active',
+  ];
+  static const _skillOptions = ['Beginner', 'Intermediate', 'Advanced'];
 
   @override
   void initState() {
     super.initState();
     final user = context.read<AuthProvider>().userModel;
     if (user != null) {
-      _fullNameController.text = user.fullName;
+      _firstNameController.text = user.firstName;
+      _lastNameController.text = user.lastName;
+      _phoneController.text = user.phoneNumber ?? '';
       _bioController.text = user.bio ?? '';
+      _birthDate = user.birthDate;
+      _gender = user.gender;
+      _heightController.text =
+          user.heightCm != null ? user.heightCm.toString() : '';
+      _weightController.text =
+          user.weightKg != null ? user.weightKg.toString() : '';
+      _activityLevel = user.activityLevel;
+      _cookingSkillLevel = user.cookingSkillLevel;
     }
   }
 
   @override
   void dispose() {
-    _fullNameController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _phoneController.dispose();
     _bioController.dispose();
+    _heightController.dispose();
+    _weightController.dispose();
     super.dispose();
   }
 
@@ -51,6 +84,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final picked = await _picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
       setState(() => _imageFile = File(picked.path));
+    }
+  }
+
+  Future<void> _pickBirthDate() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _birthDate ?? DateTime(now.year - 25, now.month, now.day),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(now.year - 10, now.month, now.day),
+      helpText: 'Select date of birth',
+    );
+    if (picked != null) {
+      setState(() => _birthDate = picked);
     }
   }
 
@@ -67,18 +114,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       photoUrl = await _storageService.uploadUserAvatar(_imageFile!);
     }
 
-    final newName = _fullNameController.text.trim();
+    final newFirstName = _firstNameController.text.trim();
+    final newLastName = _lastNameController.text.trim();
+    final newFullName = '$newFirstName $newLastName'.trim();
 
-    await _userService.updateUser(user.uid, {
-      'fullName': newName,
+    final updates = <String, dynamic>{
+      'firstName': newFirstName,
+      'lastName': newLastName,
+      'fullName': newFullName,
+      'phoneNumber': _phoneController.text.trim(),
       'bio': _bioController.text.trim(),
+      'birthDate': _birthDate?.toIso8601String(),
+      'gender': _gender,
+      'heightCm': double.tryParse(_heightController.text),
+      'weightKg': double.tryParse(_weightController.text),
+      'activityLevel': _activityLevel,
+      'cookingSkillLevel': _cookingSkillLevel,
       if (photoUrl != user.photoUrl) 'photoUrl': photoUrl,
-    });
+    };
 
-    if (newName != user.fullName) {
-      await RecipeService().updateAuthorName(user.uid, newName);
+    await _userService.updateUser(user.uid, updates);
+
+    if (newFullName != user.fullName) {
+      await RecipeService().updateAuthorName(user.uid, newFullName);
       if (mounted) {
-        context.read<RecipeProvider>().updateAuthorName(user.uid, newName);
+        context.read<RecipeProvider>().updateAuthorName(user.uid, newFullName);
       }
     }
 
@@ -104,7 +164,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border(
-                bottom: BorderSide(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+                bottom:
+                    BorderSide(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
               ),
             ),
             child: SafeArea(
@@ -128,16 +189,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                     ),
                     const Spacer(),
-                    // Save button
                     TextButton(
                       onPressed: _isSaving ? null : _save,
                       child: _isSaving
                           ? const SizedBox(
                               height: 18,
                               width: 18,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                              ),
+                              child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : Text(
                               l10n.save,
@@ -224,60 +282,232 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  // Full Name field
-                  Text(
-                    l10n.fullName.toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.textTertiary,
-                      letterSpacing: 0.8,
+
+                  // ── Personal Info Section ──
+                  _sectionLabel('PERSONAL INFO'),
+                  const SizedBox(height: 12),
+
+                  // First & Last Name
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _firstNameController,
+                          textCapitalization: TextCapitalization.words,
+                          decoration: const InputDecoration(
+                            labelText: 'First Name',
+                            prefixIcon: Icon(Icons.person_outlined),
+                          ),
+                          validator: (v) =>
+                              (v == null || v.trim().isEmpty) ? 'Required' : null,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _lastNameController,
+                          textCapitalization: TextCapitalization.words,
+                          decoration: const InputDecoration(
+                            labelText: 'Last Name',
+                            prefixIcon: Icon(Icons.person_outlined),
+                          ),
+                          validator: (v) =>
+                              (v == null || v.trim().isEmpty) ? 'Required' : null,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Phone
+                  TextFormField(
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9+\-\s()]')),
+                    ],
+                    decoration: const InputDecoration(
+                      labelText: 'Phone Number',
+                      prefixIcon: Icon(Icons.phone_outlined),
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _fullNameController,
-                    decoration: InputDecoration(
-                      hintText: l10n.fullName,
-                      prefixIcon: const Icon(
-                        Icons.person_outline,
-                        color: AppTheme.textTertiary,
+                  const SizedBox(height: 16),
+
+                  // Birth Date
+                  GestureDetector(
+                    onTap: _pickBirthDate,
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        labelText: 'Date of Birth',
+                        prefixIcon: const Icon(Icons.cake_outlined),
+                        suffixIcon: const Icon(Icons.calendar_today_outlined,
+                            size: 20),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: _birthDate == null
+                                ? AppTheme.warmBeige
+                                : AppTheme.primaryColor,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                              color: AppTheme.primaryColor, width: 2),
+                        ),
+                      ),
+                      child: Text(
+                        _birthDate != null
+                            ? '${_birthDate!.day.toString().padLeft(2, '0')}/'
+                                '${_birthDate!.month.toString().padLeft(2, '0')}/'
+                                '${_birthDate!.year}'
+                            : 'Select your date of birth',
+                        style: TextStyle(
+                          color:
+                              _birthDate != null ? null : AppTheme.textTertiary,
+                        ),
                       ),
                     ),
-                    validator: (v) =>
-                        (v == null || v.trim().isEmpty) ? l10n.nameRequired : null,
                   ),
-                  const SizedBox(height: 20),
-                  Divider(color: AppTheme.warmBeige),
-                  const SizedBox(height: 20),
-                  // Bio field
-                  Text(
-                    l10n.bio.toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.textTertiary,
-                      letterSpacing: 0.8,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
+
+                  // Bio
                   TextFormField(
                     controller: _bioController,
                     decoration: InputDecoration(
-                      hintText: l10n.bio,
-                      prefixIcon: const Icon(
-                        Icons.info_outline,
-                        color: AppTheme.textTertiary,
-                      ),
+                      labelText: l10n.bio,
+                      prefixIcon: const Icon(Icons.info_outline),
                       alignLabelWithHint: true,
                     ),
                     maxLines: 3,
                   ),
+
+                  const SizedBox(height: 24),
+                  Divider(color: AppTheme.warmBeige),
+                  const SizedBox(height: 24),
+
+                  // ── Physical Info Section ──
+                  _sectionLabel('PHYSICAL INFO'),
+                  const SizedBox(height: 12),
+
+                  // Gender
+                  DropdownButtonFormField<String>(
+                    initialValue: _gender,
+                    decoration: const InputDecoration(
+                      labelText: 'Gender',
+                      prefixIcon: Icon(Icons.wc_outlined),
+                    ),
+                    items: _genderOptions
+                        .map((g) => DropdownMenuItem(value: g, child: Text(g)))
+                        .toList(),
+                    onChanged: (v) => setState(() => _gender = v),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Height & Weight
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _heightController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d{0,3}\.?\d{0,1}')),
+                          ],
+                          decoration: const InputDecoration(
+                            labelText: 'Height',
+                            prefixIcon: Icon(Icons.height),
+                            suffixText: 'cm',
+                          ),
+                          validator: (value) {
+                            if (value != null && value.isNotEmpty) {
+                              final v = double.tryParse(value);
+                              if (v == null || v < 50 || v > 300) {
+                                return 'Invalid';
+                              }
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _weightController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d{0,3}\.?\d{0,1}')),
+                          ],
+                          decoration: const InputDecoration(
+                            labelText: 'Weight',
+                            prefixIcon: Icon(Icons.monitor_weight_outlined),
+                            suffixText: 'kg',
+                          ),
+                          validator: (value) {
+                            if (value != null && value.isNotEmpty) {
+                              final v = double.tryParse(value);
+                              if (v == null || v < 20 || v > 500) {
+                                return 'Invalid';
+                              }
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Activity Level
+                  DropdownButtonFormField<String>(
+                    initialValue: _activityLevel,
+                    decoration: const InputDecoration(
+                      labelText: 'Activity Level',
+                      prefixIcon: Icon(Icons.directions_run_outlined),
+                    ),
+                    items: _activityOptions
+                        .map(
+                            (a) => DropdownMenuItem(value: a, child: Text(a)))
+                        .toList(),
+                    onChanged: (v) => setState(() => _activityLevel = v),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Cooking Skill Level
+                  DropdownButtonFormField<String>(
+                    initialValue: _cookingSkillLevel,
+                    decoration: const InputDecoration(
+                      labelText: 'Cooking Skill Level',
+                      prefixIcon: Icon(Icons.restaurant_outlined),
+                    ),
+                    items: _skillOptions
+                        .map(
+                            (s) => DropdownMenuItem(value: s, child: Text(s)))
+                        .toList(),
+                    onChanged: (v) => setState(() => _cookingSkillLevel = v),
+                  ),
+                  const SizedBox(height: 32),
                 ],
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _sectionLabel(String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: 11,
+        fontWeight: FontWeight.w700,
+        color: AppTheme.textTertiary,
+        letterSpacing: 0.8,
       ),
     );
   }

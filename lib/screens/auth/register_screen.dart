@@ -167,7 +167,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: Divider(
                           color: _currentPage > 0
                               ? AppTheme.primaryColor
-                              : AppTheme.neutralLight,
+                              : AppTheme.neutralLightOf(context),
                           thickness: 2,
                         ),
                       ),
@@ -211,7 +211,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               'Account Information',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.textSecondaryOf(context),
                   ),
             ),
             const SizedBox(height: 20),
@@ -311,7 +311,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
                       color: _birthDate == null
-                          ? AppTheme.neutralLight
+                          ? AppTheme.neutralLightOf(context)
                           : AppTheme.primaryColor,
                     ),
                   ),
@@ -330,7 +330,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   style: TextStyle(
                     color: _birthDate != null
                         ? null
-                        : AppTheme.textTertiary,
+                        : AppTheme.textTertiaryOf(context),
                   ),
                 ),
               ),
@@ -417,14 +417,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               'Personal Information',
               style: textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: AppTheme.textSecondary,
+                color: AppTheme.textSecondaryOf(context),
               ),
             ),
             const SizedBox(height: 4),
             Text(
               'Optional — helps us personalize your experience',
               style: textTheme.bodySmall
-                  ?.copyWith(color: AppTheme.textTertiary),
+                  ?.copyWith(color: AppTheme.textTertiaryOf(context)),
             ),
             const SizedBox(height: 20),
 
@@ -582,7 +582,7 @@ class _StepDot extends StatelessWidget {
           height: 32,
           decoration: BoxDecoration(
             gradient: isHighlighted ? AppTheme.primaryGradient : null,
-            color: isHighlighted ? null : AppTheme.neutralLight,
+            color: isHighlighted ? null : AppTheme.neutralLightOf(context),
             shape: BoxShape.circle,
           ),
           child: Center(
@@ -594,7 +594,7 @@ class _StepDot extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: active
                           ? Colors.white
-                          : AppTheme.textTertiary,
+                          : AppTheme.textTertiaryOf(context),
                       fontSize: 13,
                     ),
                   ),
@@ -606,7 +606,7 @@ class _StepDot extends StatelessWidget {
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: isHighlighted
                     ? AppTheme.primaryColor
-                    : AppTheme.textTertiary,
+                    : AppTheme.textTertiaryOf(context),
                 fontWeight: active ? FontWeight.bold : FontWeight.normal,
               ),
         ),

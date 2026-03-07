@@ -54,9 +54,11 @@ class FoodItemDetailScreen extends StatelessWidget {
   }
 
   Widget _buildSliverAppBar(BuildContext context, bool isOwner) {
+    final hasImage = foodItem.imageUrl != null && foodItem.imageUrl!.isNotEmpty;
     return SliverAppBar(
       expandedHeight: 200,
       pinned: true,
+      foregroundColor: hasImage ? Colors.white : AppTheme.textPrimaryOf(context),
       flexibleSpace: FlexibleSpaceBar(
         background: foodItem.imageUrl != null && foodItem.imageUrl!.isNotEmpty
             ? Stack(
@@ -65,7 +67,7 @@ class FoodItemDetailScreen extends StatelessWidget {
                   Image.network(
                     foodItem.imageUrl!,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, _, _) => _buildPlaceholderImage(),
+                    errorBuilder: (_, _, _) => _buildPlaceholderImage(context),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -81,7 +83,7 @@ class FoodItemDetailScreen extends StatelessWidget {
                   ),
                 ],
               )
-            : _buildPlaceholderImage(),
+            : _buildPlaceholderImage(context),
       ),
       actions: isOwner
           ? [
@@ -121,11 +123,11 @@ class FoodItemDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPlaceholderImage() {
+  Widget _buildPlaceholderImage(BuildContext context) {
     return Container(
-      color: AppTheme.warmCream,
-      child: const Center(
-        child: Icon(Icons.restaurant_outlined, size: 80, color: AppTheme.textTertiary),
+      color: AppTheme.neutralSoftOf(context),
+      child: Center(
+        child: Icon(Icons.restaurant_outlined, size: 80, color: AppTheme.textTertiaryOf(context)),
       ),
     );
   }

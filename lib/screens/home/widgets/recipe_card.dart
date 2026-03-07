@@ -42,12 +42,12 @@ class _RecipeCardState extends State<RecipeCard> {
         curve: Curves.easeInOut,
         child: Container(
           decoration: BoxDecoration(
-            color: AppTheme.surfaceColor,
+            color: AppTheme.surfaceOf(context),
             borderRadius: BorderRadius.circular(22),
             border: Border.all(
-              color: AppTheme.neutralLight.withValues(alpha: 0.5),
+              color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
             ),
-            boxShadow: [AppTheme.warmShadowMedium()],
+            boxShadow: [AppTheme.shadowOf(context)],
           ),
           clipBehavior: Clip.antiAlias,
           child: Column(
@@ -95,10 +95,10 @@ class _RecipeCardState extends State<RecipeCard> {
                     // Title
                     Text(
                       recipe.title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary,
+                        color: AppTheme.textPrimaryOf(context),
                         height: 1.2,
                       ),
                       maxLines: 2,
@@ -127,35 +127,35 @@ class _RecipeCardState extends State<RecipeCard> {
                         Flexible(
                           child: Text(
                             recipe.authorName,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
-                              color: AppTheme.textSecondary,
+                              color: AppTheme.textSecondaryOf(context),
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 6),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
                           child: Text(
                             '\u2022',
                             style: TextStyle(
                               fontSize: 12,
-                              color: AppTheme.textTertiary,
+                              color: AppTheme.textTertiaryOf(context),
                             ),
                           ),
                         ),
-                        const Icon(
+                        Icon(
                           Icons.schedule,
                           size: 14,
-                          color: AppTheme.textTertiary,
+                          color: AppTheme.textTertiaryOf(context),
                         ),
                         const SizedBox(width: 3),
                         Text(
                           '$totalTime ${l10n.minuteShort}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: AppTheme.textSecondary,
+                            color: AppTheme.textSecondaryOf(context),
                           ),
                         ),
                       ],
@@ -168,9 +168,9 @@ class _RecipeCardState extends State<RecipeCard> {
                       const SizedBox(height: 14),
                       Container(
                         padding: const EdgeInsets.only(top: 14),
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           border: Border(
-                            top: BorderSide(color: AppTheme.neutralLight),
+                            top: BorderSide(color: AppTheme.neutralLightOf(context)),
                           ),
                         ),
                         child: Row(
@@ -224,33 +224,33 @@ class _RecipeCardState extends State<RecipeCard> {
           recipe.averageRating > 0
               ? recipe.averageRating.toStringAsFixed(1)
               : '-',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: AppTheme.textPrimary,
+            color: AppTheme.textPrimaryOf(context),
           ),
         ),
         if (recipe.ratingCount > 0) ...[
           Text(
             ' (${recipe.ratingCount})',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
-              color: AppTheme.textTertiary,
+              color: AppTheme.textTertiaryOf(context),
             ),
           ),
         ],
         const SizedBox(width: 10),
-        const Icon(
+        Icon(
           Icons.chat_bubble_outline,
           size: 13,
-          color: AppTheme.textTertiary,
+          color: AppTheme.textTertiaryOf(context),
         ),
         const SizedBox(width: 3),
         Text(
           '${recipe.commentCount}',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 12,
-            color: AppTheme.textSecondary,
+            color: AppTheme.textSecondaryOf(context),
           ),
         ),
       ],
@@ -266,7 +266,7 @@ class _RecipeCardState extends State<RecipeCard> {
         fit: BoxFit.cover,
         placeholder: (context, url) => Container(
           height: 210,
-          color: AppTheme.neutralLight,
+          color: AppTheme.neutralLightOf(context),
           child: const Center(
             child: CircularProgressIndicator(
               color: AppTheme.primaryColor,
@@ -284,11 +284,11 @@ class _RecipeCardState extends State<RecipeCard> {
     return Container(
       height: 210,
       width: double.infinity,
-      color: AppTheme.neutralLight,
-      child: const Icon(
+      color: AppTheme.neutralLightOf(context),
+      child: Icon(
         Icons.restaurant,
         size: 56,
-        color: AppTheme.textTertiary,
+        color: AppTheme.textTertiaryOf(context),
       ),
     );
   }
@@ -357,20 +357,20 @@ class _RecipeCardState extends State<RecipeCard> {
         children: [
           Text(
             label.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w500,
-              color: AppTheme.textTertiary,
+              color: AppTheme.textTertiaryOf(context),
               letterSpacing: 0.3,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: AppTheme.textPrimary,
+              color: AppTheme.textPrimaryOf(context),
             ),
           ),
         ],

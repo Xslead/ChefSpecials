@@ -37,12 +37,12 @@ class ImagePickerTile extends StatelessWidget {
         width: double.infinity,
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          color: AppTheme.neutralSoft,
+          color: AppTheme.neutralSoftOf(context),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: hasImage
                 ? AppTheme.primaryColor.withValues(alpha: 0.3)
-                : AppTheme.neutralLight,
+                : AppTheme.neutralLightOf(context),
             width: hasImage ? 2 : 1,
           ),
           image: imageFile != null
@@ -59,15 +59,15 @@ class ImagePickerTile extends StatelessWidget {
                     imageUrl: existingImageUrl,
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
-                        Container(color: AppTheme.neutralSoft),
-                    errorWidget: (context, url, error) => _placeholder(),
+                        Container(color: AppTheme.neutralSoftOf(context)),
+                    errorWidget: (context, url, error) => _placeholder(context),
                   )
-                : _placeholder(),
+                : _placeholder(context),
       ),
     );
   }
 
-  Widget _placeholder() {
+  Widget _placeholder(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -85,12 +85,12 @@ class ImagePickerTile extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        const Text(
+        Text(
           'Tap to add photo',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: AppTheme.textTertiary,
+            color: AppTheme.textTertiaryOf(context),
           ),
         ),
       ],

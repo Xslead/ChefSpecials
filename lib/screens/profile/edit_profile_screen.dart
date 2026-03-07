@@ -162,10 +162,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           // Custom header
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppTheme.surfaceOf(context),
               border: Border(
                 bottom:
-                    BorderSide(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
+                    BorderSide(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
               ),
             ),
             child: SafeArea(
@@ -177,7 +177,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     IconButton(
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () => Navigator.of(context).pop(),
-                      color: AppTheme.textPrimary,
+                      color: AppTheme.textPrimaryOf(context),
                     ),
                     const SizedBox(width: 4),
                     Text(
@@ -233,8 +233,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             padding: const EdgeInsets.all(3),
                             child: Container(
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
+                              decoration: BoxDecoration(
+                                color: AppTheme.surfaceOf(context),
                                 shape: BoxShape.circle,
                               ),
                               padding: const EdgeInsets.all(2),
@@ -266,7 +266,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 color: AppTheme.primaryColor,
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: Colors.white,
+                                  color: AppTheme.surfaceOf(context),
                                   width: 2,
                                 ),
                               ),
@@ -284,7 +284,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   const SizedBox(height: 32),
 
                   // ── Personal Info Section ──
-                  _sectionLabel('PERSONAL INFO'),
+                  _sectionLabel('PERSONAL INFO', context),
                   const SizedBox(height: 12),
 
                   // First & Last Name
@@ -346,7 +346,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(
                             color: _birthDate == null
-                                ? AppTheme.neutralLight
+                                ? AppTheme.neutralLightOf(context)
                                 : AppTheme.primaryColor,
                           ),
                         ),
@@ -364,7 +364,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             : 'Select your date of birth',
                         style: TextStyle(
                           color:
-                              _birthDate != null ? null : AppTheme.textTertiary,
+                              _birthDate != null ? null : AppTheme.textTertiaryOf(context),
                         ),
                       ),
                     ),
@@ -383,11 +383,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
 
                   const SizedBox(height: 24),
-                  Divider(color: AppTheme.neutralLight),
+                  Divider(color: AppTheme.neutralLightOf(context)),
                   const SizedBox(height: 24),
 
                   // ── Physical Info Section ──
-                  _sectionLabel('PHYSICAL INFO'),
+                  _sectionLabel('PHYSICAL INFO', context),
                   const SizedBox(height: 12),
 
                   // Gender
@@ -500,13 +500,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _sectionLabel(String text) {
+  Widget _sectionLabel(String text, BuildContext context) {
     return Text(
       text,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 11,
         fontWeight: FontWeight.w700,
-        color: AppTheme.textTertiary,
+        color: AppTheme.textTertiaryOf(context),
         letterSpacing: 0.8,
       ),
     );

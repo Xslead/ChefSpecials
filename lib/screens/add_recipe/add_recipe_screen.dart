@@ -68,9 +68,9 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
           // Custom header
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppTheme.surfaceOf(context),
               border: Border(
-                bottom: BorderSide(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
+                bottom: BorderSide(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
               ),
             ),
             child: SafeArea(
@@ -82,7 +82,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                     IconButton(
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () => context.pop(),
-                      color: AppTheme.textPrimary,
+                      color: AppTheme.textPrimaryOf(context),
                     ),
                     const SizedBox(width: 4),
                     Container(
@@ -142,7 +142,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                   const SizedBox(height: 20),
 
                   // Recipe name
-                  _buildSectionLabel(l10n.recipeName),
+                  _buildSectionLabel(l10n.recipeName, context),
                   const SizedBox(height: 8),
                   TextFormField(
                     decoration: InputDecoration(
@@ -159,7 +159,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                   const SizedBox(height: 16),
 
                   // Description
-                  _buildSectionLabel(l10n.description),
+                  _buildSectionLabel(l10n.description, context),
                   const SizedBox(height: 8),
                   TextFormField(
                     decoration: InputDecoration(
@@ -178,7 +178,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                   const SizedBox(height: 16),
 
                   // Category
-                  _buildSectionLabel(l10n.category),
+                  _buildSectionLabel(l10n.category, context),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
                     initialValue: formProvider.category,
@@ -203,6 +203,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                     children: [
                       Expanded(
                         child: _buildCompactCard(
+                          context: context,
                           icon: Icons.people_outline,
                           color: AppTheme.primaryColor,
                           label: l10n.servings,
@@ -215,7 +216,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                               fontWeight: FontWeight.w900,
                               color: AppTheme.primaryColor,
                             ),
-                            decoration: _compactInputDecoration(),
+                            decoration: _compactInputDecoration(context),
                             onChanged: (v) {
                               final n = int.tryParse(v);
                               if (n != null) formProvider.servings = n;
@@ -226,6 +227,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: _buildCompactCard(
+                          context: context,
                           icon: Icons.timer_outlined,
                           color: const Color(0xFFF59E0B),
                           label: l10n.prepTime,
@@ -239,7 +241,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                               fontWeight: FontWeight.w900,
                               color: Color(0xFFF59E0B),
                             ),
-                            decoration: _compactInputDecoration(),
+                            decoration: _compactInputDecoration(context),
                             onChanged: (v) {
                               final n = int.tryParse(v);
                               if (n != null) formProvider.prepTimeMinutes = n;
@@ -250,6 +252,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: _buildCompactCard(
+                          context: context,
                           icon: Icons.local_fire_department,
                           color: const Color(0xFFEF4444),
                           label: l10n.cookTime,
@@ -263,7 +266,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                               fontWeight: FontWeight.w900,
                               color: Color(0xFFEF4444),
                             ),
-                            decoration: _compactInputDecoration(),
+                            decoration: _compactInputDecoration(context),
                             onChanged: (v) {
                               final n = int.tryParse(v);
                               if (n != null) formProvider.cookTimeMinutes = n;
@@ -285,7 +288,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
 
                   // Auto-calculated nutrition
                   if (formProvider.ingredients.isNotEmpty) ...[
-                    _buildNutritionCard(l10n, formProvider),
+                    _buildNutritionCard(l10n, formProvider, context),
                     const SizedBox(height: 24),
                   ],
                 ],
@@ -297,19 +300,20 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
     );
   }
 
-  Widget _buildSectionLabel(String label) {
+  Widget _buildSectionLabel(String label, BuildContext context) {
     return Text(
       label.toUpperCase(),
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 11,
         fontWeight: FontWeight.w700,
-        color: AppTheme.textTertiary,
+        color: AppTheme.textTertiaryOf(context),
         letterSpacing: 0.8,
       ),
     );
   }
 
   Widget _buildCompactCard({
+    required BuildContext context,
     required IconData icon,
     required Color color,
     required String label,
@@ -318,10 +322,10 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.surfaceOf(context),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
-        boxShadow: [AppTheme.warmShadowLight()],
+        border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
+        boxShadow: [AppTheme.shadowOf(context)],
       ),
       child: Column(
         children: [
@@ -337,10 +341,10 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
           const SizedBox(height: 6),
           Text(
             label.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 9,
               fontWeight: FontWeight.w700,
-              color: AppTheme.textTertiary,
+              color: AppTheme.textTertiaryOf(context),
               letterSpacing: 0.5,
             ),
           ),
@@ -351,10 +355,10 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
     );
   }
 
-  InputDecoration _compactInputDecoration() {
+  InputDecoration _compactInputDecoration(BuildContext context) {
     return InputDecoration(
       filled: true,
-      fillColor: AppTheme.neutralSoft,
+      fillColor: AppTheme.neutralSoftOf(context),
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
@@ -373,14 +377,14 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
   }
 
   Widget _buildNutritionCard(
-      AppLocalizations l10n, RecipeFormProvider formProvider) {
+      AppLocalizations l10n, RecipeFormProvider formProvider, BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.surfaceOf(context),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
-        boxShadow: [AppTheme.warmShadowLight()],
+        border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
+        boxShadow: [AppTheme.shadowOf(context)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -400,10 +404,10 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
               const SizedBox(width: 10),
               Text(
                 l10n.calories.toUpperCase(),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
-                  color: AppTheme.textTertiary,
+                  color: AppTheme.textTertiaryOf(context),
                   letterSpacing: 0.8,
                 ),
               ),
@@ -417,24 +421,28 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                 '${formProvider.caloriesPerServing ?? 0}',
                 l10n.kcal,
                 AppTheme.primaryColor,
+                context,
               ),
               _buildNutritionStat(
                 l10n.protein,
                 '${formProvider.proteinGrams ?? 0}',
                 l10n.gram,
                 AppTheme.secondaryColor,
+                context,
               ),
               _buildNutritionStat(
                 l10n.carbs,
                 '${formProvider.carbsGrams ?? 0}',
                 l10n.gram,
                 const Color(0xFFF59E0B),
+                context,
               ),
               _buildNutritionStat(
                 l10n.fat,
                 '${formProvider.fatGrams ?? 0}',
                 l10n.gram,
                 const Color(0xFFEF4444),
+                context,
               ),
             ],
           ),
@@ -444,16 +452,16 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
   }
 
   Widget _buildNutritionStat(
-      String label, String value, String unit, Color color) {
+      String label, String value, String unit, Color color, BuildContext context) {
     return Expanded(
       child: Column(
         children: [
           Text(
             label.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 9,
               fontWeight: FontWeight.w600,
-              color: AppTheme.textTertiary,
+              color: AppTheme.textTertiaryOf(context),
               letterSpacing: 0.3,
             ),
           ),
@@ -468,10 +476,10 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
           ),
           Text(
             unit,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w500,
-              color: AppTheme.textTertiary,
+              color: AppTheme.textTertiaryOf(context),
             ),
           ),
         ],

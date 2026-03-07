@@ -16,12 +16,12 @@ class StepOverviewList extends StatelessWidget {
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppTheme.surfaceOf(context),
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: AppTheme.neutralLight.withValues(alpha: 0.5),
+              color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
             ),
-            boxShadow: [AppTheme.warmShadowLight()],
+            boxShadow: [AppTheme.shadowOf(context)],
           ),
           child: Padding(
             padding: const EdgeInsets.all(16),

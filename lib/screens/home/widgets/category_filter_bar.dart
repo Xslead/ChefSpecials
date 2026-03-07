@@ -24,11 +24,13 @@ class CategoryFilterBar extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         children: [
           _buildPill(
+            context: context,
             label: l10n.all,
             value: null,
           ),
           ...AppConstants.defaultCategories.map(
             (category) => _buildPill(
+              context: context,
               label: _localizeCategory(category, l10n),
               value: category,
             ),
@@ -38,7 +40,7 @@ class CategoryFilterBar extends StatelessWidget {
     );
   }
 
-  Widget _buildPill({required String label, required String? value}) {
+  Widget _buildPill({required BuildContext context, required String label, required String? value}) {
     final isSelected = selectedCategory == value;
 
     return Padding(
@@ -49,7 +51,7 @@ class CategoryFilterBar extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected ? AppTheme.primaryColor : AppTheme.neutralLight,
+            color: isSelected ? AppTheme.primaryColor : AppTheme.neutralLightOf(context),
             borderRadius: BorderRadius.circular(50),
           ),
           child: Text(
@@ -57,7 +59,7 @@ class CategoryFilterBar extends StatelessWidget {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: isSelected ? Colors.white : AppTheme.textSecondary,
+              color: isSelected ? Colors.white : AppTheme.textSecondaryOf(context),
             ),
           ),
         ),

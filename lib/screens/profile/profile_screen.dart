@@ -9,6 +9,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/favorite_provider.dart';
 import '../../providers/recipe_provider.dart';
+import '../../providers/theme_provider.dart';
 import '../home/widgets/recipe_card.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -50,6 +51,7 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: _buildStatCard(
+                          context: context,
                           icon: Icons.menu_book,
                           color: AppTheme.primaryColor,
                           count: userRecipes.length,
@@ -59,6 +61,7 @@ class ProfileScreen extends StatelessWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: _buildStatCard(
+                          context: context,
                           icon: Icons.favorite,
                           color: AppTheme.errorColor,
                           count: favoriteCount,
@@ -145,9 +148,9 @@ class ProfileScreen extends StatelessWidget {
   Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.surfaceOf(context),
         border: Border(
-          bottom: BorderSide(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
+          bottom: BorderSide(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
         ),
       ),
       child: SafeArea(
@@ -178,6 +181,16 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(),
+              IconButton(
+                icon: Icon(
+                  Theme.of(context).brightness == Brightness.dark
+                      ? Icons.light_mode_outlined
+                      : Icons.dark_mode_outlined,
+                ),
+                onPressed: () =>
+                    context.read<ThemeProvider>().toggleTheme(),
+                color: AppTheme.textSecondary,
+              ),
               IconButton(
                 icon: const Icon(Icons.edit_outlined),
                 onPressed: () => context.push('/edit-profile'),
@@ -238,10 +251,10 @@ class ProfileScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppTheme.surfaceOf(context),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
-          boxShadow: [AppTheme.warmShadowLight()],
+          border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
+          boxShadow: [AppTheme.shadowOf(context)],
         ),
         child: Column(
           children: [
@@ -255,8 +268,8 @@ class ProfileScreen extends StatelessWidget {
               ),
               padding: const EdgeInsets.all(3),
               child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
+                decoration: BoxDecoration(
+                  color: AppTheme.surfaceOf(context),
                   shape: BoxShape.circle,
                 ),
                 padding: const EdgeInsets.all(2),
@@ -356,6 +369,7 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildStatCard({
+    required BuildContext context,
     required IconData icon,
     required Color color,
     required int count,
@@ -364,10 +378,10 @@ class ProfileScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.surfaceOf(context),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
-        boxShadow: [AppTheme.warmShadowLight()],
+        border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
+        boxShadow: [AppTheme.shadowOf(context)],
       ),
       child: Row(
         children: [
@@ -386,18 +400,18 @@ class ProfileScreen extends StatelessWidget {
             children: [
               Text(
                 '$count',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w900,
-                  color: AppTheme.textPrimary,
+                  color: AppTheme.textPrimaryOf(context),
                 ),
               ),
               Text(
                 label.toUpperCase(),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.textTertiary,
+                  color: AppTheme.textTertiaryOf(context),
                   letterSpacing: 0.5,
                 ),
               ),

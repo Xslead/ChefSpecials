@@ -54,7 +54,7 @@ class MacroBarChart extends StatelessWidget {
               l10n.dailySummary,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
+                    color: AppTheme.textPrimaryOf(context),
                   ),
             ),
             const SizedBox(height: 16),
@@ -145,7 +145,7 @@ class MacroBarChart extends StatelessWidget {
                     show: true,
                     horizontalInterval: 50,
                     getDrawingHorizontalLine: (value) => FlLine(
-                      color: AppTheme.warmBeige,
+                      color: AppTheme.neutralLightOf(context),
                       strokeWidth: 1,
                     ),
                     drawVerticalLine: false,
@@ -162,7 +162,7 @@ class MacroBarChart extends StatelessWidget {
                     horizontalLines: [
                       HorizontalLine(
                         y: 100,
-                        color: AppTheme.textTertiary,
+                        color: AppTheme.textTertiaryOf(context),
                         strokeWidth: 1,
                         dashArray: [4, 4],
                       ),

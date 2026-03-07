@@ -18,10 +18,10 @@ class SearchResultTile extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppTheme.surfaceOf(context),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
-          boxShadow: [AppTheme.warmShadowLight()],
+          border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
+          boxShadow: [AppTheme.shadowOf(context)],
         ),
         child: Row(
           children: [
@@ -76,9 +76,9 @@ class SearchResultTile extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     '${recipe.category} • ${recipe.prepTimeMinutes + recipe.cookTimeMinutes} min',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: AppTheme.textTertiary,
+                      color: AppTheme.textTertiaryOf(context),
                     ),
                   ),
                 ],

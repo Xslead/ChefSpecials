@@ -74,9 +74,9 @@ class MealSectionCard extends StatelessWidget {
           color: AppTheme.surfaceOf(context),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: AppTheme.warmBeige.withValues(alpha: 0.5),
+            color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
           ),
-          boxShadow: [AppTheme.warmShadowLight()],
+          boxShadow: [AppTheme.shadowOf(context)],
         ),
         clipBehavior: Clip.antiAlias,
         child: Column(
@@ -115,9 +115,9 @@ class MealSectionCard extends StatelessWidget {
                           hasEntries
                               ? '${totalCal.toInt()} ${l10n.kcal}'
                               : l10n.notAddedYet,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
-                            color: AppTheme.textTertiary,
+                            color: AppTheme.textTertiaryOf(context),
                           ),
                         ),
                       ],
@@ -149,7 +149,7 @@ class MealSectionCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border(
                     top: BorderSide(
-                      color: AppTheme.warmBeige.withValues(alpha: 0.5),
+                      color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
                     ),
                   ),
                 ),
@@ -182,18 +182,18 @@ class MealSectionCard extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 '${entry.name} (${entry.quantity.toInt()}${entry.unit})',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 14,
-                                  color: AppTheme.textSecondary,
+                                  color: AppTheme.textSecondaryOf(context),
                                 ),
                               ),
                             ),
                             Text(
                               '${entry.calories.toInt()} ${AppLocalizations.of(context)!.kcal}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                color: AppTheme.textPrimary,
+                                color: AppTheme.textPrimaryOf(context),
                               ),
                             ),
                           ],

@@ -13,7 +13,7 @@ class FoodItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final color = _colorForCategory(foodItem.category);
+    final color = _colorForCategory(foodItem.category, context);
 
     return GestureDetector(
       onTap: () => context.push(
@@ -25,7 +25,7 @@ class FoodItemCard extends StatelessWidget {
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
-          boxShadow: [AppTheme.warmShadowLight()],
+          boxShadow: [AppTheme.shadowOf(context)],
         ),
         child: Padding(
           padding: const EdgeInsets.all(14),
@@ -103,9 +103,9 @@ class FoodItemCard extends StatelessWidget {
                           foodItem.brand != null
                               ? '${foodItem.brand} \u2022 ${foodItem.category}'
                               : foodItem.category,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: AppTheme.textTertiary,
+                            color: AppTheme.textTertiaryOf(context),
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -128,10 +128,10 @@ class FoodItemCard extends StatelessWidget {
                       ),
                       Text(
                         l10n.kcal,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
-                          color: AppTheme.textTertiary,
+                          color: AppTheme.textTertiaryOf(context),
                         ),
                       ),
                     ],
@@ -150,24 +150,28 @@ class FoodItemCard extends StatelessWidget {
                 child: Row(
                   children: [
                     _buildMiniNutrition(
+                      context,
                       l10n.protein,
                       '${foodItem.protein.toStringAsFixed(1)}g',
                       AppTheme.primaryColor,
                     ),
                     _buildMiniNutrition(
+                      context,
                       l10n.carbs,
                       '${foodItem.carbs.toStringAsFixed(1)}g',
                       const Color(0xFFF59E0B),
                     ),
                     _buildMiniNutrition(
+                      context,
                       l10n.fat,
                       '${foodItem.fat.toStringAsFixed(1)}g',
                       const Color(0xFFEF4444),
                     ),
                     _buildMiniNutrition(
+                      context,
                       l10n.per100,
                       '${foodItem.packetSize.toStringAsFixed(0)}${foodItem.unit == 'mL' ? 'mL' : 'g'}',
-                      AppTheme.textSecondary,
+                      AppTheme.textSecondaryOf(context),
                     ),
                   ],
                 ),
@@ -179,16 +183,16 @@ class FoodItemCard extends StatelessWidget {
     );
   }
 
-  Widget _buildMiniNutrition(String label, String value, Color color) {
+  Widget _buildMiniNutrition(BuildContext context, String label, String value, Color color) {
     return Expanded(
       child: Column(
         children: [
           Text(
             label.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 9,
               fontWeight: FontWeight.w600,
-              color: AppTheme.textTertiary,
+              color: AppTheme.textTertiaryOf(context),
               letterSpacing: 0.3,
             ),
           ),
@@ -206,7 +210,7 @@ class FoodItemCard extends StatelessWidget {
     );
   }
 
-  Color _colorForCategory(String category) {
+  Color _colorForCategory(String category, BuildContext context) {
     switch (category) {
       case 'Protein':
         return const Color(0xFFEF4444);
@@ -223,7 +227,7 @@ class FoodItemCard extends StatelessWidget {
       case 'Beverages':
         return const Color(0xFF06B6D4);
       default:
-        return AppTheme.textTertiary;
+        return AppTheme.textTertiaryOf(context);
     }
   }
 

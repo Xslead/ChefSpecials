@@ -56,14 +56,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icon(
                               Icons.restaurant_menu,
                               size: 64,
-                              color: AppTheme.neutralLight,
+                              color: AppTheme.neutralLightOf(context),
                             ),
                             const SizedBox(height: 16),
                             Text(
                               l10n.noRecipes,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 16,
-                                color: AppTheme.textTertiary,
+                                color: AppTheme.textTertiaryOf(context),
                               ),
                             ),
                           ],
@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
-        boxShadow: [AppTheme.warmShadowLight()],
+        boxShadow: [AppTheme.shadowOf(context)],
       ),
       child: SafeArea(
         bottom: false,
@@ -126,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(
                     '${_getGreeting()}, $firstName!',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppTheme.textSecondary,
+                          color: AppTheme.textSecondaryOf(context),
                         ),
                   ),
                 ),
@@ -157,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.favorite_outline),
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.textSecondaryOf(context),
                     onPressed: () => context.push('/favorites'),
                   ),
                 ],
@@ -169,22 +169,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   height: 48,
                   decoration: BoxDecoration(
-                    color: AppTheme.neutralLight,
+                    color: AppTheme.neutralLightOf(context),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Row(
                     children: [
                       const SizedBox(width: 14),
-                      const Icon(
+                      Icon(
                         Icons.search,
-                        color: AppTheme.textTertiary,
+                        color: AppTheme.textTertiaryOf(context),
                         size: 22,
                       ),
                       const SizedBox(width: 10),
                       Text(
                         l10n.searchRecipeOrIngredient,
-                        style: const TextStyle(
-                          color: AppTheme.textTertiary,
+                        style: TextStyle(
+                          color: AppTheme.textTertiaryOf(context),
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),

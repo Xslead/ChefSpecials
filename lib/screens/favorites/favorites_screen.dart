@@ -28,9 +28,9 @@ class FavoritesScreen extends StatelessWidget {
           // Custom header
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppTheme.surfaceOf(context),
               border: Border(
-                bottom: BorderSide(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
+                bottom: BorderSide(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
               ),
             ),
             child: SafeArea(
@@ -42,7 +42,7 @@ class FavoritesScreen extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () => context.pop(),
-                      color: AppTheme.textPrimary,
+                      color: AppTheme.textPrimaryOf(context),
                     ),
                     const SizedBox(width: 4),
                     Container(
@@ -102,30 +102,30 @@ class FavoritesScreen extends StatelessWidget {
                           width: 72,
                           height: 72,
                           decoration: BoxDecoration(
-                            color: AppTheme.neutralSoft,
+                            color: AppTheme.neutralSoftOf(context),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Icon(
                             Icons.favorite_border,
                             size: 36,
-                            color: AppTheme.neutralLight,
+                            color: AppTheme.neutralLightOf(context),
                           ),
                         ),
                         const SizedBox(height: 16),
                         Text(
                           l10n.noFavorites,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: AppTheme.textSecondary,
+                            color: AppTheme.textSecondaryOf(context),
                           ),
                         ),
                         const SizedBox(height: 6),
-                        const Text(
+                        Text(
                           'Tap the heart icon on recipes to save them here',
                           style: TextStyle(
                             fontSize: 13,
-                            color: AppTheme.textTertiary,
+                            color: AppTheme.textTertiaryOf(context),
                           ),
                         ),
                       ],

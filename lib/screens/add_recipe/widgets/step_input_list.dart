@@ -33,10 +33,10 @@ class StepInputList extends StatelessWidget {
             const SizedBox(width: 10),
             Text(
               l10n.steps.toUpperCase(),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
-                color: AppTheme.textTertiary,
+                color: AppTheme.textTertiaryOf(context),
                 letterSpacing: 0.8,
               ),
             ),
@@ -80,9 +80,9 @@ class StepInputList extends StatelessWidget {
             return Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppTheme.surfaceOf(context),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
+                border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,12 +113,12 @@ class StepInputList extends StatelessWidget {
                           initialValue: step.instruction,
                           decoration: InputDecoration(
                             hintText: 'Instruction',
-                            hintStyle: const TextStyle(
-                              color: AppTheme.textTertiary,
+                            hintStyle: TextStyle(
+                              color: AppTheme.textTertiaryOf(context),
                               fontSize: 13,
                             ),
                             filled: true,
-                            fillColor: AppTheme.neutralSoft,
+                            fillColor: AppTheme.neutralSoftOf(context),
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 10),
                             isDense: true,
@@ -144,17 +144,17 @@ class StepInputList extends StatelessWidget {
                           initialValue: step.timerSeconds?.toString(),
                           decoration: InputDecoration(
                             hintText: 'Timer (seconds)',
-                            hintStyle: const TextStyle(
-                              color: AppTheme.textTertiary,
+                            hintStyle: TextStyle(
+                              color: AppTheme.textTertiaryOf(context),
                               fontSize: 13,
                             ),
-                            prefixIcon: const Icon(
+                            prefixIcon: Icon(
                               Icons.timer_outlined,
                               size: 18,
-                              color: AppTheme.textTertiary,
+                              color: AppTheme.textTertiaryOf(context),
                             ),
                             filled: true,
-                            fillColor: AppTheme.neutralSoft,
+                            fillColor: AppTheme.neutralSoftOf(context),
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 10),
                             isDense: true,
@@ -184,12 +184,12 @@ class StepInputList extends StatelessWidget {
                   if (steps.length > 1)
                     GestureDetector(
                       onTap: () => formProvider.removeStep(index),
-                      child: const Padding(
-                        padding: EdgeInsets.only(left: 6),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 6),
                         child: Icon(
                           Icons.close,
                           size: 18,
-                          color: AppTheme.textTertiary,
+                          color: AppTheme.textTertiaryOf(context),
                         ),
                       ),
                     ),

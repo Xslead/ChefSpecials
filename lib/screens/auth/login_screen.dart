@@ -47,9 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppTheme.warmBackgroundGradient,
-        ),
+        color: AppTheme.backgroundOf(context),
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -171,8 +169,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       icon: const Icon(Icons.bolt, size: 18),
                       label: const Text('Quick Login (Test)'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppTheme.textSecondary,
-                        side: const BorderSide(color: AppTheme.neutralLight),
+                        foregroundColor: AppTheme.textSecondaryOf(context),
+                        side: BorderSide(color: AppTheme.neutralLightOf(context)),
                       ),
                     ),
                     const SizedBox(height: 4),

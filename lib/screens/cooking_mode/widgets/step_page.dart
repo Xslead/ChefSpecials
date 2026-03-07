@@ -64,12 +64,12 @@ class StepPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppTheme.warmCream,
+              color: AppTheme.neutralSoftOf(context),
               borderRadius: BorderRadius.circular(18),
               border: Border.all(
-                color: AppTheme.warmBeige.withValues(alpha: 0.5),
+                color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
               ),
-              boxShadow: [AppTheme.warmShadowLight()],
+              boxShadow: [AppTheme.shadowOf(context)],
             ),
             child: Text(
               step.instruction,

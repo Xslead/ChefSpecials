@@ -71,9 +71,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         elevation: 0,
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppTheme.warmBackgroundGradient,
-        ),
+        color: AppTheme.backgroundOf(context),
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -111,7 +109,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           Text(
             'Enter the email address associated with your account. We\'ll send you a link to reset your password.',
             textAlign: TextAlign.center,
-            style: textTheme.bodyMedium?.copyWith(color: AppTheme.textSecondary),
+            style: textTheme.bodyMedium?.copyWith(color: AppTheme.textSecondaryOf(context)),
           ),
           const SizedBox(height: 40),
           TextFormField(
@@ -179,13 +177,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         Text(
           'We sent a password reset link to\n${_emailController.text.trim()}',
           textAlign: TextAlign.center,
-          style: textTheme.bodyMedium?.copyWith(color: AppTheme.textSecondary),
+          style: textTheme.bodyMedium?.copyWith(color: AppTheme.textSecondaryOf(context)),
         ),
         const SizedBox(height: 8),
         Text(
           'Check your inbox and follow the link to reset your password.',
           textAlign: TextAlign.center,
-          style: textTheme.bodySmall?.copyWith(color: AppTheme.textTertiary),
+          style: textTheme.bodySmall?.copyWith(color: AppTheme.textTertiaryOf(context)),
         ),
         const SizedBox(height: 40),
         GradientButton(

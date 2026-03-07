@@ -128,14 +128,14 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                         Icon(
                           Icons.menu_book,
                           size: 64,
-                          color: AppTheme.neutralLight,
+                          color: AppTheme.neutralLightOf(context),
                         ),
                         const SizedBox(height: 16),
                         Text(
                           l10n.noRecipes,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
-                            color: AppTheme.textTertiary,
+                            color: AppTheme.textTertiaryOf(context),
                           ),
                         ),
                       ],
@@ -173,7 +173,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
-        boxShadow: [AppTheme.warmShadowLight()],
+        boxShadow: [AppTheme.shadowOf(context)],
       ),
       child: SafeArea(
         bottom: false,
@@ -211,18 +211,18 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                       ),
                       Text(
                         l10n.recipeCount(totalCount),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: AppTheme.textTertiary,
+                          color: AppTheme.textTertiaryOf(context),
                         ),
                       ),
                     ],
                   ),
                   const Spacer(),
                   PopupMenuButton<_SortOption>(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.sort,
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.textSecondaryOf(context),
                     ),
                     tooltip: l10n.sortBy,
                     onSelected: (option) => setState(() => _sortOption = option),
@@ -255,16 +255,16 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                   key: _searchBarKey,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: AppTheme.neutralLight,
+                    color: AppTheme.neutralLightOf(context),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: _isSearching
                       ? Row(
                           children: [
                             const SizedBox(width: 14),
-                            const Icon(
+                            Icon(
                               Icons.search,
-                              color: AppTheme.textTertiary,
+                              color: AppTheme.textTertiaryOf(context),
                               size: 22,
                             ),
                             const SizedBox(width: 10),
@@ -275,8 +275,8 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                                 autofocus: true,
                                 decoration: InputDecoration(
                                   hintText: l10n.searchRecipeOrIngredient,
-                                  hintStyle: const TextStyle(
-                                    color: AppTheme.textTertiary,
+                                  hintStyle: TextStyle(
+                                    color: AppTheme.textTertiaryOf(context),
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -314,12 +314,12 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                                   setState(() => _searchQuery = '');
                                 }
                               },
-                              child: const Padding(
-                                padding: EdgeInsets.all(12),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
                                 child: Icon(
                                   Icons.clear,
                                   size: 18,
-                                  color: AppTheme.textTertiary,
+                                  color: AppTheme.textTertiaryOf(context),
                                 ),
                               ),
                             ),
@@ -328,16 +328,16 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                       : Row(
                           children: [
                             const SizedBox(width: 14),
-                            const Icon(
+                            Icon(
                               Icons.search,
-                              color: AppTheme.textTertiary,
+                              color: AppTheme.textTertiaryOf(context),
                               size: 22,
                             ),
                             const SizedBox(width: 10),
                             Text(
                               l10n.searchRecipeOrIngredient,
-                              style: const TextStyle(
-                                color: AppTheme.textTertiary,
+                              style: TextStyle(
+                                color: AppTheme.textTertiaryOf(context),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -390,7 +390,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
           decoration: BoxDecoration(
-            color: isSelected ? AppTheme.primaryColor : AppTheme.neutralLight,
+            color: isSelected ? AppTheme.primaryColor : AppTheme.neutralLightOf(context),
             borderRadius: BorderRadius.circular(50),
           ),
           child: Text(
@@ -398,7 +398,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: isSelected ? Colors.white : AppTheme.textSecondary,
+              color: isSelected ? Colors.white : AppTheme.textSecondaryOf(context),
             ),
           ),
         ),

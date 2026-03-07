@@ -93,7 +93,7 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
-        boxShadow: [AppTheme.warmShadowLight()],
+        boxShadow: [AppTheme.shadowOf(context)],
       ),
       child: SafeArea(
         bottom: false,
@@ -131,9 +131,9 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                       ),
                       Text(
                         l10n.itemCount(provider.foodItems.length),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: AppTheme.textTertiary,
+                          color: AppTheme.textTertiaryOf(context),
                         ),
                       ),
                     ],
@@ -153,16 +153,16 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                   key: _searchBarKey,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: AppTheme.warmBeige,
+                    color: AppTheme.neutralLightOf(context),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: _isSearching
                       ? Row(
                           children: [
                             const SizedBox(width: 14),
-                            const Icon(
+                            Icon(
                               Icons.search_outlined,
-                              color: AppTheme.textTertiary,
+                              color: AppTheme.textTertiaryOf(context),
                               size: 22,
                             ),
                             const SizedBox(width: 10),
@@ -173,8 +173,8 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                                 autofocus: true,
                                 decoration: InputDecoration(
                                   hintText: l10n.searchFoodItems,
-                                  hintStyle: const TextStyle(
-                                    color: AppTheme.textTertiary,
+                                  hintStyle: TextStyle(
+                                    color: AppTheme.textTertiaryOf(context),
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -218,12 +218,12 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                                   setState(() {});
                                 }
                               },
-                              child: const Padding(
-                                padding: EdgeInsets.all(12),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
                                 child: Icon(
                                   Icons.close_rounded,
                                   size: 18,
-                                  color: AppTheme.textTertiary,
+                                  color: AppTheme.textTertiaryOf(context),
                                 ),
                               ),
                             ),
@@ -232,16 +232,16 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                       : Row(
                           children: [
                             const SizedBox(width: 14),
-                            const Icon(
+                            Icon(
                               Icons.search_outlined,
-                              color: AppTheme.textTertiary,
+                              color: AppTheme.textTertiaryOf(context),
                               size: 22,
                             ),
                             const SizedBox(width: 10),
                             Text(
                               l10n.searchFoodItems,
-                              style: const TextStyle(
-                                color: AppTheme.textTertiary,
+                              style: TextStyle(
+                                color: AppTheme.textTertiaryOf(context),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -271,7 +271,7 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? AppTheme.primaryColor
-                                : AppTheme.neutralLight,
+                                : AppTheme.neutralLightOf(context),
                             borderRadius: BorderRadius.circular(50),
                           ),
                           child: Text(
@@ -281,7 +281,7 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                               fontWeight: FontWeight.w600,
                               color: isSelected
                                   ? Colors.white
-                                  : AppTheme.textSecondary,
+                                  : AppTheme.textSecondaryOf(context),
                             ),
                           ),
                         ),
@@ -315,14 +315,14 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
             Icon(
               Icons.inventory_2_outlined,
               size: 64,
-              color: AppTheme.warmBeige,
+              color: AppTheme.neutralLightOf(context),
             ),
             const SizedBox(height: 16),
             Text(
               _isSearching ? l10n.noResults : l10n.noFoodItems,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
-                color: AppTheme.textTertiary,
+                color: AppTheme.textTertiaryOf(context),
               ),
             ),
           ],

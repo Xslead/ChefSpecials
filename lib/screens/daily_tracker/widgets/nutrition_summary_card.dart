@@ -53,6 +53,7 @@ class NutritionSummaryCard extends StatelessWidget {
                   painter: _CalorieRingPainter(
                     progress: calorieProgress.clamp(0, 1.0),
                     isExceeded: isExceeded,
+                    trackColor: AppTheme.neutralLightOf(context),
                   ),
                   child: Center(
                     child: Column(
@@ -67,17 +68,17 @@ class NutritionSummaryCard extends StatelessWidget {
                             fontWeight: FontWeight.w900,
                             color: isExceeded
                                 ? AppTheme.errorColor
-                                : AppTheme.textPrimary,
+                                : AppTheme.textPrimaryOf(context),
                           ),
                         ),
                         Text(
                           isExceeded
                               ? '${l10n.exceeded} ${l10n.kcal}'
                               : l10n.remainingKcal,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
-                            color: AppTheme.textTertiary,
+                            color: AppTheme.textTertiaryOf(context),
                           ),
                         ),
                       ],
@@ -91,6 +92,7 @@ class NutritionSummaryCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _buildCalorieStat(
+                    context,
                     l10n.consumed,
                     '${currentCalories.toInt()} ${l10n.kcal}',
                   ),
@@ -98,9 +100,10 @@ class NutritionSummaryCard extends StatelessWidget {
                     width: 1,
                     height: 32,
                     margin: const EdgeInsets.symmetric(horizontal: 20),
-                    color: AppTheme.warmBeige,
+                    color: AppTheme.neutralLightOf(context),
                   ),
                   _buildCalorieStat(
+                    context,
                     l10n.target,
                     '${targetCalories.toInt()} ${l10n.kcal}',
                   ),
@@ -121,8 +124,12 @@ class NutritionSummaryCard extends StatelessWidget {
                   current: currentProtein,
                   target: targetProtein,
                   progress: proteinProgress,
-                  tintColor: const Color(0xFFE0F2FE),
-                  borderColor: const Color(0xFFBAE6FD),
+                  tintColor: AppTheme.adaptive(context,
+                      light: const Color(0xFFE0F2FE),
+                      dark: const Color(0xFF0C4A6E)),
+                  borderColor: AppTheme.adaptive(context,
+                      light: const Color(0xFFBAE6FD),
+                      dark: const Color(0xFF075985)),
                 ),
               ),
               const SizedBox(width: 10),
@@ -132,8 +139,12 @@ class NutritionSummaryCard extends StatelessWidget {
                   current: currentCarbs,
                   target: targetCarbs,
                   progress: carbsProgress,
-                  tintColor: const Color(0xFFFEF3C7),
-                  borderColor: const Color(0xFFFDE68A),
+                  tintColor: AppTheme.adaptive(context,
+                      light: const Color(0xFFFEF3C7),
+                      dark: const Color(0xFF78350F)),
+                  borderColor: AppTheme.adaptive(context,
+                      light: const Color(0xFFFDE68A),
+                      dark: const Color(0xFF92400E)),
                 ),
               ),
               const SizedBox(width: 10),
@@ -143,8 +154,12 @@ class NutritionSummaryCard extends StatelessWidget {
                   current: currentFat,
                   target: targetFat,
                   progress: fatProgress,
-                  tintColor: const Color(0xFFD1FAE5),
-                  borderColor: const Color(0xFFA7F3D0),
+                  tintColor: AppTheme.adaptive(context,
+                      light: const Color(0xFFD1FAE5),
+                      dark: const Color(0xFF064E3B)),
+                  borderColor: AppTheme.adaptive(context,
+                      light: const Color(0xFFA7F3D0),
+                      dark: const Color(0xFF065F46)),
                 ),
               ),
             ],
@@ -154,24 +169,24 @@ class NutritionSummaryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildCalorieStat(String label, String value) {
+  Widget _buildCalorieStat(BuildContext context, String label, String value) {
     return Column(
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w500,
-            color: AppTheme.textTertiary,
+            color: AppTheme.textTertiaryOf(context),
           ),
         ),
         const SizedBox(height: 2),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: AppTheme.textPrimary,
+            color: AppTheme.textPrimaryOf(context),
           ),
         ),
       ],
@@ -212,29 +227,29 @@ class _MacroCard extends StatelessWidget {
         children: [
           Text(
             label.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w700,
-              color: AppTheme.textTertiary,
+              color: AppTheme.textTertiaryOf(context),
               letterSpacing: 0.8,
             ),
           ),
           const SizedBox(height: 6),
           RichText(
             text: TextSpan(
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 19,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.textPrimary,
+                color: AppTheme.textPrimaryOf(context),
               ),
               children: [
                 TextSpan(text: '${current.toInt()}g '),
                 TextSpan(
                   text: '/ ${target.toInt()}g',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.normal,
-                    color: AppTheme.textTertiary,
+                    color: AppTheme.textTertiaryOf(context),
                   ),
                 ),
               ],
@@ -245,7 +260,7 @@ class _MacroCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: clampedProgress,
-              backgroundColor: AppTheme.warmBeige,
+              backgroundColor: AppTheme.neutralLightOf(context),
               valueColor: AlwaysStoppedAnimation<Color>(
                 progress > 1.0 ? AppTheme.errorColor : AppTheme.primaryColor,
               ),
@@ -261,10 +276,12 @@ class _MacroCard extends StatelessWidget {
 class _CalorieRingPainter extends CustomPainter {
   final double progress;
   final bool isExceeded;
+  final Color trackColor;
 
   _CalorieRingPainter({
     required this.progress,
     required this.isExceeded,
+    required this.trackColor,
   });
 
   @override
@@ -274,7 +291,7 @@ class _CalorieRingPainter extends CustomPainter {
     const strokeWidth = 14.0;
 
     final bgPaint = Paint()
-      ..color = AppTheme.warmBeige
+      ..color = trackColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
@@ -316,6 +333,7 @@ class _CalorieRingPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _CalorieRingPainter oldDelegate) {
     return oldDelegate.progress != progress ||
-        oldDelegate.isExceeded != isExceeded;
+        oldDelegate.isExceeded != isExceeded ||
+        oldDelegate.trackColor != trackColor;
   }
 }

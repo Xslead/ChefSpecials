@@ -158,10 +158,10 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
   Widget _buildHeader(AppLocalizations l10n, DailyTrackerProvider provider) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.surfaceVariant,
+        color: AppTheme.surfaceVariantOf(context),
         border: Border(
           bottom: BorderSide(
-            color: AppTheme.warmBeige.withValues(alpha: 0.5),
+            color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
           ),
         ),
       ),
@@ -180,7 +180,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                     provider.selectedDate.subtract(const Duration(days: 1)),
                   );
                 },
-                color: AppTheme.textPrimary,
+                color: AppTheme.textPrimaryOf(context),
               ),
               Expanded(
                 child: GestureDetector(
@@ -202,13 +202,13 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                               provider.selectedDate.add(const Duration(days: 1)),
                             );
                           },
-                color: AppTheme.textPrimary,
-                disabledColor: AppTheme.textTertiary,
+                color: AppTheme.textPrimaryOf(context),
+                disabledColor: AppTheme.textTertiaryOf(context),
               ),
               IconButton(
                 icon: const Icon(Icons.settings_outlined),
                 onPressed: () => context.push('/nutrition-goals'),
-                color: AppTheme.textSecondary,
+                color: AppTheme.textSecondaryOf(context),
               ),
               const SizedBox(width: 4),
             ],

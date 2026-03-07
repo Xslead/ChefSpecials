@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'config/theme.dart';
 import 'config/routes.dart';
 import 'providers/locale_provider.dart';
+import 'providers/theme_provider.dart';
 
 class ChefSpecialsApp extends StatelessWidget {
   const ChefSpecialsApp({super.key});
@@ -12,13 +13,14 @@ class ChefSpecialsApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localeProvider = context.watch<LocaleProvider>();
+    final themeProvider = context.watch<ThemeProvider>();
 
     return MaterialApp.router(
       title: 'ChefSpecials',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: themeProvider.themeMode,
       locale: localeProvider.locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,

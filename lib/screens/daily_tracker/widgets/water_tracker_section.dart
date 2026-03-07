@@ -27,12 +27,14 @@ class WaterTrackerSection extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFE0F2FE),
+        color: AppTheme.adaptive(context,
+            light: const Color(0xFFE0F2FE),
+            dark: const Color(0xFF0C4A6E)),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppTheme.warmBeige.withValues(alpha: 0.5),
+          color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
         ),
-        boxShadow: [AppTheme.warmShadowLight()],
+        boxShadow: [AppTheme.shadowOf(context)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,10 +56,10 @@ class WaterTrackerSection extends StatelessWidget {
               ),
               Text(
                 '$currentMl / $targetMl ${l10n.ml}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimary,
+                  color: AppTheme.textPrimaryOf(context),
                 ),
               ),
             ],
@@ -78,7 +80,7 @@ class WaterTrackerSection extends StatelessWidget {
                   size: 24,
                   color: isFilled
                       ? const Color(0xFF0EA5E9)
-                      : AppTheme.warmBeige,
+                      : AppTheme.neutralLightOf(context),
                 ),
               );
             }),
@@ -149,7 +151,7 @@ class _WaterButton extends StatelessWidget {
           color: AppTheme.surfaceOf(context),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: enabled ? borderColor : AppTheme.warmBeige,
+            color: enabled ? borderColor : AppTheme.neutralLightOf(context),
           ),
         ),
         child: Center(
@@ -158,7 +160,7 @@ class _WaterButton extends StatelessWidget {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: enabled ? color : AppTheme.textTertiary,
+              color: enabled ? color : AppTheme.textTertiaryOf(context),
             ),
           ),
         ),

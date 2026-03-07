@@ -35,10 +35,10 @@ class IngredientInputList extends StatelessWidget {
             const SizedBox(width: 10),
             Text(
               l10n.ingredients.toUpperCase(),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
-                color: AppTheme.textTertiary,
+                color: AppTheme.textTertiaryOf(context),
                 letterSpacing: 0.8,
               ),
             ),
@@ -77,19 +77,19 @@ class IngredientInputList extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppTheme.neutralSoft,
+              color: AppTheme.neutralSoftOf(context),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
+              border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
             ),
             child: Column(
               children: [
-                Icon(Icons.egg_alt, size: 32, color: AppTheme.neutralLight),
+                Icon(Icons.egg_alt, size: 32, color: AppTheme.neutralLightOf(context)),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'Tap + to add ingredients',
                   style: TextStyle(
                     fontSize: 13,
-                    color: AppTheme.textTertiary,
+                    color: AppTheme.textTertiaryOf(context),
                   ),
                 ),
               ],
@@ -105,9 +105,9 @@ class IngredientInputList extends StatelessWidget {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppTheme.surfaceOf(context),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
+                border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
               ),
               child: Row(
                 children: [
@@ -126,9 +126,9 @@ class IngredientInputList extends StatelessWidget {
                         if (ingredient.caloriesPer100 != null)
                           Text(
                             '${ingredient.caloriesPer100!.toStringAsFixed(0)} kcal / 100${ingredient.unit ?? 'g'}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 11,
-                              color: AppTheme.textTertiary,
+                              color: AppTheme.textTertiaryOf(context),
                             ),
                           ),
                       ],
@@ -146,12 +146,12 @@ class IngredientInputList extends StatelessWidget {
                       ),
                       decoration: InputDecoration(
                         suffixText: ingredient.unit ?? 'g',
-                        suffixStyle: const TextStyle(
+                        suffixStyle: TextStyle(
                           fontSize: 11,
-                          color: AppTheme.textTertiary,
+                          color: AppTheme.textTertiaryOf(context),
                         ),
                         filled: true,
-                        fillColor: AppTheme.neutralSoft,
+                        fillColor: AppTheme.neutralSoftOf(context),
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 8),
                         isDense: true,
@@ -173,10 +173,10 @@ class IngredientInputList extends StatelessWidget {
                   const SizedBox(width: 4),
                   GestureDetector(
                     onTap: () => formProvider.removeIngredient(index),
-                    child: const Icon(
+                    child: Icon(
                       Icons.close,
                       size: 18,
-                      color: AppTheme.textTertiary,
+                      color: AppTheme.textTertiaryOf(context),
                     ),
                   ),
                 ],
@@ -230,15 +230,15 @@ class IngredientInputList extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppTheme.neutralSoft,
+                color: AppTheme.neutralSoftOf(dialogContext),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
                 '${foodItem.calories.toStringAsFixed(0)} kcal, '
                 '${foodItem.protein.toStringAsFixed(1)}g protein / 100${foodItem.unit == "100g" ? "g" : "mL"}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
-                  color: AppTheme.textSecondary,
+                  color: AppTheme.textSecondaryOf(dialogContext),
                 ),
               ),
             ),
@@ -248,9 +248,9 @@ class IngredientInputList extends StatelessWidget {
               decoration: InputDecoration(
                 labelText:
                     '${l10n.quantity} (${foodItem.unit == "100g" ? "g" : "mL"})',
-                prefixIcon: const Icon(
+                prefixIcon: Icon(
                   Icons.scale,
-                  color: AppTheme.textTertiary,
+                  color: AppTheme.textTertiaryOf(dialogContext),
                 ),
               ),
               keyboardType: TextInputType.number,
@@ -351,7 +351,7 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: AppTheme.neutralLight,
+              color: AppTheme.neutralLightOf(context),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -362,21 +362,21 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
           child: Container(
             height: 48,
             decoration: BoxDecoration(
-              color: AppTheme.neutralLight,
+              color: AppTheme.neutralLightOf(context),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
               children: [
                 const SizedBox(width: 14),
-                const Icon(Icons.search, color: AppTheme.textTertiary, size: 22),
+                Icon(Icons.search, color: AppTheme.textTertiaryOf(context), size: 22),
                 const SizedBox(width: 10),
                 Expanded(
                   child: TextField(
                     controller: _searchController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Search materials...',
                       hintStyle: TextStyle(
-                        color: AppTheme.textTertiary,
+                        color: AppTheme.textTertiaryOf(context),
                         fontSize: 14,
                       ),
                       border: InputBorder.none,
@@ -400,13 +400,13 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.kitchen,
-                              size: 48, color: AppTheme.neutralLight),
+                              size: 48, color: AppTheme.neutralLightOf(context)),
                           const SizedBox(height: 12),
-                          const Text(
+                          Text(
                             'No materials found',
                             style: TextStyle(
                               fontSize: 14,
-                              color: AppTheme.textTertiary,
+                              color: AppTheme.textTertiaryOf(context),
                             ),
                           ),
                         ],
@@ -424,10 +424,10 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
                                 horizontal: 16, vertical: 4),
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: AppTheme.surfaceOf(context),
                               borderRadius: BorderRadius.circular(12),
                               border:
-                                  Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
+                                  Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
                             ),
                             child: Row(
                               children: [
@@ -463,9 +463,9 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
                                         '${item.protein.toStringAsFixed(1)}g P · '
                                         '${item.carbs.toStringAsFixed(1)}g C · '
                                         '${item.fat.toStringAsFixed(1)}g F',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 11,
-                                          color: AppTheme.textTertiary,
+                                          color: AppTheme.textTertiaryOf(context),
                                         ),
                                       ),
                                     ],
@@ -473,9 +473,9 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
                                 ),
                                 Text(
                                   item.category,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 11,
-                                    color: AppTheme.textTertiary,
+                                    color: AppTheme.textTertiaryOf(context),
                                   ),
                                 ),
                               ],

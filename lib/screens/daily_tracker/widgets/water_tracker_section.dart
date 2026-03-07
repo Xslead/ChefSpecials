@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../config/theme.dart';
 import '../../../l10n/generated/app_localizations.dart';
 
 class WaterTrackerSection extends StatelessWidget {
@@ -26,8 +27,12 @@ class WaterTrackerSection extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.blue.shade50.withValues(alpha: 0.5),
+        color: const Color(0xFFF0F4FF),
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppTheme.warmBeige.withValues(alpha: 0.5),
+        ),
+        boxShadow: [AppTheme.warmShadowLight()],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,14 +43,12 @@ class WaterTrackerSection extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(Icons.water_drop, color: Colors.blue.shade500, size: 22),
+                  Icon(Icons.water_drop,
+                      color: Colors.blue.shade500, size: 22),
                   const SizedBox(width: 8),
                   Text(
                     l10n.waterTracking,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ],
               ),
@@ -54,6 +57,7 @@ class WaterTrackerSection extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
                 ),
               ),
             ],
@@ -72,7 +76,9 @@ class WaterTrackerSection extends StatelessWidget {
                 child: Icon(
                   Icons.local_drink,
                   size: 24,
-                  color: isFilled ? Colors.blue.shade500 : Colors.grey.shade300,
+                  color: isFilled
+                      ? Colors.blue.shade500
+                      : AppTheme.warmBeige,
                 ),
               );
             }),
@@ -143,7 +149,7 @@ class _WaterButton extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: enabled ? borderColor : Colors.grey.shade200,
+            color: enabled ? borderColor : AppTheme.warmBeige,
           ),
         ),
         child: Center(
@@ -152,7 +158,7 @@ class _WaterButton extends StatelessWidget {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: enabled ? color : Colors.grey.shade400,
+              color: enabled ? color : AppTheme.textTertiary,
             ),
           ),
         ),

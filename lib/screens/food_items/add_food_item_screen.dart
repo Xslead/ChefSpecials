@@ -39,13 +39,25 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
   double _packetSize = 100;
   String? _barcode;
   bool _isVegan = false;
+  bool _isVegetarian = false;
+  bool _isGlutenFree = false;
   double _calories = 0;
   double _protein = 0;
   double _carbs = 0;
   double _fat = 0;
+  double _saturatedFat = 0;
+  double _transFat = 0;
+  double _cholesterol = 0;
   double _fiber = 0;
   double _sugar = 0;
   double _sodium = 0;
+  double _salt = 0;
+  String? _nutriScore;
+  int? _novaGroup;
+  List<String> _allergens = [];
+  String? _ingredientsText;
+  String? _origin;
+  double? _servingSize;
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
@@ -66,13 +78,25 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
         packetSize: _packetSize,
         barcode: _barcode,
         isVegan: _isVegan,
+        isVegetarian: _isVegetarian,
+        isGlutenFree: _isGlutenFree,
         calories: _calories,
         protein: _protein,
         carbs: _carbs,
         fat: _fat,
+        saturatedFat: _saturatedFat,
+        transFat: _transFat,
+        cholesterol: _cholesterol,
         fiber: _fiber,
         sugar: _sugar,
         sodium: _sodium,
+        salt: _salt,
+        nutriScore: _nutriScore,
+        novaGroup: _novaGroup,
+        allergens: _allergens,
+        ingredientsText: _ingredientsText,
+        origin: _origin,
+        servingSize: _servingSize,
         addedBy: user.uid,
         createdAt: DateTime.now(),
       );
@@ -107,7 +131,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border(
-                bottom: BorderSide(color: Colors.grey.shade100),
+                bottom: BorderSide(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
               ),
             ),
             child: SafeArea(
@@ -418,6 +442,255 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 10),
+
+                  // Sat. Fat, Trans Fat, Cholesterol row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildNutritionCard(
+                          icon: Icons.water_drop,
+                          color: const Color(0xFFEC4899),
+                          label: 'Sat. Fat',
+                          suffix: l10n.gram,
+                          compact: true,
+                          onSaved: (v) =>
+                              _saturatedFat = double.tryParse(v ?? '') ?? 0,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildNutritionCard(
+                          icon: Icons.warning_amber,
+                          color: const Color(0xFFF97316),
+                          label: 'Trans Fat',
+                          suffix: l10n.gram,
+                          compact: true,
+                          onSaved: (v) =>
+                              _transFat = double.tryParse(v ?? '') ?? 0,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildNutritionCard(
+                          icon: Icons.favorite_outline,
+                          color: const Color(0xFFDC2626),
+                          label: 'Cholesterol',
+                          suffix: 'mg',
+                          compact: true,
+                          onSaved: (v) =>
+                              _cholesterol = double.tryParse(v ?? '') ?? 0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Salt row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildNutritionCard(
+                          icon: Icons.grain,
+                          color: const Color(0xFF0EA5E9),
+                          label: 'Salt',
+                          suffix: l10n.gram,
+                          compact: true,
+                          onSaved: (v) =>
+                              _salt = double.tryParse(v ?? '') ?? 0,
+                        ),
+                      ),
+                      const Spacer(flex: 2),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Additional Info Section
+                  _buildSectionHeader(
+                    icon: Icons.tune,
+                    color: const Color(0xFF8B5CF6),
+                    label: 'ADDITIONAL INFO',
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Nutri-Score & NOVA Group row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionLabel('NUTRI-SCORE'),
+                            const SizedBox(height: 8),
+                            DropdownButtonFormField<String>(
+                              initialValue: _nutriScore,
+                              decoration: _styledInputDecoration(
+                                prefixIcon: Icons.grade_outlined,
+                                hintText: 'Optional',
+                              ),
+                              items: ['A', 'B', 'C', 'D', 'E']
+                                  .map((s) => DropdownMenuItem(
+                                      value: s, child: Text(s)))
+                                  .toList(),
+                              onChanged: (v) =>
+                                  setState(() => _nutriScore = v),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionLabel('NOVA GROUP'),
+                            const SizedBox(height: 8),
+                            DropdownButtonFormField<int>(
+                              initialValue: _novaGroup,
+                              decoration: _styledInputDecoration(
+                                prefixIcon: Icons.science_outlined,
+                                hintText: 'Optional',
+                              ),
+                              items: [1, 2, 3, 4]
+                                  .map((n) => DropdownMenuItem(
+                                      value: n, child: Text('$n')))
+                                  .toList(),
+                              onChanged: (v) =>
+                                  setState(() => _novaGroup = v),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Serving Size & Origin row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionLabel('SERVING SIZE'),
+                            const SizedBox(height: 8),
+                            TextFormField(
+                              decoration: _styledInputDecoration(
+                                hintText: 'Optional',
+                                prefixIcon: Icons.scale_outlined,
+                                suffixText: 'g',
+                              ),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
+                              validator: (v) {
+                                if (v == null || v.isEmpty) return null;
+                                if (double.tryParse(v) == null) {
+                                  return 'Invalid';
+                                }
+                                return null;
+                              },
+                              onSaved: (v) => _servingSize =
+                                  (v != null && v.isNotEmpty)
+                                      ? double.tryParse(v)
+                                      : null,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionLabel('ORIGIN'),
+                            const SizedBox(height: 8),
+                            TextFormField(
+                              decoration: _styledInputDecoration(
+                                hintText: 'Optional',
+                                prefixIcon: Icons.public,
+                              ),
+                              onSaved: (v) => _origin =
+                                  (v != null && v.isNotEmpty) ? v : null,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Ingredients text field
+                  _buildSectionLabel('INGREDIENTS'),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    decoration: _styledInputDecoration(
+                      hintText: 'List of ingredients (optional)',
+                      prefixIcon: Icons.list_alt,
+                    ),
+                    maxLines: 3,
+                    onSaved: (v) => _ingredientsText =
+                        (v != null && v.isNotEmpty) ? v : null,
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Allergens
+                  _buildSectionLabel('ALLERGENS'),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      'Gluten',
+                      'Peanuts',
+                      'Tree Nuts',
+                      'Milk',
+                      'Eggs',
+                      'Fish',
+                      'Shellfish',
+                      'Soy',
+                      'Sesame',
+                    ]
+                        .map(
+                          (allergen) => FilterChip(
+                            label: Text(allergen),
+                            selected: _allergens.contains(allergen),
+                            onSelected: (selected) {
+                              setState(() {
+                                if (selected) {
+                                  _allergens = [..._allergens, allergen];
+                                } else {
+                                  _allergens = _allergens
+                                      .where((a) => a != allergen)
+                                      .toList();
+                                }
+                              });
+                            },
+                            selectedColor:
+                                AppTheme.primaryColor.withValues(alpha: 0.2),
+                            checkmarkColor: AppTheme.primaryColor,
+                            labelStyle: TextStyle(
+                              color: _allergens.contains(allergen)
+                                  ? AppTheme.primaryColor
+                                  : AppTheme.textSecondary,
+                              fontWeight: _allergens.contains(allergen)
+                                  ? FontWeight.w600
+                                  : FontWeight.w500,
+                              fontSize: 13,
+                            ),
+                            backgroundColor: AppTheme.warmCream,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                              side: BorderSide(
+                                color: _allergens.contains(allergen)
+                                    ? AppTheme.primaryColor.withValues(alpha: 0.3)
+                                    : AppTheme.warmBeige,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
                   const SizedBox(height: 20),
 
                   // Vegan toggle card
@@ -427,14 +700,8 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: Colors.grey.shade100),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.03),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
+                      border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+                      boxShadow: [AppTheme.warmShadowLight()],
                     ),
                     child: Row(
                       children: [
@@ -472,6 +739,102 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 10),
+
+                  // Vegetarian toggle card
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+                      boxShadow: [AppTheme.warmShadowLight()],
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: Colors.orange
+                                .withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.spa,
+                            color: Colors.orange,
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Text(
+                            'Vegetarian',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Switch(
+                          value: _isVegetarian,
+                          onChanged: (v) => setState(() => _isVegetarian = v),
+                          activeTrackColor:
+                              Colors.orange.withValues(alpha: 0.5),
+                          activeThumbColor: Colors.orange,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Gluten Free toggle card
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+                      boxShadow: [AppTheme.warmShadowLight()],
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: Colors.blue
+                                .withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.no_food,
+                            color: Colors.blue,
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Text(
+                            'Gluten Free',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Switch(
+                          value: _isGlutenFree,
+                          onChanged: (v) => setState(() => _isGlutenFree = v),
+                          activeTrackColor:
+                              Colors.blue.withValues(alpha: 0.5),
+                          activeThumbColor: Colors.blue,
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 24),
                 ],
               ),
@@ -485,10 +848,10 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
   Widget _buildSectionLabel(String label) {
     return Text(
       label.toUpperCase(),
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 11,
         fontWeight: FontWeight.w700,
-        color: Colors.grey.shade500,
+        color: AppTheme.textTertiary,
         letterSpacing: 0.8,
       ),
     );
@@ -513,10 +876,10 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
         const SizedBox(width: 10),
         Text(
           label.toUpperCase(),
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w700,
-            color: Colors.grey.shade500,
+            color: AppTheme.textTertiary,
             letterSpacing: 0.8,
           ),
         ),
@@ -531,18 +894,18 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
   }) {
     return InputDecoration(
       hintText: hintText,
-      hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+      hintStyle: const TextStyle(color: AppTheme.textTertiary, fontSize: 14),
       prefixIcon: prefixIcon != null
-          ? Icon(prefixIcon, color: Colors.grey.shade400, size: 20)
+          ? Icon(prefixIcon, color: AppTheme.textTertiary, size: 20)
           : null,
       suffixText: suffixText,
-      suffixStyle: TextStyle(
+      suffixStyle: const TextStyle(
         fontSize: 12,
-        color: Colors.grey.shade400,
+        color: AppTheme.textTertiary,
         fontWeight: FontWeight.w500,
       ),
       filled: true,
-      fillColor: Colors.grey.shade50,
+      fillColor: AppTheme.warmCream,
       contentPadding:
           const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       border: OutlineInputBorder(
@@ -584,14 +947,8 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade100),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+        boxShadow: [AppTheme.warmShadowLight()],
       ),
       child: Column(
         children: [
@@ -610,7 +967,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
             style: TextStyle(
               fontSize: compact ? 9 : 10,
               fontWeight: FontWeight.w700,
-              color: Colors.grey.shade500,
+              color: AppTheme.textTertiary,
               letterSpacing: 0.5,
             ),
           ),
@@ -634,11 +991,11 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
               suffixText: suffix,
               suffixStyle: TextStyle(
                 fontSize: compact ? 9 : 11,
-                color: Colors.grey.shade400,
+                color: AppTheme.textTertiary,
                 fontWeight: FontWeight.w500,
               ),
               filled: true,
-              fillColor: Colors.grey.shade50,
+              fillColor: AppTheme.warmCream,
               contentPadding: const EdgeInsets.symmetric(
                   horizontal: 8, vertical: 8),
               border: OutlineInputBorder(

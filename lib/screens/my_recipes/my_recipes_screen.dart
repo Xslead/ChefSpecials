@@ -128,14 +128,14 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                         Icon(
                           Icons.menu_book,
                           size: 64,
-                          color: Colors.grey.shade300,
+                          color: AppTheme.warmBeige,
                         ),
                         const SizedBox(height: 16),
                         Text(
                           l10n.noRecipes,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
-                            color: Colors.grey.shade500,
+                            color: AppTheme.textTertiary,
                           ),
                         ),
                       ],
@@ -155,15 +155,28 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
         ],
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: FloatingActionButton(
-          heroTag: 'my_recipes_fab',
-          onPressed: () => context.push('/add-recipe'),
-          backgroundColor: AppTheme.primaryColor,
-          foregroundColor: Colors.white,
-          elevation: 4,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.add, size: 28),
+        padding: const EdgeInsets.only(bottom: 100),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: AppTheme.primaryGradient,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: FloatingActionButton(
+            heroTag: 'my_recipes_fab',
+            onPressed: () => context.push('/add-recipe'),
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            shape: const CircleBorder(),
+            child: const Icon(Icons.add, size: 28),
+          ),
         ),
       ),
     );
@@ -173,13 +186,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: [AppTheme.warmShadowLight()],
       ),
       child: SafeArea(
         bottom: false,
@@ -217,16 +224,16 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                       ),
                       Text(
                         l10n.recipeCount(totalCount),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
-                          color: Colors.grey.shade500,
+                          color: AppTheme.textTertiary,
                         ),
                       ),
                     ],
                   ),
                   const Spacer(),
                   PopupMenuButton<_SortOption>(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.sort,
                       color: AppTheme.textSecondary,
                     ),
@@ -261,16 +268,16 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                   key: _searchBarKey,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
+                    color: AppTheme.warmBeige,
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: _isSearching
                       ? Row(
                           children: [
                             const SizedBox(width: 14),
-                            Icon(
+                            const Icon(
                               Icons.search,
-                              color: Colors.grey.shade400,
+                              color: AppTheme.textTertiary,
                               size: 22,
                             ),
                             const SizedBox(width: 10),
@@ -281,8 +288,8 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                                 autofocus: true,
                                 decoration: InputDecoration(
                                   hintText: l10n.searchRecipeOrIngredient,
-                                  hintStyle: TextStyle(
-                                    color: Colors.grey.shade400,
+                                  hintStyle: const TextStyle(
+                                    color: AppTheme.textTertiary,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -320,12 +327,12 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                                   setState(() => _searchQuery = '');
                                 }
                               },
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
+                              child: const Padding(
+                                padding: EdgeInsets.all(12),
                                 child: Icon(
                                   Icons.clear,
                                   size: 18,
-                                  color: Colors.grey.shade400,
+                                  color: AppTheme.textTertiary,
                                 ),
                               ),
                             ),
@@ -334,16 +341,16 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                       : Row(
                           children: [
                             const SizedBox(width: 14),
-                            Icon(
+                            const Icon(
                               Icons.search,
-                              color: Colors.grey.shade400,
+                              color: AppTheme.textTertiary,
                               size: 22,
                             ),
                             const SizedBox(width: 10),
                             Text(
                               l10n.searchRecipeOrIngredient,
-                              style: TextStyle(
-                                color: Colors.grey.shade400,
+                              style: const TextStyle(
+                                color: AppTheme.textTertiary,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -396,7 +403,8 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
           decoration: BoxDecoration(
-            color: isSelected ? AppTheme.primaryColor : Colors.grey.shade100,
+            gradient: isSelected ? AppTheme.primaryGradient : null,
+            color: isSelected ? null : AppTheme.warmBeige,
             borderRadius: BorderRadius.circular(50),
           ),
           child: Text(

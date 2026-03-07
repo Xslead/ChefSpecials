@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../config/theme.dart';
 import '../../../models/recipe_step.dart';
 import 'countdown_timer_widget.dart';
 
@@ -22,12 +23,12 @@ class StepPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Step number badge
+          // Step number badge with gradient
           Center(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primary,
+                gradient: AppTheme.primaryGradient,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -59,16 +60,22 @@ class StepPage extends StatelessWidget {
             const SizedBox(height: 24),
           ],
 
-          // Instruction text
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Text(
-                step.instruction,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  fontSize: 18,
-                  height: 1.5,
-                ),
+          // Instruction card with warm styling
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: AppTheme.warmCream,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: AppTheme.warmBeige.withValues(alpha: 0.5),
+              ),
+              boxShadow: [AppTheme.warmShadowLight()],
+            ),
+            child: Text(
+              step.instruction,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontSize: 18,
+                height: 1.5,
               ),
             ),
           ),

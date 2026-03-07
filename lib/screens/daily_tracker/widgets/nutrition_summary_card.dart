@@ -52,8 +52,7 @@ class NutritionSummaryCard extends StatelessWidget {
                 child: CustomPaint(
                   painter: _CalorieRingPainter(
                     progress: calorieProgress.clamp(0, 1.0),
-                    color: isExceeded ? AppTheme.errorColor : AppTheme.primaryColor,
-                    backgroundColor: Colors.grey.shade200,
+                    isExceeded: isExceeded,
                   ),
                   child: Center(
                     child: Column(
@@ -75,10 +74,10 @@ class NutritionSummaryCard extends StatelessWidget {
                           isExceeded
                               ? '${l10n.exceeded} ${l10n.kcal}'
                               : l10n.remainingKcal,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey.shade500,
+                            color: AppTheme.textTertiary,
                           ),
                         ),
                       ],
@@ -99,7 +98,7 @@ class NutritionSummaryCard extends StatelessWidget {
                     width: 1,
                     height: 32,
                     margin: const EdgeInsets.symmetric(horizontal: 20),
-                    color: Colors.grey.shade200,
+                    color: AppTheme.warmBeige,
                   ),
                   _buildCalorieStat(
                     l10n.target,
@@ -122,6 +121,8 @@ class NutritionSummaryCard extends StatelessWidget {
                   current: currentProtein,
                   target: targetProtein,
                   progress: proteinProgress,
+                  tintColor: const Color(0xFFFFF1E8),
+                  borderColor: const Color(0xFFFFD9C0),
                 ),
               ),
               const SizedBox(width: 10),
@@ -131,6 +132,8 @@ class NutritionSummaryCard extends StatelessWidget {
                   current: currentCarbs,
                   target: targetCarbs,
                   progress: carbsProgress,
+                  tintColor: const Color(0xFFFFF8E1),
+                  borderColor: const Color(0xFFFFECB3),
                 ),
               ),
               const SizedBox(width: 10),
@@ -140,6 +143,8 @@ class NutritionSummaryCard extends StatelessWidget {
                   current: currentFat,
                   target: targetFat,
                   progress: fatProgress,
+                  tintColor: const Color(0xFFFFF0F0),
+                  borderColor: const Color(0xFFFFD6D6),
                 ),
               ),
             ],
@@ -154,10 +159,10 @@ class NutritionSummaryCard extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w500,
-            color: Colors.grey.shade400,
+            color: AppTheme.textTertiary,
           ),
         ),
         const SizedBox(height: 2),
@@ -166,6 +171,7 @@ class NutritionSummaryCard extends StatelessWidget {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: AppTheme.textPrimary,
           ),
         ),
       ],
@@ -178,12 +184,16 @@ class _MacroCard extends StatelessWidget {
   final double current;
   final double target;
   final double progress;
+  final Color tintColor;
+  final Color borderColor;
 
   const _MacroCard({
     required this.label,
     required this.current,
     required this.target,
     required this.progress,
+    required this.tintColor,
+    required this.borderColor,
   });
 
   @override
@@ -193,19 +203,19 @@ class _MacroCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: tintColor,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade100),
+        border: Border.all(color: borderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             label.toUpperCase(),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w700,
-              color: Colors.grey.shade500,
+              color: AppTheme.textTertiary,
               letterSpacing: 0.8,
             ),
           ),
@@ -221,10 +231,10 @@ class _MacroCard extends StatelessWidget {
                 TextSpan(text: '${current.toInt()}g '),
                 TextSpan(
                   text: '/ ${target.toInt()}g',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.normal,
-                    color: Colors.grey.shade400,
+                    color: AppTheme.textTertiary,
                   ),
                 ),
               ],
@@ -235,7 +245,7 @@ class _MacroCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: clampedProgress,
-              backgroundColor: Colors.grey.shade200,
+              backgroundColor: AppTheme.warmBeige,
               valueColor: AlwaysStoppedAnimation<Color>(
                 progress > 1.0 ? AppTheme.errorColor : AppTheme.primaryColor,
               ),
@@ -250,47 +260,62 @@ class _MacroCard extends StatelessWidget {
 
 class _CalorieRingPainter extends CustomPainter {
   final double progress;
-  final Color color;
-  final Color backgroundColor;
+  final bool isExceeded;
 
   _CalorieRingPainter({
     required this.progress,
-    required this.color,
-    required this.backgroundColor,
+    required this.isExceeded,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = min(size.width, size.height) / 2 - 8;
-    const strokeWidth = 12.0;
+    const strokeWidth = 14.0;
 
     final bgPaint = Paint()
-      ..color = backgroundColor
+      ..color = AppTheme.warmBeige
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
 
     canvas.drawCircle(center, radius, bgPaint);
 
-    final progressPaint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
-
     final sweepAngle = 2 * pi * progress;
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      -pi / 2,
-      sweepAngle,
-      false,
-      progressPaint,
-    );
+    final rect = Rect.fromCircle(center: center, radius: radius);
+
+    if (isExceeded) {
+      final progressPaint = Paint()
+        ..color = AppTheme.errorColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = strokeWidth
+        ..strokeCap = StrokeCap.round;
+
+      canvas.drawArc(rect, -pi / 2, sweepAngle, false, progressPaint);
+    } else {
+      final gradient = SweepGradient(
+        startAngle: -pi / 2,
+        endAngle: -pi / 2 + 2 * pi,
+        colors: const [
+          AppTheme.primaryColor,
+          AppTheme.primaryLight,
+          AppTheme.primaryColor,
+        ],
+      );
+
+      final progressPaint = Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = strokeWidth
+        ..strokeCap = StrokeCap.round
+        ..shader = gradient.createShader(rect);
+
+      canvas.drawArc(rect, -pi / 2, sweepAngle, false, progressPaint);
+    }
   }
 
   @override
   bool shouldRepaint(covariant _CalorieRingPainter oldDelegate) {
-    return oldDelegate.progress != progress || oldDelegate.color != color;
+    return oldDelegate.progress != progress ||
+        oldDelegate.isExceeded != isExceeded;
   }
 }

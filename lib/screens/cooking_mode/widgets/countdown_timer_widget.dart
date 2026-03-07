@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../../config/theme.dart';
 
 class CountdownTimerWidget extends StatefulWidget {
   final int totalSeconds;
@@ -87,7 +88,7 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
                   child: CircularProgressIndicator(
                     value: progress,
                     strokeWidth: 8,
-                    backgroundColor: Colors.grey.shade200,
+                    backgroundColor: AppTheme.warmBeige,
                     color: isDone ? Colors.green : theme.colorScheme.primary,
                   ),
                 ),

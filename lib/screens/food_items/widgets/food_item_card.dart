@@ -24,14 +24,8 @@ class FoodItemCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.grey.shade100),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+          boxShadow: [AppTheme.warmShadowLight()],
         ),
         child: Padding(
           padding: const EdgeInsets.all(14),
@@ -109,9 +103,9 @@ class FoodItemCard extends StatelessWidget {
                           foodItem.brand != null
                               ? '${foodItem.brand} \u2022 ${foodItem.category}'
                               : foodItem.category,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
-                            color: Colors.grey.shade500,
+                            color: AppTheme.textTertiary,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -134,10 +128,10 @@ class FoodItemCard extends StatelessWidget {
                       ),
                       Text(
                         l10n.kcal,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
-                          color: Colors.grey.shade400,
+                          color: AppTheme.textTertiary,
                         ),
                       ),
                     ],
@@ -148,9 +142,9 @@ class FoodItemCard extends StatelessWidget {
               const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.only(top: 12),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   border: Border(
-                    top: BorderSide(color: Colors.grey.shade100),
+                    top: BorderSide(color: AppTheme.warmBeige),
                   ),
                 ),
                 child: Row(
@@ -191,10 +185,10 @@ class FoodItemCard extends StatelessWidget {
         children: [
           Text(
             label.toUpperCase(),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 9,
               fontWeight: FontWeight.w600,
-              color: Colors.grey.shade400,
+              color: AppTheme.textTertiary,
               letterSpacing: 0.3,
             ),
           ),
@@ -229,7 +223,7 @@ class FoodItemCard extends StatelessWidget {
       case 'Beverages':
         return Colors.cyan.shade500;
       default:
-        return Colors.grey.shade500;
+        return AppTheme.textTertiary;
     }
   }
 

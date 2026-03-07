@@ -98,13 +98,7 @@ class _SearchBodyState extends State<_SearchBody> {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: [AppTheme.warmShadowLight()],
       ),
       child: SafeArea(
         bottom: false,
@@ -119,10 +113,10 @@ class _SearchBodyState extends State<_SearchBody> {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
+                        color: AppTheme.warmBeige,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_back,
                         color: AppTheme.textSecondary,
                         size: 20,
@@ -134,7 +128,7 @@ class _SearchBodyState extends State<_SearchBody> {
                     child: Container(
                       height: 48,
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
+                        color: AppTheme.warmBeige,
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: TextField(
@@ -146,19 +140,19 @@ class _SearchBodyState extends State<_SearchBody> {
                         },
                         decoration: InputDecoration(
                           hintText: l10n.searchHint,
-                          hintStyle: TextStyle(
-                            color: Colors.grey.shade400,
+                          hintStyle: const TextStyle(
+                            color: AppTheme.textTertiary,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.search,
-                            color: Colors.grey.shade400,
+                            color: AppTheme.textTertiary,
                             size: 22,
                           ),
                           suffixIcon: _controller.text.isNotEmpty
                               ? IconButton(
-                                  icon: Icon(Icons.clear, color: Colors.grey.shade400, size: 20),
+                                  icon: const Icon(Icons.clear, color: AppTheme.textTertiary, size: 20),
                                   onPressed: () {
                                     _controller.clear();
                                     setState(() {});
@@ -209,12 +203,12 @@ class _SearchBodyState extends State<_SearchBody> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
+                    color: AppTheme.warmBeige,
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: Text(
                     _localizeCategory(category, l10n),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                       color: AppTheme.textSecondary,
@@ -237,14 +231,14 @@ class _SearchBodyState extends State<_SearchBody> {
           Icon(
             Icons.search_off,
             size: 64,
-            color: Colors.grey.shade300,
+            color: AppTheme.warmBeige,
           ),
           const SizedBox(height: 16),
           Text(
             l10n.noRecipes,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
-              color: Colors.grey.shade500,
+              color: AppTheme.textTertiary,
             ),
           ),
         ],

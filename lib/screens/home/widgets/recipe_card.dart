@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -8,10 +10,19 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../../models/recipe.dart';
 import '../../../providers/favorite_provider.dart';
 
-class RecipeCard extends StatelessWidget {
+class RecipeCard extends StatefulWidget {
   final Recipe recipe;
 
   const RecipeCard({super.key, required this.recipe});
+
+  @override
+  State<RecipeCard> createState() => _RecipeCardState();
+}
+
+class _RecipeCardState extends State<RecipeCard> {
+  bool _isPressed = false;
+
+  Recipe get recipe => widget.recipe;
 
   @override
   Widget build(BuildContext context) {
@@ -19,163 +30,182 @@ class RecipeCard extends StatelessWidget {
     final totalTime = recipe.prepTimeMinutes + recipe.cookTimeMinutes;
 
     return GestureDetector(
-      onTap: () => context.push('/recipe/${recipe.id}', extra: recipe),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey.shade100),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
+      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapUp: (_) {
+        setState(() => _isPressed = false);
+        context.push('/recipe/${recipe.id}', extra: recipe);
+      },
+      onTapCancel: () => setState(() => _isPressed = false),
+      child: AnimatedScale(
+        scale: _isPressed ? 0.97 : 1.0,
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeInOut,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: AppTheme.warmBeige.withValues(alpha: 0.5),
             ),
-          ],
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image section
-            Stack(
-              children: [
-                _buildImage(),
-                Positioned(
-                  top: 12,
-                  right: 12,
-                  child: _buildFavoriteButton(context),
-                ),
-              ],
-            ),
-            // Content section
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            boxShadow: [AppTheme.warmShadowMedium()],
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image section
+              Stack(
                 children: [
-                  // Title + Badge row
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          recipe.title,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.textPrimary,
-                            height: 1.2,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      _buildCategoryBadge(l10n),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  // Author + Time row
-                  Row(
-                    children: [
-                      // Author avatar
-                      CircleAvatar(
-                        radius: 10,
-                        backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.15),
-                        child: Text(
-                          recipe.authorName.isNotEmpty
-                              ? recipe.authorName[0].toUpperCase()
-                              : '?',
-                          style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.primaryColor,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Flexible(
-                        child: Text(
-                          recipe.authorName,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey.shade500,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 6),
-                        child: Text(
-                          '\u2022',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey.shade400,
-                          ),
-                        ),
-                      ),
-                      Icon(
-                        Icons.schedule,
-                        size: 14,
-                        color: Colors.grey.shade400,
-                      ),
-                      const SizedBox(width: 3),
-                      Text(
-                        '$totalTime ${l10n.minuteShort}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade500,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  // Rating + comment row
-                  _buildRatingRow(),
-                  // Nutrition grid
-                  if (recipe.caloriesPerServing != null) ...[
-                    const SizedBox(height: 14),
-                    Container(
-                      padding: const EdgeInsets.only(top: 14),
+                  _buildImage(),
+                  // Gradient overlay
+                  Positioned.fill(
+                    child: Container(
                       decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(color: Colors.grey.shade100),
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withValues(alpha: 0.3),
+                          ],
                         ),
-                      ),
-                      child: Row(
-                        children: [
-                          _buildNutritionColumn(
-                            l10n.calories,
-                            '${recipe.caloriesPerServing}',
-                          ),
-                          _buildNutritionColumn(
-                            l10n.protein,
-                            recipe.proteinGrams != null
-                                ? '${recipe.proteinGrams!.toStringAsFixed(0)}g'
-                                : '-',
-                          ),
-                          _buildNutritionColumn(
-                            l10n.carbs,
-                            recipe.carbsGrams != null
-                                ? '${recipe.carbsGrams!.toStringAsFixed(0)}g'
-                                : '-',
-                          ),
-                          _buildNutritionColumn(
-                            l10n.fat,
-                            recipe.fatGrams != null
-                                ? '${recipe.fatGrams!.toStringAsFixed(0)}g'
-                                : '-',
-                          ),
-                        ],
                       ),
                     ),
-                  ],
+                  ),
+                  // Category badge (top-left, glass effect)
+                  Positioned(
+                    top: 12,
+                    left: 12,
+                    child: _buildCategoryBadge(l10n),
+                  ),
+                  // Favorite button (top-right, glass effect)
+                  Positioned(
+                    top: 12,
+                    right: 12,
+                    child: _buildFavoriteButton(context),
+                  ),
                 ],
               ),
-            ),
-          ],
+              // Content section
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    Text(
+                      recipe.title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.textPrimary,
+                        height: 1.2,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 10),
+                    // Author + Time row
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 10,
+                          backgroundColor:
+                              AppTheme.primaryColor.withValues(alpha: 0.15),
+                          child: Text(
+                            recipe.authorName.isNotEmpty
+                                ? recipe.authorName[0].toUpperCase()
+                                : '?',
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.primaryColor,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            recipe.authorName,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppTheme.textSecondary,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 6),
+                          child: Text(
+                            '\u2022',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppTheme.textTertiary,
+                            ),
+                          ),
+                        ),
+                        const Icon(
+                          Icons.schedule,
+                          size: 14,
+                          color: AppTheme.textTertiary,
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          '$totalTime ${l10n.minuteShort}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppTheme.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    // Rating + comment row
+                    _buildRatingRow(),
+                    // Nutrition grid
+                    if (recipe.caloriesPerServing != null) ...[
+                      const SizedBox(height: 14),
+                      Container(
+                        padding: const EdgeInsets.only(top: 14),
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            top: BorderSide(color: Color(0xFFF0E4D8)),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            _buildNutritionColumn(
+                              l10n.calories,
+                              '${recipe.caloriesPerServing}',
+                            ),
+                            _buildNutritionColumn(
+                              l10n.protein,
+                              recipe.proteinGrams != null
+                                  ? '${recipe.proteinGrams!.toStringAsFixed(0)}g'
+                                  : '-',
+                            ),
+                            _buildNutritionColumn(
+                              l10n.carbs,
+                              recipe.carbsGrams != null
+                                  ? '${recipe.carbsGrams!.toStringAsFixed(0)}g'
+                                  : '-',
+                            ),
+                            _buildNutritionColumn(
+                              l10n.fat,
+                              recipe.fatGrams != null
+                                  ? '${recipe.fatGrams!.toStringAsFixed(0)}g'
+                                  : '-',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -187,31 +217,41 @@ class RecipeCard extends StatelessWidget {
         Icon(
           recipe.averageRating > 0 ? Icons.star : Icons.star_border,
           size: 14,
-          color: Colors.amber.shade600,
+          color: AppTheme.starColor,
         ),
         const SizedBox(width: 3),
         Text(
           recipe.averageRating > 0
               ? recipe.averageRating.toStringAsFixed(1)
               : '-',
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: Colors.grey.shade700,
+            color: AppTheme.textPrimary,
           ),
         ),
         if (recipe.ratingCount > 0) ...[
           Text(
             ' (${recipe.ratingCount})',
-            style: TextStyle(fontSize: 11, color: Colors.grey.shade400),
+            style: const TextStyle(
+              fontSize: 11,
+              color: AppTheme.textTertiary,
+            ),
           ),
         ],
         const SizedBox(width: 10),
-        Icon(Icons.chat_bubble_outline, size: 13, color: Colors.grey.shade400),
+        const Icon(
+          Icons.chat_bubble_outline,
+          size: 13,
+          color: AppTheme.textTertiary,
+        ),
         const SizedBox(width: 3),
         Text(
           '${recipe.commentCount}',
-          style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+          style: const TextStyle(
+            fontSize: 12,
+            color: AppTheme.textSecondary,
+          ),
         ),
       ],
     );
@@ -221,12 +261,12 @@ class RecipeCard extends StatelessWidget {
     if (recipe.imageUrl != null && recipe.imageUrl!.isNotEmpty) {
       return CachedNetworkImage(
         imageUrl: recipe.imageUrl!,
-        height: 192,
+        height: 210,
         width: double.infinity,
         fit: BoxFit.cover,
         placeholder: (context, url) => Container(
-          height: 192,
-          color: Colors.grey.shade100,
+          height: 210,
+          color: AppTheme.warmBeige,
           child: const Center(
             child: CircularProgressIndicator(
               color: AppTheme.primaryColor,
@@ -242,20 +282,21 @@ class RecipeCard extends StatelessWidget {
 
   Widget _buildPlaceholder() {
     return Container(
-      height: 192,
+      height: 210,
       width: double.infinity,
-      color: Colors.grey.shade100,
-      child: Icon(
+      color: AppTheme.warmBeige,
+      child: const Icon(
         Icons.restaurant,
         size: 56,
-        color: Colors.grey.shade300,
+        color: AppTheme.textTertiary,
       ),
     );
   }
 
   Widget _buildFavoriteButton(BuildContext context) {
     final favoriteProvider = context.watch<FavoriteProvider>();
-    final isFav = recipe.id != null && favoriteProvider.isFavorite(recipe.id!);
+    final isFav =
+        recipe.id != null && favoriteProvider.isFavorite(recipe.id!);
 
     return GestureDetector(
       onTap: () {
@@ -263,63 +304,51 @@ class RecipeCard extends StatelessWidget {
           favoriteProvider.toggleFavorite(recipe.id!);
         }
       },
-      child: Container(
-        padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.9),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+      child: ClipOval(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFFFFF).withValues(alpha: 0.2),
+              shape: BoxShape.circle,
             ),
-          ],
-        ),
-        child: Icon(
-          isFav ? Icons.favorite : Icons.favorite_border,
-          color: isFav ? Colors.red.shade500 : Colors.grey.shade400,
-          size: 20,
+            child: Icon(
+              isFav ? Icons.favorite : Icons.favorite_border,
+              color: isFav ? Colors.red.shade500 : Colors.white,
+              size: 20,
+            ),
+          ),
         ),
       ),
     );
   }
 
   Widget _buildCategoryBadge(AppLocalizations l10n) {
-    final color = _getCategoryColor();
     final label = _localizeCategory(recipe.category, l10n);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        label.toUpperCase(),
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-          color: color,
-          letterSpacing: 0.5,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFFFFF).withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            label.toUpperCase(),
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+              letterSpacing: 0.5,
+            ),
+          ),
         ),
       ),
     );
-  }
-
-  Color _getCategoryColor() {
-    switch (recipe.category) {
-      case 'Salad':
-      case 'Soup':
-        return const Color(0xFF059669); // emerald
-      case 'Dessert':
-      case 'Drink':
-        return const Color(0xFF7C3AED); // violet
-      case 'Snack':
-        return const Color(0xFF0891B2); // cyan
-      default:
-        return AppTheme.primaryColor;
-    }
   }
 
   Widget _buildNutritionColumn(String label, String value) {
@@ -328,10 +357,10 @@ class RecipeCard extends StatelessWidget {
         children: [
           Text(
             label.toUpperCase(),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w500,
-              color: Colors.grey.shade400,
+              color: AppTheme.textTertiary,
               letterSpacing: 0.3,
             ),
           ),

@@ -102,9 +102,9 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
           // Custom header
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                bottom: BorderSide(color: Colors.grey.shade100),
+              color: AppTheme.surfaceVariant,
+              border: const Border(
+                bottom: BorderSide(color: Color(0xFFF0E4D8)),
               ),
             ),
             child: SafeArea(
@@ -248,14 +248,8 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade100),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+        boxShadow: [AppTheme.warmShadowLight()],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,7 +273,7 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
                   style: TextStyle(
                     fontSize: compact ? 9 : 11,
                     fontWeight: FontWeight.w700,
-                    color: Colors.grey.shade500,
+                    color: AppTheme.textSecondary,
                     letterSpacing: 0.8,
                   ),
                 ),
@@ -303,10 +297,10 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
               suffixStyle: TextStyle(
                 fontSize: compact ? 12 : 14,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey.shade400,
+                color: AppTheme.textTertiary,
               ),
               filled: true,
-              fillColor: Colors.grey.shade50,
+              fillColor: AppTheme.warmCream,
               contentPadding: EdgeInsets.symmetric(
                 horizontal: compact ? 10 : 16,
                 vertical: compact ? 10 : 14,

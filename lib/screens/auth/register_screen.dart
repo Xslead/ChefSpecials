@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
+import '../../widgets/gradient_button.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -121,7 +123,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final authProvider = context.watch<AuthProvider>();
-    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: SafeArea(
@@ -133,8 +134,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.restaurant_menu,
-                          size: 32, color: colorScheme.primary),
+                      Container(
+                        width: 32,
+                        height: 32,
+                        decoration: const BoxDecoration(
+                          gradient: AppTheme.primaryGradient,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.restaurant_menu,
+                            size: 18, color: Colors.white),
+                      ),
                       const SizedBox(width: 12),
                       Text(
                         l10n.register,
@@ -157,8 +166,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Expanded(
                         child: Divider(
                           color: _currentPage > 0
-                              ? colorScheme.primary
-                              : colorScheme.outlineVariant,
+                              ? AppTheme.primaryColor
+                              : AppTheme.warmBeige,
                           thickness: 2,
                         ),
                       ),
@@ -190,8 +199,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildStep1(AppLocalizations l10n, AuthProvider authProvider) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Form(
@@ -204,7 +211,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               'Account Information',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: colorScheme.onSurfaceVariant,
+                    color: AppTheme.textSecondary,
                   ),
             ),
             const SizedBox(height: 20),
@@ -304,14 +311,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
                       color: _birthDate == null
-                          ? colorScheme.outline
-                          : colorScheme.primary,
+                          ? AppTheme.warmBeige
+                          : AppTheme.primaryColor,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide:
-                        BorderSide(color: colorScheme.primary, width: 2),
+                        const BorderSide(color: AppTheme.primaryColor, width: 2),
                   ),
                 ),
                 child: Text(
@@ -323,7 +330,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   style: TextStyle(
                     color: _birthDate != null
                         ? null
-                        : colorScheme.onSurfaceVariant,
+                        : AppTheme.textTertiary,
                   ),
                 ),
               ),
@@ -379,16 +386,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 32),
 
-            ElevatedButton(
+            GradientButton(
+              text: l10n.next,
               onPressed: _nextPage,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(l10n.next),
-                  const SizedBox(width: 8),
-                  const Icon(Icons.arrow_forward, size: 18),
-                ],
-              ),
+              icon: Icons.arrow_forward,
             ),
             const SizedBox(height: 16),
             TextButton(
@@ -402,7 +403,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildStep2(AppLocalizations l10n, AuthProvider authProvider) {
-    final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
     return SingleChildScrollView(
@@ -417,14 +417,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               'Personal Information',
               style: textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: colorScheme.onSurfaceVariant,
+                color: AppTheme.textSecondary,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               'Optional — helps us personalize your experience',
               style: textTheme.bodySmall
-                  ?.copyWith(color: colorScheme.onSurfaceVariant),
+                  ?.copyWith(color: AppTheme.textTertiary),
             ),
             const SizedBox(height: 20),
 
@@ -527,22 +527,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 16),
               Text(
                 authProvider.error!,
-                style: TextStyle(color: colorScheme.error),
+                style: const TextStyle(color: AppTheme.errorColor),
                 textAlign: TextAlign.center,
               ),
             ],
             const SizedBox(height: 32),
 
-            ElevatedButton(
+            GradientButton(
+              text: l10n.signUp,
               onPressed: authProvider.isLoading ? null : _handleRegister,
-              child: authProvider.isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                          strokeWidth: 2, color: Colors.white),
-                    )
-                  : Text(l10n.signUp),
             ),
             const SizedBox(height: 12),
             OutlinedButton(
@@ -579,7 +572,6 @@ class _StepDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final isHighlighted = active || done;
 
     return Column(
@@ -589,25 +581,20 @@ class _StepDot extends StatelessWidget {
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-            color: isHighlighted ? colorScheme.primary : colorScheme.surface,
-            border: Border.all(
-              color: isHighlighted
-                  ? colorScheme.primary
-                  : colorScheme.outlineVariant,
-              width: 2,
-            ),
+            gradient: isHighlighted ? AppTheme.primaryGradient : null,
+            color: isHighlighted ? null : AppTheme.warmBeige,
             shape: BoxShape.circle,
           ),
           child: Center(
             child: done
-                ? Icon(Icons.check, size: 16, color: colorScheme.onPrimary)
+                ? const Icon(Icons.check, size: 16, color: Colors.white)
                 : Text(
                     '$index',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: active
-                          ? colorScheme.onPrimary
-                          : colorScheme.onSurfaceVariant,
+                          ? Colors.white
+                          : AppTheme.textTertiary,
                       fontSize: 13,
                     ),
                   ),
@@ -618,8 +605,8 @@ class _StepDot extends StatelessWidget {
           label,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: isHighlighted
-                    ? colorScheme.primary
-                    : colorScheme.onSurfaceVariant,
+                    ? AppTheme.primaryColor
+                    : AppTheme.textTertiary,
                 fontWeight: active ? FontWeight.bold : FontWeight.normal,
               ),
         ),

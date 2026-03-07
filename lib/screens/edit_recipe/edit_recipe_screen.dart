@@ -75,7 +75,7 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border(
-                bottom: BorderSide(color: Colors.grey.shade100),
+                bottom: BorderSide(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
               ),
             ),
             child: SafeArea(
@@ -150,9 +150,9 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
                     initialValue: formProvider.title,
                     decoration: InputDecoration(
                       hintText: l10n.recipeName,
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.edit_outlined,
-                        color: Colors.grey.shade400,
+                        color: AppTheme.textTertiary,
                       ),
                     ),
                     validator: (v) =>
@@ -167,9 +167,9 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
                     initialValue: formProvider.description,
                     decoration: InputDecoration(
                       hintText: l10n.description,
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.notes,
-                        color: Colors.grey.shade400,
+                        color: AppTheme.textTertiary,
                       ),
                       alignLabelWithHint: true,
                     ),
@@ -185,9 +185,9 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
                   DropdownButtonFormField<String>(
                     initialValue: formProvider.category,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.category_outlined,
-                        color: Colors.grey.shade400,
+                        color: AppTheme.textTertiary,
                       ),
                     ),
                     items: AppConstants.defaultCategories
@@ -299,10 +299,10 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
   Widget _buildSectionLabel(String label) {
     return Text(
       label.toUpperCase(),
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 11,
         fontWeight: FontWeight.w700,
-        color: Colors.grey.shade500,
+        color: AppTheme.textTertiary,
         letterSpacing: 0.8,
       ),
     );
@@ -319,14 +319,8 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade100),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+        boxShadow: [AppTheme.warmShadowLight()],
       ),
       child: Column(
         children: [
@@ -342,10 +336,10 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
           const SizedBox(height: 6),
           Text(
             label.toUpperCase(),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 9,
               fontWeight: FontWeight.w700,
-              color: Colors.grey.shade500,
+              color: AppTheme.textTertiary,
               letterSpacing: 0.5,
             ),
           ),
@@ -359,7 +353,7 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
   InputDecoration _compactInputDecoration() {
     return InputDecoration(
       filled: true,
-      fillColor: Colors.grey.shade50,
+      fillColor: AppTheme.warmCream,
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
@@ -384,14 +378,8 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade100),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+        boxShadow: [AppTheme.warmShadowLight()],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -411,10 +399,10 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
               const SizedBox(width: 10),
               Text(
                 l10n.calories.toUpperCase(),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
-                  color: Colors.grey.shade500,
+                  color: AppTheme.textTertiary,
                   letterSpacing: 0.8,
                 ),
               ),
@@ -461,10 +449,10 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
         children: [
           Text(
             label.toUpperCase(),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 9,
               fontWeight: FontWeight.w600,
-              color: Colors.grey.shade400,
+              color: AppTheme.textTertiary,
               letterSpacing: 0.3,
             ),
           ),
@@ -479,10 +467,10 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
           ),
           Text(
             unit,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w500,
-              color: Colors.grey.shade400,
+              color: AppTheme.textTertiary,
             ),
           ),
         ],

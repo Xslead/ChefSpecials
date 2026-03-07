@@ -73,14 +73,10 @@ class MealSectionCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.grey.shade100),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          border: Border.all(
+            color: AppTheme.warmBeige.withValues(alpha: 0.5),
+          ),
+          boxShadow: [AppTheme.warmShadowLight()],
         ),
         clipBehavior: Clip.antiAlias,
         child: Column(
@@ -112,32 +108,29 @@ class MealSectionCard extends StatelessWidget {
                       children: [
                         Text(
                           _mealTypeName(l10n, mealType),
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                         const SizedBox(height: 2),
                         Text(
                           hasEntries
                               ? '${totalCal.toInt()} ${l10n.kcal}'
                               : l10n.notAddedYet,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 14,
-                            color: Colors.grey.shade500,
+                            color: AppTheme.textTertiary,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  // Add button — always visible
+                  // Add button with gradient
                   GestureDetector(
                     onTap: onAddPressed,
                     child: Container(
                       width: 32,
                       height: 32,
                       decoration: const BoxDecoration(
-                        color: AppTheme.primaryColor,
+                        gradient: AppTheme.primaryGradient,
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -155,7 +148,9 @@ class MealSectionCard extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   border: Border(
-                    top: BorderSide(color: Colors.grey.shade100),
+                    top: BorderSide(
+                      color: AppTheme.warmBeige.withValues(alpha: 0.5),
+                    ),
                   ),
                 ),
                 child: Column(
@@ -187,9 +182,9 @@ class MealSectionCard extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 '${entry.name} (${entry.quantity.toInt()}${entry.unit})',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 14,
-                                  color: Colors.grey.shade600,
+                                  color: AppTheme.textSecondary,
                                 ),
                               ),
                             ),
@@ -198,6 +193,7 @@ class MealSectionCard extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
+                                color: AppTheme.textPrimary,
                               ),
                             ),
                           ],

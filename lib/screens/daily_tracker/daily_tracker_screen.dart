@@ -158,9 +158,11 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
   Widget _buildHeader(AppLocalizations l10n, DailyTrackerProvider provider) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.surfaceVariant,
         border: Border(
-          bottom: BorderSide(color: Colors.grey.shade100),
+          bottom: BorderSide(
+            color: AppTheme.warmBeige.withValues(alpha: 0.5),
+          ),
         ),
       ),
       child: SafeArea(
@@ -186,10 +188,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                   child: Text(
                     _formatDate(provider.selectedDate, l10n),
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
               ),
@@ -204,7 +203,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                             );
                           },
                 color: AppTheme.textPrimary,
-                disabledColor: Colors.grey.shade300,
+                disabledColor: AppTheme.textTertiary,
               ),
               IconButton(
                 icon: const Icon(Icons.settings_outlined),
@@ -227,10 +226,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
         children: [
           Text(
             l10n.todaysMeals,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ],
       ),

@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/comment.dart';
 import '../../models/recipe.dart';
@@ -9,6 +12,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/comment_provider.dart';
 import '../../providers/rating_provider.dart';
 import '../../providers/recipe_provider.dart';
+import '../../widgets/gradient_button.dart';
 import 'widgets/ingredient_list_view.dart';
 import 'widgets/step_overview_list.dart';
 
@@ -112,7 +116,6 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     final hasExistingRating = ratingProvider.userRating != null;
     final commentText = _commentController.text.trim();
 
-    // Find the user's existing entry (may be rating-only with empty text)
     final myEntry = commentProvider.comments
         .where((c) => c.userId == user.uid)
         .firstOrNull;
@@ -135,7 +138,6 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
 
     setState(() => _submittingComment = true);
     try {
-      // Submit rating
       if (pendingStars > 0 && !hasExistingRating) {
         await ratingProvider.submitRating(
           recipeId: r.id!,
@@ -146,7 +148,6 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
       final commentStars = ratingProvider.userRating?.stars ?? pendingStars;
 
       if (myEntry == null) {
-        // No entry yet — create one (may have empty text if rating-only)
         await commentProvider.addComment(Comment(
           recipeId: r.id!,
           userId: user.uid,
@@ -156,7 +157,6 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
           createdAt: DateTime.now(),
         ));
       } else if (commentText.isNotEmpty && myEntry.text.isEmpty) {
-        // Had a rating-only entry; now user adds text — update in place
         await commentProvider.updateCommentText(
           commentId: myEntry.id!,
           recipeId: r.id!,
@@ -252,15 +252,12 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                   const SizedBox(height: 8),
                   StepOverviewList(steps: liveRecipe.steps),
                   const SizedBox(height: 24),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        context.push('/cooking/${liveRecipe.id}', extra: liveRecipe);
-                      },
-                      icon: const Icon(Icons.restaurant),
-                      label: Text(l10n.startCooking),
-                    ),
+                  GradientButton(
+                    text: l10n.startCooking,
+                    icon: Icons.restaurant,
+                    onPressed: () {
+                      context.push('/cooking/${liveRecipe.id}', extra: liveRecipe);
+                    },
                   ),
                   const SizedBox(height: 32),
                   _buildRatingsSection(context, l10n, theme, liveRecipe),
@@ -276,23 +273,28 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     );
   }
 
-  Widget _buildCircleIconButton({
+  Widget _buildGlassCircleButton({
     required IconData icon,
-    required Color color,
+    required Color iconColor,
     required VoidCallback onPressed,
   }) {
     return Padding(
       padding: const EdgeInsets.only(right: 6),
       child: GestureDetector(
         onTap: onPressed,
-        child: Container(
-          width: 36,
-          height: 36,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
+        child: ClipOval(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+            child: Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFFFFF).withValues(alpha: 0.2),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: iconColor, size: 20),
+            ),
           ),
-          child: Icon(icon, color: color, size: 20),
         ),
       ),
     );
@@ -300,44 +302,63 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
 
   Widget _buildSliverAppBar(BuildContext context, Recipe r) {
     return SliverAppBar(
-      expandedHeight: 280,
+      expandedHeight: 320,
       pinned: true,
       actions: [
         if (_isOwner(r)) ...[
-          _buildCircleIconButton(
+          _buildGlassCircleButton(
             icon: Icons.edit_outlined,
-            color: Colors.blue.shade700,
+            iconColor: Colors.white,
             onPressed: () =>
                 context.push('/edit-recipe/${r.id}', extra: r),
           ),
-          _buildCircleIconButton(
+          _buildGlassCircleButton(
             icon: Icons.delete_outline,
-            color: Colors.red.shade600,
+            iconColor: Colors.white,
             onPressed: () => _deleteRecipe(context, r),
           ),
         ],
       ],
       flexibleSpace: FlexibleSpaceBar(
-        background: r.imageUrl != null
-            ? CachedNetworkImage(
-                imageUrl: r.imageUrl!,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  color: Colors.grey.shade200,
-                  child: const Center(child: CircularProgressIndicator()),
+        background: Stack(
+          fit: StackFit.expand,
+          children: [
+            r.imageUrl != null
+                ? CachedNetworkImage(
+                    imageUrl: r.imageUrl!,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: AppTheme.warmBeige,
+                      child: const Center(child: CircularProgressIndicator()),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        _buildPlaceholderImage(),
+                  )
+                : _buildPlaceholderImage(),
+            // Gradient overlay
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withValues(alpha: 0.4),
+                  ],
                 ),
-                errorWidget: (context, url, error) => _buildPlaceholderImage(),
-              )
-            : _buildPlaceholderImage(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildPlaceholderImage() {
     return Container(
-      color: Colors.grey.shade200,
+      color: AppTheme.warmBeige,
       child: const Center(
-        child: Icon(Icons.restaurant_menu, size: 80, color: Colors.grey),
+        child: Icon(Icons.restaurant_menu, size: 80, color: AppTheme.textTertiary),
       ),
     );
   }
@@ -363,7 +384,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
             Text(
               r.authorName,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: Colors.grey.shade600,
+                color: AppTheme.textSecondary,
               ),
             ),
             const SizedBox(width: 12),
@@ -421,7 +442,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
             Text(
               label,
               style: theme.textTheme.labelSmall?.copyWith(
-                color: Colors.grey.shade600,
+                color: AppTheme.textSecondary,
               ),
             ),
             Text(
@@ -505,14 +526,14 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
         Text(
           unit,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: Colors.grey.shade500,
+            color: AppTheme.textSecondary,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           label,
           style: theme.textTheme.labelSmall?.copyWith(
-            color: Colors.grey.shade600,
+            color: AppTheme.textSecondary,
           ),
         ),
       ],
@@ -539,8 +560,6 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     );
   }
 
-  // ── Ratings section ──────────────────────────────────────────────────────────
-
   Widget _buildRatingsSection(
     BuildContext context,
     AppLocalizations l10n,
@@ -565,7 +584,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
             ),
             const Spacer(),
             if (r.ratingCount > 0) ...[
-              Icon(Icons.star, size: 18, color: Colors.amber.shade600),
+              const Icon(Icons.star, size: 18, color: AppTheme.starColor),
               const SizedBox(width: 4),
               Text(
                 r.averageRating.toStringAsFixed(1),
@@ -577,7 +596,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
               Text(
                 l10n.ratingCount(r.ratingCount),
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: Colors.grey.shade500,
+                  color: AppTheme.textSecondary,
                 ),
               ),
             ],
@@ -588,7 +607,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
           Text(
             l10n.yourRating,
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: Colors.grey.shade600,
+              color: AppTheme.textSecondary,
             ),
           ),
           const SizedBox(height: 6),
@@ -612,8 +631,6 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     );
   }
 
-  // ── Comments section ─────────────────────────────────────────────────────────
-
   Widget _buildCommentsSection(
     BuildContext context,
     AppLocalizations l10n,
@@ -622,14 +639,12 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
   ) {
     final comments = context.watch<CommentProvider>().comments;
     final userId = context.read<AuthProvider>().userModel?.uid;
-    // True only when the user has an entry with actual text (not rating-only)
     final hasMyTextComment = userId != null &&
         comments.any((c) => c.userId == userId && c.text.isNotEmpty);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Comment input + Send button
         if (userId != null)
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -644,7 +659,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                     hintStyle: TextStyle(
                       color: hasMyTextComment
                           ? Colors.orange.shade300
-                          : Colors.grey.shade400,
+                          : AppTheme.textTertiary,
                       fontSize: 13,
                     ),
                     border: OutlineInputBorder(
@@ -683,7 +698,10 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
           Center(
             child: Text(
               l10n.noComments,
-              style: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+              style: const TextStyle(
+                color: AppTheme.textTertiary,
+                fontSize: 14,
+              ),
             ),
           )
         else
@@ -693,9 +711,12 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.grey.shade50,
+                color: AppTheme.warmCream,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.shade100),
+                border: Border.all(
+                  color: AppTheme.warmBeige.withValues(alpha: 0.5),
+                ),
+                boxShadow: [AppTheme.warmShadowLight()],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -731,7 +752,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                                 children: List.generate(5, (i) => Icon(
                                   i < c.stars ? Icons.star : Icons.star_border,
                                   size: 13,
-                                  color: Colors.amber.shade600,
+                                  color: AppTheme.starColor,
                                 )),
                               ),
                           ],
@@ -739,9 +760,9 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                       ),
                       Text(
                         _formatDate(c.createdAt),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 11,
-                          color: Colors.grey.shade400,
+                          color: AppTheme.textTertiary,
                         ),
                       ),
                       if (isMyComment) ...[
@@ -774,8 +795,6 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
   }
 }
 
-// ── Star rating widget ────────────────────────────────────────────────────────
-
 class _StarRatingWidget extends StatelessWidget {
   final int currentStars;
   final Future<void> Function(int stars) onRate;
@@ -793,7 +812,7 @@ class _StarRatingWidget extends StatelessWidget {
             padding: const EdgeInsets.only(right: 4),
             child: Icon(
               star <= currentStars ? Icons.star : Icons.star_border,
-              color: Colors.amber.shade600,
+              color: AppTheme.starColor,
               size: 32,
             ),
           ),

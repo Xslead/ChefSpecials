@@ -19,7 +19,7 @@ class CategoryFilterBar extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return SizedBox(
-      height: 40,
+      height: 44,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
@@ -47,11 +47,10 @@ class CategoryFilterBar extends StatelessWidget {
         onTap: () => onSelected(value),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected
-                ? AppTheme.primaryColor
-                : Colors.grey.shade100,
+            gradient: isSelected ? AppTheme.primaryGradient : null,
+            color: isSelected ? null : AppTheme.warmBeige,
             borderRadius: BorderRadius.circular(50),
           ),
           child: Text(

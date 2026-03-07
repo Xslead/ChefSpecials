@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../config/theme.dart';
 import '../../../models/ingredient.dart';
 
 class IngredientListView extends StatelessWidget {
@@ -9,24 +10,31 @@ class IngredientListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: ingredients.map((ingredient) {
+      children: List.generate(ingredients.length, (index) {
+        final ingredient = ingredients[index];
         final subtitle = ingredient.unit != null
             ? '${ingredient.amount} ${ingredient.unit}'
             : ingredient.amount;
 
-        return ListTile(
-          leading: const Icon(Icons.fiber_manual_record, size: 10),
-          title: Text(ingredient.name),
-          trailing: Text(
-            subtitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey.shade600,
-                ),
+        return Container(
+          color: index.isEven ? AppTheme.warmCream : Colors.transparent,
+          child: ListTile(
+            leading: const Icon(Icons.fiber_manual_record, size: 10, color: AppTheme.primaryColor),
+            title: Text(
+              ingredient.name,
+              style: const TextStyle(color: AppTheme.textPrimary),
+            ),
+            trailing: Text(
+              subtitle,
+              style: const TextStyle(
+                color: AppTheme.textSecondary,
+              ),
+            ),
+            dense: true,
+            visualDensity: VisualDensity.compact,
           ),
-          dense: true,
-          visualDensity: VisualDensity.compact,
         );
-      }).toList(),
+      }),
     );
   }
 }

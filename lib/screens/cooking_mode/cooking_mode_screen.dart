@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../config/theme.dart';
 import '../../models/recipe.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../widgets/gradient_button.dart';
 import 'widgets/step_page.dart';
 
 class CookingModeScreen extends StatefulWidget {
@@ -39,7 +41,6 @@ class _CookingModeScreenState extends State<CookingModeScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
     final steps = widget.recipe.steps;
     final isFirst = _currentPage == 0;
     final isLast = _currentPage == steps.length - 1;
@@ -49,10 +50,19 @@ class _CookingModeScreenState extends State<CookingModeScreen> {
         title: Text(widget.recipe.title),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
-          child: LinearProgressIndicator(
-            value: steps.isEmpty ? 0 : (_currentPage + 1) / steps.length,
-            backgroundColor: Colors.grey.shade200,
-            color: theme.colorScheme.primary,
+          child: Container(
+            height: 4,
+            width: double.infinity,
+            color: AppTheme.warmBeige,
+            alignment: Alignment.centerLeft,
+            child: FractionallySizedBox(
+              widthFactor: steps.isEmpty ? 0 : (_currentPage + 1) / steps.length,
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: AppTheme.primaryGradient,
+                ),
+              ),
+            ),
           ),
         ),
       ),
@@ -87,12 +97,12 @@ class _CookingModeScreenState extends State<CookingModeScreen> {
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: FilledButton.icon(
+                      child: GradientButton(
+                        text: isLast ? l10n.done : l10n.next,
+                        icon: isLast ? Icons.check : Icons.arrow_forward,
                         onPressed: isLast
                             ? () => Navigator.of(context).pop()
                             : () => _goToPage(_currentPage + 1),
-                        icon: Icon(isLast ? Icons.check : Icons.arrow_forward),
-                        label: Text(isLast ? l10n.done : l10n.next),
                       ),
                     ),
                   ],

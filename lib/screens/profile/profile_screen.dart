@@ -120,14 +120,14 @@ class ProfileScreen extends StatelessWidget {
                           Icon(
                             Icons.menu_book,
                             size: 64,
-                            color: Colors.grey.shade300,
+                            color: AppTheme.warmBeige,
                           ),
                           const SizedBox(height: 16),
                           Text(
                             l10n.noRecipes,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
-                              color: Colors.grey.shade500,
+                              color: AppTheme.textTertiary,
                             ),
                           ),
                         ],
@@ -147,7 +147,7 @@ class ProfileScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
-          bottom: BorderSide(color: Colors.grey.shade100),
+          bottom: BorderSide(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
         ),
       ),
       child: SafeArea(
@@ -240,52 +240,51 @@ class ProfileScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey.shade100),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+          boxShadow: [AppTheme.warmShadowLight()],
         ),
         child: Column(
           children: [
-            // Avatar
+            // Avatar with gradient ring
             Container(
-              width: 88,
-              height: 88,
-              decoration: BoxDecoration(
+              width: 92,
+              height: 92,
+              decoration: const BoxDecoration(
+                gradient: AppTheme.primaryGradient,
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: AppTheme.primaryColor.withValues(alpha: 0.2),
-                  width: 3,
-                ),
               ),
-              child: ClipOval(
-                child: photoUrl != null && photoUrl.isNotEmpty
-                    ? CachedNetworkImage(
-                        imageUrl: photoUrl,
-                        fit: BoxFit.cover,
-                        placeholder: (_, _) => Container(
-                          color: Colors.grey.shade100,
-                          child: Icon(Icons.person,
-                              size: 40, color: Colors.grey.shade400),
+              padding: const EdgeInsets.all(3),
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                padding: const EdgeInsets.all(2),
+                child: ClipOval(
+                  child: photoUrl != null && photoUrl.isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: photoUrl,
+                          fit: BoxFit.cover,
+                          placeholder: (_, _) => Container(
+                            color: AppTheme.warmCream,
+                            child: const Icon(Icons.person,
+                                size: 40, color: AppTheme.textTertiary),
+                          ),
+                          errorWidget: (_, _, _) => Container(
+                            color: AppTheme.warmCream,
+                            child: const Icon(Icons.person,
+                                size: 40, color: AppTheme.textTertiary),
+                          ),
+                        )
+                      : Container(
+                          color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                          child: const Icon(
+                            Icons.person,
+                            size: 40,
+                            color: AppTheme.primaryColor,
+                          ),
                         ),
-                        errorWidget: (_, _, _) => Container(
-                          color: Colors.grey.shade100,
-                          child: Icon(Icons.person,
-                              size: 40, color: Colors.grey.shade400),
-                        ),
-                      )
-                    : Container(
-                        color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                        child: const Icon(
-                          Icons.person,
-                          size: 40,
-                          color: AppTheme.primaryColor,
-                        ),
-                      ),
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -302,9 +301,9 @@ class ProfileScreen extends StatelessWidget {
             // Email
             Text(
               email,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
-                color: Colors.grey.shade500,
+                color: AppTheme.textTertiary,
               ),
             ),
             // Bio
@@ -312,9 +311,9 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 bio,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
-                  color: Colors.grey.shade600,
+                  color: AppTheme.textSecondary,
                   height: 1.4,
                 ),
                 textAlign: TextAlign.center,
@@ -325,25 +324,25 @@ class ProfileScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.grey.shade50,
+                color: AppTheme.warmCream,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.calendar_today,
                     size: 14,
-                    color: Colors.grey.shade400,
+                    color: AppTheme.textTertiary,
                   ),
                   const SizedBox(width: 6),
                   Text(
                     l10n.memberSince(
                       DateFormat('MMM yyyy').format(createdAt),
                     ),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
-                      color: Colors.grey.shade500,
+                      color: AppTheme.textTertiary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -367,14 +366,8 @@ class ProfileScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade100),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+        boxShadow: [AppTheme.warmShadowLight()],
       ),
       child: Row(
         children: [
@@ -401,10 +394,10 @@ class ProfileScreen extends StatelessWidget {
               ),
               Text(
                 label.toUpperCase(),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
-                  color: Colors.grey.shade500,
+                  color: AppTheme.textTertiary,
                   letterSpacing: 0.5,
                 ),
               ),

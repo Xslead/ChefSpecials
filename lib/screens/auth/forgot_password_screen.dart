@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../config/theme.dart';
 import '../../services/auth_service.dart';
+import '../../widgets/gradient_button.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -60,7 +62,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -69,24 +70,37 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         title: const Text('Forgot Password'),
         elevation: 0,
       ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: _emailSent ? _buildSuccessView(colorScheme, textTheme) : _buildFormView(colorScheme, textTheme),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppTheme.warmBackgroundGradient,
+        ),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: _emailSent ? _buildSuccessView(textTheme) : _buildFormView(textTheme),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildFormView(ColorScheme colorScheme, TextTheme textTheme) {
+  Widget _buildFormView(TextTheme textTheme) {
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Icon(Icons.lock_reset_outlined, size: 72, color: colorScheme.primary),
+          Container(
+            width: 72,
+            height: 72,
+            decoration: const BoxDecoration(
+              gradient: AppTheme.primaryGradient,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.lock_reset_outlined, size: 36, color: Colors.white),
+          ),
           const SizedBox(height: 24),
           Text(
             'Reset your password',
@@ -97,7 +111,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           Text(
             'Enter the email address associated with your account. We\'ll send you a link to reset your password.',
             textAlign: TextAlign.center,
-            style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
+            style: textTheme.bodyMedium?.copyWith(color: AppTheme.textSecondary),
           ),
           const SizedBox(height: 40),
           TextFormField(
@@ -122,20 +136,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             const SizedBox(height: 16),
             Text(
               _error!,
-              style: TextStyle(color: colorScheme.error),
+              style: const TextStyle(color: AppTheme.errorColor),
               textAlign: TextAlign.center,
             ),
           ],
           const SizedBox(height: 24),
-          ElevatedButton(
+          GradientButton(
+            text: 'Send Reset Link',
             onPressed: _isLoading ? null : _handleSend,
-            child: _isLoading
-                ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                  )
-                : const Text('Send Reset Link'),
+            icon: Icons.send,
           ),
           const SizedBox(height: 16),
           TextButton(
@@ -147,11 +156,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  Widget _buildSuccessView(ColorScheme colorScheme, TextTheme textTheme) {
+  Widget _buildSuccessView(TextTheme textTheme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Icon(Icons.mark_email_read_outlined, size: 72, color: colorScheme.primary),
+        Container(
+          width: 72,
+          height: 72,
+          decoration: const BoxDecoration(
+            gradient: AppTheme.primaryGradient,
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(Icons.mark_email_read_outlined, size: 36, color: Colors.white),
+        ),
         const SizedBox(height: 24),
         Text(
           'Check your email',
@@ -162,18 +179,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         Text(
           'We sent a password reset link to\n${_emailController.text.trim()}',
           textAlign: TextAlign.center,
-          style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
+          style: textTheme.bodyMedium?.copyWith(color: AppTheme.textSecondary),
         ),
         const SizedBox(height: 8),
         Text(
           'Check your inbox and follow the link to reset your password.',
           textAlign: TextAlign.center,
-          style: textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
+          style: textTheme.bodySmall?.copyWith(color: AppTheme.textTertiary),
         ),
         const SizedBox(height: 40),
-        ElevatedButton(
+        GradientButton(
+          text: 'Back to Login',
           onPressed: () => context.go('/login'),
-          child: const Text('Back to Login'),
         ),
         const SizedBox(height: 16),
         TextButton(

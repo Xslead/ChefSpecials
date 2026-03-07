@@ -35,10 +35,10 @@ class IngredientInputList extends StatelessWidget {
             const SizedBox(width: 10),
             Text(
               l10n.ingredients.toUpperCase(),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
-                color: Colors.grey.shade500,
+                color: AppTheme.textTertiary,
                 letterSpacing: 0.8,
               ),
             ),
@@ -49,20 +49,20 @@ class IngredientInputList extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                  gradient: AppTheme.primaryGradient,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.add, size: 16, color: AppTheme.primaryColor),
+                    Icon(Icons.add, size: 16, color: Colors.white),
                     SizedBox(width: 4),
                     Text(
                       'Add',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: AppTheme.primaryColor,
+                        color: Colors.white,
                       ),
                     ),
                   ],
@@ -77,19 +77,19 @@ class IngredientInputList extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.grey.shade50,
+              color: AppTheme.warmCream,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Colors.grey.shade100),
+              border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
             ),
             child: Column(
               children: [
-                Icon(Icons.egg_alt, size: 32, color: Colors.grey.shade300),
+                Icon(Icons.egg_alt, size: 32, color: AppTheme.warmBeige),
                 const SizedBox(height: 8),
-                Text(
+                const Text(
                   'Tap + to add ingredients',
                   style: TextStyle(
                     fontSize: 13,
-                    color: Colors.grey.shade400,
+                    color: AppTheme.textTertiary,
                   ),
                 ),
               ],
@@ -107,7 +107,7 @@ class IngredientInputList extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.shade100),
+                border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
               ),
               child: Row(
                 children: [
@@ -126,9 +126,9 @@ class IngredientInputList extends StatelessWidget {
                         if (ingredient.caloriesPer100 != null)
                           Text(
                             '${ingredient.caloriesPer100!.toStringAsFixed(0)} kcal / 100${ingredient.unit ?? 'g'}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 11,
-                              color: Colors.grey.shade500,
+                              color: AppTheme.textTertiary,
                             ),
                           ),
                       ],
@@ -146,12 +146,12 @@ class IngredientInputList extends StatelessWidget {
                       ),
                       decoration: InputDecoration(
                         suffixText: ingredient.unit ?? 'g',
-                        suffixStyle: TextStyle(
+                        suffixStyle: const TextStyle(
                           fontSize: 11,
-                          color: Colors.grey.shade400,
+                          color: AppTheme.textTertiary,
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade50,
+                        fillColor: AppTheme.warmCream,
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 8),
                         isDense: true,
@@ -173,10 +173,10 @@ class IngredientInputList extends StatelessWidget {
                   const SizedBox(width: 4),
                   GestureDetector(
                     onTap: () => formProvider.removeIngredient(index),
-                    child: Icon(
+                    child: const Icon(
                       Icons.close,
                       size: 18,
-                      color: Colors.grey.shade400,
+                      color: AppTheme.textTertiary,
                     ),
                   ),
                 ],
@@ -230,15 +230,15 @@ class IngredientInputList extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.grey.shade50,
+                color: AppTheme.warmCream,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
                 '${foodItem.calories.toStringAsFixed(0)} kcal, '
                 '${foodItem.protein.toStringAsFixed(1)}g protein / 100${foodItem.unit == "100g" ? "g" : "mL"}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
-                  color: Colors.grey.shade600,
+                  color: AppTheme.textSecondary,
                 ),
               ),
             ),
@@ -248,9 +248,9 @@ class IngredientInputList extends StatelessWidget {
               decoration: InputDecoration(
                 labelText:
                     '${l10n.quantity} (${foodItem.unit == "100g" ? "g" : "mL"})',
-                prefixIcon: Icon(
+                prefixIcon: const Icon(
                   Icons.scale,
-                  color: Colors.grey.shade400,
+                  color: AppTheme.textTertiary,
                 ),
               ),
               keyboardType: TextInputType.number,
@@ -351,7 +351,7 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey.shade300,
+              color: AppTheme.warmBeige,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -362,21 +362,21 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
           child: Container(
             height: 48,
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              color: AppTheme.warmBeige,
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
               children: [
                 const SizedBox(width: 14),
-                Icon(Icons.search, color: Colors.grey.shade400, size: 22),
+                const Icon(Icons.search, color: AppTheme.textTertiary, size: 22),
                 const SizedBox(width: 10),
                 Expanded(
                   child: TextField(
                     controller: _searchController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Search materials...',
                       hintStyle: TextStyle(
-                        color: Colors.grey.shade400,
+                        color: AppTheme.textTertiary,
                         fontSize: 14,
                       ),
                       border: InputBorder.none,
@@ -400,13 +400,13 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.kitchen,
-                              size: 48, color: Colors.grey.shade300),
+                              size: 48, color: AppTheme.warmBeige),
                           const SizedBox(height: 12),
-                          Text(
+                          const Text(
                             'No materials found',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.grey.shade500,
+                              color: AppTheme.textTertiary,
                             ),
                           ),
                         ],
@@ -427,7 +427,7 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12),
                               border:
-                                  Border.all(color: Colors.grey.shade100),
+                                  Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
                             ),
                             child: Row(
                               children: [
@@ -463,9 +463,9 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
                                         '${item.protein.toStringAsFixed(1)}g P · '
                                         '${item.carbs.toStringAsFixed(1)}g C · '
                                         '${item.fat.toStringAsFixed(1)}g F',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 11,
-                                          color: Colors.grey.shade500,
+                                          color: AppTheme.textTertiary,
                                         ),
                                       ),
                                     ],
@@ -473,9 +473,9 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
                                 ),
                                 Text(
                                   item.category,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 11,
-                                    color: Colors.grey.shade400,
+                                    color: AppTheme.textTertiary,
                                   ),
                                 ),
                               ],

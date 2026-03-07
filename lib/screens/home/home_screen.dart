@@ -49,14 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icon(
                               Icons.restaurant_menu,
                               size: 64,
-                              color: Colors.grey.shade300,
+                              color: AppTheme.warmBeige,
                             ),
                             const SizedBox(height: 16),
                             Text(
                               l10n.noRecipes,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 16,
-                                color: Colors.grey.shade500,
+                                color: AppTheme.textTertiary,
                               ),
                             ),
                           ],
@@ -78,15 +78,21 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: FloatingActionButton(
-          heroTag: 'home_fab',
-          onPressed: () => context.push('/add-recipe'),
-          backgroundColor: AppTheme.primaryColor,
-          foregroundColor: Colors.white,
-          elevation: 4,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.add, size: 28),
+        padding: const EdgeInsets.only(bottom: 100),
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: AppTheme.primaryGradient,
+            shape: BoxShape.circle,
+          ),
+          child: FloatingActionButton(
+            heroTag: 'home_fab',
+            onPressed: () => context.push('/add-recipe'),
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.white,
+            elevation: 0,
+            shape: const CircleBorder(),
+            child: const Icon(Icons.add, size: 28),
+          ),
         ),
       ),
     );
@@ -97,16 +103,13 @@ class _HomeScreenState extends State<HomeScreen> {
     AppLocalizations l10n,
     RecipeProvider recipeProvider,
   ) {
+    final user = context.watch<AuthProvider>().userModel;
+    final firstName = user?.firstName ?? '';
+
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: [AppTheme.warmShadowLight()],
       ),
       child: SafeArea(
         bottom: false,
@@ -115,13 +118,24 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Greeting text
+              if (firstName.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text(
+                    'Good morning, $firstName!',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppTheme.textSecondary,
+                        ),
+                  ),
+                ),
               // Logo row
               Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                      color: AppTheme.surfaceVariant,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(
@@ -154,22 +168,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   height: 48,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
+                    color: AppTheme.warmBeige,
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Row(
                     children: [
                       const SizedBox(width: 14),
-                      Icon(
+                      const Icon(
                         Icons.search,
-                        color: Colors.grey.shade400,
+                        color: AppTheme.textTertiary,
                         size: 22,
                       ),
                       const SizedBox(width: 10),
                       Text(
                         l10n.searchRecipeOrIngredient,
-                        style: TextStyle(
-                          color: Colors.grey.shade400,
+                        style: const TextStyle(
+                          color: AppTheme.textTertiary,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),

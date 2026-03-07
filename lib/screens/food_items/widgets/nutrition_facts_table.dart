@@ -93,12 +93,49 @@ class NutritionFactsTable extends StatelessWidget {
               barColor: const Color(0xFFEE5A5A),
               barRatio: _macroRatio(foodItem.fat),
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Column(
+                children: [
+                  const Divider(height: 1),
+                  _buildRow(
+                    context,
+                    label: 'Saturated Fat',
+                    value: '${foodItem.saturatedFat.toStringAsFixed(1)} g',
+                    perPacketValue: '${foodItem.saturatedFatPerPacket.toStringAsFixed(1)} g',
+                    isSubRow: true,
+                  ),
+                  const Divider(height: 1),
+                  _buildRow(
+                    context,
+                    label: 'Trans Fat',
+                    value: '${foodItem.transFat.toStringAsFixed(1)} g',
+                    perPacketValue: '${foodItem.transFatPerPacket.toStringAsFixed(1)} g',
+                    isSubRow: true,
+                  ),
+                ],
+              ),
+            ),
             const Divider(height: 1),
             _buildRow(
               context,
               label: 'Sodium',
               value: '${foodItem.sodium.toStringAsFixed(1)} mg',
               perPacketValue: '${foodItem.sodiumPerPacket.toStringAsFixed(1)} mg',
+            ),
+            const Divider(height: 1),
+            _buildRow(
+              context,
+              label: 'Cholesterol',
+              value: '${foodItem.cholesterol.toStringAsFixed(1)} mg',
+              perPacketValue: '${foodItem.cholesterolPerPacket.toStringAsFixed(1)} mg',
+            ),
+            const Divider(height: 1),
+            _buildRow(
+              context,
+              label: 'Salt',
+              value: '${foodItem.salt.toStringAsFixed(1)} g',
+              perPacketValue: '${foodItem.saltPerPacket.toStringAsFixed(1)} g',
             ),
           ],
         ),
@@ -207,7 +244,7 @@ class NutritionFactsTable extends StatelessWidget {
               borderRadius: BorderRadius.circular(2),
               child: LinearProgressIndicator(
                 value: barRatio,
-                backgroundColor: Colors.grey.shade200,
+                backgroundColor: AppTheme.warmBeige,
                 valueColor: AlwaysStoppedAnimation<Color>(barColor),
                 minHeight: 4,
               ),

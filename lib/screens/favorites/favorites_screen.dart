@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers/favorite_provider.dart';
 import '../../providers/recipe_provider.dart';
@@ -28,15 +30,21 @@ class FavoritesScreen extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border(
-                bottom: BorderSide(color: Colors.grey.shade100),
+                bottom: BorderSide(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
               ),
             ),
             child: SafeArea(
               bottom: false,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                padding: const EdgeInsets.fromLTRB(4, 8, 16, 8),
                 child: Row(
                   children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () => context.pop(),
+                      color: AppTheme.textPrimary,
+                    ),
+                    const SizedBox(width: 4),
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -94,30 +102,30 @@ class FavoritesScreen extends StatelessWidget {
                           width: 72,
                           height: 72,
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
+                            color: AppTheme.warmCream,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Icon(
                             Icons.favorite_border,
                             size: 36,
-                            color: Colors.grey.shade300,
+                            color: AppTheme.warmBeige,
                           ),
                         ),
                         const SizedBox(height: 16),
                         Text(
                           l10n.noFavorites,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade400,
+                            color: AppTheme.textSecondary,
                           ),
                         ),
                         const SizedBox(height: 6),
-                        Text(
+                        const Text(
                           'Tap the heart icon on recipes to save them here',
                           style: TextStyle(
                             fontSize: 13,
-                            color: Colors.grey.shade400,
+                            color: AppTheme.textTertiary,
                           ),
                         ),
                       ],

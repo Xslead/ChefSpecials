@@ -104,7 +104,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border(
-                bottom: BorderSide(color: Colors.grey.shade100),
+                bottom: BorderSide(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
               ),
             ),
             child: SafeArea(
@@ -167,32 +167,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       child: Stack(
                         children: [
                           Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
+                            width: 104,
+                            height: 104,
+                            decoration: const BoxDecoration(
+                              gradient: AppTheme.primaryGradient,
                               shape: BoxShape.circle,
-                              border: Border.all(
-                                color: AppTheme.primaryColor
-                                    .withValues(alpha: 0.2),
-                                width: 3,
-                              ),
                             ),
-                            child: ClipOval(
-                              child: _imageFile != null
-                                  ? Image.file(_imageFile!, fit: BoxFit.cover)
-                                  : (currentPhotoUrl != null &&
-                                          currentPhotoUrl.isNotEmpty
-                                      ? Image.network(currentPhotoUrl,
-                                          fit: BoxFit.cover)
-                                      : Container(
-                                          color: AppTheme.primaryColor
-                                              .withValues(alpha: 0.1),
-                                          child: const Icon(
-                                            Icons.person,
-                                            size: 44,
-                                            color: AppTheme.primaryColor,
-                                          ),
-                                        )),
+                            padding: const EdgeInsets.all(3),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              padding: const EdgeInsets.all(2),
+                              child: ClipOval(
+                                child: _imageFile != null
+                                    ? Image.file(_imageFile!, fit: BoxFit.cover)
+                                    : (currentPhotoUrl != null &&
+                                            currentPhotoUrl.isNotEmpty
+                                        ? Image.network(currentPhotoUrl,
+                                            fit: BoxFit.cover)
+                                        : Container(
+                                            color: AppTheme.primaryColor
+                                                .withValues(alpha: 0.1),
+                                            child: const Icon(
+                                              Icons.person,
+                                              size: 44,
+                                              color: AppTheme.primaryColor,
+                                            ),
+                                          )),
+                              ),
                             ),
                           ),
                           Positioned(
@@ -201,7 +205,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             child: Container(
                               padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
-                                color: AppTheme.primaryColor,
+                                gradient: AppTheme.primaryGradient,
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: Colors.white,
@@ -223,10 +227,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   // Full Name field
                   Text(
                     l10n.fullName.toUpperCase(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
-                      color: Colors.grey.shade500,
+                      color: AppTheme.textTertiary,
                       letterSpacing: 0.8,
                     ),
                   ),
@@ -235,22 +239,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     controller: _fullNameController,
                     decoration: InputDecoration(
                       hintText: l10n.fullName,
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.person_outline,
-                        color: Colors.grey.shade400,
+                        color: AppTheme.textTertiary,
                       ),
                     ),
                     validator: (v) =>
                         (v == null || v.trim().isEmpty) ? l10n.nameRequired : null,
                   ),
                   const SizedBox(height: 20),
+                  Divider(color: AppTheme.warmBeige),
+                  const SizedBox(height: 20),
                   // Bio field
                   Text(
                     l10n.bio.toUpperCase(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
-                      color: Colors.grey.shade500,
+                      color: AppTheme.textTertiary,
                       letterSpacing: 0.8,
                     ),
                   ),
@@ -259,9 +265,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     controller: _bioController,
                     decoration: InputDecoration(
                       hintText: l10n.bio,
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.info_outline,
-                        color: Colors.grey.shade400,
+                        color: AppTheme.textTertiary,
                       ),
                       alignLabelWithHint: true,
                     ),

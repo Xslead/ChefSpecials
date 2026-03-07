@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../config/theme.dart';
 import '../../../models/recipe_step.dart';
 
 class StepOverviewList extends StatelessWidget {
@@ -12,16 +13,29 @@ class StepOverviewList extends StatelessWidget {
 
     return Column(
       children: steps.map((step) {
-        return Card(
+        return Container(
           margin: const EdgeInsets.only(bottom: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: AppTheme.warmBeige.withValues(alpha: 0.5),
+            ),
+            boxShadow: [AppTheme.warmShadowLight()],
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
-                  radius: 16,
-                  backgroundColor: theme.colorScheme.primary,
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: const BoxDecoration(
+                    gradient: AppTheme.primaryGradient,
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
                   child: Text(
                     '${step.order}',
                     style: const TextStyle(

@@ -115,7 +115,7 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                       width: 40,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
+                        color: AppTheme.warmBeige,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -144,17 +144,14 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                           children: [
                             Text(
                               item.name,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(ctx).textTheme.titleMedium,
                             ),
                             if (item.brand != null && item.brand!.isNotEmpty)
                               Text(
                                 item.brand!,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 13,
-                                  color: Colors.grey.shade500,
+                                  color: AppTheme.textTertiary,
                                 ),
                               ),
                           ],
@@ -166,10 +163,10 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                   // Quantity input
                   Text(
                     '${l10n.quantity} (${l10n.gram})'.toUpperCase(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
-                      color: Colors.grey.shade500,
+                      color: AppTheme.textTertiary,
                       letterSpacing: 0.8,
                     ),
                   ),
@@ -181,15 +178,16 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
+                      color: AppTheme.textPrimary,
                     ),
                     decoration: InputDecoration(
                       suffixText: l10n.gram,
-                      suffixStyle: TextStyle(
+                      suffixStyle: const TextStyle(
                         fontSize: 14,
-                        color: Colors.grey.shade400,
+                        color: AppTheme.textTertiary,
                       ),
                       filled: true,
-                      fillColor: Colors.grey.shade50,
+                      fillColor: AppTheme.warmCream,
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 14),
                       border: OutlineInputBorder(
@@ -209,9 +207,11 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                   Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppTheme.warmCream,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: Colors.grey.shade100),
+                      border: Border.all(
+                        color: AppTheme.warmBeige.withValues(alpha: 0.5),
+                      ),
                     ),
                     child: Row(
                       children: [
@@ -300,10 +300,10 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
         children: [
           Text(
             label.toUpperCase(),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 9,
               fontWeight: FontWeight.w600,
-              color: Colors.grey.shade400,
+              color: AppTheme.textTertiary,
               letterSpacing: 0.3,
             ),
           ),
@@ -318,9 +318,9 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
           ),
           Text(
             unit,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 10,
-              color: Colors.grey.shade400,
+              color: AppTheme.textTertiary,
             ),
           ),
         ],
@@ -361,9 +361,11 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
           // Custom header
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppTheme.surfaceVariant,
               border: Border(
-                bottom: BorderSide(color: Colors.grey.shade100),
+                bottom: BorderSide(
+                  color: AppTheme.warmBeige.withValues(alpha: 0.5),
+                ),
               ),
             ),
             child: SafeArea(
@@ -398,17 +400,13 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                           children: [
                             Text(
                               l10n.addFood,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: -0.3,
-                              ),
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
                             Text(
                               _mealTypeName(l10n),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 12,
-                                color: Colors.grey.shade500,
+                                color: AppTheme.textTertiary,
                               ),
                             ),
                           ],
@@ -421,7 +419,7 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
+                      color: AppTheme.warmBeige,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     padding: const EdgeInsets.all(4),
@@ -430,17 +428,11 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                       indicator: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.05),
-                            blurRadius: 4,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
+                        boxShadow: [AppTheme.warmShadowLight()],
                       ),
                       indicatorSize: TabBarIndicatorSize.tab,
                       labelColor: AppTheme.textPrimary,
-                      unselectedLabelColor: Colors.grey.shade500,
+                      unselectedLabelColor: AppTheme.textSecondary,
                       labelStyle: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -520,21 +512,22 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
           child: Container(
             height: 48,
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              color: AppTheme.warmBeige,
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
               children: [
                 const SizedBox(width: 14),
-                Icon(Icons.search, color: Colors.grey.shade400, size: 22),
+                const Icon(Icons.search,
+                    color: AppTheme.textTertiary, size: 22),
                 const SizedBox(width: 10),
                 Expanded(
                   child: TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
                       hintText: '${l10n.search}...',
-                      hintStyle: TextStyle(
-                        color: Colors.grey.shade400,
+                      hintStyle: const TextStyle(
+                        color: AppTheme.textTertiary,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -545,6 +538,7 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
+                      color: AppTheme.textPrimary,
                     ),
                     onChanged: (value) {
                       setState(() {});
@@ -559,12 +553,12 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                       setState(() {});
                       foodProvider.searchFoodItems('');
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
+                    child: const Padding(
+                      padding: EdgeInsets.all(12),
                       child: Icon(
                         Icons.clear,
                         size: 18,
-                        color: Colors.grey.shade400,
+                        color: AppTheme.textTertiary,
                       ),
                     ),
                   ),
@@ -582,13 +576,13 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.kitchen,
-                              size: 64, color: Colors.grey.shade300),
+                              size: 64, color: AppTheme.warmBeige),
                           const SizedBox(height: 16),
                           Text(
                             l10n.noResults,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
-                              color: Colors.grey.shade500,
+                              color: AppTheme.textSecondary,
                             ),
                           ),
                         ],
@@ -616,7 +610,10 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade100),
+          border: Border.all(
+            color: AppTheme.warmBeige.withValues(alpha: 0.5),
+          ),
+          boxShadow: [AppTheme.warmShadowLight()],
         ),
         child: Row(
           children: [
@@ -643,6 +640,7 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -650,9 +648,9 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                   const SizedBox(height: 2),
                   Text(
                     item.brand ?? item.category,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
-                      color: Colors.grey.shade500,
+                      color: AppTheme.textTertiary,
                     ),
                   ),
                 ],
@@ -671,9 +669,9 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                 ),
                 Text(
                   '${l10n.kcal}/100${l10n.gram}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 10,
-                    color: Colors.grey.shade400,
+                    color: AppTheme.textTertiary,
                   ),
                 ),
               ],
@@ -697,13 +695,13 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.menu_book, size: 64, color: Colors.grey.shade300),
+            Icon(Icons.menu_book, size: 64, color: AppTheme.warmBeige),
             const SizedBox(height: 16),
             Text(
               l10n.noRecipes,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
-                color: Colors.grey.shade500,
+                color: AppTheme.textSecondary,
               ),
             ),
           ],
@@ -726,7 +724,10 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade100),
+              border: Border.all(
+                color: AppTheme.warmBeige.withValues(alpha: 0.5),
+              ),
+              boxShadow: [AppTheme.warmShadowLight()],
             ),
             child: Row(
               children: [
@@ -753,6 +754,7 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
+                          color: AppTheme.textPrimary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -760,9 +762,9 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                       const SizedBox(height: 2),
                       Text(
                         '${recipe.servings} ${l10n.servings}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
-                          color: Colors.grey.shade500,
+                          color: AppTheme.textTertiary,
                         ),
                       ),
                     ],
@@ -781,9 +783,9 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                     ),
                     Text(
                       '${l10n.kcal}/${l10n.servings}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 10,
-                        color: Colors.grey.shade400,
+                        color: AppTheme.textTertiary,
                       ),
                     ),
                   ],

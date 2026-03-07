@@ -34,6 +34,15 @@ class FoodItemDetailScreen extends StatelessWidget {
                   NutritionFactsTable(foodItem: foodItem),
                   const SizedBox(height: 24),
                   _buildFooterInfo(theme),
+                  if (foodItem.allergens.isNotEmpty) ...[
+                    const SizedBox(height: 24),
+                    _buildAllergensCard(theme),
+                  ],
+                  if (foodItem.ingredientsText != null &&
+                      foodItem.ingredientsText!.isNotEmpty) ...[
+                    const SizedBox(height: 24),
+                    _buildIngredientsCard(theme),
+                  ],
                   const SizedBox(height: 32),
                 ],
               ),
@@ -50,10 +59,27 @@ class FoodItemDetailScreen extends StatelessWidget {
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         background: foodItem.imageUrl != null && foodItem.imageUrl!.isNotEmpty
-            ? Image.network(
-                foodItem.imageUrl!,
-                fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => _buildPlaceholderImage(),
+            ? Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.network(
+                    foodItem.imageUrl!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, _, _) => _buildPlaceholderImage(),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          AppTheme.primaryDark.withValues(alpha: 0.3),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               )
             : _buildPlaceholderImage(),
       ),
@@ -97,9 +123,9 @@ class FoodItemDetailScreen extends StatelessWidget {
 
   Widget _buildPlaceholderImage() {
     return Container(
-      color: Colors.grey.shade200,
+      color: AppTheme.warmCream,
       child: const Center(
-        child: Icon(Icons.restaurant, size: 80, color: Colors.grey),
+        child: Icon(Icons.restaurant, size: 80, color: AppTheme.textTertiary),
       ),
     );
   }
@@ -145,7 +171,7 @@ class FoodItemDetailScreen extends StatelessWidget {
             if (foodItem.isVegan)
               _buildBadge(label: 'VEGAN', color: Colors.green)
             else
-              _buildBadge(label: 'NON-VEGAN', color: Colors.grey),
+              _buildBadge(label: 'NON-VEGAN', color: AppTheme.textTertiary),
             if (foodItem.isVerified)
               Container(
                 padding:
@@ -170,18 +196,43 @@ class FoodItemDetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
+            if (foodItem.isVegetarian)
+              _buildBadge(label: 'VEGETARIAN', color: Colors.orange),
+            if (foodItem.isGlutenFree)
+              _buildBadge(label: 'GLUTEN FREE', color: Colors.blue),
+            if (foodItem.nutriScore != null)
+              _buildBadge(
+                label: 'Nutri-Score: ${foodItem.nutriScore!.toUpperCase()}',
+                color: _nutriScoreColor(foodItem.nutriScore!),
+              ),
+            if (foodItem.novaGroup != null)
+              _buildBadge(
+                label: 'NOVA ${foodItem.novaGroup}',
+                color: _novaGroupColor(foodItem.novaGroup!),
+              ),
+            if (foodItem.origin != null)
+              _buildBadge(
+                label: foodItem.origin!,
+                color: AppTheme.textSecondary,
+              ),
+            if (foodItem.servingSize != null)
+              _buildBadge(
+                label:
+                    'Serving: ${foodItem.servingSize!.toStringAsFixed(0)}g',
+                color: AppTheme.primaryColor,
+              ),
           ],
         ),
         if (foodItem.barcode != null) ...[
           const SizedBox(height: 8),
           Row(
             children: [
-              Icon(Icons.qr_code, size: 16, color: Colors.grey.shade600),
+              const Icon(Icons.qr_code, size: 16, color: AppTheme.textSecondary),
               const SizedBox(width: 4),
               Text(
                 foodItem.barcode!,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: Colors.grey.shade600,
+                  color: AppTheme.textSecondary,
                 ),
               ),
             ],
@@ -340,25 +391,127 @@ class FoodItemDetailScreen extends StatelessWidget {
   Widget _buildFooterInfo(ThemeData theme) {
     return Row(
       children: [
-        Icon(Icons.person_outline, size: 16, color: Colors.grey.shade500),
+        const Icon(Icons.person_outline, size: 16, color: AppTheme.textTertiary),
         const SizedBox(width: 4),
         Text(
           'Added by ${foodItem.addedBy}',
           style: theme.textTheme.bodySmall?.copyWith(
-            color: Colors.grey.shade500,
+            color: AppTheme.textTertiary,
           ),
         ),
         const Spacer(),
-        Icon(Icons.calendar_today_outlined,
-            size: 14, color: Colors.grey.shade500),
+        const Icon(Icons.calendar_today_outlined,
+            size: 14, color: AppTheme.textTertiary),
         const SizedBox(width: 4),
         Text(
           '${foodItem.createdAt.day}/${foodItem.createdAt.month}/${foodItem.createdAt.year}',
           style: theme.textTheme.bodySmall?.copyWith(
-            color: Colors.grey.shade500,
+            color: AppTheme.textTertiary,
           ),
         ),
       ],
+    );
+  }
+
+  Color _nutriScoreColor(String grade) {
+    switch (grade.toUpperCase()) {
+      case 'A':
+        return Colors.green;
+      case 'B':
+        return Colors.lightGreen;
+      case 'C':
+        return Colors.yellow.shade700;
+      case 'D':
+        return Colors.orange;
+      case 'E':
+        return Colors.red;
+      default:
+        return AppTheme.textSecondary;
+    }
+  }
+
+  Color _novaGroupColor(int group) {
+    switch (group) {
+      case 1:
+        return Colors.green;
+      case 2:
+        return Colors.yellow.shade700;
+      case 3:
+        return Colors.orange;
+      case 4:
+        return Colors.red;
+      default:
+        return AppTheme.textSecondary;
+    }
+  }
+
+  Widget _buildAllergensCard(ThemeData theme) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Allergens',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: foodItem.allergens
+                  .map(
+                    (allergen) => Chip(
+                      label: Text(
+                        allergen,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.red,
+                        ),
+                      ),
+                      backgroundColor: Colors.red.withValues(alpha: 0.1),
+                      side: BorderSide(
+                        color: Colors.red.withValues(alpha: 0.3),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIngredientsCard(ThemeData theme) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Ingredients',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              foodItem.ingredientsText!,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: AppTheme.textSecondary,
+                height: 1.5,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

@@ -20,7 +20,8 @@ class SearchResultTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.grey.shade100),
+          border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+          boxShadow: [AppTheme.warmShadowLight()],
         ),
         child: Row(
           children: [
@@ -36,24 +37,24 @@ class SearchResultTile extends StatelessWidget {
                       placeholder: (_, _) => Container(
                         width: 56,
                         height: 56,
-                        color: Colors.grey.shade100,
-                        child: Icon(Icons.restaurant, color: Colors.grey.shade300),
+                        color: AppTheme.warmCream,
+                        child: const Icon(Icons.restaurant, color: AppTheme.warmBeige),
                       ),
                       errorWidget: (_, _, _) => Container(
                         width: 56,
                         height: 56,
-                        color: Colors.grey.shade100,
-                        child: Icon(Icons.restaurant, color: Colors.grey.shade300),
+                        color: AppTheme.warmCream,
+                        child: const Icon(Icons.restaurant, color: AppTheme.warmBeige),
                       ),
                     )
                   : Container(
                       width: 56,
                       height: 56,
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
+                        color: AppTheme.warmCream,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(Icons.restaurant, color: Colors.grey.shade300),
+                      child: const Icon(Icons.restaurant, color: AppTheme.warmBeige),
                     ),
             ),
             const SizedBox(width: 12),
@@ -75,9 +76,9 @@ class SearchResultTile extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     '${recipe.category} • ${recipe.prepTimeMinutes + recipe.cookTimeMinutes} min',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
-                      color: Colors.grey.shade500,
+                      color: AppTheme.textTertiary,
                     ),
                   ),
                 ],
@@ -94,7 +95,7 @@ class SearchResultTile extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.local_fire_department,
                       size: 14,
                       color: AppTheme.primaryColor,
@@ -102,7 +103,7 @@ class SearchResultTile extends StatelessWidget {
                     const SizedBox(width: 2),
                     Text(
                       '${recipe.caloriesPerServing}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: AppTheme.primaryColor,

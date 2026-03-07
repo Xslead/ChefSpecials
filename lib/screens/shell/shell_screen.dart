@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,63 +17,70 @@ class ShellScreen extends StatelessWidget {
     final currentIndex = navigationShell.currentIndex;
 
     return Scaffold(
+      extendBody: true,
       body: navigationShell,
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(
-            top: BorderSide(color: Colors.grey.shade100),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         child: SafeArea(
           top: false,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            child: Row(
-              children: [
-                _buildNavItem(
-                  index: 0,
-                  currentIndex: currentIndex,
-                  icon: Icons.home_outlined,
-                  activeIcon: Icons.home,
-                  label: l10n.home,
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [AppTheme.warmShadowMedium()],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.85),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  child: Row(
+                    children: [
+                      _buildNavItem(
+                        index: 0,
+                        currentIndex: currentIndex,
+                        icon: Icons.home_outlined,
+                        activeIcon: Icons.home,
+                        label: l10n.home,
+                      ),
+                      _buildNavItem(
+                        index: 1,
+                        currentIndex: currentIndex,
+                        icon: Icons.menu_book_outlined,
+                        activeIcon: Icons.menu_book,
+                        label: l10n.myRecipes,
+                      ),
+                      _buildNavItem(
+                        index: 2,
+                        currentIndex: currentIndex,
+                        icon: Icons.track_changes_outlined,
+                        activeIcon: Icons.track_changes,
+                        label: l10n.dailyTracker,
+                      ),
+                      _buildNavItem(
+                        index: 3,
+                        currentIndex: currentIndex,
+                        icon: Icons.kitchen_outlined,
+                        activeIcon: Icons.kitchen,
+                        label: l10n.materials,
+                      ),
+                      _buildNavItem(
+                        index: 4,
+                        currentIndex: currentIndex,
+                        icon: Icons.person_outline,
+                        activeIcon: Icons.person,
+                        label: l10n.profile,
+                      ),
+                    ],
+                  ),
                 ),
-                _buildNavItem(
-                  index: 1,
-                  currentIndex: currentIndex,
-                  icon: Icons.menu_book_outlined,
-                  activeIcon: Icons.menu_book,
-                  label: l10n.myRecipes,
-                ),
-                _buildNavItem(
-                  index: 2,
-                  currentIndex: currentIndex,
-                  icon: Icons.track_changes_outlined,
-                  activeIcon: Icons.track_changes,
-                  label: l10n.dailyTracker,
-                ),
-                _buildNavItem(
-                  index: 3,
-                  currentIndex: currentIndex,
-                  icon: Icons.kitchen_outlined,
-                  activeIcon: Icons.kitchen,
-                  label: l10n.materials,
-                ),
-                _buildNavItem(
-                  index: 4,
-                  currentIndex: currentIndex,
-                  icon: Icons.person_outline,
-                  activeIcon: Icons.person,
-                  label: l10n.profile,
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -103,25 +112,12 @@ class ShellScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? AppTheme.primaryColor.withValues(alpha: 0.1)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  isSelected ? activeIcon : icon,
-                  size: 24,
-                  color: isSelected
-                      ? AppTheme.primaryColor
-                      : Colors.grey.shade400,
-                ),
+              Icon(
+                isSelected ? activeIcon : icon,
+                size: 24,
+                color: isSelected
+                    ? AppTheme.primaryColor
+                    : AppTheme.textTertiary,
               ),
               const SizedBox(height: 4),
               Text(
@@ -131,10 +127,20 @@ class ShellScreen extends StatelessWidget {
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                   color: isSelected
                       ? AppTheme.primaryColor
-                      : Colors.grey.shade400,
+                      : AppTheme.textTertiary,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                height: 4,
+                width: isSelected ? 24 : 0,
+                decoration: BoxDecoration(
+                  gradient: isSelected ? AppTheme.primaryGradient : null,
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
             ],
           ),

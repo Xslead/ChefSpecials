@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../../config/theme.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../../widgets/premium_card.dart';
 
 class MacroBarChart extends StatelessWidget {
   final double currentCalories;
@@ -42,9 +43,9 @@ class MacroBarChart extends StatelessWidget {
         ? (currentFat / targetFat * 100).clamp(0, 150)
         : 0.0;
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Padding(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: PremiumCard(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,11 +104,12 @@ class MacroBarChart extends StatelessWidget {
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(
                               labels[index],
-                              style: const TextStyle(
-                                fontSize: 11,
-                                color: AppTheme.textSecondary,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
                             ),
                           );
                         },
@@ -121,10 +123,10 @@ class MacroBarChart extends StatelessWidget {
                           if (value == 0 || value == 50 || value == 100) {
                             return Text(
                               '${value.toInt()}%',
-                              style: const TextStyle(
-                                fontSize: 10,
-                                color: AppTheme.textSecondary,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(fontSize: 10),
                             );
                           }
                           return const SizedBox.shrink();
@@ -143,7 +145,7 @@ class MacroBarChart extends StatelessWidget {
                     show: true,
                     horizontalInterval: 50,
                     getDrawingHorizontalLine: (value) => FlLine(
-                      color: Colors.grey.shade200,
+                      color: AppTheme.warmBeige,
                       strokeWidth: 1,
                     ),
                     drawVerticalLine: false,
@@ -152,14 +154,15 @@ class MacroBarChart extends StatelessWidget {
                   barGroups: [
                     _makeBar(0, calPct.toDouble(), AppTheme.primaryColor),
                     _makeBar(1, protPct.toDouble(), AppTheme.secondaryColor),
-                    _makeBar(2, carbPct.toDouble(), const Color(0xFFF59E0B)),
+                    _makeBar(
+                        2, carbPct.toDouble(), const Color(0xFFF59E0B)),
                     _makeBar(3, fatPct.toDouble(), const Color(0xFFEF4444)),
                   ],
                   extraLinesData: ExtraLinesData(
                     horizontalLines: [
                       HorizontalLine(
                         y: 100,
-                        color: Colors.grey.shade400,
+                        color: AppTheme.textTertiary,
                         strokeWidth: 1,
                         dashArray: [4, 4],
                       ),

@@ -19,6 +19,9 @@ class Recipe {
   final double? carbsGrams;
   final double? fatGrams;
   final DateTime createdAt;
+  final double averageRating;
+  final int ratingCount;
+  final int commentCount;
 
   Recipe({
     this.id,
@@ -38,6 +41,9 @@ class Recipe {
     this.carbsGrams,
     this.fatGrams,
     required this.createdAt,
+    this.averageRating = 0.0,
+    this.ratingCount = 0,
+    this.commentCount = 0,
   });
 
   factory Recipe.fromMap(Map<String, dynamic> map, String docId) {
@@ -63,6 +69,9 @@ class Recipe {
       carbsGrams: (map['carbsGrams'] as num?)?.toDouble(),
       fatGrams: (map['fatGrams'] as num?)?.toDouble(),
       createdAt: DateTime.parse(map['createdAt'] as String),
+      averageRating: (map['averageRating'] as num?)?.toDouble() ?? 0.0,
+      ratingCount: map['ratingCount'] as int? ?? 0,
+      commentCount: map['commentCount'] as int? ?? 0,
     );
   }
 
@@ -84,6 +93,9 @@ class Recipe {
     double? carbsGrams,
     double? fatGrams,
     DateTime? createdAt,
+    double? averageRating,
+    int? ratingCount,
+    int? commentCount,
   }) {
     return Recipe(
       id: id ?? this.id,
@@ -103,6 +115,9 @@ class Recipe {
       carbsGrams: carbsGrams ?? this.carbsGrams,
       fatGrams: fatGrams ?? this.fatGrams,
       createdAt: createdAt ?? this.createdAt,
+      averageRating: averageRating ?? this.averageRating,
+      ratingCount: ratingCount ?? this.ratingCount,
+      commentCount: commentCount ?? this.commentCount,
     );
   }
 

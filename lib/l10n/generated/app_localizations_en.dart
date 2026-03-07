@@ -342,4 +342,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings => 'Settings';
+
+  @override
+  String get deleteRating => 'Delete Rating';
+
+  @override
+  String get ratingsAndComments => 'Comments';
+
+  @override
+  String get writeComment => 'Write a comment...';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get noComments => 'No comments yet. Be the first!';
+
+  @override
+  String get yourRating => 'Your Rating';
+
+  @override
+  String get tapToRate => 'Tap to rate';
+
+  @override
+  String get deleteComment => 'Delete Comment';
+
+  @override
+  String get deleteCommentConfirm => 'Delete this comment?';
+
+  @override
+  String ratingCount(int count) {
+    return '$count ratings';
+  }
+
+  @override
+  String commentCount(int count) {
+    return '$count comments';
+  }
 }

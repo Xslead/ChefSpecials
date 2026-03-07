@@ -751,6 +751,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settings;
+
+  /// No description provided for @deleteRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Rating'**
+  String get deleteRating;
+
+  /// No description provided for @ratingsAndComments.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments'**
+  String get ratingsAndComments;
+
+  /// No description provided for @writeComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a comment...'**
+  String get writeComment;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @noComments.
+  ///
+  /// In en, this message translates to:
+  /// **'No comments yet. Be the first!'**
+  String get noComments;
+
+  /// No description provided for @yourRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Rating'**
+  String get yourRating;
+
+  /// No description provided for @tapToRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to rate'**
+  String get tapToRate;
+
+  /// No description provided for @deleteComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Comment'**
+  String get deleteComment;
+
+  /// No description provided for @deleteCommentConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this comment?'**
+  String get deleteCommentConfirm;
+
+  /// No description provided for @ratingCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} ratings'**
+  String ratingCount(int count);
+
+  /// No description provided for @commentCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} comments'**
+  String commentCount(int count);
 }
 
 class _AppLocalizationsDelegate

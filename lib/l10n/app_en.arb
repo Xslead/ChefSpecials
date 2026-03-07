@@ -108,5 +108,26 @@
   "recipes": "Recipes",
   "memberSince": "Member since {date}",
   "logoutConfirm": "Are you sure you want to logout?",
-  "settings": "Settings"
+  "settings": "Settings",
+  "deleteRating": "Delete Rating",
+  "ratingsAndComments": "Comments",
+  "writeComment": "Write a comment...",
+  "send": "Send",
+  "noComments": "No comments yet. Be the first!",
+  "yourRating": "Your Rating",
+  "tapToRate": "Tap to rate",
+  "deleteComment": "Delete Comment",
+  "deleteCommentConfirm": "Delete this comment?",
+  "ratingCount": "{count} ratings",
+  "@ratingCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "commentCount": "{count} comments",
+  "@commentCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  }
 }

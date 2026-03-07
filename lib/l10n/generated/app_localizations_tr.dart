@@ -342,4 +342,41 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get settings => 'Ayarlar';
+
+  @override
+  String get deleteRating => 'Puanı Sil';
+
+  @override
+  String get ratingsAndComments => 'Puanlar ve Yorumlar';
+
+  @override
+  String get writeComment => 'Yorum yaz...';
+
+  @override
+  String get send => 'Gonder';
+
+  @override
+  String get noComments => 'Henuz yorum yok. Ilk yorumu sen yap!';
+
+  @override
+  String get yourRating => 'Puaniniz';
+
+  @override
+  String get tapToRate => 'Puan vermek icin dokun';
+
+  @override
+  String get deleteComment => 'Yorumu Sil';
+
+  @override
+  String get deleteCommentConfirm => 'Bu yorumu silmek istiyor musunuz?';
+
+  @override
+  String ratingCount(int count) {
+    return '$count puan';
+  }
+
+  @override
+  String commentCount(int count) {
+    return '$count yorum';
+  }
 }

@@ -131,6 +131,9 @@ class RecipeCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 8),
+                  // Rating + comment row
+                  _buildRatingRow(),
                   // Nutrition grid
                   if (recipe.caloriesPerServing != null) ...[
                     const SizedBox(height: 14),
@@ -175,6 +178,42 @@ class RecipeCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildRatingRow() {
+    return Row(
+      children: [
+        Icon(
+          recipe.averageRating > 0 ? Icons.star : Icons.star_border,
+          size: 14,
+          color: Colors.amber.shade600,
+        ),
+        const SizedBox(width: 3),
+        Text(
+          recipe.averageRating > 0
+              ? recipe.averageRating.toStringAsFixed(1)
+              : '-',
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey.shade700,
+          ),
+        ),
+        if (recipe.ratingCount > 0) ...[
+          Text(
+            ' (${recipe.ratingCount})',
+            style: TextStyle(fontSize: 11, color: Colors.grey.shade400),
+          ),
+        ],
+        const SizedBox(width: 10),
+        Icon(Icons.chat_bubble_outline, size: 13, color: Colors.grey.shade400),
+        const SizedBox(width: 3),
+        Text(
+          '${recipe.commentCount}',
+          style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+        ),
+      ],
     );
   }
 

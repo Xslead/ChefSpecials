@@ -108,5 +108,26 @@
   "recipes": "Tarifler",
   "memberSince": "{date} tarihinden beri uye",
   "logoutConfirm": "Cikmak istediginize emin misiniz?",
-  "settings": "Ayarlar"
+  "settings": "Ayarlar",
+  "deleteRating": "Puanı Sil",
+  "ratingsAndComments": "Puanlar ve Yorumlar",
+  "writeComment": "Yorum yaz...",
+  "send": "Gonder",
+  "noComments": "Henuz yorum yok. Ilk yorumu sen yap!",
+  "yourRating": "Puaniniz",
+  "tapToRate": "Puan vermek icin dokun",
+  "deleteComment": "Yorumu Sil",
+  "deleteCommentConfirm": "Bu yorumu silmek istiyor musunuz?",
+  "ratingCount": "{count} puan",
+  "@ratingCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "commentCount": "{count} yorum",
+  "@commentCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  }
 }

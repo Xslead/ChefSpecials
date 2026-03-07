@@ -3,8 +3,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../models/comment.dart';
 import '../../models/recipe.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/comment_provider.dart';
+import '../../providers/rating_provider.dart';
 import '../../providers/recipe_provider.dart';
 import 'widgets/ingredient_list_view.dart';
 import 'widgets/step_overview_list.dart';
@@ -16,13 +19,200 @@ class RecipeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => RatingProvider()),
+        ChangeNotifierProvider(create: (_) => CommentProvider()),
+      ],
+      child: _RecipeDetailBody(recipe: recipe),
+    );
+  }
+}
+
+class _RecipeDetailBody extends StatefulWidget {
+  final Recipe recipe;
+  const _RecipeDetailBody({required this.recipe});
+
+  @override
+  State<_RecipeDetailBody> createState() => _RecipeDetailBodyState();
+}
+
+class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
+  final TextEditingController _commentController = TextEditingController();
+  bool _submittingComment = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final recipeId = widget.recipe.id;
+      if (recipeId == null) return;
+      final userId = context.read<AuthProvider>().userModel?.uid;
+      if (userId != null) {
+        context.read<RatingProvider>().loadUserRating(recipeId, userId);
+      }
+      context.read<CommentProvider>().listenToComments(recipeId);
+    });
+  }
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
+
+  bool _isOwner(Recipe r) {
+    final userId = context.read<AuthProvider>().userModel?.uid;
+    return userId != null && userId == r.authorId;
+  }
+
+  Future<void> _deleteRecipe(BuildContext context, Recipe r) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.delete),
+        content: Text('${l10n.delete} "${r.title}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: Text(l10n.delete),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && context.mounted) {
+      await context.read<RecipeProvider>().deleteRecipe(r.id!);
+      if (context.mounted) context.pop();
+    }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _onSendPressed(Recipe r) async {
+    final ratingProvider = context.read<RatingProvider>();
+    final commentProvider = context.read<CommentProvider>();
+    final user = context.read<AuthProvider>().userModel;
+    if (user == null) return;
+
+    if (_isOwner(r)) {
+      _showSnackBar('You cannot rate or comment on your own recipe.');
+      return;
+    }
+
+    final pendingStars = ratingProvider.displayStars;
+    final hasExistingRating = ratingProvider.userRating != null;
+    final commentText = _commentController.text.trim();
+
+    // Find the user's existing entry (may be rating-only with empty text)
+    final myEntry = commentProvider.comments
+        .where((c) => c.userId == user.uid)
+        .firstOrNull;
+    final hasTextComment = myEntry != null && myEntry.text.isNotEmpty;
+
+    if (pendingStars == 0 && commentText.isEmpty) {
+      _showSnackBar('Please select stars or write a comment.');
+      return;
+    }
+
+    if (pendingStars > 0 && hasExistingRating) {
+      _showSnackBar('Delete your existing rating first to submit a new one.');
+      return;
+    }
+
+    if (commentText.isNotEmpty && hasTextComment) {
+      _showSnackBar('Delete your existing comment first to submit a new one.');
+      return;
+    }
+
+    setState(() => _submittingComment = true);
+    try {
+      // Submit rating
+      if (pendingStars > 0 && !hasExistingRating) {
+        await ratingProvider.submitRating(
+          recipeId: r.id!,
+          userId: user.uid,
+        );
+      }
+
+      final commentStars = ratingProvider.userRating?.stars ?? pendingStars;
+
+      if (myEntry == null) {
+        // No entry yet — create one (may have empty text if rating-only)
+        await commentProvider.addComment(Comment(
+          recipeId: r.id!,
+          userId: user.uid,
+          authorName: user.fullName,
+          text: commentText,
+          stars: commentStars,
+          createdAt: DateTime.now(),
+        ));
+      } else if (commentText.isNotEmpty && myEntry.text.isEmpty) {
+        // Had a rating-only entry; now user adds text — update in place
+        await commentProvider.updateCommentText(
+          commentId: myEntry.id!,
+          recipeId: r.id!,
+          newText: commentText,
+          newStars: commentStars,
+        );
+      }
+      _commentController.clear();
+    } finally {
+      if (mounted) setState(() => _submittingComment = false);
+    }
+  }
+
+  Future<void> _deleteReview(String commentId, String recipeId) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.deleteComment),
+        content: const Text('Your rating and comment will both be deleted.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: Text(l10n.delete),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && mounted) {
+      final userId = context.read<AuthProvider>().userModel?.uid;
+      await context.read<CommentProvider>().deleteComment(
+        commentId: commentId,
+        recipeId: recipeId,
+      );
+      if (userId != null) {
+        await context.read<RatingProvider>().deleteRating(
+          recipeId: recipeId,
+          userId: userId,
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    // Always use the latest version from the provider so edits are reflected immediately
     final liveRecipe = context
         .watch<RecipeProvider>()
         .allRecipes
-        .firstWhere((r) => r.id == recipe.id, orElse: () => recipe);
+        .firstWhere((r) => r.id == widget.recipe.id, orElse: () => widget.recipe);
 
     return Scaffold(
       body: CustomScrollView(
@@ -73,6 +263,10 @@ class RecipeDetailScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 32),
+                  _buildRatingsSection(context, l10n, theme, liveRecipe),
+                  const SizedBox(height: 24),
+                  _buildCommentsSection(context, l10n, theme, liveRecipe),
+                  const SizedBox(height: 32),
                 ],
               ),
             ),
@@ -80,37 +274,6 @@ class RecipeDetailScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  bool _isOwner(BuildContext context, Recipe r) {
-    final userId = context.read<AuthProvider>().userModel?.uid;
-    return userId != null && userId == r.authorId;
-  }
-
-  Future<void> _deleteRecipe(BuildContext context, Recipe r) async {
-    final l10n = AppLocalizations.of(context)!;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.delete),
-        content: Text('${l10n.delete} "${r.title}"?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(l10n.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text(l10n.delete),
-          ),
-        ],
-      ),
-    );
-    if (confirmed == true && context.mounted) {
-      await context.read<RecipeProvider>().deleteRecipe(r.id!);
-      if (context.mounted) context.pop();
-    }
   }
 
   Widget _buildCircleIconButton({
@@ -140,7 +303,7 @@ class RecipeDetailScreen extends StatelessWidget {
       expandedHeight: 280,
       pinned: true,
       actions: [
-        if (_isOwner(context, r)) ...[
+        if (_isOwner(r)) ...[
           _buildCircleIconButton(
             icon: Icons.edit_outlined,
             color: Colors.blue.shade700,
@@ -373,6 +536,269 @@ class RecipeDetailScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  // ── Ratings section ──────────────────────────────────────────────────────────
+
+  Widget _buildRatingsSection(
+    BuildContext context,
+    AppLocalizations l10n,
+    ThemeData theme,
+    Recipe r,
+  ) {
+    final ratingProvider = context.watch<RatingProvider>();
+    final userId = context.read<AuthProvider>().userModel?.uid;
+    final isOwner = _isOwner(r);
+    final hasExistingRating = ratingProvider.userRating != null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              l10n.ratingsAndComments,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Spacer(),
+            if (r.ratingCount > 0) ...[
+              Icon(Icons.star, size: 18, color: Colors.amber.shade600),
+              const SizedBox(width: 4),
+              Text(
+                r.averageRating.toStringAsFixed(1),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                l10n.ratingCount(r.ratingCount),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: Colors.grey.shade500,
+                ),
+              ),
+            ],
+          ],
+        ),
+        if (userId != null) ...[
+          const SizedBox(height: 12),
+          Text(
+            l10n.yourRating,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: Colors.grey.shade600,
+            ),
+          ),
+          const SizedBox(height: 6),
+          _StarRatingWidget(
+            currentStars: ratingProvider.displayStars,
+            onRate: (stars) async {
+              if (isOwner) {
+                _showSnackBar('You cannot rate your own recipe.');
+                return;
+              }
+              if (hasExistingRating) {
+                _showSnackBar(
+                    'Delete your review (via the comment card) to re-rate.');
+                return;
+              }
+              context.read<RatingProvider>().selectStars(stars);
+            },
+          ),
+        ],
+      ],
+    );
+  }
+
+  // ── Comments section ─────────────────────────────────────────────────────────
+
+  Widget _buildCommentsSection(
+    BuildContext context,
+    AppLocalizations l10n,
+    ThemeData theme,
+    Recipe r,
+  ) {
+    final comments = context.watch<CommentProvider>().comments;
+    final userId = context.read<AuthProvider>().userModel?.uid;
+    // True only when the user has an entry with actual text (not rating-only)
+    final hasMyTextComment = userId != null &&
+        comments.any((c) => c.userId == userId && c.text.isNotEmpty);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Comment input + Send button
+        if (userId != null)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _commentController,
+                  decoration: InputDecoration(
+                    hintText: hasMyTextComment
+                        ? 'Delete your comment to write a new one'
+                        : l10n.writeComment,
+                    hintStyle: TextStyle(
+                      color: hasMyTextComment
+                          ? Colors.orange.shade300
+                          : Colors.grey.shade400,
+                      fontSize: 13,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 10,
+                    ),
+                    isDense: true,
+                  ),
+                  maxLines: 3,
+                  minLines: 1,
+                ),
+              ),
+              const SizedBox(width: 8),
+              _submittingComment
+                  ? const SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : IconButton.filled(
+                      onPressed: () => _onSendPressed(r),
+                      icon: const Icon(Icons.send),
+                      style: IconButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+            ],
+          ),
+        const SizedBox(height: 16),
+        if (comments.isEmpty)
+          Center(
+            child: Text(
+              l10n.noComments,
+              style: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+            ),
+          )
+        else
+          ...comments.map((c) {
+            final isMyComment = c.userId == userId;
+            return Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade100),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 14,
+                        backgroundColor:
+                            theme.colorScheme.primary.withValues(alpha: 0.15),
+                        child: Text(
+                          c.authorName.isNotEmpty
+                              ? c.authorName[0].toUpperCase()
+                              : '?',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              c.authorName,
+                              style: const TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            if (c.stars > 0)
+                              Row(
+                                children: List.generate(5, (i) => Icon(
+                                  i < c.stars ? Icons.star : Icons.star_border,
+                                  size: 13,
+                                  color: Colors.amber.shade600,
+                                )),
+                              ),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        _formatDate(c.createdAt),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey.shade400,
+                        ),
+                      ),
+                      if (isMyComment) ...[
+                        const SizedBox(width: 4),
+                        GestureDetector(
+                          onTap: () => _deleteReview(c.id!, r.id!),
+                          child: Icon(
+                            Icons.delete_outline,
+                            size: 18,
+                            color: Colors.red.shade400,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  if (c.text.isNotEmpty) ...[
+                    const SizedBox(height: 6),
+                    Text(c.text, style: const TextStyle(fontSize: 14)),
+                  ],
+                ],
+              ),
+            );
+          }),
+      ],
+    );
+  }
+
+  String _formatDate(DateTime dt) {
+    return '${dt.day}/${dt.month}/${dt.year}';
+  }
+}
+
+// ── Star rating widget ────────────────────────────────────────────────────────
+
+class _StarRatingWidget extends StatelessWidget {
+  final int currentStars;
+  final Future<void> Function(int stars) onRate;
+
+  const _StarRatingWidget({required this.currentStars, required this.onRate});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: List.generate(5, (i) {
+        final star = i + 1;
+        return GestureDetector(
+          onTap: () => onRate(star),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: Icon(
+              star <= currentStars ? Icons.star : Icons.star_border,
+              color: Colors.amber.shade600,
+              size: 32,
+            ),
+          ),
+        );
+      }),
     );
   }
 }

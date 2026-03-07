@@ -37,12 +37,12 @@ class ImagePickerTile extends StatelessWidget {
         width: double.infinity,
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          color: AppTheme.warmCream,
+          color: AppTheme.neutralSoft,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: hasImage
                 ? AppTheme.primaryColor.withValues(alpha: 0.3)
-                : AppTheme.warmBeige,
+                : AppTheme.neutralLight,
             width: hasImage ? 2 : 1,
           ),
           image: imageFile != null
@@ -59,7 +59,7 @@ class ImagePickerTile extends StatelessWidget {
                     imageUrl: existingImageUrl,
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
-                        Container(color: AppTheme.warmCream),
+                        Container(color: AppTheme.neutralSoft),
                     errorWidget: (context, url, error) => _placeholder(),
                   )
                 : _placeholder(),
@@ -75,7 +75,7 @@ class ImagePickerTile extends StatelessWidget {
           width: 56,
           height: 56,
           decoration: BoxDecoration(
-            gradient: AppTheme.primaryGradient,
+            color: AppTheme.primaryColor,
             borderRadius: BorderRadius.circular(14),
           ),
           child: const Icon(

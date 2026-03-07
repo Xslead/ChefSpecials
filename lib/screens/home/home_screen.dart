@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icon(
                               Icons.restaurant_menu,
                               size: 64,
-                              color: AppTheme.warmBeige,
+                              color: AppTheme.neutralLight,
                             ),
                             const SizedBox(height: 16),
                             Text(
@@ -86,20 +86,14 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 100),
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: AppTheme.primaryGradient,
-            shape: BoxShape.circle,
-          ),
-          child: FloatingActionButton(
-            heroTag: 'home_fab',
-            onPressed: () => context.push('/add-recipe'),
-            backgroundColor: Colors.transparent,
-            foregroundColor: Colors.white,
-            elevation: 0,
-            shape: const CircleBorder(),
-            child: const Icon(Icons.add, size: 28),
-          ),
+        child: FloatingActionButton(
+          heroTag: 'home_fab',
+          onPressed: () => context.push('/add-recipe'),
+          backgroundColor: AppTheme.primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 2,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add, size: 28),
         ),
       ),
     );
@@ -175,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   height: 48,
                   decoration: BoxDecoration(
-                    color: AppTheme.warmBeige,
+                    color: AppTheme.neutralLight,
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Row(

@@ -165,7 +165,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               color: Colors.white,
               border: Border(
                 bottom:
-                    BorderSide(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+                    BorderSide(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
               ),
             ),
             child: SafeArea(
@@ -228,7 +228,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             width: 104,
                             height: 104,
                             decoration: const BoxDecoration(
-                              gradient: AppTheme.primaryGradient,
+                              color: AppTheme.primaryColor,
                               shape: BoxShape.circle,
                             ),
                             padding: const EdgeInsets.all(3),
@@ -263,7 +263,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             child: Container(
                               padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
-                                gradient: AppTheme.primaryGradient,
+                                color: AppTheme.primaryColor,
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: Colors.white,
@@ -346,7 +346,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(
                             color: _birthDate == null
-                                ? AppTheme.warmBeige
+                                ? AppTheme.neutralLight
                                 : AppTheme.primaryColor,
                           ),
                         ),
@@ -383,7 +383,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
 
                   const SizedBox(height: 24),
-                  Divider(color: AppTheme.warmBeige),
+                  Divider(color: AppTheme.neutralLight),
                   const SizedBox(height: 24),
 
                   // ── Physical Info Section ──

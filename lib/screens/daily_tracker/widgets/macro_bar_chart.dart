@@ -152,11 +152,11 @@ class MacroBarChart extends StatelessWidget {
                   ),
                   borderData: FlBorderData(show: false),
                   barGroups: [
-                    _makeBar(0, calPct.toDouble(), AppTheme.primaryColor),
-                    _makeBar(1, protPct.toDouble(), AppTheme.secondaryColor),
+                    _makeBar(0, calPct.toDouble(), const Color(0xFFEF4444)),
+                    _makeBar(1, protPct.toDouble(), const Color(0xFF0EA5E9)),
                     _makeBar(
                         2, carbPct.toDouble(), const Color(0xFFF59E0B)),
-                    _makeBar(3, fatPct.toDouble(), const Color(0xFFEF4444)),
+                    _makeBar(3, fatPct.toDouble(), const Color(0xFF10B981)),
                   ],
                   extraLinesData: ExtraLinesData(
                     horizontalLines: [

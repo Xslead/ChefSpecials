@@ -47,7 +47,7 @@ class StepInputList extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  gradient: AppTheme.primaryGradient,
+                  color: AppTheme.primaryColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Row(
@@ -82,7 +82,7 @@ class StepInputList extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+                border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,7 +91,7 @@ class StepInputList extends StatelessWidget {
                     width: 28,
                     height: 28,
                     decoration: BoxDecoration(
-                      gradient: AppTheme.primaryGradient,
+                      color: AppTheme.primaryColor,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Center(
@@ -118,7 +118,7 @@ class StepInputList extends StatelessWidget {
                               fontSize: 13,
                             ),
                             filled: true,
-                            fillColor: AppTheme.warmCream,
+                            fillColor: AppTheme.neutralSoft,
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 10),
                             isDense: true,
@@ -154,7 +154,7 @@ class StepInputList extends StatelessWidget {
                               color: AppTheme.textTertiary,
                             ),
                             filled: true,
-                            fillColor: AppTheme.warmCream,
+                            fillColor: AppTheme.neutralSoft,
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 10),
                             isDense: true,

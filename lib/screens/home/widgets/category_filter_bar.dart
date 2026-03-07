@@ -49,8 +49,7 @@ class CategoryFilterBar extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
           decoration: BoxDecoration(
-            gradient: isSelected ? AppTheme.primaryGradient : null,
-            color: isSelected ? null : AppTheme.warmBeige,
+            color: isSelected ? AppTheme.primaryColor : AppTheme.neutralLight,
             borderRadius: BorderRadius.circular(50),
           ),
           child: Text(

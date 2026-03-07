@@ -49,7 +49,7 @@ class IngredientInputList extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  gradient: AppTheme.primaryGradient,
+                  color: AppTheme.primaryColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Row(
@@ -77,13 +77,13 @@ class IngredientInputList extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppTheme.warmCream,
+              color: AppTheme.neutralSoft,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+              border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
             ),
             child: Column(
               children: [
-                Icon(Icons.egg_alt, size: 32, color: AppTheme.warmBeige),
+                Icon(Icons.egg_alt, size: 32, color: AppTheme.neutralLight),
                 const SizedBox(height: 8),
                 const Text(
                   'Tap + to add ingredients',
@@ -107,7 +107,7 @@ class IngredientInputList extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+                border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
               ),
               child: Row(
                 children: [
@@ -151,7 +151,7 @@ class IngredientInputList extends StatelessWidget {
                           color: AppTheme.textTertiary,
                         ),
                         filled: true,
-                        fillColor: AppTheme.warmCream,
+                        fillColor: AppTheme.neutralSoft,
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 8),
                         isDense: true,
@@ -230,7 +230,7 @@ class IngredientInputList extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppTheme.warmCream,
+                color: AppTheme.neutralSoft,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
@@ -351,7 +351,7 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: AppTheme.warmBeige,
+              color: AppTheme.neutralLight,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -362,7 +362,7 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
           child: Container(
             height: 48,
             decoration: BoxDecoration(
-              color: AppTheme.warmBeige,
+              color: AppTheme.neutralLight,
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
@@ -400,7 +400,7 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.kitchen,
-                              size: 48, color: AppTheme.warmBeige),
+                              size: 48, color: AppTheme.neutralLight),
                           const SizedBox(height: 12),
                           const Text(
                             'No materials found',
@@ -427,7 +427,7 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12),
                               border:
-                                  Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+                                  Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
                             ),
                             child: Row(
                               children: [

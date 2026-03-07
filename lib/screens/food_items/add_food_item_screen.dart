@@ -129,9 +129,9 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
           // Custom header
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.surface,
               border: Border(
-                bottom: BorderSide(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+                bottom: BorderSide(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
               ),
             ),
             child: SafeArea(
@@ -698,9 +698,9 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+                      border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
                       boxShadow: [AppTheme.warmShadowLight()],
                     ),
                     child: Row(
@@ -746,9 +746,9 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+                      border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
                       boxShadow: [AppTheme.warmShadowLight()],
                     ),
                     child: Row(
@@ -757,13 +757,13 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           width: 36,
                           height: 36,
                           decoration: BoxDecoration(
-                            color: Colors.orange
+                            color: const Color(0xFFF97316)
                                 .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const Icon(
                             Icons.spa,
-                            color: Colors.orange,
+                            color: Color(0xFFF97316),
                             size: 20,
                           ),
                         ),
@@ -781,8 +781,8 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           value: _isVegetarian,
                           onChanged: (v) => setState(() => _isVegetarian = v),
                           activeTrackColor:
-                              Colors.orange.withValues(alpha: 0.5),
-                          activeThumbColor: Colors.orange,
+                              const Color(0xFFF97316).withValues(alpha: 0.5),
+                          activeThumbColor: const Color(0xFFF97316),
                         ),
                       ],
                     ),
@@ -794,9 +794,9 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+                      border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
                       boxShadow: [AppTheme.warmShadowLight()],
                     ),
                     child: Row(
@@ -805,13 +805,13 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           width: 36,
                           height: 36,
                           decoration: BoxDecoration(
-                            color: Colors.blue
+                            color: AppTheme.primaryColor
                                 .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const Icon(
                             Icons.no_food,
-                            color: Colors.blue,
+                            color: AppTheme.primaryColor,
                             size: 20,
                           ),
                         ),
@@ -829,8 +829,8 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           value: _isGlutenFree,
                           onChanged: (v) => setState(() => _isGlutenFree = v),
                           activeTrackColor:
-                              Colors.blue.withValues(alpha: 0.5),
-                          activeThumbColor: Colors.blue,
+                              AppTheme.primaryColor.withValues(alpha: 0.5),
+                          activeThumbColor: AppTheme.primaryColor,
                         ),
                       ],
                     ),
@@ -945,9 +945,9 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
     return Container(
       padding: EdgeInsets.all(compact ? 10 : 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+        border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
         boxShadow: [AppTheme.warmShadowLight()],
       ),
       child: Column(

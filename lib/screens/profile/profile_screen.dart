@@ -60,7 +60,7 @@ class ProfileScreen extends StatelessWidget {
                       Expanded(
                         child: _buildStatCard(
                           icon: Icons.favorite,
-                          color: const Color(0xFFEF4444),
+                          color: AppTheme.errorColor,
                           count: favoriteCount,
                           label: l10n.favorites,
                         ),
@@ -120,7 +120,7 @@ class ProfileScreen extends StatelessWidget {
                           Icon(
                             Icons.menu_book,
                             size: 64,
-                            color: AppTheme.warmBeige,
+                            color: AppTheme.neutralLight,
                           ),
                           const SizedBox(height: 16),
                           Text(
@@ -147,7 +147,7 @@ class ProfileScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
-          bottom: BorderSide(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+          bottom: BorderSide(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
         ),
       ),
       child: SafeArea(
@@ -240,7 +240,7 @@ class ProfileScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+          border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
           boxShadow: [AppTheme.warmShadowLight()],
         ),
         child: Column(
@@ -250,7 +250,7 @@ class ProfileScreen extends StatelessWidget {
               width: 92,
               height: 92,
               decoration: const BoxDecoration(
-                gradient: AppTheme.primaryGradient,
+                color: AppTheme.primaryColor,
                 shape: BoxShape.circle,
               ),
               padding: const EdgeInsets.all(3),
@@ -266,12 +266,12 @@ class ProfileScreen extends StatelessWidget {
                           imageUrl: photoUrl,
                           fit: BoxFit.cover,
                           placeholder: (_, _) => Container(
-                            color: AppTheme.warmCream,
+                            color: AppTheme.neutralSoft,
                             child: const Icon(Icons.person,
                                 size: 40, color: AppTheme.textTertiary),
                           ),
                           errorWidget: (_, _, _) => Container(
-                            color: AppTheme.warmCream,
+                            color: AppTheme.neutralSoft,
                             child: const Icon(Icons.person,
                                 size: 40, color: AppTheme.textTertiary),
                           ),
@@ -324,7 +324,7 @@ class ProfileScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: AppTheme.warmCream,
+                color: AppTheme.neutralSoft,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
@@ -366,7 +366,7 @@ class ProfileScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+        border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
         boxShadow: [AppTheme.warmShadowLight()],
       ),
       child: Row(

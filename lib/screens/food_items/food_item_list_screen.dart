@@ -72,27 +72,14 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 100),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: AppTheme.primaryGradient,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.primaryColor.withValues(alpha: 0.3),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: FloatingActionButton(
-            heroTag: 'materials_fab',
-            onPressed: () => context.push('/add-food-item'),
-            backgroundColor: Colors.transparent,
-            foregroundColor: Colors.white,
-            elevation: 0,
-            shape: const CircleBorder(),
-            child: const Icon(Icons.add, size: 28),
-          ),
+        child: FloatingActionButton(
+          heroTag: 'materials_fab',
+          onPressed: () => context.push('/add-food-item'),
+          backgroundColor: AppTheme.primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 2,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add, size: 28),
         ),
       ),
     );
@@ -282,12 +269,9 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                             vertical: 8,
                           ),
                           decoration: BoxDecoration(
-                            gradient: isSelected
-                                ? AppTheme.primaryGradient
-                                : null,
                             color: isSelected
-                                ? null
-                                : AppTheme.warmBeige,
+                                ? AppTheme.primaryColor
+                                : AppTheme.neutralLight,
                             borderRadius: BorderRadius.circular(50),
                           ),
                           child: Text(

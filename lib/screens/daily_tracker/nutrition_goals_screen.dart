@@ -103,8 +103,8 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
           Container(
             decoration: BoxDecoration(
               color: AppTheme.surfaceVariant,
-              border: const Border(
-                bottom: BorderSide(color: Color(0xFFF0E4D8)),
+              border: Border(
+                bottom: BorderSide(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
               ),
             ),
             child: SafeArea(
@@ -208,7 +208,7 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
                       Expanded(
                         child: _buildGoalCard(
                           icon: Icons.water_drop,
-                          color: const Color(0xFFEF4444),
+                          color: const Color(0xFF10B981),
                           label: l10n.fat,
                           suffix: l10n.gram,
                           controller: _fatController,
@@ -221,7 +221,7 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
                   // Water goal card
                   _buildGoalCard(
                     icon: Icons.local_drink,
-                    color: Colors.blue,
+                    color: const Color(0xFF0EA5E9),
                     label: l10n.waterTarget,
                     suffix: l10n.ml,
                     controller: _waterController,
@@ -246,7 +246,7 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
     return Container(
       padding: EdgeInsets.all(compact ? 12 : 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.surfaceOf(context),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
         boxShadow: [AppTheme.warmShadowLight()],

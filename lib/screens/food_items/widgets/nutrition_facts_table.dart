@@ -49,7 +49,7 @@ class NutritionFactsTable extends StatelessWidget {
               label: 'Protein',
               value: '${foodItem.protein.toStringAsFixed(1)} g',
               perPacketValue: '${foodItem.proteinPerPacket.toStringAsFixed(1)} g',
-              barColor: const Color(0xFF4A90D9),
+              barColor: const Color(0xFF0EA5E9),
               barRatio: _macroRatio(foodItem.protein),
             ),
             const Divider(height: 1),
@@ -58,7 +58,7 @@ class NutritionFactsTable extends StatelessWidget {
               label: 'Carbohydrates',
               value: '${foodItem.carbs.toStringAsFixed(1)} g',
               perPacketValue: '${foodItem.carbsPerPacket.toStringAsFixed(1)} g',
-              barColor: const Color(0xFFFF9F43),
+              barColor: const Color(0xFFF59E0B),
               barRatio: _macroRatio(foodItem.carbs),
             ),
             Padding(
@@ -90,7 +90,7 @@ class NutritionFactsTable extends StatelessWidget {
               label: 'Fat',
               value: '${foodItem.fat.toStringAsFixed(1)} g',
               perPacketValue: '${foodItem.fatPerPacket.toStringAsFixed(1)} g',
-              barColor: const Color(0xFFEE5A5A),
+              barColor: const Color(0xFFEF4444),
               barRatio: _macroRatio(foodItem.fat),
             ),
             Padding(

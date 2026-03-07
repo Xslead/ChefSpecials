@@ -84,7 +84,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            style: TextButton.styleFrom(foregroundColor: AppTheme.errorColor),
             child: Text(l10n.delete),
           ),
         ],
@@ -184,7 +184,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            style: TextButton.styleFrom(foregroundColor: AppTheme.errorColor),
             child: Text(l10n.delete),
           ),
         ],
@@ -328,7 +328,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                     imageUrl: r.imageUrl!,
                     fit: BoxFit.cover,
                     placeholder: (context, url) => Container(
-                      color: AppTheme.warmBeige,
+                      color: AppTheme.neutralLight,
                       child: const Center(child: CircularProgressIndicator()),
                     ),
                     errorWidget: (context, url, error) =>
@@ -356,7 +356,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
 
   Widget _buildPlaceholderImage() {
     return Container(
-      color: AppTheme.warmBeige,
+      color: AppTheme.neutralLight,
       child: const Center(
         child: Icon(Icons.restaurant_menu, size: 80, color: AppTheme.textTertiary),
       ),
@@ -658,7 +658,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                         : l10n.writeComment,
                     hintStyle: TextStyle(
                       color: hasMyTextComment
-                          ? Colors.orange.shade300
+                          ? AppTheme.starColor
                           : AppTheme.textTertiary,
                       fontSize: 13,
                     ),
@@ -711,10 +711,10 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppTheme.warmCream,
+                color: AppTheme.neutralSoft,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: AppTheme.warmBeige.withValues(alpha: 0.5),
+                  color: AppTheme.neutralLight.withValues(alpha: 0.5),
                 ),
                 boxShadow: [AppTheme.warmShadowLight()],
               ),
@@ -772,7 +772,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                           child: Icon(
                             Icons.delete_outline,
                             size: 18,
-                            color: Colors.red.shade400,
+                            color: AppTheme.errorColor,
                           ),
                         ),
                       ],

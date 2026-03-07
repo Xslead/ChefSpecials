@@ -42,10 +42,10 @@ class _RecipeCardState extends State<RecipeCard> {
         curve: Curves.easeInOut,
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppTheme.surfaceColor,
             borderRadius: BorderRadius.circular(22),
             border: Border.all(
-              color: AppTheme.warmBeige.withValues(alpha: 0.5),
+              color: AppTheme.neutralLight.withValues(alpha: 0.5),
             ),
             boxShadow: [AppTheme.warmShadowMedium()],
           ),
@@ -170,7 +170,7 @@ class _RecipeCardState extends State<RecipeCard> {
                         padding: const EdgeInsets.only(top: 14),
                         decoration: const BoxDecoration(
                           border: Border(
-                            top: BorderSide(color: Color(0xFFF0E4D8)),
+                            top: BorderSide(color: AppTheme.neutralLight),
                           ),
                         ),
                         child: Row(
@@ -266,7 +266,7 @@ class _RecipeCardState extends State<RecipeCard> {
         fit: BoxFit.cover,
         placeholder: (context, url) => Container(
           height: 210,
-          color: AppTheme.warmBeige,
+          color: AppTheme.neutralLight,
           child: const Center(
             child: CircularProgressIndicator(
               color: AppTheme.primaryColor,
@@ -284,7 +284,7 @@ class _RecipeCardState extends State<RecipeCard> {
     return Container(
       height: 210,
       width: double.infinity,
-      color: AppTheme.warmBeige,
+      color: AppTheme.neutralLight,
       child: const Icon(
         Icons.restaurant,
         size: 56,
@@ -315,7 +315,7 @@ class _RecipeCardState extends State<RecipeCard> {
             ),
             child: Icon(
               isFav ? Icons.favorite : Icons.favorite_border,
-              color: isFav ? Colors.red.shade500 : Colors.white,
+              color: isFav ? AppTheme.errorColor : Colors.white,
               size: 20,
             ),
           ),

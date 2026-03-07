@@ -28,7 +28,7 @@ class StepPage extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               decoration: BoxDecoration(
-                gradient: AppTheme.primaryGradient,
+                color: AppTheme.primaryColor,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(

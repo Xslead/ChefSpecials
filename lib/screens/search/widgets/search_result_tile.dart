@@ -20,7 +20,7 @@ class SearchResultTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+          border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
           boxShadow: [AppTheme.warmShadowLight()],
         ),
         child: Row(
@@ -37,24 +37,24 @@ class SearchResultTile extends StatelessWidget {
                       placeholder: (_, _) => Container(
                         width: 56,
                         height: 56,
-                        color: AppTheme.warmCream,
-                        child: const Icon(Icons.restaurant, color: AppTheme.warmBeige),
+                        color: AppTheme.neutralSoft,
+                        child: const Icon(Icons.restaurant, color: AppTheme.neutralLight),
                       ),
                       errorWidget: (_, _, _) => Container(
                         width: 56,
                         height: 56,
-                        color: AppTheme.warmCream,
-                        child: const Icon(Icons.restaurant, color: AppTheme.warmBeige),
+                        color: AppTheme.neutralSoft,
+                        child: const Icon(Icons.restaurant, color: AppTheme.neutralLight),
                       ),
                     )
                   : Container(
                       width: 56,
                       height: 56,
                       decoration: BoxDecoration(
-                        color: AppTheme.warmCream,
+                        color: AppTheme.neutralSoft,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(Icons.restaurant, color: AppTheme.warmBeige),
+                      child: const Icon(Icons.restaurant, color: AppTheme.neutralLight),
                     ),
             ),
             const SizedBox(width: 12),

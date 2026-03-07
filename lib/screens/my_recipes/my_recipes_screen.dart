@@ -128,7 +128,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                         Icon(
                           Icons.menu_book,
                           size: 64,
-                          color: AppTheme.warmBeige,
+                          color: AppTheme.neutralLight,
                         ),
                         const SizedBox(height: 16),
                         Text(
@@ -156,27 +156,14 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 100),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: AppTheme.primaryGradient,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.primaryColor.withValues(alpha: 0.3),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: FloatingActionButton(
-            heroTag: 'my_recipes_fab',
-            onPressed: () => context.push('/add-recipe'),
-            backgroundColor: Colors.transparent,
-            foregroundColor: Colors.white,
-            elevation: 0,
-            shape: const CircleBorder(),
-            child: const Icon(Icons.add, size: 28),
-          ),
+        child: FloatingActionButton(
+          heroTag: 'my_recipes_fab',
+          onPressed: () => context.push('/add-recipe'),
+          backgroundColor: AppTheme.primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 2,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add, size: 28),
         ),
       ),
     );
@@ -268,7 +255,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                   key: _searchBarKey,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: AppTheme.warmBeige,
+                    color: AppTheme.neutralLight,
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: _isSearching
@@ -403,8 +390,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
           decoration: BoxDecoration(
-            gradient: isSelected ? AppTheme.primaryGradient : null,
-            color: isSelected ? null : AppTheme.warmBeige,
+            color: isSelected ? AppTheme.primaryColor : AppTheme.neutralLight,
             borderRadius: BorderRadius.circular(50),
           ),
           child: Text(

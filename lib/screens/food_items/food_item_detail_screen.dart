@@ -108,9 +108,9 @@ class FoodItemDetailScreen extends StatelessWidget {
                     value: 'delete',
                     child: Row(
                       children: [
-                        Icon(Icons.delete_outline, size: 20, color: Colors.red),
+                        Icon(Icons.delete_outline, size: 20, color: AppTheme.errorColor),
                         SizedBox(width: 8),
-                        Text('Delete', style: TextStyle(color: Colors.red)),
+                        Text('Delete', style: TextStyle(color: AppTheme.errorColor)),
                       ],
                     ),
                   ),
@@ -169,7 +169,7 @@ class FoodItemDetailScreen extends StatelessWidget {
               color: AppTheme.primaryColor,
             ),
             if (foodItem.isVegan)
-              _buildBadge(label: 'VEGAN', color: Colors.green)
+              _buildBadge(label: 'VEGAN', color: const Color(0xFF10B981))
             else
               _buildBadge(label: 'NON-VEGAN', color: AppTheme.textTertiary),
             if (foodItem.isVerified)
@@ -177,29 +177,29 @@ class FoodItemDetailScreen extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.15),
+                  color: const Color(0xFF10B981).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.verified, size: 14, color: Colors.green),
+                    Icon(Icons.verified, size: 14, color: Color(0xFF10B981)),
                     SizedBox(width: 4),
                     Text(
                       'Verified',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: Colors.green,
+                        color: Color(0xFF10B981),
                       ),
                     ),
                   ],
                 ),
               ),
             if (foodItem.isVegetarian)
-              _buildBadge(label: 'VEGETARIAN', color: Colors.orange),
+              _buildBadge(label: 'VEGETARIAN', color: const Color(0xFFF97316)),
             if (foodItem.isGlutenFree)
-              _buildBadge(label: 'GLUTEN FREE', color: Colors.blue),
+              _buildBadge(label: 'GLUTEN FREE', color: AppTheme.primaryColor),
             if (foodItem.nutriScore != null)
               _buildBadge(
                 label: 'Nutri-Score: ${foodItem.nutriScore!.toUpperCase()}',
@@ -301,15 +301,15 @@ class FoodItemDetailScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: (proteinRatio * 100).round().clamp(1, 100),
-                      child: Container(color: const Color(0xFF4A90D9)),
+                      child: Container(color: const Color(0xFF0EA5E9)),
                     ),
                     Expanded(
                       flex: (carbsRatio * 100).round().clamp(1, 100),
-                      child: Container(color: const Color(0xFFFF9F43)),
+                      child: Container(color: const Color(0xFFF59E0B)),
                     ),
                     Expanded(
                       flex: (fatRatio * 100).round().clamp(1, 100),
-                      child: Container(color: const Color(0xFFEE5A5A)),
+                      child: Container(color: const Color(0xFFEF4444)),
                     ),
                   ],
                 ),
@@ -324,21 +324,21 @@ class FoodItemDetailScreen extends StatelessWidget {
                   label: 'Protein',
                   value: '${foodItem.protein.toStringAsFixed(1)}g',
                   percentage: '${(proteinRatio * 100).toStringAsFixed(0)}%',
-                  color: const Color(0xFF4A90D9),
+                  color: const Color(0xFF0EA5E9),
                 ),
                 _buildMacroItem(
                   theme: theme,
                   label: 'Carbs',
                   value: '${foodItem.carbs.toStringAsFixed(1)}g',
                   percentage: '${(carbsRatio * 100).toStringAsFixed(0)}%',
-                  color: const Color(0xFFFF9F43),
+                  color: const Color(0xFFF59E0B),
                 ),
                 _buildMacroItem(
                   theme: theme,
                   label: 'Fat',
                   value: '${foodItem.fat.toStringAsFixed(1)}g',
                   percentage: '${(fatRatio * 100).toStringAsFixed(0)}%',
-                  color: const Color(0xFFEE5A5A),
+                  color: const Color(0xFFEF4444),
                 ),
               ],
             ),
@@ -416,15 +416,15 @@ class FoodItemDetailScreen extends StatelessWidget {
   Color _nutriScoreColor(String grade) {
     switch (grade.toUpperCase()) {
       case 'A':
-        return Colors.green;
+        return const Color(0xFF10B981);
       case 'B':
-        return Colors.lightGreen;
+        return const Color(0xFF22C55E);
       case 'C':
-        return Colors.yellow.shade700;
+        return const Color(0xFFF59E0B);
       case 'D':
-        return Colors.orange;
+        return const Color(0xFFF97316);
       case 'E':
-        return Colors.red;
+        return const Color(0xFFEF4444);
       default:
         return AppTheme.textSecondary;
     }
@@ -433,13 +433,13 @@ class FoodItemDetailScreen extends StatelessWidget {
   Color _novaGroupColor(int group) {
     switch (group) {
       case 1:
-        return Colors.green;
+        return const Color(0xFF10B981);
       case 2:
-        return Colors.yellow.shade700;
+        return const Color(0xFFF59E0B);
       case 3:
-        return Colors.orange;
+        return const Color(0xFFF97316);
       case 4:
-        return Colors.red;
+        return const Color(0xFFEF4444);
       default:
         return AppTheme.textSecondary;
     }
@@ -470,12 +470,12 @@ class FoodItemDetailScreen extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: Colors.red,
+                          color: AppTheme.errorColor,
                         ),
                       ),
-                      backgroundColor: Colors.red.withValues(alpha: 0.1),
+                      backgroundColor: AppTheme.errorColor.withValues(alpha: 0.1),
                       side: BorderSide(
-                        color: Colors.red.withValues(alpha: 0.3),
+                        color: AppTheme.errorColor.withValues(alpha: 0.3),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 4),
                     ),
@@ -535,7 +535,7 @@ class FoodItemDetailScreen extends StatelessWidget {
             },
             child: const Text(
               'Delete',
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(color: AppTheme.errorColor),
             ),
           ),
         ],

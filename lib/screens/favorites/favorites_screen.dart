@@ -30,7 +30,7 @@ class FavoritesScreen extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border(
-                bottom: BorderSide(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+                bottom: BorderSide(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
               ),
             ),
             child: SafeArea(
@@ -102,13 +102,13 @@ class FavoritesScreen extends StatelessWidget {
                           width: 72,
                           height: 72,
                           decoration: BoxDecoration(
-                            color: AppTheme.warmCream,
+                            color: AppTheme.neutralSoft,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Icon(
                             Icons.favorite_border,
                             size: 36,
-                            color: AppTheme.warmBeige,
+                            color: AppTheme.neutralLight,
                           ),
                         ),
                         const SizedBox(height: 16),

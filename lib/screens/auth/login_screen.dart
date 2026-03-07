@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: 80,
                       height: 80,
                       decoration: const BoxDecoration(
-                        gradient: AppTheme.primaryGradient,
+                        color: AppTheme.primaryColor,
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -172,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       label: const Text('Quick Login (Test)'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppTheme.textSecondary,
-                        side: const BorderSide(color: AppTheme.warmBeige),
+                        side: const BorderSide(color: AppTheme.neutralLight),
                       ),
                     ),
                     const SizedBox(height: 4),

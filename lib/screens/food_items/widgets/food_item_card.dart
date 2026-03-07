@@ -22,9 +22,9 @@ class FoodItemCard extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+          border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
           boxShadow: [AppTheme.warmShadowLight()],
         ),
         child: Padding(
@@ -75,7 +75,7 @@ class FoodItemCard extends StatelessWidget {
                                   vertical: 1,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.green.withValues(alpha: 0.1),
+                                  color: const Color(0xFF10B981).withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: const Text(
@@ -83,17 +83,17 @@ class FoodItemCard extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w700,
-                                    color: Colors.green,
+                                    color: Color(0xFF10B981),
                                   ),
                                 ),
                               ),
                             ],
                             if (foodItem.isVerified) ...[
                               const SizedBox(width: 4),
-                              Icon(
+                              const Icon(
                                 Icons.verified,
                                 size: 14,
-                                color: Colors.blue.shade400,
+                                color: AppTheme.primaryColor,
                               ),
                             ],
                           ],
@@ -142,9 +142,9 @@ class FoodItemCard extends StatelessWidget {
               const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.only(top: 12),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   border: Border(
-                    top: BorderSide(color: AppTheme.warmBeige),
+                    top: BorderSide(color: AppTheme.neutralLightOf(context)),
                   ),
                 ),
                 child: Row(
@@ -209,19 +209,19 @@ class FoodItemCard extends StatelessWidget {
   Color _colorForCategory(String category) {
     switch (category) {
       case 'Protein':
-        return Colors.red.shade400;
+        return const Color(0xFFEF4444);
       case 'Dairy':
-        return Colors.blue.shade400;
+        return const Color(0xFF0EA5E9);
       case 'Grains':
-        return Colors.amber.shade600;
+        return const Color(0xFFF59E0B);
       case 'Vegetables':
-        return Colors.green.shade500;
+        return const Color(0xFF10B981);
       case 'Fruits':
-        return Colors.orange.shade400;
+        return const Color(0xFFF97316);
       case 'Oils & Fats':
-        return Colors.yellow.shade700;
+        return const Color(0xFFEAB308);
       case 'Beverages':
-        return Colors.cyan.shade500;
+        return const Color(0xFF06B6D4);
       default:
         return AppTheme.textTertiary;
     }

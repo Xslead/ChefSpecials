@@ -33,13 +33,13 @@ class MealSectionCard extends StatelessWidget {
   Color _colorForMealType(MealType type) {
     switch (type) {
       case MealType.breakfast:
-        return Colors.orange;
+        return const Color(0xFFF59E0B);
       case MealType.lunch:
-        return Colors.blue;
+        return const Color(0xFF0EA5E9);
       case MealType.dinner:
-        return Colors.indigo;
+        return const Color(0xFF10B981);
       case MealType.snack:
-        return Colors.green;
+        return const Color(0xFF8B5CF6);
     }
   }
 
@@ -71,7 +71,7 @@ class MealSectionCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppTheme.surfaceOf(context),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: AppTheme.warmBeige.withValues(alpha: 0.5),
@@ -130,7 +130,7 @@ class MealSectionCard extends StatelessWidget {
                       width: 32,
                       height: 32,
                       decoration: const BoxDecoration(
-                        gradient: AppTheme.primaryGradient,
+                        color: AppTheme.primaryColor,
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(

@@ -17,7 +17,7 @@ class IngredientListView extends StatelessWidget {
             : ingredient.amount;
 
         return Container(
-          color: index.isEven ? AppTheme.warmCream : Colors.transparent,
+          color: index.isEven ? AppTheme.neutralSoft : Colors.transparent,
           child: ListTile(
             leading: const Icon(Icons.fiber_manual_record, size: 10, color: AppTheme.primaryColor),
             title: Text(

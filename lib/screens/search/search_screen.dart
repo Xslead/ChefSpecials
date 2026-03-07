@@ -113,7 +113,7 @@ class _SearchBodyState extends State<_SearchBody> {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: AppTheme.warmBeige,
+                        color: AppTheme.neutralLight,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Icon(
@@ -128,7 +128,7 @@ class _SearchBodyState extends State<_SearchBody> {
                     child: Container(
                       height: 48,
                       decoration: BoxDecoration(
-                        color: AppTheme.warmBeige,
+                        color: AppTheme.neutralLight,
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: TextField(
@@ -203,7 +203,7 @@ class _SearchBodyState extends State<_SearchBody> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   decoration: BoxDecoration(
-                    color: AppTheme.warmBeige,
+                    color: AppTheme.neutralLight,
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: Text(
@@ -231,7 +231,7 @@ class _SearchBodyState extends State<_SearchBody> {
           Icon(
             Icons.search_off,
             size: 64,
-            color: AppTheme.warmBeige,
+            color: AppTheme.neutralLight,
           ),
           const SizedBox(height: 16),
           Text(

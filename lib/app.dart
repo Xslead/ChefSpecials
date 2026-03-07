@@ -17,6 +17,8 @@ class ChefSpecialsApp extends StatelessWidget {
       title: 'ChefSpecials',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
       locale: localeProvider.locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,

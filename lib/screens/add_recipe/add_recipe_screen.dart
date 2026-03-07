@@ -70,7 +70,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border(
-                bottom: BorderSide(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+                bottom: BorderSide(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
               ),
             ),
             child: SafeArea(
@@ -320,7 +320,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+        border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
         boxShadow: [AppTheme.warmShadowLight()],
       ),
       child: Column(
@@ -354,7 +354,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
   InputDecoration _compactInputDecoration() {
     return InputDecoration(
       filled: true,
-      fillColor: AppTheme.warmCream,
+      fillColor: AppTheme.neutralSoft,
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
@@ -379,7 +379,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
+        border: Border.all(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
         boxShadow: [AppTheme.warmShadowLight()],
       ),
       child: Column(

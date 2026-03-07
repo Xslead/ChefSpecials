@@ -19,7 +19,7 @@ class StepOverviewList extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: AppTheme.warmBeige.withValues(alpha: 0.5),
+              color: AppTheme.neutralLight.withValues(alpha: 0.5),
             ),
             boxShadow: [AppTheme.warmShadowLight()],
           ),
@@ -32,7 +32,7 @@ class StepOverviewList extends StatelessWidget {
                   width: 32,
                   height: 32,
                   decoration: const BoxDecoration(
-                    gradient: AppTheme.primaryGradient,
+                    color: AppTheme.primaryColor,
                     shape: BoxShape.circle,
                   ),
                   alignment: Alignment.center,

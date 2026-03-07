@@ -70,7 +70,7 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: isDone ? Colors.green.shade50 : theme.colorScheme.primary.withAlpha(25),
+        color: isDone ? const Color(0xFF10B981).withValues(alpha: 0.1) : theme.colorScheme.primary.withAlpha(25),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -89,14 +89,14 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
                     value: progress,
                     strokeWidth: 8,
                     backgroundColor: AppTheme.warmBeige,
-                    color: isDone ? Colors.green : theme.colorScheme.primary,
+                    color: isDone ? const Color(0xFF10B981) : theme.colorScheme.primary,
                   ),
                 ),
                 Text(
                   isDone ? 'Done!' : _formatTime(_remaining),
                   style: theme.textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: isDone ? Colors.green : theme.colorScheme.primary,
+                    color: isDone ? const Color(0xFF10B981) : theme.colorScheme.primary,
                   ),
                 ),
               ],

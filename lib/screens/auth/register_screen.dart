@@ -138,7 +138,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         width: 32,
                         height: 32,
                         decoration: const BoxDecoration(
-                          gradient: AppTheme.primaryGradient,
+                          color: AppTheme.primaryColor,
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(Icons.restaurant_menu,
@@ -167,7 +167,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: Divider(
                           color: _currentPage > 0
                               ? AppTheme.primaryColor
-                              : AppTheme.warmBeige,
+                              : AppTheme.neutralLight,
                           thickness: 2,
                         ),
                       ),
@@ -311,7 +311,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
                       color: _birthDate == null
-                          ? AppTheme.warmBeige
+                          ? AppTheme.neutralLight
                           : AppTheme.primaryColor,
                     ),
                   ),
@@ -582,7 +582,7 @@ class _StepDot extends StatelessWidget {
           height: 32,
           decoration: BoxDecoration(
             gradient: isHighlighted ? AppTheme.primaryGradient : null,
-            color: isHighlighted ? null : AppTheme.warmBeige,
+            color: isHighlighted ? null : AppTheme.neutralLight,
             shape: BoxShape.circle,
           ),
           child: Center(

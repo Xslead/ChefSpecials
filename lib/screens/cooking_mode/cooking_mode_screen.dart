@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../config/theme.dart';
 import '../../models/recipe.dart';
 import '../../l10n/generated/app_localizations.dart';
-import '../../widgets/gradient_button.dart';
 import 'widgets/step_page.dart';
 
 class CookingModeScreen extends StatefulWidget {
@@ -58,9 +57,7 @@ class _CookingModeScreenState extends State<CookingModeScreen> {
             child: FractionallySizedBox(
               widthFactor: steps.isEmpty ? 0 : (_currentPage + 1) / steps.length,
               child: Container(
-                decoration: const BoxDecoration(
-                  gradient: AppTheme.primaryGradient,
-                ),
+                color: AppTheme.primaryColor,
               ),
             ),
           ),
@@ -97,12 +94,12 @@ class _CookingModeScreenState extends State<CookingModeScreen> {
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: GradientButton(
-                        text: isLast ? l10n.done : l10n.next,
-                        icon: isLast ? Icons.check : Icons.arrow_forward,
+                      child: FilledButton.icon(
                         onPressed: isLast
                             ? () => Navigator.of(context).pop()
                             : () => _goToPage(_currentPage + 1),
+                        icon: Icon(isLast ? Icons.check : Icons.arrow_forward),
+                        label: Text(isLast ? l10n.done : l10n.next),
                       ),
                     ),
                   ],

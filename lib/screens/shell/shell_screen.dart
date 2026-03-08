@@ -54,9 +54,9 @@ class ShellScreen extends StatelessWidget {
                   context: context,
                   index: 1,
                   currentIndex: currentIndex,
-                  icon: Icons.menu_book_outlined,
-                  activeIcon: Icons.menu_book,
-                  label: l10n.myRecipes,
+                  icon: Icons.dynamic_feed_outlined,
+                  activeIcon: Icons.dynamic_feed,
+                  label: l10n.feed,
                 ),
                 _buildNavItem(
                   context: context,

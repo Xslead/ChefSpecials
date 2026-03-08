@@ -817,6 +817,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} comments'**
   String commentCount(int count);
+
+  /// No description provided for @feed.
+  ///
+  /// In en, this message translates to:
+  /// **'Feed'**
+  String get feed;
+
+  /// No description provided for @feedComingSoonSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'See what the people you follow are cooking.'**
+  String get feedComingSoonSubtitle;
+
+  /// No description provided for @private.
+  ///
+  /// In en, this message translates to:
+  /// **'Private'**
+  String get private;
+
+  /// No description provided for @public.
+  ///
+  /// In en, this message translates to:
+  /// **'Public'**
+  String get public;
+
+  /// No description provided for @privateDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Only you can see this recipe.'**
+  String get privateDescription;
+
+  /// No description provided for @publicDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone can see this recipe.'**
+  String get publicDescription;
 }
 
 class _AppLocalizationsDelegate

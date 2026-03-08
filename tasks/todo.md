@@ -144,12 +144,12 @@
 ---
 
 ## Push 9: Ratings, Comments & Dietary Filters
-- [ ] **Models:** Rating, Comment
-- [ ] **Services:** RatingService, CommentService
-- [ ] **Providers:** RatingProvider, CommentProvider
-- [ ] Star rating widget (1–5 stars) on RecipeDetailScreen
-- [ ] Average rating displayed on RecipeCard
-- [ ] Comments section on RecipeDetailScreen (add/view/delete)
+- [x] **Models:** Rating, Comment
+- [x] **Services:** RatingService, CommentService
+- [x] **Providers:** RatingProvider, CommentProvider
+- [x] Star rating widget (1–5 stars) on RecipeDetailScreen
+- [x] Average rating displayed on RecipeCard
+- [x] Comments section on RecipeDetailScreen (add/view/delete)
 - [ ] **Dietary tags** on Recipe model: Vegan, Gluten-Free, Keto, Halal, etc.
 - [ ] Dietary tag picker on AddRecipeScreen
 - [ ] Filter recipes by dietary tags on HomeScreen/SearchScreen

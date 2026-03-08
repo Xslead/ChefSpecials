@@ -129,5 +129,11 @@
     "placeholders": {
       "count": {"type": "int"}
     }
-  }
+  },
+  "feed": "Feed",
+  "feedComingSoonSubtitle": "See what the people you follow are cooking.",
+  "private": "Private",
+  "public": "Public",
+  "privateDescription": "Only you can see this recipe.",
+  "publicDescription": "Everyone can see this recipe."
 }

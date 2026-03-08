@@ -8,6 +8,7 @@ import '../../models/recipe.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../home/widgets/recipe_card.dart';
+import '../home/widgets/privacy_badge.dart';
 
 enum _SortOption { newest, oldest, category }
 
@@ -145,9 +146,19 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
                     itemCount: displayedRecipes.length,
                     itemBuilder: (context, index) {
+                      final recipe = displayedRecipes[index];
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 16),
-                        child: RecipeCard(recipe: displayedRecipes[index]),
+                        child: Stack(
+                          children: [
+                            RecipeCard(recipe: recipe),
+                            Positioned(
+                              top: 12,
+                              right: 52,
+                              child: PrivacyBadge(recipe: recipe),
+                            ),
+                          ],
+                        ),
                       );
                     },
                   ),

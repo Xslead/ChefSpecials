@@ -379,4 +379,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String commentCount(int count) {
     return '$count comments';
   }
+
+  @override
+  String get feed => 'Feed';
+
+  @override
+  String get feedComingSoonSubtitle =>
+      'See what the people you follow are cooking.';
+
+  @override
+  String get private => 'Private';
+
+  @override
+  String get public => 'Public';
+
+  @override
+  String get privateDescription => 'Only you can see this recipe.';
+
+  @override
+  String get publicDescription => 'Everyone can see this recipe.';
 }

@@ -7,6 +7,7 @@ import '../screens/auth/register_screen.dart';
 import '../screens/auth/forgot_password_screen.dart';
 import '../screens/shell/shell_screen.dart';
 import '../screens/home/home_screen.dart';
+import '../screens/feed/feed_screen.dart';
 import '../screens/my_recipes/my_recipes_screen.dart';
 import '../screens/daily_tracker/daily_tracker_screen.dart';
 import '../screens/food_items/food_item_list_screen.dart';
@@ -57,12 +58,12 @@ final GoRouter router = GoRouter(
             ),
           ],
         ),
-        // Tab 1: My Recipes
+        // Tab 1: Feed
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/my-recipes',
-              builder: (context, state) => const MyRecipesScreen(),
+              path: '/feed',
+              builder: (context, state) => const FeedScreen(),
             ),
           ],
         ),
@@ -168,6 +169,11 @@ final GoRouter router = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/nutrition-goals',
       builder: (context, state) => const NutritionGoalsScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/my-recipes',
+      builder: (context, state) => const MyRecipesScreen(),
     ),
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,

@@ -280,6 +280,9 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
                   ),
                   const SizedBox(height: 24),
 
+                  _buildVisibilityToggle(context, l10n, formProvider),
+                  const SizedBox(height: 24),
+
                   const IngredientInputList(),
                   const SizedBox(height: 24),
 
@@ -293,6 +296,69 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
                 ],
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVisibilityToggle(
+      BuildContext context, AppLocalizations l10n, RecipeFormProvider formProvider) {
+    final isPrivate = formProvider.isPrivate;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceOf(context),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+            color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
+        boxShadow: [AppTheme.shadowOf(context)],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: isPrivate
+                  ? AppTheme.textTertiaryOf(context).withValues(alpha: 0.12)
+                  : AppTheme.primaryColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              isPrivate ? Icons.lock_outline : Icons.public,
+              color: isPrivate
+                  ? AppTheme.textSecondaryOf(context)
+                  : AppTheme.primaryColor,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isPrivate ? l10n.private : l10n.public,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  isPrivate ? l10n.privateDescription : l10n.publicDescription,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppTheme.textTertiaryOf(context),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Switch(
+            value: isPrivate,
+            onChanged: formProvider.setIsPrivate,
+            activeColor: AppTheme.primaryColor,
           ),
         ],
       ),

@@ -13,9 +13,12 @@ class RecipeProvider extends ChangeNotifier {
 
   bool _initialized = false;
 
-  List<Recipe> get recipes => _selectedCategory == null
-      ? _recipes
-      : _recipes.where((r) => r.category == _selectedCategory).toList();
+  List<Recipe> get recipes {
+    final pub = _recipes.where((r) => !r.isPrivate);
+    return _selectedCategory == null
+        ? pub.toList()
+        : pub.where((r) => r.category == _selectedCategory).toList();
+  }
   List<Recipe> get allRecipes => _recipes;
   String? get selectedCategory => _selectedCategory;
   bool get isLoading => _isLoading;

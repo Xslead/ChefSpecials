@@ -379,4 +379,23 @@ class AppLocalizationsTr extends AppLocalizations {
   String commentCount(int count) {
     return '$count yorum';
   }
+
+  @override
+  String get feed => 'Akış';
+
+  @override
+  String get feedComingSoonSubtitle =>
+      'Takip ettiklerinizin neler pişirdiğini görün.';
+
+  @override
+  String get private => 'Gizli';
+
+  @override
+  String get public => 'Herkese Açık';
+
+  @override
+  String get privateDescription => 'Bu tarifi yalnızca sen görebilirsin.';
+
+  @override
+  String get publicDescription => 'Bu tarifi herkes görebilir.';
 }

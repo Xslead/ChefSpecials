@@ -22,6 +22,7 @@ class Recipe {
   final double averageRating;
   final int ratingCount;
   final int commentCount;
+  final bool isPrivate;
 
   Recipe({
     this.id,
@@ -44,6 +45,7 @@ class Recipe {
     this.averageRating = 0.0,
     this.ratingCount = 0,
     this.commentCount = 0,
+    this.isPrivate = false,
   });
 
   factory Recipe.fromMap(Map<String, dynamic> map, String docId) {
@@ -72,6 +74,7 @@ class Recipe {
       averageRating: (map['averageRating'] as num?)?.toDouble() ?? 0.0,
       ratingCount: map['ratingCount'] as int? ?? 0,
       commentCount: map['commentCount'] as int? ?? 0,
+      isPrivate: map['isPrivate'] as bool? ?? false,
     );
   }
 
@@ -96,6 +99,7 @@ class Recipe {
     double? averageRating,
     int? ratingCount,
     int? commentCount,
+    bool? isPrivate,
   }) {
     return Recipe(
       id: id ?? this.id,
@@ -118,6 +122,7 @@ class Recipe {
       averageRating: averageRating ?? this.averageRating,
       ratingCount: ratingCount ?? this.ratingCount,
       commentCount: commentCount ?? this.commentCount,
+      isPrivate: isPrivate ?? this.isPrivate,
     );
   }
 
@@ -139,6 +144,7 @@ class Recipe {
       'carbsGrams': carbsGrams,
       'fatGrams': fatGrams,
       'createdAt': createdAt.toIso8601String(),
+      'isPrivate': isPrivate,
     };
   }
 }

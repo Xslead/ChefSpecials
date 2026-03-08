@@ -23,6 +23,7 @@ class RecipeFormProvider extends ChangeNotifier {
   double? proteinGrams;
   double? carbsGrams;
   double? fatGrams;
+  bool isPrivate = false;
   bool isSubmitting = false;
 
   void addIngredientFromFoodItem(FoodItem foodItem, String amount) {
@@ -130,6 +131,11 @@ class RecipeFormProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setIsPrivate(bool value) {
+    isPrivate = value;
+    notifyListeners();
+  }
+
   void loadFromRecipe(Recipe recipe) {
     title = recipe.title;
     description = recipe.description;
@@ -146,6 +152,7 @@ class RecipeFormProvider extends ChangeNotifier {
     proteinGrams = recipe.proteinGrams;
     carbsGrams = recipe.carbsGrams;
     fatGrams = recipe.fatGrams;
+    isPrivate = recipe.isPrivate;
     notifyListeners();
   }
 
@@ -182,6 +189,7 @@ class RecipeFormProvider extends ChangeNotifier {
       carbsGrams: carbsGrams,
       fatGrams: fatGrams,
       createdAt: DateTime.now(),
+      isPrivate: isPrivate,
     );
 
     isSubmitting = false;
@@ -204,6 +212,7 @@ class RecipeFormProvider extends ChangeNotifier {
     proteinGrams = null;
     carbsGrams = null;
     fatGrams = null;
+    isPrivate = false;
     isSubmitting = false;
     notifyListeners();
   }

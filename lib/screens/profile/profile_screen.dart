@@ -10,6 +10,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/favorite_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../providers/theme_provider.dart';
+import '../home/widgets/privacy_badge.dart';
 import '../home/widgets/recipe_card.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -29,7 +30,8 @@ class ProfileScreen extends StatelessWidget {
 
     final userRecipes = recipeProvider.allRecipes
         .where((r) => r.authorId == user.uid)
-        .toList();
+        .toList()
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
     final favoriteCount = favoriteProvider.favoriteRecipeIds.length;
 
     return Scaffold(
@@ -110,8 +112,17 @@ class ProfileScreen extends StatelessWidget {
                 if (userRecipes.isNotEmpty)
                   ...userRecipes.map(
                     (recipe) => Padding(
-                      padding: const EdgeInsets.only(bottom: 0),
-                      child: RecipeCard(recipe: recipe),
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      child: Stack(
+                        children: [
+                          RecipeCard(recipe: recipe),
+                          Positioned(
+                            top: 12,
+                            right: 52,
+                            child: PrivacyBadge(recipe: recipe),
+                          ),
+                        ],
+                      ),
                     ),
                   )
                 else

@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../../config/theme.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../models/recipe.dart';
+import '../../../providers/auth_provider.dart';
 import '../../../providers/favorite_provider.dart';
 
 class RecipeCard extends StatefulWidget {
@@ -108,31 +109,40 @@ class _RecipeCardState extends State<RecipeCard> {
                     // Author + Time row
                     Row(
                       children: [
-                        CircleAvatar(
-                          radius: 10,
-                          backgroundColor:
-                              AppTheme.primaryColor.withValues(alpha: 0.15),
-                          child: Text(
-                            recipe.authorName.isNotEmpty
-                                ? recipe.authorName[0].toUpperCase()
-                                : '?',
-                            style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                              color: AppTheme.primaryColor,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Flexible(
-                          child: Text(
-                            recipe.authorName,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppTheme.textSecondaryOf(context),
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                        GestureDetector(
+                          onTap: () => _navigateToAuthor(context),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CircleAvatar(
+                                radius: 10,
+                                backgroundColor:
+                                    AppTheme.primaryColor.withValues(alpha: 0.15),
+                                child: Text(
+                                  recipe.authorName.isNotEmpty
+                                      ? recipe.authorName[0].toUpperCase()
+                                      : '?',
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppTheme.primaryColor,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                recipe.authorName,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: AppTheme.textSecondaryOf(context),
+                                  decoration: TextDecoration.underline,
+                                  decorationColor:
+                                      AppTheme.textSecondaryOf(context),
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
                           ),
                         ),
                         Padding(
@@ -209,6 +219,19 @@ class _RecipeCardState extends State<RecipeCard> {
         ),
       ),
     );
+  }
+
+  void _navigateToAuthor(BuildContext context) {
+    final currentUid =
+        context.read<AuthProvider>().userModel?.uid;
+    if (currentUid == recipe.authorId) {
+      context.push('/profile');
+    } else {
+      context.push(
+        '/user/${recipe.authorId}',
+        extra: recipe.authorName,
+      );
+    }
   }
 
   Widget _buildRatingRow() {

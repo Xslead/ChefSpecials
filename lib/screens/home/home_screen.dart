@@ -40,6 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final recipeProvider = context.watch<RecipeProvider>();
+    // Initialize favorites as soon as userModel is available (stream-based auth
+    // means userModel may arrive after initState runs)
+    final user = context.watch<AuthProvider>().userModel;
+    if (user != null) {
+      context.read<FavoriteProvider>().listenToFavorites(user.uid);
+    }
 
     return Scaffold(
       body: Column(

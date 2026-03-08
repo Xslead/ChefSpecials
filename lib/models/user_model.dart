@@ -14,6 +14,8 @@ class UserModel {
   final double? weightKg;
   final String? activityLevel;
   final String? cookingSkillLevel;
+  final int followingCount;
+  final int followersCount;
 
   UserModel({
     required this.uid,
@@ -31,12 +33,13 @@ class UserModel {
     this.weightKg,
     this.activityLevel,
     this.cookingSkillLevel,
+    this.followingCount = 0,
+    this.followersCount = 0,
   });
 
   String get fullName => '$firstName $lastName'.trim();
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
-    // Support legacy documents that only have fullName stored
     final firstName = map['firstName'] as String? ??
         (map['fullName'] as String? ?? '').split(' ').first;
     final lastName = map['lastName'] as String? ??
@@ -63,6 +66,8 @@ class UserModel {
       weightKg: (map['weightKg'] as num?)?.toDouble(),
       activityLevel: map['activityLevel'] as String?,
       cookingSkillLevel: map['cookingSkillLevel'] as String?,
+      followingCount: map['followingCount'] as int? ?? 0,
+      followersCount: map['followersCount'] as int? ?? 0,
     );
   }
 
@@ -72,7 +77,7 @@ class UserModel {
       'email': email,
       'firstName': firstName,
       'lastName': lastName,
-      'fullName': fullName, // kept for backward compatibility
+      'fullName': fullName,
       'phoneNumber': phoneNumber,
       'photoUrl': photoUrl,
       'bio': bio,
@@ -84,6 +89,8 @@ class UserModel {
       'weightKg': weightKg,
       'activityLevel': activityLevel,
       'cookingSkillLevel': cookingSkillLevel,
+      'followingCount': followingCount,
+      'followersCount': followersCount,
     };
   }
 
@@ -100,6 +107,8 @@ class UserModel {
     double? weightKg,
     String? activityLevel,
     String? cookingSkillLevel,
+    int? followingCount,
+    int? followersCount,
   }) {
     return UserModel(
       uid: uid,
@@ -117,6 +126,8 @@ class UserModel {
       weightKg: weightKg ?? this.weightKg,
       activityLevel: activityLevel ?? this.activityLevel,
       cookingSkillLevel: cookingSkillLevel ?? this.cookingSkillLevel,
+      followingCount: followingCount ?? this.followingCount,
+      followersCount: followersCount ?? this.followersCount,
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../models/recipe.dart';
 import '../services/recipe_service.dart';
 
@@ -40,8 +40,13 @@ class RecipeProvider extends ChangeNotifier {
         notifyListeners();
       },
       onError: (error) {
+        debugPrint('RecipeProvider stream error: $error');
         _isLoading = false;
         notifyListeners();
+        // Restart stream after delay so it recovers from transient errors
+        Future.delayed(const Duration(seconds: 3), () {
+          if (_initialized) _listenToRecipes();
+        });
       },
     );
   }

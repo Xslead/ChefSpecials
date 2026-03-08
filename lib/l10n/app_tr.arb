@@ -135,5 +135,12 @@
   "private": "Gizli",
   "public": "Herkese Açık",
   "privateDescription": "Bu tarifi yalnızca sen görebilirsin.",
-  "publicDescription": "Bu tarifi herkes görebilir."
+  "publicDescription": "Bu tarifi herkes görebilir.",
+  "follow": "Takip Et",
+  "unfollow": "Takibi Bırak",
+  "followers": "Takipçi",
+  "following": "Takip",
+  "noFollowing": "Henüz kimseyi takip etmiyorsun",
+  "noFollowingSubtitle": "Tarifleri keşfet ve insanları takip ederek burada son paylaşımlarını gör.",
+  "noFeedRecipes": "Takip ettiklerinden yeni tarif yok."
 }

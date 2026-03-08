@@ -30,9 +30,17 @@ class RecipeService {
     return _recipesRef
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Recipe.fromMap(doc.data(), doc.id))
-            .toList());
+        .map((snapshot) {
+          final recipes = <Recipe>[];
+          for (final doc in snapshot.docs) {
+            try {
+              recipes.add(Recipe.fromMap(doc.data(), doc.id));
+            } catch (e) {
+              // Skip malformed documents so one bad doc doesn't break the stream
+            }
+          }
+          return recipes;
+        });
   }
 
   Stream<List<Recipe>> getRecipesByCategory(String category) {
@@ -53,6 +61,45 @@ class RecipeService {
         .map((snapshot) => snapshot.docs
             .map((doc) => Recipe.fromMap(doc.data(), doc.id))
             .toList());
+  }
+
+  /// Fetch public recipes from a list of authors.
+  /// Batches whereIn queries in groups of 10 (Firestore limit), then
+  /// filters and sorts in memory to avoid composite index requirements.
+  Future<List<Recipe>> getFeedRecipes(
+    List<String> authorIds, {
+    int limit = 20,
+    DateTime? before,
+  }) async {
+    if (authorIds.isEmpty) return [];
+
+    final batches = <List<String>>[];
+    for (var i = 0; i < authorIds.length; i += 10) {
+      batches.add(authorIds.sublist(
+          i, i + 10 > authorIds.length ? authorIds.length : i + 10));
+    }
+
+    // Fetch without orderBy/isPrivate filter to avoid composite index
+    final futures = batches.map((batch) =>
+        _recipesRef.where('authorId', whereIn: batch).get());
+
+    final snapshots = await Future.wait(futures);
+    final all = <Recipe>[];
+    for (final snap in snapshots) {
+      for (final doc in snap.docs) {
+        try {
+          all.add(Recipe.fromMap(doc.data(), doc.id));
+        } catch (_) {}
+      }
+    }
+
+    // Filter and sort in memory
+    var filtered = all.where((r) => !r.isPrivate).toList();
+    if (before != null) {
+      filtered = filtered.where((r) => r.createdAt.isBefore(before)).toList();
+    }
+    filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return filtered.take(limit).toList();
   }
 
   Future<void> updateAuthorName(String userId, String newName) async {

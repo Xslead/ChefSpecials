@@ -8,6 +8,7 @@ import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/favorite_provider.dart';
+import '../../providers/follow_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../home/widgets/privacy_badge.dart';
@@ -27,6 +28,9 @@ class ProfileScreen extends StatelessWidget {
     if (user == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
+
+    // Initialize follow provider for current user
+    context.read<FollowProvider>().initialize(user.uid);
 
     final userRecipes = recipeProvider.allRecipes
         .where((r) => r.authorId == user.uid)
@@ -60,14 +64,24 @@ class ProfileScreen extends StatelessWidget {
                           label: l10n.recipes,
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 8),
                       Expanded(
                         child: _buildStatCard(
                           context: context,
-                          icon: Icons.favorite,
-                          color: AppTheme.errorColor,
-                          count: favoriteCount,
-                          label: l10n.favorites,
+                          icon: Icons.people_outline,
+                          color: AppTheme.secondaryColor,
+                          count: user.followersCount,
+                          label: l10n.followers,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _buildStatCard(
+                          context: context,
+                          icon: Icons.person_add_outlined,
+                          color: const Color(0xFFF59E0B),
+                          count: user.followingCount,
+                          label: l10n.following,
                         ),
                       ),
                     ],
@@ -387,46 +401,33 @@ class ProfileScreen extends StatelessWidget {
     required String label,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
       decoration: BoxDecoration(
         color: AppTheme.surfaceOf(context),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
         boxShadow: [AppTheme.shadowOf(context)],
       ),
-      child: Row(
+      child: Column(
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
+          Icon(icon, color: color, size: 22),
+          const SizedBox(height: 6),
+          Text(
+            '$count',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+              color: AppTheme.textPrimaryOf(context),
             ),
-            child: Icon(icon, color: color, size: 22),
           ),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '$count',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w900,
-                  color: AppTheme.textPrimaryOf(context),
-                ),
-              ),
-              Text(
-                label.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textTertiaryOf(context),
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ],
+          Text(
+            label.toUpperCase(),
+            style: TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textTertiaryOf(context),
+              letterSpacing: 0.5,
+            ),
           ),
         ],
       ),

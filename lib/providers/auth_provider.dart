@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user_model.dart';
@@ -12,6 +14,7 @@ class AuthProvider extends ChangeNotifier {
   UserModel? _userModel;
   bool _isLoading = false;
   String? _error;
+  StreamSubscription<UserModel?>? _userSub;
 
   User? get firebaseUser => _firebaseUser;
   UserModel? get userModel => _userModel;
@@ -23,14 +26,26 @@ class AuthProvider extends ChangeNotifier {
     _authService.authStateChanges.listen(_onAuthStateChanged);
   }
 
-  Future<void> _onAuthStateChanged(User? user) async {
+  void _onAuthStateChanged(User? user) {
     _firebaseUser = user;
+    _userSub?.cancel();
+    _userSub = null;
     if (user != null) {
-      _userModel = await _userService.getUser(user.uid);
+      _userSub = _userService.watchUser(user.uid).listen(
+        (model) {
+          _userModel = model;
+          notifyListeners();
+        },
+        onError: (_) async {
+          // Fallback to one-time fetch if stream fails
+          _userModel = await _userService.getUser(user.uid);
+          notifyListeners();
+        },
+      );
     } else {
       _userModel = null;
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   Future<bool> signIn(String email, String password) async {
@@ -112,6 +127,12 @@ class AuthProvider extends ChangeNotifier {
       _userModel = await _userService.getUser(_firebaseUser!.uid);
       notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    _userSub?.cancel();
+    super.dispose();
   }
 
   Future<void> signOut() async {

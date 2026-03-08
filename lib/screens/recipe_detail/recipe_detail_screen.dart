@@ -381,10 +381,44 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
         const SizedBox(height: 8),
         Row(
           children: [
-            Text(
-              r.authorName,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: AppTheme.textSecondary,
+            GestureDetector(
+              onTap: () {
+                final currentUserId =
+                    context.read<AuthProvider>().userModel?.uid;
+                if (r.authorId == currentUserId) {
+                  context.go('/profile');
+                } else {
+                  context.push('/user/${r.authorId}', extra: r.authorName);
+                }
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircleAvatar(
+                    radius: 12,
+                    backgroundColor:
+                        AppTheme.primaryColor.withValues(alpha: 0.15),
+                    child: Text(
+                      r.authorName.isNotEmpty
+                          ? r.authorName[0].toUpperCase()
+                          : '?',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.primaryColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    r.authorName,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: AppTheme.primaryColor,
+                      decoration: TextDecoration.underline,
+                      decorationColor: AppTheme.primaryColor,
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(width: 12),

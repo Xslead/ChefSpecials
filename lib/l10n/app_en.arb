@@ -135,5 +135,12 @@
   "private": "Private",
   "public": "Public",
   "privateDescription": "Only you can see this recipe.",
-  "publicDescription": "Everyone can see this recipe."
+  "publicDescription": "Everyone can see this recipe.",
+  "follow": "Follow",
+  "unfollow": "Unfollow",
+  "followers": "Followers",
+  "following": "Following",
+  "noFollowing": "You're not following anyone yet",
+  "noFollowingSubtitle": "Explore recipes and follow people to see their latest posts here.",
+  "noFeedRecipes": "No new recipes from people you follow."
 }

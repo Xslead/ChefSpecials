@@ -40,9 +40,10 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
     final formProvider = context.read<RecipeFormProvider>();
     final recipeProvider = context.read<RecipeProvider>();
     final authProvider = context.read<AuthProvider>();
-    final user = authProvider.userModel!;
 
     try {
+      final user = authProvider.userModel;
+      if (user == null) throw Exception('User not loaded yet. Please try again.');
       final recipe = await formProvider.buildRecipe(user.uid, user.fullName);
       await recipeProvider.createRecipe(recipe);
       if (mounted) {

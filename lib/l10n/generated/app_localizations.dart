@@ -853,6 +853,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Everyone can see this recipe.'**
   String get publicDescription;
+
+  /// No description provided for @follow.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow'**
+  String get follow;
+
+  /// No description provided for @unfollow.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfollow'**
+  String get unfollow;
+
+  /// No description provided for @followers.
+  ///
+  /// In en, this message translates to:
+  /// **'Followers'**
+  String get followers;
+
+  /// No description provided for @following.
+  ///
+  /// In en, this message translates to:
+  /// **'Following'**
+  String get following;
+
+  /// No description provided for @noFollowing.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re not following anyone yet'**
+  String get noFollowing;
+
+  /// No description provided for @noFollowingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore recipes and follow people to see their latest posts here.'**
+  String get noFollowingSubtitle;
+
+  /// No description provided for @noFeedRecipes.
+  ///
+  /// In en, this message translates to:
+  /// **'No new recipes from people you follow.'**
+  String get noFeedRecipes;
 }
 
 class _AppLocalizationsDelegate

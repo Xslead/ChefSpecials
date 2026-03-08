@@ -398,4 +398,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get publicDescription => 'Everyone can see this recipe.';
+
+  @override
+  String get follow => 'Follow';
+
+  @override
+  String get unfollow => 'Unfollow';
+
+  @override
+  String get followers => 'Followers';
+
+  @override
+  String get following => 'Following';
+
+  @override
+  String get noFollowing => 'You\'re not following anyone yet';
+
+  @override
+  String get noFollowingSubtitle =>
+      'Explore recipes and follow people to see their latest posts here.';
+
+  @override
+  String get noFeedRecipes => 'No new recipes from people you follow.';
 }

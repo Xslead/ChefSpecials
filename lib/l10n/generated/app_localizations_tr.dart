@@ -398,4 +398,26 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get publicDescription => 'Bu tarifi herkes görebilir.';
+
+  @override
+  String get follow => 'Takip Et';
+
+  @override
+  String get unfollow => 'Takibi Bırak';
+
+  @override
+  String get followers => 'Takipçi';
+
+  @override
+  String get following => 'Takip';
+
+  @override
+  String get noFollowing => 'Henüz kimseyi takip etmiyorsun';
+
+  @override
+  String get noFollowingSubtitle =>
+      'Tarifleri keşfet ve insanları takip ederek burada son paylaşımlarını gör.';
+
+  @override
+  String get noFeedRecipes => 'Takip ettiklerinden yeni tarif yok.';
 }

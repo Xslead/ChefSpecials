@@ -17,6 +17,13 @@ class UserService {
     return UserModel.fromMap(doc.data()!);
   }
 
+  Stream<UserModel?> watchUser(String uid) {
+    return _usersRef.doc(uid).snapshots().map((doc) {
+      if (!doc.exists) return null;
+      return UserModel.fromMap(doc.data()!);
+    });
+  }
+
   Future<void> updateUser(String uid, Map<String, dynamic> data) async {
     await _usersRef.doc(uid).update(data);
   }

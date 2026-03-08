@@ -12,6 +12,7 @@ import '../screens/my_recipes/my_recipes_screen.dart';
 import '../screens/daily_tracker/daily_tracker_screen.dart';
 import '../screens/food_items/food_item_list_screen.dart';
 import '../screens/profile/profile_screen.dart';
+import '../screens/profile/public_profile_screen.dart';
 import '../screens/add_recipe/add_recipe_screen.dart';
 import '../screens/edit_recipe/edit_recipe_screen.dart';
 import '../screens/recipe_detail/recipe_detail_screen.dart';
@@ -174,6 +175,18 @@ final GoRouter router = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/my-recipes',
       builder: (context, state) => const MyRecipesScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/user/:id',
+      builder: (context, state) {
+        final userId = state.pathParameters['id']!;
+        final initialName = state.extra as String? ?? '';
+        return PublicProfileScreen(
+          userId: userId,
+          initialName: initialName,
+        );
+      },
     ),
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,

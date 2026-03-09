@@ -195,32 +195,50 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
           child: Row(
             children: [
               Expanded(
-                child: _buildStatCard(
-                  context: context,
-                  icon: Icons.menu_book,
-                  color: AppTheme.primaryColor,
-                  count: recipes.length,
-                  label: l10n.recipes,
+                child: GestureDetector(
+                  onTap: () => context.push(
+                    '/my-recipes',
+                    extra: widget.userId,
+                  ),
+                  child: _buildStatCard(
+                    context: context,
+                    icon: Icons.menu_book,
+                    color: AppTheme.primaryColor,
+                    count: recipes.length,
+                    label: l10n.recipes,
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: _buildStatCard(
-                  context: context,
-                  icon: Icons.people_outline,
-                  color: AppTheme.secondaryColor,
-                  count: user.followersCount,
-                  label: l10n.followers,
+                child: GestureDetector(
+                  onTap: () => context.push(
+                    '/follow-list/${widget.userId}',
+                    extra: 0,
+                  ),
+                  child: _buildStatCard(
+                    context: context,
+                    icon: Icons.people_outline,
+                    color: AppTheme.secondaryColor,
+                    count: user.followersCount,
+                    label: l10n.followers,
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: _buildStatCard(
-                  context: context,
-                  icon: Icons.person_add_outlined,
-                  color: const Color(0xFFF59E0B),
-                  count: user.followingCount,
-                  label: l10n.following,
+                child: GestureDetector(
+                  onTap: () => context.push(
+                    '/follow-list/${widget.userId}',
+                    extra: 1,
+                  ),
+                  child: _buildStatCard(
+                    context: context,
+                    icon: Icons.person_add_outlined,
+                    color: const Color(0xFFF59E0B),
+                    count: user.followingCount,
+                    label: l10n.following,
+                  ),
                 ),
               ),
             ],
@@ -230,9 +248,55 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
         // Recipes header
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-          child: Text(
-            l10n.recipes,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          child: Row(
+            children: [
+              Text(
+                l10n.recipes,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  '${recipes.length}',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.primaryColor,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              if (recipes.length > 3)
+                GestureDetector(
+                  onTap: () => context.push(
+                    '/my-recipes',
+                    extra: widget.userId,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        l10n.viewAll,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.primaryColor,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        size: 14,
+                        color: AppTheme.primaryColor,
+                      ),
+                    ],
+                  ),
+                ),
+            ],
           ),
         ),
         if (recipes.isEmpty)
@@ -253,7 +317,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
             ),
           )
         else
-          ...recipes.map(
+          ...recipes.take(3).map(
             (recipe) => Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: RecipeCard(recipe: recipe),

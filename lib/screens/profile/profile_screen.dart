@@ -57,12 +57,15 @@ class ProfileScreen extends StatelessWidget {
                   child: Row(
                     children: [
                       Expanded(
-                        child: _buildStatCard(
-                          context: context,
-                          icon: Icons.menu_book,
-                          color: AppTheme.primaryColor,
-                          count: userRecipes.length,
-                          label: l10n.recipes,
+                        child: GestureDetector(
+                          onTap: () => context.push('/my-recipes'),
+                          child: _buildStatCard(
+                            context: context,
+                            icon: Icons.menu_book,
+                            color: AppTheme.primaryColor,
+                            count: userRecipes.length,
+                            label: l10n.recipes,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),

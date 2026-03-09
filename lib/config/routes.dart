@@ -175,7 +175,10 @@ final GoRouter router = GoRouter(
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/my-recipes',
-      builder: (context, state) => const MyRecipesScreen(),
+      builder: (context, state) {
+        final userId = state.extra as String?;
+        return MyRecipesScreen(userId: userId);
+      },
     ),
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,

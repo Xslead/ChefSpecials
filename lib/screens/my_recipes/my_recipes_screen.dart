@@ -13,7 +13,9 @@ import '../home/widgets/privacy_badge.dart';
 enum _SortOption { newest, oldest, category }
 
 class MyRecipesScreen extends StatefulWidget {
-  const MyRecipesScreen({super.key});
+  final String? userId;
+
+  const MyRecipesScreen({super.key, this.userId});
 
   @override
   State<MyRecipesScreen> createState() => _MyRecipesScreenState();
@@ -106,20 +108,25 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
     final l10n = AppLocalizations.of(context)!;
     final authProvider = context.watch<AuthProvider>();
     final recipeProvider = context.watch<RecipeProvider>();
-    final user = authProvider.userModel;
+    final currentUser = authProvider.userModel;
 
-    if (user == null) {
+    if (currentUser == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    final userRecipes =
-        recipeProvider.allRecipes.where((r) => r.authorId == user.uid).toList();
+    final isOwnProfile = widget.userId == null || widget.userId == currentUser.uid;
+    final targetUid = widget.userId ?? currentUser.uid;
+
+    final userRecipes = recipeProvider.allRecipes
+        .where((r) =>
+            r.authorId == targetUid && (isOwnProfile || !r.isPrivate))
+        .toList();
     final displayedRecipes = _filterAndSort(userRecipes);
 
     return Scaffold(
       body: Column(
         children: [
-          _buildHeader(context, l10n, userRecipes.length),
+          _buildHeader(context, l10n, userRecipes.length, isOwnProfile),
           Expanded(
             child: displayedRecipes.isEmpty
                 ? Center(
@@ -149,38 +156,42 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                       final recipe = displayedRecipes[index];
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 16),
-                        child: Stack(
-                          children: [
-                            RecipeCard(recipe: recipe),
-                            Positioned(
-                              top: 12,
-                              right: 52,
-                              child: PrivacyBadge(recipe: recipe),
-                            ),
-                          ],
-                        ),
+                        child: isOwnProfile
+                            ? Stack(
+                                children: [
+                                  RecipeCard(recipe: recipe),
+                                  Positioned(
+                                    top: 12,
+                                    right: 52,
+                                    child: PrivacyBadge(recipe: recipe),
+                                  ),
+                                ],
+                              )
+                            : RecipeCard(recipe: recipe),
                       );
                     },
                   ),
           ),
         ],
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 100),
-        child: FloatingActionButton(
-          heroTag: 'my_recipes_fab',
-          onPressed: () => context.push('/add-recipe'),
-          backgroundColor: AppTheme.primaryColor,
-          foregroundColor: Colors.white,
-          elevation: 2,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.add, size: 28),
-        ),
-      ),
+      floatingActionButton: isOwnProfile
+          ? Padding(
+              padding: const EdgeInsets.only(bottom: 100),
+              child: FloatingActionButton(
+                heroTag: 'my_recipes_fab',
+                onPressed: () => context.push('/add-recipe'),
+                backgroundColor: AppTheme.primaryColor,
+                foregroundColor: Colors.white,
+                elevation: 2,
+                shape: const CircleBorder(),
+                child: const Icon(Icons.add, size: 28),
+              ),
+            )
+          : null,
     );
   }
 
-  Widget _buildHeader(BuildContext context, AppLocalizations l10n, int totalCount) {
+  Widget _buildHeader(BuildContext context, AppLocalizations l10n, int totalCount, bool isOwnProfile) {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
@@ -189,13 +200,18 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
       child: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+          padding: const EdgeInsets.fromLTRB(4, 12, 16, 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Title row
               Row(
                 children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => context.pop(),
+                    color: AppTheme.textPrimaryOf(context),
+                  ),
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -213,7 +229,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        l10n.myRecipes,
+                        isOwnProfile ? l10n.myRecipes : l10n.recipes,
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,

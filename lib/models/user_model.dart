@@ -16,6 +16,7 @@ class UserModel {
   final String? cookingSkillLevel;
   final int followingCount;
   final int followersCount;
+  final String? username;
 
   UserModel({
     required this.uid,
@@ -35,6 +36,7 @@ class UserModel {
     this.cookingSkillLevel,
     this.followingCount = 0,
     this.followersCount = 0,
+    this.username,
   });
 
   String get fullName => '$firstName $lastName'.trim();
@@ -68,6 +70,7 @@ class UserModel {
       cookingSkillLevel: map['cookingSkillLevel'] as String?,
       followingCount: map['followingCount'] as int? ?? 0,
       followersCount: map['followersCount'] as int? ?? 0,
+      username: map['username'] as String?,
     );
   }
 
@@ -91,6 +94,7 @@ class UserModel {
       'cookingSkillLevel': cookingSkillLevel,
       'followingCount': followingCount,
       'followersCount': followersCount,
+      'username': username,
     };
   }
 
@@ -109,6 +113,7 @@ class UserModel {
     String? cookingSkillLevel,
     int? followingCount,
     int? followersCount,
+    String? username,
   }) {
     return UserModel(
       uid: uid,
@@ -128,6 +133,7 @@ class UserModel {
       cookingSkillLevel: cookingSkillLevel ?? this.cookingSkillLevel,
       followingCount: followingCount ?? this.followingCount,
       followersCount: followersCount ?? this.followersCount,
+      username: username ?? this.username,
     );
   }
 }

@@ -48,7 +48,8 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 // Profile card
                 _buildProfileCard(context, l10n, user.photoUrl,
-                    user.fullName, user.email, user.bio, user.createdAt),
+                    user.fullName, user.email, user.bio, user.createdAt,
+                    user.username),
                 const SizedBox(height: 16),
                 // Stats row
                 Padding(
@@ -304,6 +305,7 @@ class ProfileScreen extends StatelessWidget {
     String email,
     String? bio,
     DateTime createdAt,
+    String? username,
   ) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
@@ -369,6 +371,17 @@ class ProfileScreen extends StatelessWidget {
                 letterSpacing: -0.3,
               ),
             ),
+            if (username != null) ...[
+              const SizedBox(height: 4),
+              Text(
+                '@$username',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppTheme.primaryColor,
+                ),
+              ),
+            ],
             const SizedBox(height: 4),
             // Email
             Text(

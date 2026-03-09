@@ -142,5 +142,12 @@
   "following": "Takip",
   "noFollowing": "Henüz kimseyi takip etmiyorsun",
   "noFollowingSubtitle": "Tarifleri keşfet ve insanları takip ederek burada son paylaşımlarını gör.",
-  "noFeedRecipes": "Takip ettiklerinden yeni tarif yok."
+  "noFeedRecipes": "Takip ettiklerinden yeni tarif yok.",
+  "username": "Kullanici Adi",
+  "usernameRequired": "Kullanici adi gerekli",
+  "usernameTooShort": "Kullanici adi en az 3 karakter olmali",
+  "usernameTaken": "Bu kullanici adi alinmis",
+  "usernameAvailable": "Kullanici adi uygun",
+  "people": "Kisiler",
+  "searchFeedHint": "Tarif veya @kullaniciadi ara..."
 }

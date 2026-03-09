@@ -142,5 +142,12 @@
   "following": "Following",
   "noFollowing": "You're not following anyone yet",
   "noFollowingSubtitle": "Explore recipes and follow people to see their latest posts here.",
-  "noFeedRecipes": "No new recipes from people you follow."
+  "noFeedRecipes": "No new recipes from people you follow.",
+  "username": "Username",
+  "usernameRequired": "Username is required",
+  "usernameTooShort": "Username must be at least 3 characters",
+  "usernameTaken": "Username is already taken",
+  "usernameAvailable": "Username is available",
+  "people": "People",
+  "searchFeedHint": "Search recipes or @username..."
 }

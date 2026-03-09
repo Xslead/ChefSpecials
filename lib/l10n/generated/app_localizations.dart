@@ -895,6 +895,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No new recipes from people you follow.'**
   String get noFeedRecipes;
+
+  /// No description provided for @username.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get username;
+
+  /// No description provided for @usernameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Username is required'**
+  String get usernameRequired;
+
+  /// No description provided for @usernameTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Username must be at least 3 characters'**
+  String get usernameTooShort;
+
+  /// No description provided for @usernameTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Username is already taken'**
+  String get usernameTaken;
+
+  /// No description provided for @usernameAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Username is available'**
+  String get usernameAvailable;
+
+  /// No description provided for @people.
+  ///
+  /// In en, this message translates to:
+  /// **'People'**
+  String get people;
+
+  /// No description provided for @searchFeedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search recipes or @username...'**
+  String get searchFeedHint;
 }
 
 class _AppLocalizationsDelegate

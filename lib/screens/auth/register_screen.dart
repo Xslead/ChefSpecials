@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -5,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
+import '../../services/user_service.dart';
 import '../../widgets/gradient_button.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -22,6 +25,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _step1Key = GlobalKey<FormState>();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -29,6 +33,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirm = true;
   DateTime? _birthDate;
+
+  // Username availability
+  final UserService _userService = UserService();
+  Timer? _usernameDebounce;
+  bool _checkingUsername = false;
+  bool? _usernameAvailable;
 
   // Step 2 — Optional physical info
   final _step2Key = GlobalKey<FormState>();
@@ -53,13 +63,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _pageController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
+    _usernameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     _heightController.dispose();
     _weightController.dispose();
+    _usernameDebounce?.cancel();
     super.dispose();
+  }
+
+  void _onUsernameChanged(String value) {
+    _usernameDebounce?.cancel();
+    final trimmed = value.trim();
+    if (trimmed.length < 3) {
+      setState(() {
+        _usernameAvailable = null;
+        _checkingUsername = false;
+      });
+      return;
+    }
+    setState(() => _checkingUsername = true);
+    _usernameDebounce = Timer(const Duration(milliseconds: 500), () async {
+      final available = await _userService.isUsernameAvailable(trimmed);
+      if (mounted && _usernameController.text.trim() == trimmed) {
+        setState(() {
+          _usernameAvailable = available;
+          _checkingUsername = false;
+        });
+      }
+    });
   }
 
   void _goToPage(int page) {
@@ -79,6 +113,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
       return;
     }
+    if (_usernameAvailable != true) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please choose an available username')),
+      );
+      return;
+    }
     _goToPage(1);
   }
 
@@ -93,6 +133,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _lastNameController.text.trim(),
       _phoneController.text.trim(),
       birthDate: _birthDate!,
+      username: _usernameController.text.trim(),
       gender: _gender,
       heightCm: double.tryParse(_heightController.text),
       weightKg: double.tryParse(_weightController.text),
@@ -253,6 +294,52 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 16),
+
+            // Username
+            TextFormField(
+              controller: _usernameController,
+              decoration: InputDecoration(
+                labelText: l10n.username,
+                prefixIcon: const Icon(Icons.alternate_email),
+                suffixIcon: _checkingUsername
+                    ? const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppTheme.primaryColor,
+                          ),
+                        ),
+                      )
+                    : _usernameAvailable == true
+                        ? const Icon(Icons.check_circle,
+                            color: AppTheme.primaryColor)
+                        : _usernameAvailable == false
+                            ? const Icon(Icons.cancel,
+                                color: AppTheme.errorColor)
+                            : null,
+              ),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9_]')),
+                LengthLimitingTextInputFormatter(20),
+              ],
+              onChanged: _onUsernameChanged,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return l10n.usernameRequired;
+                }
+                if (value.trim().length < 3) {
+                  return l10n.usernameTooShort;
+                }
+                if (_usernameAvailable == false) {
+                  return l10n.usernameTaken;
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 16),
 

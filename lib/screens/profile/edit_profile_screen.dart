@@ -106,47 +106,61 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     setState(() => _isSaving = true);
 
-    final authProvider = context.read<AuthProvider>();
-    final user = authProvider.userModel!;
+    try {
+      final authProvider = context.read<AuthProvider>();
+      final user = authProvider.userModel!;
 
-    String? photoUrl = user.photoUrl;
-    if (_imageFile != null) {
-      photoUrl = await _storageService.uploadUserAvatar(_imageFile!);
-    }
-
-    final newFirstName = _firstNameController.text.trim();
-    final newLastName = _lastNameController.text.trim();
-    final newFullName = '$newFirstName $newLastName'.trim();
-
-    final updates = <String, dynamic>{
-      'firstName': newFirstName,
-      'lastName': newLastName,
-      'fullName': newFullName,
-      'phoneNumber': _phoneController.text.trim(),
-      'bio': _bioController.text.trim(),
-      'birthDate': _birthDate?.toIso8601String(),
-      'gender': _gender,
-      'heightCm': double.tryParse(_heightController.text),
-      'weightKg': double.tryParse(_weightController.text),
-      'activityLevel': _activityLevel,
-      'cookingSkillLevel': _cookingSkillLevel,
-      if (photoUrl != user.photoUrl) 'photoUrl': photoUrl,
-    };
-
-    await _userService.updateUser(user.uid, updates);
-
-    if (newFullName != user.fullName) {
-      await RecipeService().updateAuthorName(user.uid, newFullName);
-      if (mounted) {
-        context.read<RecipeProvider>().updateAuthorName(user.uid, newFullName);
+      String? photoUrl = user.photoUrl;
+      if (_imageFile != null) {
+        photoUrl = await _storageService.uploadUserAvatar(_imageFile!);
       }
-    }
 
-    await authProvider.refreshUser();
+      final newFirstName = _firstNameController.text.trim();
+      final newLastName = _lastNameController.text.trim();
+      final newFullName = '$newFirstName $newLastName'.trim();
 
-    if (mounted) {
-      setState(() => _isSaving = false);
-      Navigator.of(context).pop();
+      final updates = <String, dynamic>{
+        'firstName': newFirstName,
+        'lastName': newLastName,
+        'fullName': newFullName,
+        'fullNameLowercase': newFullName.toLowerCase(),
+        'firstNameLowercase': newFirstName.toLowerCase(),
+        'lastNameLowercase': newLastName.toLowerCase(),
+        'phoneNumber': _phoneController.text.trim(),
+        'bio': _bioController.text.trim(),
+        'birthDate': _birthDate?.toIso8601String(),
+        'gender': _gender,
+        'heightCm': double.tryParse(_heightController.text),
+        'weightKg': double.tryParse(_weightController.text),
+        'activityLevel': _activityLevel,
+        'cookingSkillLevel': _cookingSkillLevel,
+        'photoUrl': photoUrl,
+      };
+
+      await _userService.updateUser(user.uid, updates);
+
+      if (newFullName != user.fullName) {
+        await RecipeService().updateAuthorName(user.uid, newFullName);
+        if (mounted) {
+          context.read<RecipeProvider>().updateAuthorName(user.uid, newFullName);
+        }
+      }
+
+      await authProvider.refreshUser();
+
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
     }
   }
 
@@ -286,6 +300,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   // ── Personal Info Section ──
                   _sectionLabel('PERSONAL INFO', context),
                   const SizedBox(height: 12),
+
+                  // Username (read-only)
+                  if (user?.username != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: TextFormField(
+                        initialValue: '@${user!.username}',
+                        enabled: false,
+                        decoration: InputDecoration(
+                          labelText: l10n.username,
+                          prefixIcon: const Icon(Icons.alternate_email),
+                          disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: AppTheme.neutralLightOf(context),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
 
                   // First & Last Name
                   Row(

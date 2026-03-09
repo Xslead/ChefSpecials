@@ -420,4 +420,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noFeedRecipes => 'No new recipes from people you follow.';
+
+  @override
+  String get username => 'Username';
+
+  @override
+  String get usernameRequired => 'Username is required';
+
+  @override
+  String get usernameTooShort => 'Username must be at least 3 characters';
+
+  @override
+  String get usernameTaken => 'Username is already taken';
+
+  @override
+  String get usernameAvailable => 'Username is available';
+
+  @override
+  String get people => 'People';
+
+  @override
+  String get searchFeedHint => 'Search recipes or @username...';
 }

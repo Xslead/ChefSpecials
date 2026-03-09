@@ -326,6 +326,17 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                 letterSpacing: -0.3,
               ),
             ),
+            if (user.username != null) ...[
+              const SizedBox(height: 4),
+              Text(
+                '@${user.username}',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppTheme.primaryColor,
+                ),
+              ),
+            ],
             if (user.bio != null && user.bio!.isNotEmpty) ...[
               const SizedBox(height: 10),
               Text(

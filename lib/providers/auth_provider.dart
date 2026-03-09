@@ -34,6 +34,12 @@ class AuthProvider extends ChangeNotifier {
       _userSub = _userService.watchUser(user.uid).listen(
         (model) {
           _userModel = model;
+          if (model != null && model.username == null) {
+            _generateMissingUsername(model);
+          } else if (model != null && !_migrationRan) {
+            _migrationRan = true;
+            _userService.migrateUsersWithoutUsernames();
+          }
           notifyListeners();
         },
         onError: (_) async {
@@ -45,6 +51,30 @@ class AuthProvider extends ChangeNotifier {
     } else {
       _userModel = null;
       notifyListeners();
+    }
+  }
+
+  bool _generatingUsername = false;
+  bool _migrationRan = false;
+
+  Future<void> _generateMissingUsername(UserModel model) async {
+    if (_generatingUsername) return;
+    _generatingUsername = true;
+    try {
+      await _userService.generateAndClaimUsername(
+        model.uid,
+        model.firstName,
+        model.lastName,
+      );
+      // After own username is set, migrate other users once
+      if (!_migrationRan) {
+        _migrationRan = true;
+        _userService.migrateUsersWithoutUsernames();
+      }
+    } catch (_) {
+      // Silently fail — will retry on next auth state change
+    } finally {
+      _generatingUsername = false;
     }
   }
 
@@ -78,6 +108,7 @@ class AuthProvider extends ChangeNotifier {
     String lastName,
     String phoneNumber, {
     required DateTime birthDate,
+    required String username,
     String? gender,
     double? heightCm,
     double? weightKg,
@@ -90,8 +121,9 @@ class AuthProvider extends ChangeNotifier {
 
     try {
       final credential = await _authService.register(email, password);
+      final uid = credential.user!.uid;
       final user = UserModel(
-        uid: credential.user!.uid,
+        uid: uid,
         email: email,
         firstName: firstName,
         lastName: lastName,
@@ -103,8 +135,10 @@ class AuthProvider extends ChangeNotifier {
         weightKg: weightKg,
         activityLevel: activityLevel,
         cookingSkillLevel: cookingSkillLevel,
+        username: username,
       );
       await _userService.createUser(user);
+      await _userService.claimUsername(username, uid);
       _userModel = user;
       _isLoading = false;
       notifyListeners();

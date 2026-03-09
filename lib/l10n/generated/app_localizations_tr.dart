@@ -420,4 +420,25 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get noFeedRecipes => 'Takip ettiklerinden yeni tarif yok.';
+
+  @override
+  String get username => 'Kullanici Adi';
+
+  @override
+  String get usernameRequired => 'Kullanici adi gerekli';
+
+  @override
+  String get usernameTooShort => 'Kullanici adi en az 3 karakter olmali';
+
+  @override
+  String get usernameTaken => 'Bu kullanici adi alinmis';
+
+  @override
+  String get usernameAvailable => 'Kullanici adi uygun';
+
+  @override
+  String get people => 'Kisiler';
+
+  @override
+  String get searchFeedHint => 'Tarif veya @kullaniciadi ara...';
 }

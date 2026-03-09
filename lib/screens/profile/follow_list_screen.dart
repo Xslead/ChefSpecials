@@ -256,17 +256,19 @@ class _FollowListScreenState extends State<FollowListScreen>
           fontSize: 15,
         ),
       ),
-      subtitle: user.bio != null && user.bio!.isNotEmpty
-          ? Text(
-              user.bio!,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 13,
-                color: AppTheme.textTertiaryOf(context),
-              ),
-            )
-          : null,
+      subtitle: Text(
+        user.username != null
+            ? '@${user.username}'
+            : (user.bio ?? ''),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          fontSize: 13,
+          color: user.username != null
+              ? AppTheme.primaryColor
+              : AppTheme.textTertiaryOf(context),
+        ),
+      ),
       trailing: _buildFollowButton(user.uid, isFollowing, followProvider),
       onTap: () => context.push('/user/${user.uid}', extra: user.fullName),
     );

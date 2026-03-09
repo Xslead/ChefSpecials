@@ -66,22 +66,34 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Expanded(
-                        child: _buildStatCard(
-                          context: context,
-                          icon: Icons.people_outline,
-                          color: AppTheme.secondaryColor,
-                          count: user.followersCount,
-                          label: l10n.followers,
+                        child: GestureDetector(
+                          onTap: () => context.push(
+                            '/follow-list/${user.uid}',
+                            extra: 0,
+                          ),
+                          child: _buildStatCard(
+                            context: context,
+                            icon: Icons.people_outline,
+                            color: AppTheme.secondaryColor,
+                            count: user.followersCount,
+                            label: l10n.followers,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
-                        child: _buildStatCard(
-                          context: context,
-                          icon: Icons.person_add_outlined,
-                          color: const Color(0xFFF59E0B),
-                          count: user.followingCount,
-                          label: l10n.following,
+                        child: GestureDetector(
+                          onTap: () => context.push(
+                            '/follow-list/${user.uid}',
+                            extra: 1,
+                          ),
+                          child: _buildStatCard(
+                            context: context,
+                            icon: Icons.person_add_outlined,
+                            color: const Color(0xFFF59E0B),
+                            count: user.followingCount,
+                            label: l10n.following,
+                          ),
                         ),
                       ),
                     ],
@@ -119,12 +131,34 @@ class ProfileScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () => context.push('/my-recipes'),
+                        child: Row(
+                          children: [
+                            Text(
+                              l10n.viewAll,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.primaryColor,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            const Icon(
+                              Icons.arrow_forward_ios,
+                              size: 14,
+                              color: AppTheme.primaryColor,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                // Recipe list
+                // Recipe list (show max 3 on profile)
                 if (userRecipes.isNotEmpty)
-                  ...userRecipes.map(
+                  ...userRecipes.take(3).map(
                     (recipe) => Padding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                       child: Stack(

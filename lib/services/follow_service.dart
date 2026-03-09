@@ -42,4 +42,20 @@ class FollowService {
         .map((snap) =>
             snap.docs.map((d) => d.data()['followedId'] as String).toList());
   }
+
+  Future<List<String>> getFollowerIds(String userId) async {
+    final snap = await _db
+        .collection('follows')
+        .where('followedId', isEqualTo: userId)
+        .get();
+    return snap.docs.map((d) => d.data()['followerId'] as String).toList();
+  }
+
+  Future<List<String>> getFollowingIds(String userId) async {
+    final snap = await _db
+        .collection('follows')
+        .where('followerId', isEqualTo: userId)
+        .get();
+    return snap.docs.map((d) => d.data()['followedId'] as String).toList();
+  }
 }

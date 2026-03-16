@@ -182,9 +182,11 @@
 ## Remaining — What's Left To Do
 
 ### Push 12: Dietary Tags
-- [ ] Add dietary tags to Recipe model (Vegan, Gluten-Free, Keto, Halal, etc.)
-- [ ] Dietary tag picker on AddRecipeScreen
-- [ ] Filter recipes by dietary tags on HomeScreen/SearchScreen
+- [x] Add dietary tags to Recipe model (Vegan, Gluten-Free, Keto, Halal, etc.)
+- [x] Dietary tag picker on AddRecipeScreen
+- [x] Filter recipes by dietary tags on HomeScreen/SearchScreen
+- [x] Unified filter sheet (category + dietary tags + sort) on Home and Materials screens
+- [x] Fix: filter icon alignment when badge is visible
 
 ### Push 13: Shopping List
 - [ ] **Model:** ShoppingList, ShoppingItem (name, quantity, unit, checked)

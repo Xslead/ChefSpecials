@@ -243,6 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Container(
                       width: 48,
                       height: 48,
+                      alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: _activeFilterCount > 0
                             ? AppTheme.primaryColor

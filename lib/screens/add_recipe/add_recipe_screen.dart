@@ -53,7 +53,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
+          SnackBar(content: Text(AppLocalizations.of(context)!.error)),
         );
       }
     }

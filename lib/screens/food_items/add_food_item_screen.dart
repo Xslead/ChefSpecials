@@ -109,7 +109,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
+          SnackBar(content: Text(AppLocalizations.of(context)!.error)),
         );
       }
     } finally {

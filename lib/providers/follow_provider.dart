@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import '../services/follow_service.dart';
 
 class FollowProvider extends ChangeNotifier {
-  final FollowService _service = FollowService();
+  final FollowService _service;
+
+  FollowProvider({FollowService? followService})
+      : _service = followService ?? FollowService();
 
   Set<String> _followingIds = {};
   String? _currentUserId;

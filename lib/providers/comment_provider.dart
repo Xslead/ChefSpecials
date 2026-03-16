@@ -4,7 +4,10 @@ import '../models/comment.dart';
 import '../services/comment_service.dart';
 
 class CommentProvider extends ChangeNotifier {
-  final CommentService _service = CommentService();
+  final CommentService _service;
+
+  CommentProvider({CommentService? commentService})
+      : _service = commentService ?? CommentService();
 
   List<Comment> _comments = [];
   StreamSubscription? _subscription;

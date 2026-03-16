@@ -4,7 +4,10 @@ import '../models/food_item.dart';
 import '../services/food_item_service.dart';
 
 class FoodItemProvider extends ChangeNotifier {
-  final FoodItemService _foodItemService = FoodItemService();
+  final FoodItemService _foodItemService;
+
+  FoodItemProvider({FoodItemService? foodItemService})
+      : _foodItemService = foodItemService ?? FoodItemService();
 
   List<FoodItem> _foodItems = [];
   List<FoodItem> _searchResults = [];

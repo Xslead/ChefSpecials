@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/rating.dart';
 
 class RatingService {
-  final _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _db;
+
+  RatingService({FirebaseFirestore? firestore})
+      : _db = firestore ?? FirebaseFirestore.instance;
 
   String _docId(String recipeId, String userId) => '${recipeId}_$userId';
 

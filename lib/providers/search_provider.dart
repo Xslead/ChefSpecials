@@ -3,7 +3,10 @@ import '../models/recipe.dart';
 import '../services/recipe_service.dart';
 
 class SearchProvider extends ChangeNotifier {
-  final RecipeService _recipeService = RecipeService();
+  final RecipeService _recipeService;
+
+  SearchProvider({RecipeService? recipeService})
+      : _recipeService = recipeService ?? RecipeService();
 
   String _query = '';
   List<Recipe> _allRecipes = [];

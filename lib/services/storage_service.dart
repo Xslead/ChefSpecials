@@ -3,7 +3,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
 
 class StorageService {
-  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseStorage _storage;
+
+  StorageService({FirebaseStorage? storage})
+      : _storage = storage ?? FirebaseStorage.instance;
   final _uuid = const Uuid();
 
   Future<String> uploadRecipeImage(File file) async {

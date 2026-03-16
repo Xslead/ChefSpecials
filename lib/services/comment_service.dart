@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/comment.dart';
 
 class CommentService {
-  final _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _db;
+
+  CommentService({FirebaseFirestore? firestore})
+      : _db = firestore ?? FirebaseFirestore.instance;
 
   // Comments are stored as a subcollection: recipes/{recipeId}/comments
   // This avoids the need for a composite index on the flat collection.

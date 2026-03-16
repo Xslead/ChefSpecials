@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import '../services/favorite_service.dart';
 
 class FavoriteProvider extends ChangeNotifier {
-  final FavoriteService _favoriteService = FavoriteService();
+  final FavoriteService _favoriteService;
+
+  FavoriteProvider({FavoriteService? favoriteService})
+      : _favoriteService = favoriteService ?? FavoriteService();
 
   Set<String> _favoriteRecipeIds = {};
   StreamSubscription? _subscription;

@@ -7,7 +7,10 @@ import '../models/nutrition_goal.dart';
 import '../services/daily_tracker_service.dart';
 
 class DailyTrackerProvider extends ChangeNotifier {
-  final DailyTrackerService _service = DailyTrackerService();
+  final DailyTrackerService _service;
+
+  DailyTrackerProvider({DailyTrackerService? dailyTrackerService})
+      : _service = dailyTrackerService ?? DailyTrackerService();
 
   DailyLog? _dailyLog;
   NutritionGoal? _nutritionGoal;

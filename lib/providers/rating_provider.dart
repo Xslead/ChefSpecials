@@ -3,7 +3,10 @@ import '../models/rating.dart';
 import '../services/rating_service.dart';
 
 class RatingProvider extends ChangeNotifier {
-  final RatingService _service = RatingService();
+  final RatingService _service;
+
+  RatingProvider({RatingService? ratingService})
+      : _service = ratingService ?? RatingService();
 
   Rating? _userRating; // existing saved rating (null = never rated)
   int _displayStars = 0; // local selection shown in the star widget

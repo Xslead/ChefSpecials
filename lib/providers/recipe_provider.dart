@@ -4,7 +4,10 @@ import '../models/recipe.dart';
 import '../services/recipe_service.dart';
 
 class RecipeProvider extends ChangeNotifier {
-  final RecipeService _recipeService = RecipeService();
+  final RecipeService _recipeService;
+
+  RecipeProvider({RecipeService? recipeService})
+      : _recipeService = recipeService ?? RecipeService();
 
   List<Recipe> _recipes = [];
   String? _selectedCategory;

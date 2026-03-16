@@ -3,7 +3,10 @@ import '../models/daily_log.dart';
 import '../models/nutrition_goal.dart';
 
 class DailyTrackerService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
+
+  DailyTrackerService({FirebaseFirestore? firestore})
+      : _firestore = firestore ?? FirebaseFirestore.instance;
 
   CollectionReference<Map<String, dynamic>> get _logsRef =>
       _firestore.collection('daily_logs');

@@ -189,13 +189,19 @@
 - [x] Fix: filter icon alignment when badge is visible
 
 ### Push 13: Shopping List
-- [ ] **Model:** ShoppingList, ShoppingItem (name, quantity, unit, checked)
-- [ ] **Service:** ShoppingListService (Firestore CRUD)
-- [ ] **Provider:** ShoppingListProvider
-- [ ] **ShoppingListScreen** — view/manage grocery list with checkboxes
-- [ ] Auto-generate shopping list from a recipe's ingredients (button on RecipeDetailScreen)
-- [ ] Check off items as you shop
-- [ ] Clear completed items
+- [x] **Model:** ShoppingList, ShoppingItem (name, amount, unit, isChecked)
+- [x] **Service:** ShoppingListService (Firestore CRUD, toggle, clear checked, add items)
+- [x] **Provider:** ShoppingListProvider (stream subscription, all CRUD methods)
+- [x] **ShoppingListsScreen** — view all user's lists with progress circles, swipe-to-delete
+- [x] **ShoppingListDetailScreen** — check/uncheck items, strikethrough, clear checked, swipe-to-delete
+- [x] Auto-generate shopping list from recipe ingredients (button on RecipeDetailScreen)
+- [x] Bottom sheet: pick existing list or create new list from recipe detail
+- [x] Shopping cart icon on Home screen header for quick access
+- [x] Firestore security rules deployed (owner-only read/write)
+- [x] Firestore composite index deployed (userId + updatedAt)
+- [x] l10n: 13 new keys in EN + TR
+- [x] UI redesigned to match app design patterns (custom headers, shadows, adaptive colors)
+- **Status:** PUSHED ✅
 
 ### Push 14: Recipe Collections
 - [ ] **Model:** RecipeCollection (name, description, recipeIds, coverImage)
@@ -242,3 +248,115 @@
 - [ ] Widgets: StatsCard, UserListTile, AdminRecipeTile, CategoryEditDialog
 - [ ] Admin route guard
 - [ ] Firestore security rules
+
+### Push 20: Testing (Unit + Widget + Integration)
+
+#### Unit Tests (`test/`)
+- [ ] **Models:** Recipe, Ingredient, ShoppingList, ShoppingItem, FoodItem, DailyLog, MealEntry, NutritionGoal, UserModel, Rating, Comment, Favorite
+  - [ ] `fromMap()` / `toMap()` round-trip correctness
+  - [ ] Default values, null handling, edge cases
+- [ ] **Services (with mock Firestore):**
+  - [ ] RecipeService — CRUD, query by category, privacy filter
+  - [ ] FavoriteService — add/remove/check favorite
+  - [ ] ShoppingListService — create, toggle item, clear checked, remove item
+  - [ ] FoodItemService — CRUD, search
+  - [ ] DailyTrackerService — CRUD, date queries
+  - [ ] RatingService — add/update/average calculation
+  - [ ] CommentService — add/delete/stream
+  - [ ] FollowService — follow/unfollow/counts
+- [ ] **Providers (with mock services):**
+  - [ ] AuthProvider — login/logout state changes
+  - [ ] RecipeProvider — load, filter, sort
+  - [ ] FavoriteProvider — toggle, isFavorite check
+  - [ ] ShoppingListProvider — init, createList, toggleItem, clearChecked
+  - [ ] DailyTrackerProvider — load day, add/remove meal entries
+  - [ ] FoodItemProvider — load, search, filter
+  - [ ] RatingProvider / CommentProvider — state updates
+  - [ ] SearchProvider — query filtering logic
+- [ ] **Utils:**
+  - [ ] Validators (email, password, username)
+  - [ ] Date utils, image utils
+  - [ ] Nutrition calculation helpers
+
+#### Widget Tests (`test/widgets/`)
+- [ ] **Shared Widgets:**
+  - [ ] RecipeCard — renders title, image, rating, category, favorite icon
+  - [ ] FoodItemCard — renders name, brand, nutrition summary
+  - [ ] NutritionFactsTable — correct values and formatting
+  - [ ] GradientButton — renders label, responds to tap
+  - [ ] CountdownTimerWidget — start, pause, tick display
+  - [ ] CategoryFilterBar — renders chips, selection callback
+- [ ] **Screen Widgets:**
+  - [ ] LoginScreen — form validation, button states
+  - [ ] RegisterScreen — form validation, field requirements
+  - [ ] AddRecipeScreen — ingredient list, step list, image picker, form submission
+  - [ ] RecipeDetailScreen — displays recipe data, buttons render correctly
+  - [ ] ShoppingListsScreen — empty state, list rendering, FAB
+  - [ ] ShoppingListDetailScreen — checkbox toggle, swipe delete, clear checked
+  - [ ] DailyTrackerScreen — date picker, meal sections, nutrition summary
+  - [ ] ProfileScreen — user info display, stats, action buttons
+
+#### Integration Tests (`integration_test/`)
+- [ ] **Auth Flow:** Register → Login → Logout → Login again
+- [ ] **Recipe Flow:** Create recipe → View in home feed → Open detail → Start cooking mode → Complete
+- [ ] **Favorite Flow:** Browse recipes → Favorite a recipe → Check favorites screen → Unfavorite
+- [ ] **Shopping List Flow:** Open recipe → Add to shopping list → Open list → Check items → Clear checked
+- [ ] **Daily Tracker Flow:** Open tracker → Add food item → Add recipe → View nutrition summary → Set goals
+- [ ] **Search Flow:** Open search → Type query → View results → Open recipe from results
+- [ ] **Social Flow:** Search user → Follow → Check feed → Unfollow
+- [ ] **Profile Flow:** Edit profile → Change avatar → Update username → View public profile
+- [ ] **Navigation:** Bottom nav tab switching, deep link routes, back button behavior
+
+#### Test Infrastructure
+- [ ] Add `flutter_test`, `mockito`, `fake_cloud_firestore`, `integration_test` to dev_dependencies
+- [ ] Create mock classes for all services
+- [ ] Create test helpers (mock user, mock recipe, mock food item factories)
+- [ ] CI-ready: `flutter test` for unit+widget, `flutter test integration_test` for integration
+- [ ] Coverage target: ≥80% for models, services, providers
+
+### Push 21: Unit Converter + Recipe Scaling
+- [ ] **Measurement Converter:** tap any ingredient to convert between metric/imperial (g↔oz, mL↔cups, °C↔°F)
+- [ ] Converter utility class with all common cooking unit conversions
+- [ ] Inline conversion popup/bottom sheet on ingredient tap
+- [ ] **Recipe Scaling:** multiply/divide ingredient quantities (e.g. serves 2 → serves 6)
+- [ ] Serving size selector on RecipeDetailScreen
+- [ ] Auto-recalculate all ingredient amounts and nutrition totals
+
+### Push 22: Onboarding Flow
+- [ ] First-launch walkthrough (3–4 pages) showing key app features
+- [ ] Dietary preference setup during onboarding (Vegan, Keto, Halal, etc.)
+- [ ] Save preferences to user profile
+- [ ] Skip option for returning users
+- [ ] SharedPreferences flag to show only once
+
+### Push 23: Recipe Photo Gallery
+- [ ] Multiple photos per recipe (gallery instead of single cover image)
+- [ ] Photo carousel on RecipeDetailScreen
+- [ ] Step-by-step photos in cooking mode (optional photo per step)
+- [ ] Image picker for multiple photos on AddRecipeScreen
+
+### Push 24: Cooking History ("Cooked It" Log)
+- [ ] **Model:** CookingLog (recipeId, userId, cookedAt, rating, notes)
+- [ ] **Service:** CookingLogService (Firestore CRUD)
+- [ ] "I Cooked This" button on RecipeDetailScreen / end of cooking mode
+- [ ] Cooking history screen — list of cooked recipes with dates
+- [ ] Integration with daily tracker (auto-log nutrition when marking as cooked)
+
+### Push 25: Seasonal & Trending Recipes
+- [ ] Trending section on HomeScreen (most favorited/rated this week)
+- [ ] Seasonal recipe suggestions based on current month
+- [ ] "Popular Now" badge on recipe cards
+- [ ] Algorithm: weighted score from favorites + ratings + recency
+
+### Push 26: Ingredient Substitution Suggestions
+- [ ] Substitution database (e.g. butter → coconut oil, milk → oat milk)
+- [ ] "Suggest Substitute" button on ingredient items
+- [ ] Filter substitutions by dietary tag (vegan, dairy-free, etc.)
+- [ ] Community-sourced substitutions (users can suggest)
+
+### Push 27: Achievement Badges & Gamification
+- [ ] **Model:** UserAchievement (badgeId, unlockedAt)
+- [ ] Badge definitions: First Recipe, 7-Day Streak, 50 Recipes Cooked, Master Chef, etc.
+- [ ] Achievement unlock notifications
+- [ ] Badges displayed on profile screen
+- [ ] Streak tracking (consecutive days logged/cooked)

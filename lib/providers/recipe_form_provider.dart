@@ -7,7 +7,10 @@ import '../models/food_item.dart';
 import '../services/storage_service.dart';
 
 class RecipeFormProvider extends ChangeNotifier {
-  final StorageService _storageService = StorageService();
+  final StorageService _storageService;
+
+  RecipeFormProvider({StorageService? storageService})
+      : _storageService = storageService ?? StorageService();
 
   String title = '';
   String description = '';

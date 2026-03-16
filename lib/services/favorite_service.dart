@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chef_specials/models/favorite.dart';
 
 class FavoriteService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
+
+  FavoriteService({FirebaseFirestore? firestore})
+      : _firestore = firestore ?? FirebaseFirestore.instance;
   final String _collection = 'favorites';
 
   Future<void> toggleFavorite(String userId, String recipeId) async {

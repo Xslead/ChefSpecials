@@ -4,7 +4,10 @@ import '../models/shopping_list.dart';
 import '../services/shopping_list_service.dart';
 
 class ShoppingListProvider extends ChangeNotifier {
-  final ShoppingListService _service = ShoppingListService();
+  final ShoppingListService _service;
+
+  ShoppingListProvider({ShoppingListService? shoppingListService})
+      : _service = shoppingListService ?? ShoppingListService();
 
   List<ShoppingList> _lists = [];
   StreamSubscription? _subscription;

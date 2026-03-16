@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/shopping_list.dart';
 
 class ShoppingListService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
+
+  ShoppingListService({FirebaseFirestore? firestore})
+      : _firestore = firestore ?? FirebaseFirestore.instance;
   final String _collection = 'shopping_lists';
 
   Future<String> createShoppingList(ShoppingList list) async {

@@ -459,25 +459,40 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
             color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
         boxShadow: [AppTheme.shadowOf(context)],
       ),
-      child: Column(
+      child: Stack(
         children: [
-          Icon(icon, color: color, size: 22),
-          const SizedBox(height: 6),
-          Text(
-            '$count',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w900,
-              color: AppTheme.textPrimaryOf(context),
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Icon(
+              Icons.arrow_forward_ios,
+              size: 10,
+              color: AppTheme.textTertiaryOf(context).withValues(alpha: 0.4),
             ),
           ),
-          Text(
-            label.toUpperCase(),
-            style: TextStyle(
-              fontSize: 9,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textTertiaryOf(context),
-              letterSpacing: 0.5,
+          Center(
+            child: Column(
+              children: [
+                Icon(icon, color: color, size: 22),
+                const SizedBox(height: 6),
+                Text(
+                  '$count',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    color: AppTheme.textPrimaryOf(context),
+                  ),
+                ),
+                Text(
+                  label.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.textTertiaryOf(context),
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

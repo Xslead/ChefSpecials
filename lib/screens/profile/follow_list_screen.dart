@@ -129,6 +129,19 @@ class _FollowListScreenState extends State<FollowListScreen>
                     color: AppTheme.textPrimaryOf(context),
                   ),
                   const SizedBox(width: 4),
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.people,
+                      color: AppTheme.primaryColor,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
                   Text(
                     l10n.profile,
                     style: const TextStyle(
@@ -151,8 +164,26 @@ class _FollowListScreenState extends State<FollowListScreen>
                 fontWeight: FontWeight.w600,
               ),
               tabs: [
-                Tab(text: l10n.followers),
-                Tab(text: l10n.following),
+                Tab(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.people_outline, size: 16),
+                      const SizedBox(width: 6),
+                      Text(l10n.followers),
+                    ],
+                  ),
+                ),
+                Tab(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.person_add_outlined, size: 16),
+                      const SizedBox(width: 6),
+                      Text(l10n.following),
+                    ],
+                  ),
+                ),
               ],
             ),
           ],

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers/food_item_provider.dart';
+import '../../widgets/empty_state.dart';
 import 'widgets/food_item_card.dart';
 
 const List<String> _foodItemCategories = [
@@ -123,11 +124,10 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                     children: [
                       Text(
                         l10n.materials,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: -0.3,
-                        ),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: -0.3,
+                            ),
                       ),
                       Text(
                         l10n.itemCount(provider.foodItems.length),
@@ -333,25 +333,9 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
         : provider.foodItems;
 
     if (items.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.inventory_2_outlined,
-              size: 64,
-              color: AppTheme.neutralLightOf(context),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              _isSearching ? l10n.noResults : l10n.noFoodItems,
-              style: TextStyle(
-                fontSize: 16,
-                color: AppTheme.textTertiaryOf(context),
-              ),
-            ),
-          ],
-        ),
+      return EmptyState(
+        icon: Icons.inventory_2_outlined,
+        title: _isSearching ? l10n.noResults : l10n.noFoodItems,
       );
     }
 
@@ -411,9 +395,9 @@ class _FilterSheetBody extends StatelessWidget {
           // Title row
           Row(
             children: [
-              const Text(
-                'Filters',
-                style: TextStyle(
+              Text(
+                l10n.filters,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -425,9 +409,9 @@ class _FilterSheetBody extends StatelessWidget {
                     provider.clearFilters();
                     Navigator.pop(context);
                   },
-                  child: const Text(
-                    'Clear all',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.clearAll,
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: AppTheme.primaryColor,

@@ -11,6 +11,7 @@ import '../../providers/favorite_provider.dart';
 import '../../providers/follow_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../providers/theme_provider.dart';
+import '../../widgets/empty_state.dart';
 import '../home/widgets/privacy_badge.dart';
 import '../home/widgets/recipe_card.dart';
 
@@ -94,7 +95,7 @@ class ProfileScreen extends StatelessWidget {
                           child: _buildStatCard(
                             context: context,
                             icon: Icons.person_add_outlined,
-                            color: const Color(0xFFF59E0B),
+                            color: AppTheme.starColor,
                             count: user.followingCount,
                             label: l10n.following,
                           ),
@@ -111,10 +112,9 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       Text(
                         l10n.myRecipes,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(width: 8),
                       Container(
@@ -178,26 +178,11 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   )
                 else
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 40),
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.menu_book,
-                            size: 64,
-                            color: AppTheme.neutralLight,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            l10n.noRecipes,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: AppTheme.textTertiary,
-                            ),
-                          ),
-                        ],
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: EmptyState(
+                      icon: Icons.menu_book,
+                      title: l10n.noRecipes,
                     ),
                   ),
               ],
@@ -276,7 +261,7 @@ class ProfileScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(l10n.logout),
         content: Text(l10n.logoutConfirm),
         actions: [

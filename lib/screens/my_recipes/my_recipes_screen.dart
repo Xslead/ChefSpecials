@@ -7,6 +7,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../models/recipe.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_provider.dart';
+import '../../widgets/empty_state.dart';
 import '../home/widgets/recipe_card.dart';
 import '../home/widgets/privacy_badge.dart';
 
@@ -129,25 +130,9 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
           _buildHeader(context, l10n, userRecipes.length, isOwnProfile),
           Expanded(
             child: displayedRecipes.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.menu_book,
-                          size: 64,
-                          color: AppTheme.neutralLightOf(context),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          l10n.noRecipes,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: AppTheme.textTertiaryOf(context),
-                          ),
-                        ),
-                      ],
-                    ),
+                ? EmptyState(
+                    icon: Icons.menu_book,
+                    title: l10n.noRecipes,
                   )
                 : ListView.builder(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
@@ -227,11 +212,10 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                     children: [
                       Text(
                         isOwnProfile ? l10n.myRecipes : l10n.recipes,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: -0.3,
-                        ),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: -0.3,
+                            ),
                       ),
                       Text(
                         l10n.recipeCount(totalCount),

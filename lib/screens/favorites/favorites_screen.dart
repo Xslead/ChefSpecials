@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers/favorite_provider.dart';
 import '../../providers/recipe_provider.dart';
+import '../../widgets/empty_state.dart';
+import '../../widgets/screen_header.dart';
 import '../home/widgets/recipe_card.dart';
 
 class FavoritesScreen extends StatelessWidget {
@@ -25,111 +26,38 @@ class FavoritesScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          // Custom header
-          Container(
-            decoration: BoxDecoration(
-              color: AppTheme.surfaceOf(context),
-              border: Border(
-                bottom: BorderSide(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
-              ),
-            ),
-            child: SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(4, 8, 16, 8),
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () => context.pop(),
-                      color: AppTheme.textPrimaryOf(context),
+          ScreenHeader(
+            title: l10n.favorites,
+            icon: Icons.favorite,
+            iconColor: AppTheme.errorColor,
+            trailing: [
+              if (favoriteRecipes.isNotEmpty)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppTheme.errorColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    '${favoriteRecipes.length}',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.errorColor,
                     ),
-                    const SizedBox(width: 4),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEF4444).withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(
-                        Icons.favorite,
-                        color: Color(0xFFEF4444),
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      l10n.favorites,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -0.3,
-                      ),
-                    ),
-                    const Spacer(),
-                    if (favoriteRecipes.isNotEmpty)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFEF4444)
-                              .withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          '${favoriteRecipes.length}',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFFEF4444),
-                          ),
-                        ),
-                      ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
+            ],
           ),
 
           // Body
           Expanded(
             child: favoriteRecipes.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 72,
-                          height: 72,
-                          decoration: BoxDecoration(
-                            color: AppTheme.neutralSoftOf(context),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Icon(
-                            Icons.favorite_border,
-                            size: 36,
-                            color: AppTheme.neutralLightOf(context),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          l10n.noFavorites,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.textSecondaryOf(context),
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          'Tap the heart icon on recipes to save them here',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: AppTheme.textTertiaryOf(context),
-                          ),
-                        ),
-                      ],
-                    ),
+                ? EmptyState(
+                    icon: Icons.favorite_border,
+                    title: l10n.noFavorites,
+                    subtitle: l10n.favoritesEmptySubtitle,
                   )
                 : ListView.builder(
                     padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),

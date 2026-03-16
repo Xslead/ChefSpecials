@@ -206,5 +206,16 @@
     }
   },
   "emptyCollection": "Bu koleksiyonda tarif yok",
-  "emptyCollectionSubtitle": "Tarif detay ekranindan tarif ekleyin"
+  "emptyCollectionSubtitle": "Tarif detay ekranindan tarif ekleyin",
+  "filters": "Filtreler",
+  "clearAll": "Hepsini temizle",
+  "applyFilters": "Filtreleri Uygula",
+  "applyFiltersCount": "Filtreleri Uygula ({count})",
+  "@applyFiltersCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "favoritesEmptySubtitle": "Tariflerdeki kalp ikonuna dokunarak buraya kaydedin",
+  "shoppingListEmptySubtitle": "Baslamak icin herhangi bir tariften malzeme ekleyin"
 }

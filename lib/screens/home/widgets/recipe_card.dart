@@ -44,7 +44,7 @@ class _RecipeCardState extends State<RecipeCard> {
         child: Container(
           decoration: BoxDecoration(
             color: AppTheme.surfaceOf(context),
-            borderRadius: BorderRadius.circular(22),
+            borderRadius: BorderRadius.circular(AppTheme.radiusL),
             border: Border.all(
               color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
             ),
@@ -358,7 +358,7 @@ class _RecipeCardState extends State<RecipeCard> {
           child: Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: const Color(0xFFFFFFFF).withValues(alpha: 0.2),
+              color: AppTheme.glassWhite.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -376,14 +376,14 @@ class _RecipeCardState extends State<RecipeCard> {
     final label = _localizeCategory(recipe.category, l10n);
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(AppTheme.radiusS),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
-            color: const Color(0xFFFFFFFF).withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(8),
+            color: AppTheme.glassWhite.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(AppTheme.radiusS),
           ),
           child: Text(
             label.toUpperCase(),

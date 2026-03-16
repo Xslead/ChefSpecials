@@ -562,4 +562,26 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get emptyCollectionSubtitle =>
       'Add recipes from the recipe detail screen';
+
+  @override
+  String get filters => 'Filters';
+
+  @override
+  String get clearAll => 'Clear all';
+
+  @override
+  String get applyFilters => 'Apply Filters';
+
+  @override
+  String applyFiltersCount(int count) {
+    return 'Apply Filters ($count)';
+  }
+
+  @override
+  String get favoritesEmptySubtitle =>
+      'Tap the heart icon on recipes to save them here';
+
+  @override
+  String get shoppingListEmptySubtitle =>
+      'Add ingredients from any recipe to get started';
 }

@@ -2,6 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
+  // ─── Spacing scale ───
+  static const double spacingXS = 4;
+  static const double spacingS = 8;
+  static const double spacingM = 12;
+  static const double spacingL = 16;
+  static const double spacingXL = 24;
+  static const double spacingXXL = 32;
+
+  // ─── Border radius scale ───
+  static const double radiusS = 10;
+  static const double radiusM = 14;
+  static const double radiusL = 18;
+  static const double radiusXL = 24;
+
   // ─── Primary palette ───
   static const Color primaryColor = Color(0xFF0EA5E9);
   static const Color primaryLight = Color(0xFF38BDF8);
@@ -38,6 +52,31 @@ class AppTheme {
   static const Color secondaryColor = Color(0xFF06B6D4);
   static const Color errorColor = Color(0xFFEF4444);
   static const Color starColor = Color(0xFFF59E0B);
+
+  // ─── Macro nutrient colors ───
+  static const Color proteinLight = Color(0xFFE0F2FE);
+  static const Color proteinDark = Color(0xFF0C4A6E);
+  static const Color proteinBorderLight = Color(0xFFBAE6FD);
+  static const Color proteinBorderDark = Color(0xFF075985);
+
+  static const Color carbsLight = Color(0xFFFEF3C7);
+  static const Color carbsDark = Color(0xFF78350F);
+  static const Color carbsBorderLight = Color(0xFFFDE68A);
+  static const Color carbsBorderDark = Color(0xFF92400E);
+
+  static const Color fatLight = Color(0xFFD1FAE5);
+  static const Color fatDark = Color(0xFF064E3B);
+  static const Color fatBorderLight = Color(0xFFA7F3D0);
+  static const Color fatBorderDark = Color(0xFF065F46);
+
+  // ─── Meal type colors ───
+  static const Color breakfastColor = Color(0xFFF59E0B);
+  static const Color lunchColor = Color(0xFF0EA5E9);
+  static const Color dinnerColor = Color(0xFF10B981);
+  static const Color snackColor = Color(0xFF8B5CF6);
+
+  // ─── Glass morphism ───
+  static const Color glassWhite = Color(0xFFFFFFFF);
 
   // ─── Gradients (kept for backward compat, now teal) ───
   static const LinearGradient primaryGradient = LinearGradient(
@@ -112,6 +151,20 @@ class AppTheme {
       Theme.of(context).brightness == Brightness.dark
           ? darkShadow()
           : warmShadowLight();
+
+  // ─── Macro nutrient adaptive helpers ───
+  static Color proteinTintOf(BuildContext context) =>
+      adaptive(context, light: proteinLight, dark: proteinDark);
+  static Color proteinBorderOf(BuildContext context) =>
+      adaptive(context, light: proteinBorderLight, dark: proteinBorderDark);
+  static Color carbsTintOf(BuildContext context) =>
+      adaptive(context, light: carbsLight, dark: carbsDark);
+  static Color carbsBorderOf(BuildContext context) =>
+      adaptive(context, light: carbsBorderLight, dark: carbsBorderDark);
+  static Color fatTintOf(BuildContext context) =>
+      adaptive(context, light: fatLight, dark: fatDark);
+  static Color fatBorderOf(BuildContext context) =>
+      adaptive(context, light: fatBorderLight, dark: fatBorderDark);
 
   // ─── Light Theme ───
   static ThemeData get lightTheme {

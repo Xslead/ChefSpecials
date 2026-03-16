@@ -6,6 +6,9 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../models/shopping_list.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/shopping_list_provider.dart';
+import '../../widgets/empty_state.dart';
+import '../../widgets/screen_header.dart';
+import '../../widgets/styled_dialog.dart';
 
 class ShoppingListsScreen extends StatefulWidget {
   const ShoppingListsScreen({super.key});
@@ -28,30 +31,12 @@ class _ShoppingListsScreenState extends State<ShoppingListsScreen> {
 
   Future<void> _createNewList() async {
     final l10n = AppLocalizations.of(context)!;
-    final name = await showDialog<String>(
+    final name = await StyledDialog.showInput(
       context: context,
-      builder: (ctx) {
-        final controller = TextEditingController();
-        return AlertDialog(
-          title: Text(l10n.newList),
-          content: TextField(
-            controller: controller,
-            autofocus: true,
-            decoration: InputDecoration(hintText: l10n.listName),
-            textCapitalization: TextCapitalization.sentences,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: Text(l10n.cancel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, controller.text.trim()),
-              child: Text(l10n.save),
-            ),
-          ],
-        );
-      },
+      title: l10n.newList,
+      hintText: l10n.listName,
+      cancelText: l10n.cancel,
+      confirmText: l10n.save,
     );
     if (name != null && name.isNotEmpty && mounted) {
       await context.read<ShoppingListProvider>().createList(name);
@@ -60,27 +45,37 @@ class _ShoppingListsScreenState extends State<ShoppingListsScreen> {
 
   Future<void> _deleteList(ShoppingList list) async {
     final l10n = AppLocalizations.of(context)!;
-    final confirmed = await showDialog<bool>(
+    final confirmed = await StyledDialog.show<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.deleteList),
-        content: Text(l10n.deleteListConfirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(l10n.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            style: TextButton.styleFrom(foregroundColor: AppTheme.errorColor),
-            child: Text(l10n.delete),
-          ),
-        ],
-      ),
+      title: l10n.deleteList,
+      content: Text(l10n.deleteListConfirm),
+      cancelText: l10n.cancel,
+      confirmText: l10n.delete,
+      isDestructive: true,
+      onCancel: () => Navigator.pop(context, false),
+      onConfirm: () => Navigator.pop(context, true),
     );
     if (confirmed == true && mounted) {
       await context.read<ShoppingListProvider>().deleteList(list.id!);
     }
+  }
+
+  Widget _buildCountBadge(int count) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppTheme.primaryColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        '$count',
+        style: const TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w700,
+          color: AppTheme.primaryColor,
+        ),
+      ),
+    );
   }
 
   @override
@@ -91,12 +86,26 @@ class _ShoppingListsScreenState extends State<ShoppingListsScreen> {
     return Scaffold(
       body: Column(
         children: [
-          _buildHeader(context, l10n, provider),
+          ScreenHeader(
+            title: l10n.shoppingLists,
+            icon: Icons.shopping_cart_outlined,
+            subtitle: provider.lists.isNotEmpty
+                ? l10n.itemCount(provider.lists.length)
+                : null,
+            trailing: [
+              if (provider.lists.isNotEmpty)
+                _buildCountBadge(provider.lists.length),
+            ],
+          ),
           Expanded(
             child: provider.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : provider.lists.isEmpty
-                    ? _buildEmptyState(l10n)
+                    ? EmptyState(
+                        icon: Icons.shopping_cart_outlined,
+                        title: l10n.noShoppingLists,
+                        subtitle: l10n.shoppingListEmptySubtitle,
+                      )
                     : _buildListView(provider, l10n),
           ),
         ],
@@ -109,131 +118,6 @@ class _ShoppingListsScreenState extends State<ShoppingListsScreen> {
         elevation: 2,
         shape: const CircleBorder(),
         child: const Icon(Icons.add, size: 28),
-      ),
-    );
-  }
-
-  Widget _buildHeader(
-    BuildContext context,
-    AppLocalizations l10n,
-    ShoppingListProvider provider,
-  ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceOf(context),
-        border: Border(
-          bottom: BorderSide(
-            color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
-          ),
-        ),
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(4, 8, 16, 8),
-          child: Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => context.pop(),
-                color: AppTheme.textPrimaryOf(context),
-              ),
-              const SizedBox(width: 4),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(
-                  Icons.shopping_cart_outlined,
-                  color: AppTheme.primaryColor,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.shoppingLists,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -0.3,
-                    ),
-                  ),
-                  if (provider.lists.isNotEmpty)
-                    Text(
-                      l10n.itemCount(provider.lists.length),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: AppTheme.textTertiaryOf(context),
-                      ),
-                    ),
-                ],
-              ),
-              const Spacer(),
-              if (provider.lists.isNotEmpty)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    '${provider.lists.length}',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.primaryColor,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(AppLocalizations l10n) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 72,
-            height: 72,
-            decoration: BoxDecoration(
-              color: AppTheme.neutralSoftOf(context),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Icon(
-              Icons.shopping_cart_outlined,
-              size: 36,
-              color: AppTheme.neutralLightOf(context),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            l10n.noShoppingLists,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textSecondaryOf(context),
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'Add ingredients from any recipe to get started',
-            style: TextStyle(
-              fontSize: 13,
-              color: AppTheme.textTertiaryOf(context),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -258,7 +142,7 @@ class _ShoppingListsScreenState extends State<ShoppingListsScreen> {
               padding: const EdgeInsets.only(right: 24),
               decoration: BoxDecoration(
                 color: AppTheme.errorColor,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppTheme.radiusL),
               ),
               child: const Icon(Icons.delete_outline, color: Colors.white),
             ),
@@ -272,7 +156,7 @@ class _ShoppingListsScreenState extends State<ShoppingListsScreen> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: AppTheme.surfaceOf(context),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusL),
                   border: Border.all(
                     color:
                         AppTheme.neutralLightOf(context).withValues(alpha: 0.5),

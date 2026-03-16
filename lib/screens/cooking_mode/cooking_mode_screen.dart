@@ -52,7 +52,7 @@ class _CookingModeScreenState extends State<CookingModeScreen> {
           child: Container(
             height: 4,
             width: double.infinity,
-            color: AppTheme.warmBeige,
+            color: AppTheme.neutralLightOf(context),
             alignment: Alignment.centerLeft,
             child: FractionallySizedBox(
               widthFactor: steps.isEmpty ? 0 : (_currentPage + 1) / steps.length,

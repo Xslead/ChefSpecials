@@ -6,6 +6,7 @@ import '../../config/theme.dart';
 import '../../config/constants.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers/search_provider.dart';
+import '../../widgets/empty_state.dart';
 import 'widgets/search_result_tile.dart';
 
 class SearchScreen extends StatelessWidget {
@@ -72,9 +73,12 @@ class _SearchBodyState extends State<_SearchBody> {
             child: searchProvider.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : searchProvider.query.isEmpty
-                    ? _buildInitialState(l10n, searchProvider)
+                    ? _buildInitialState(context, l10n, searchProvider)
                     : searchProvider.results.isEmpty
-                        ? _buildEmptyState(l10n)
+                        ? EmptyState(
+                            icon: Icons.search_off,
+                            title: l10n.noRecipes,
+                          )
                         : ListView.builder(
                             padding: const EdgeInsets.only(top: 8, bottom: 100),
                             itemCount: searchProvider.results.length,
@@ -113,12 +117,12 @@ class _SearchBodyState extends State<_SearchBody> {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: AppTheme.neutralLight,
+                        color: AppTheme.neutralLightOf(context),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.arrow_back,
-                        color: AppTheme.textSecondary,
+                        color: AppTheme.textSecondaryOf(context),
                         size: 20,
                       ),
                     ),
@@ -128,7 +132,7 @@ class _SearchBodyState extends State<_SearchBody> {
                     child: Container(
                       height: 48,
                       decoration: BoxDecoration(
-                        color: AppTheme.neutralLight,
+                        color: AppTheme.neutralLightOf(context),
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: TextField(
@@ -140,19 +144,19 @@ class _SearchBodyState extends State<_SearchBody> {
                         },
                         decoration: InputDecoration(
                           hintText: l10n.searchHint,
-                          hintStyle: const TextStyle(
-                            color: AppTheme.textTertiary,
+                          hintStyle: TextStyle(
+                            color: AppTheme.textTertiaryOf(context),
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
-                          prefixIcon: const Icon(
+                          prefixIcon: Icon(
                             Icons.search,
-                            color: AppTheme.textTertiary,
+                            color: AppTheme.textTertiaryOf(context),
                             size: 22,
                           ),
                           suffixIcon: _controller.text.isNotEmpty
                               ? IconButton(
-                                  icon: const Icon(Icons.clear, color: AppTheme.textTertiary, size: 20),
+                                  icon: Icon(Icons.clear, color: AppTheme.textTertiaryOf(context), size: 20),
                                   onPressed: () {
                                     _controller.clear();
                                     setState(() {});
@@ -175,7 +179,7 @@ class _SearchBodyState extends State<_SearchBody> {
     );
   }
 
-  Widget _buildInitialState(AppLocalizations l10n, SearchProvider searchProvider) {
+  Widget _buildInitialState(BuildContext context, AppLocalizations l10n, SearchProvider searchProvider) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -183,11 +187,7 @@ class _SearchBodyState extends State<_SearchBody> {
         children: [
           Text(
             l10n.category,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              letterSpacing: -0.2,
-            ),
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 12),
           Wrap(
@@ -203,43 +203,20 @@ class _SearchBodyState extends State<_SearchBody> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   decoration: BoxDecoration(
-                    color: AppTheme.neutralLight,
+                    color: AppTheme.neutralLightOf(context),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: Text(
                     _localizeCategory(category, l10n),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.textSecondaryOf(context),
                     ),
                   ),
                 ),
               );
             }).toList(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(AppLocalizations l10n) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.search_off,
-            size: 64,
-            color: AppTheme.neutralLight,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            l10n.noRecipes,
-            style: const TextStyle(
-              fontSize: 16,
-              color: AppTheme.textTertiary,
-            ),
           ),
         ],
       ),

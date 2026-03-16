@@ -9,6 +9,7 @@ import '../../models/recipe.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_form_provider.dart';
 import '../../providers/recipe_provider.dart';
+import '../../widgets/screen_header.dart';
 import '../add_recipe/widgets/image_picker_tile.dart';
 import '../add_recipe/widgets/ingredient_input_list.dart';
 import '../add_recipe/widgets/step_input_list.dart';
@@ -70,69 +71,28 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
     return Scaffold(
       body: Column(
         children: [
-          // Header
-          Container(
-            decoration: BoxDecoration(
-              color: AppTheme.surfaceOf(context),
-              border: Border(
-                bottom: BorderSide(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
+          ScreenHeader(
+            title: 'Edit Recipe',
+            icon: Icons.edit_outlined,
+            trailing: [
+              TextButton(
+                onPressed: formProvider.isSubmitting ? null : _submit,
+                child: formProvider.isSubmitting
+                    ? const SizedBox(
+                        height: 18,
+                        width: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(
+                        l10n.save,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.primaryColor,
+                        ),
+                      ),
               ),
-            ),
-            child: SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(4, 8, 8, 8),
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () => context.pop(),
-                      color: AppTheme.textPrimaryOf(context),
-                    ),
-                    const SizedBox(width: 4),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(
-                        Icons.edit_outlined,
-                        color: AppTheme.primaryColor,
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    const Text(
-                      'Edit Recipe',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -0.3,
-                      ),
-                    ),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: formProvider.isSubmitting ? null : _submit,
-                      child: formProvider.isSubmitting
-                          ? const SizedBox(
-                              height: 18,
-                              width: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : Text(
-                              l10n.save,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.primaryColor,
-                              ),
-                            ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            ],
           ),
           // Body
           Expanded(
@@ -266,7 +226,7 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
                         child: _buildCompactCard(
                           context: context,
                           icon: Icons.timer_outlined,
-                          color: const Color(0xFFF59E0B),
+                          color: AppTheme.starColor,
                           label: l10n.prepTime,
                           child: TextFormField(
                             initialValue:
@@ -276,7 +236,7 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
-                              color: Color(0xFFF59E0B),
+                              color: AppTheme.starColor,
                             ),
                             decoration: _compactInputDecoration(context),
                             onChanged: (v) {
@@ -291,7 +251,7 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
                         child: _buildCompactCard(
                           context: context,
                           icon: Icons.local_fire_department,
-                          color: const Color(0xFFEF4444),
+                          color: AppTheme.errorColor,
                           label: l10n.cookTime,
                           child: TextFormField(
                             initialValue:
@@ -301,7 +261,7 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w900,
-                              color: Color(0xFFEF4444),
+                              color: AppTheme.errorColor,
                             ),
                             decoration: _compactInputDecoration(context),
                             onChanged: (v) {
@@ -534,14 +494,14 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
                 l10n.carbs,
                 '${formProvider.carbsGrams ?? 0}',
                 l10n.gram,
-                const Color(0xFFF59E0B),
+                AppTheme.starColor,
                 context,
               ),
               _buildNutritionStat(
                 l10n.fat,
                 '${formProvider.fatGrams ?? 0}',
                 l10n.gram,
-                const Color(0xFFEF4444),
+                AppTheme.errorColor,
                 context,
               ),
             ],

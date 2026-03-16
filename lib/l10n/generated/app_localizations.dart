@@ -1159,6 +1159,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add recipes from the recipe detail screen'**
   String get emptyCollectionSubtitle;
+
+  /// No description provided for @filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filters;
+
+  /// No description provided for @clearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all'**
+  String get clearAll;
+
+  /// No description provided for @applyFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Filters'**
+  String get applyFilters;
+
+  /// No description provided for @applyFiltersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Filters ({count})'**
+  String applyFiltersCount(int count);
+
+  /// No description provided for @favoritesEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the heart icon on recipes to save them here'**
+  String get favoritesEmptySubtitle;
+
+  /// No description provided for @shoppingListEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add ingredients from any recipe to get started'**
+  String get shoppingListEmptySubtitle;
 }
 
 class _AppLocalizationsDelegate

@@ -33,13 +33,13 @@ class MealSectionCard extends StatelessWidget {
   Color _colorForMealType(MealType type) {
     switch (type) {
       case MealType.breakfast:
-        return const Color(0xFFF59E0B);
+        return AppTheme.breakfastColor;
       case MealType.lunch:
-        return const Color(0xFF0EA5E9);
+        return AppTheme.lunchColor;
       case MealType.dinner:
-        return const Color(0xFF10B981);
+        return AppTheme.dinnerColor;
       case MealType.snack:
-        return const Color(0xFF8B5CF6);
+        return AppTheme.snackColor;
     }
   }
 

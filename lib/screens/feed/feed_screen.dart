@@ -13,6 +13,8 @@ import '../../providers/auth_provider.dart';
 import '../../providers/follow_provider.dart';
 import '../../services/recipe_service.dart';
 import '../../services/user_service.dart';
+import '../../widgets/empty_state.dart';
+import '../../widgets/loading_state.dart';
 import '../home/widgets/recipe_card.dart';
 
 class FeedScreen extends StatefulWidget {
@@ -225,10 +227,10 @@ class _FeedScreenState extends State<FeedScreen> {
               const SizedBox(height: 12),
               // Search bar
               Container(
-                height: 44,
+                height: 48,
                 decoration: BoxDecoration(
                   color: AppTheme.neutralLightOf(context),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusM),
                 ),
                 child: Row(
                   children: [
@@ -281,10 +283,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
   Widget _buildBody(BuildContext context, AppLocalizations l10n) {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(
-            color: AppTheme.primaryColor, strokeWidth: 2),
-      );
+      return const LoadingState();
     }
 
     // When searching, show user results + recipe filter
@@ -293,56 +292,19 @@ class _FeedScreenState extends State<FeedScreen> {
     }
 
     if (_followingIds.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.people_outline,
-                  size: 72, color: AppTheme.neutralLightOf(context)),
-              const SizedBox(height: 16),
-              Text(
-                l10n.noFollowing,
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textSecondaryOf(context),
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                l10n.noFollowingSubtitle,
-                style: TextStyle(
-                    fontSize: 13,
-                    color: AppTheme.textTertiaryOf(context),
-                    height: 1.4),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
+      return EmptyState(
+        icon: Icons.people_outline,
+        title: l10n.noFollowing,
+        subtitle: l10n.noFollowingSubtitle,
       );
     }
 
     final items = _displayedRecipes;
 
     if (items.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.dynamic_feed_outlined,
-                size: 64, color: AppTheme.neutralLightOf(context)),
-            const SizedBox(height: 16),
-            Text(
-              l10n.noFeedRecipes,
-              style: TextStyle(
-                  fontSize: 15, color: AppTheme.textTertiaryOf(context)),
-            ),
-          ],
-        ),
+      return EmptyState(
+        icon: Icons.dynamic_feed_outlined,
+        title: l10n.noFeedRecipes,
       );
     }
 
@@ -357,10 +319,7 @@ class _FeedScreenState extends State<FeedScreen> {
           if (index == items.length) {
             return const Padding(
               padding: EdgeInsets.symmetric(vertical: 16),
-              child: Center(
-                child: CircularProgressIndicator(
-                    color: AppTheme.primaryColor, strokeWidth: 2),
-              ),
+              child: LoadingState(inline: true),
             );
           }
           return Padding(

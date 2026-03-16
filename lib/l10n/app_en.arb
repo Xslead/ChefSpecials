@@ -206,5 +206,16 @@
     }
   },
   "emptyCollection": "No recipes in this collection",
-  "emptyCollectionSubtitle": "Add recipes from the recipe detail screen"
+  "emptyCollectionSubtitle": "Add recipes from the recipe detail screen",
+  "filters": "Filters",
+  "clearAll": "Clear all",
+  "applyFilters": "Apply Filters",
+  "applyFiltersCount": "Apply Filters ({count})",
+  "@applyFiltersCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "favoritesEmptySubtitle": "Tap the heart icon on recipes to save them here",
+  "shoppingListEmptySubtitle": "Add ingredients from any recipe to get started"
 }

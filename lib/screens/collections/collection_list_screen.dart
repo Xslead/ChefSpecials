@@ -10,6 +10,9 @@ import '../../models/recipe_collection.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/collection_provider.dart';
 import '../../providers/recipe_provider.dart';
+import '../../widgets/empty_state.dart';
+import '../../widgets/screen_header.dart';
+import '../../widgets/styled_dialog.dart';
 
 class CollectionListScreen extends StatefulWidget {
   const CollectionListScreen({super.key});
@@ -106,30 +109,39 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
 
   Future<void> _deleteCollection(RecipeCollection collection) async {
     final l10n = AppLocalizations.of(context)!;
-    final confirmed = await showDialog<bool>(
+    final confirmed = await StyledDialog.show<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(l10n.deleteCollection),
-        content: Text(l10n.deleteCollectionConfirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(l10n.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            style: TextButton.styleFrom(foregroundColor: AppTheme.errorColor),
-            child: Text(l10n.delete),
-          ),
-        ],
-      ),
+      title: l10n.deleteCollection,
+      content: Text(l10n.deleteCollectionConfirm),
+      cancelText: l10n.cancel,
+      confirmText: l10n.delete,
+      isDestructive: true,
+      onCancel: () => Navigator.pop(context, false),
+      onConfirm: () => Navigator.pop(context, true),
     );
     if (confirmed == true && mounted) {
       await context
           .read<CollectionProvider>()
           .deleteCollection(collection.id!);
     }
+  }
+
+  Widget _buildCountBadge(int count) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppTheme.primaryColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        '$count',
+        style: const TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w700,
+          color: AppTheme.primaryColor,
+        ),
+      ),
+    );
   }
 
   @override
@@ -140,12 +152,26 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
     return Scaffold(
       body: Column(
         children: [
-          _buildHeader(context, l10n, provider),
+          ScreenHeader(
+            title: l10n.collections,
+            icon: Icons.folder_outlined,
+            subtitle: provider.collections.isNotEmpty
+                ? l10n.itemCount(provider.collections.length)
+                : null,
+            trailing: [
+              if (provider.collections.isNotEmpty)
+                _buildCountBadge(provider.collections.length),
+            ],
+          ),
           Expanded(
             child: provider.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : provider.collections.isEmpty
-                    ? _buildEmptyState(l10n)
+                    ? EmptyState(
+                        icon: Icons.folder_outlined,
+                        title: l10n.noCollections,
+                        subtitle: l10n.emptyCollectionSubtitle,
+                      )
                     : _buildListView(provider, l10n),
           ),
         ],
@@ -158,136 +184,6 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
         elevation: 2,
         shape: const CircleBorder(),
         child: const Icon(Icons.add, size: 28),
-      ),
-    );
-  }
-
-  Widget _buildHeader(
-    BuildContext context,
-    AppLocalizations l10n,
-    CollectionProvider provider,
-  ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceOf(context),
-        border: Border(
-          bottom: BorderSide(
-            color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
-          ),
-        ),
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(4, 8, 16, 8),
-          child: Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => context.pop(),
-                color: AppTheme.textPrimaryOf(context),
-              ),
-              const SizedBox(width: 4),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(
-                  Icons.folder_outlined,
-                  color: AppTheme.primaryColor,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.collections,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -0.3,
-                    ),
-                  ),
-                  if (provider.collections.isNotEmpty)
-                    Text(
-                      l10n.itemCount(provider.collections.length),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: AppTheme.textTertiaryOf(context),
-                      ),
-                    ),
-                ],
-              ),
-              const Spacer(),
-              if (provider.collections.isNotEmpty)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    '${provider.collections.length}',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.primaryColor,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(AppLocalizations l10n) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: AppTheme.neutralSoftOf(context),
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Icon(
-                Icons.folder_outlined,
-                size: 40,
-                color: AppTheme.neutralLightOf(context),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              l10n.noCollections,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.textSecondaryOf(context),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.emptyCollectionSubtitle,
-              style: TextStyle(
-                fontSize: 13,
-                color: AppTheme.textTertiaryOf(context),
-                height: 1.4,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -332,7 +228,7 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
         padding: const EdgeInsets.only(right: 24),
         decoration: BoxDecoration(
           color: AppTheme.errorColor,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppTheme.radiusL),
         ),
         child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -357,7 +253,7 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: AppTheme.surfaceOf(context),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppTheme.radiusL),
             border: Border.all(
               color:
                   AppTheme.neutralLightOf(context).withValues(alpha: 0.5),

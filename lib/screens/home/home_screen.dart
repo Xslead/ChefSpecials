@@ -8,6 +8,7 @@ import '../../models/recipe.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../providers/favorite_provider.dart';
+import '../../widgets/empty_state.dart';
 import 'widgets/recipe_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -91,25 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
             child: recipeProvider.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : filteredRecipes.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.restaurant_menu,
-                              size: 64,
-                              color: AppTheme.neutralLightOf(context),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              l10n.noRecipes,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: AppTheme.textTertiaryOf(context),
-                              ),
-                            ),
-                          ],
-                        ),
+                    ? EmptyState(
+                        icon: Icons.restaurant_menu,
+                        title: l10n.noRecipes,
                       )
                     : ListView.builder(
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
@@ -338,9 +323,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      const Text(
-                        'Filters',
-                        style: TextStyle(
+                      Text(
+                        l10n.filters,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -360,9 +345,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             foregroundColor: AppTheme.errorColor,
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                           ),
-                          child: const Text(
-                            'Clear all',
-                            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                          child: Text(
+                            l10n.clearAll,
+                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                           ),
                         ),
                     ],
@@ -472,8 +457,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       child: Text(
                         _activeFilterCount > 0
-                            ? 'Apply Filters ($_activeFilterCount)'
-                            : 'Apply Filters',
+                            ? l10n.applyFiltersCount(_activeFilterCount)
+                            : l10n.applyFilters,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

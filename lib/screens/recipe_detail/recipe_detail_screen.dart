@@ -79,6 +79,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(l10n.delete),
         content: Text('${l10n.delete} "${r.title}"?'),
         actions: [
@@ -179,6 +180,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(l10n.deleteComment),
         content: const Text('Your rating and comment will both be deleted.'),
         actions: [
@@ -383,6 +385,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
       builder: (ctx) {
         final controller = TextEditingController();
         return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: Text(l10n.newCollection),
           content: TextField(
             controller: controller,
@@ -433,6 +436,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
       builder: (ctx) {
         final controller = TextEditingController();
         return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: Text(l10n.newList),
           content: TextField(
             controller: controller,
@@ -614,7 +618,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: const Color(0xFFFFFFFF).withValues(alpha: 0.2),
+                color: AppTheme.glassWhite.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: iconColor, size: 20),

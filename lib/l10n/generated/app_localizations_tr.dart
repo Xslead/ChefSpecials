@@ -562,4 +562,26 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get emptyCollectionSubtitle => 'Tarif detay ekranindan tarif ekleyin';
+
+  @override
+  String get filters => 'Filtreler';
+
+  @override
+  String get clearAll => 'Hepsini temizle';
+
+  @override
+  String get applyFilters => 'Filtreleri Uygula';
+
+  @override
+  String applyFiltersCount(int count) {
+    return 'Filtreleri Uygula ($count)';
+  }
+
+  @override
+  String get favoritesEmptySubtitle =>
+      'Tariflerdeki kalp ikonuna dokunarak buraya kaydedin';
+
+  @override
+  String get shoppingListEmptySubtitle =>
+      'Baslamak icin herhangi bir tariften malzeme ekleyin';
 }

@@ -985,6 +985,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Halal'**
   String get halal;
+
+  /// No description provided for @shoppingLists.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping Lists'**
+  String get shoppingLists;
+
+  /// No description provided for @shoppingList.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping List'**
+  String get shoppingList;
+
+  /// No description provided for @addToShoppingList.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Shopping List'**
+  String get addToShoppingList;
+
+  /// No description provided for @newList.
+  ///
+  /// In en, this message translates to:
+  /// **'New List'**
+  String get newList;
+
+  /// No description provided for @listName.
+  ///
+  /// In en, this message translates to:
+  /// **'List name'**
+  String get listName;
+
+  /// No description provided for @clearChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Checked'**
+  String get clearChecked;
+
+  /// No description provided for @noShoppingLists.
+  ///
+  /// In en, this message translates to:
+  /// **'No shopping lists yet'**
+  String get noShoppingLists;
+
+  /// No description provided for @noItems.
+  ///
+  /// In en, this message translates to:
+  /// **'No items'**
+  String get noItems;
+
+  /// No description provided for @itemsChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'checked'**
+  String get itemsChecked;
+
+  /// No description provided for @createNewList.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New List'**
+  String get createNewList;
+
+  /// No description provided for @addedToList.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to {name}'**
+  String addedToList(String name);
+
+  /// No description provided for @deleteList.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete List'**
+  String get deleteList;
+
+  /// No description provided for @deleteListConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this list?'**
+  String get deleteListConfirm;
 }
 
 class _AppLocalizationsDelegate

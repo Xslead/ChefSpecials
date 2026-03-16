@@ -465,4 +465,46 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get halal => 'Helal';
+
+  @override
+  String get shoppingLists => 'Alisveris Listeleri';
+
+  @override
+  String get shoppingList => 'Alisveris Listesi';
+
+  @override
+  String get addToShoppingList => 'Alisveris Listesine Ekle';
+
+  @override
+  String get newList => 'Yeni Liste';
+
+  @override
+  String get listName => 'Liste adi';
+
+  @override
+  String get clearChecked => 'Isaretlileri Temizle';
+
+  @override
+  String get noShoppingLists => 'Henuz alisveris listesi yok';
+
+  @override
+  String get noItems => 'Urun yok';
+
+  @override
+  String get itemsChecked => 'isaretli';
+
+  @override
+  String get createNewList => 'Yeni Liste Olustur';
+
+  @override
+  String addedToList(String name) {
+    return '$name listesine eklendi';
+  }
+
+  @override
+  String get deleteList => 'Listeyi Sil';
+
+  @override
+  String get deleteListConfirm =>
+      'Bu listeyi silmek istediginize emin misiniz?';
 }

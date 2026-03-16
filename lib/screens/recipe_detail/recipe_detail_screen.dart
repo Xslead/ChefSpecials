@@ -12,6 +12,9 @@ import '../../providers/auth_provider.dart';
 import '../../providers/comment_provider.dart';
 import '../../providers/rating_provider.dart';
 import '../../providers/recipe_provider.dart';
+import '../../providers/shopping_list_provider.dart';
+import '../../models/shopping_list.dart';
+import '../../services/shopping_list_service.dart';
 import '../../widgets/gradient_button.dart';
 import 'widgets/ingredient_list_view.dart';
 import 'widgets/step_overview_list.dart';
@@ -205,6 +208,168 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     }
   }
 
+  void _showAddToShoppingListSheet(BuildContext context, Recipe recipe) {
+    final l10n = AppLocalizations.of(context)!;
+    final provider = context.read<ShoppingListProvider>();
+    final userId = context.read<AuthProvider>().userModel?.uid;
+    if (userId != null) provider.init(userId);
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        final lists = context.read<ShoppingListProvider>().lists;
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    l10n.addToShoppingList,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ListTile(
+                  leading: const CircleAvatar(
+                    backgroundColor: AppTheme.primaryColor,
+                    child: Icon(Icons.add, color: Colors.white),
+                  ),
+                  title: Text(l10n.createNewList),
+                  onTap: () async {
+                    Navigator.pop(ctx);
+                    await _createAndAddToList(context, recipe);
+                  },
+                ),
+                if (lists.isNotEmpty) const Divider(),
+                ...lists.map((list) => ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor:
+                            AppTheme.primaryColor.withValues(alpha: 0.1),
+                        child: const Icon(Icons.list_alt,
+                            color: AppTheme.primaryColor),
+                      ),
+                      title: Text(list.name),
+                      subtitle: Text(
+                        '${list.items.length} ${l10n.ingredients.toLowerCase()}',
+                      ),
+                      onTap: () async {
+                        Navigator.pop(ctx);
+                        await _addIngredientsToList(
+                            context, list.id!, list.name, recipe);
+                      },
+                    )),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _createAndAddToList(BuildContext context, Recipe recipe) async {
+    final l10n = AppLocalizations.of(context)!;
+    final userId = context.read<AuthProvider>().userModel?.uid;
+    final messenger = ScaffoldMessenger.of(context);
+    if (userId == null) return;
+    final name = await showDialog<String>(
+      context: context,
+      builder: (ctx) {
+        final controller = TextEditingController();
+        return AlertDialog(
+          title: Text(l10n.newList),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            decoration: InputDecoration(hintText: l10n.listName),
+            textCapitalization: TextCapitalization.sentences,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, controller.text.trim()),
+              child: Text(l10n.save),
+            ),
+          ],
+        );
+      },
+    );
+    if (name != null && name.isNotEmpty && mounted) {
+      try {
+        final items = recipe.ingredients
+            .map((ing) => ShoppingItem(
+                  name: ing.name,
+                  amount: ing.amount,
+                  unit: ing.unit,
+                ))
+            .toList();
+        final now = DateTime.now();
+        final newList = ShoppingList(
+          userId: userId,
+          name: name,
+          items: items,
+          createdAt: now,
+          updatedAt: now,
+        );
+        await ShoppingListService().createShoppingList(newList);
+        if (mounted) {
+          messenger.showSnackBar(
+            SnackBar(content: Text(l10n.addedToList(name))),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          messenger.showSnackBar(
+            SnackBar(content: Text(l10n.error)),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _addIngredientsToList(
+    BuildContext context,
+    String listId,
+    String listName,
+    Recipe recipe,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+    final provider = context.read<ShoppingListProvider>();
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final items = recipe.ingredients
+          .map((ing) => ShoppingItem(
+                name: ing.name,
+                amount: ing.amount,
+                unit: ing.unit,
+              ))
+          .toList();
+      await provider.addIngredientsToList(listId, items);
+      if (mounted) {
+        messenger.showSnackBar(
+          SnackBar(content: Text(l10n.addedToList(listName))),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        messenger.showSnackBar(
+          SnackBar(content: Text(l10n.error)),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -258,6 +423,12 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                     onPressed: () {
                       context.push('/cooking/${liveRecipe.id}', extra: liveRecipe);
                     },
+                  ),
+                  const SizedBox(height: 12),
+                  GradientButton(
+                    text: l10n.addToShoppingList,
+                    icon: Icons.shopping_cart_outlined,
+                    onPressed: () => _showAddToShoppingListSheet(context, liveRecipe),
                   ),
                   const SizedBox(height: 32),
                   _buildRatingsSection(context, l10n, theme, liveRecipe),

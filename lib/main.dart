@@ -10,6 +10,7 @@ import 'providers/food_item_provider.dart';
 import 'providers/daily_tracker_provider.dart';
 import 'providers/follow_provider.dart';
 import 'providers/theme_provider.dart';
+import 'providers/shopping_list_provider.dart';
 import 'app.dart';
 
 void main() async {
@@ -30,6 +31,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => DailyTrackerProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => FollowProvider()),
+        ChangeNotifierProvider(create: (_) => ShoppingListProvider()),
       ],
       child: const ChefSpecialsApp(),
     ),

@@ -157,5 +157,23 @@
   "dairyFree": "Süt Ürünsüz",
   "keto": "Keto",
   "lowCarb": "Düşük Karbonhidrat",
-  "halal": "Helal"
+  "halal": "Helal",
+  "shoppingLists": "Alisveris Listeleri",
+  "shoppingList": "Alisveris Listesi",
+  "addToShoppingList": "Alisveris Listesine Ekle",
+  "newList": "Yeni Liste",
+  "listName": "Liste adi",
+  "clearChecked": "Isaretlileri Temizle",
+  "noShoppingLists": "Henuz alisveris listesi yok",
+  "noItems": "Urun yok",
+  "itemsChecked": "isaretli",
+  "createNewList": "Yeni Liste Olustur",
+  "addedToList": "{name} listesine eklendi",
+  "@addedToList": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "deleteList": "Listeyi Sil",
+  "deleteListConfirm": "Bu listeyi silmek istediginize emin misiniz?"
 }

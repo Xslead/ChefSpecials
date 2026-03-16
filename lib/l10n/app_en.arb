@@ -157,5 +157,23 @@
   "dairyFree": "Dairy Free",
   "keto": "Keto",
   "lowCarb": "Low Carb",
-  "halal": "Halal"
+  "halal": "Halal",
+  "shoppingLists": "Shopping Lists",
+  "shoppingList": "Shopping List",
+  "addToShoppingList": "Add to Shopping List",
+  "newList": "New List",
+  "listName": "List name",
+  "clearChecked": "Clear Checked",
+  "noShoppingLists": "No shopping lists yet",
+  "noItems": "No items",
+  "itemsChecked": "checked",
+  "createNewList": "Create New List",
+  "addedToList": "Added to {name}",
+  "@addedToList": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "deleteList": "Delete List",
+  "deleteListConfirm": "Are you sure you want to delete this list?"
 }

@@ -25,6 +25,8 @@ import '../screens/food_items/add_food_item_screen.dart';
 import '../screens/food_items/food_item_detail_screen.dart';
 import '../screens/daily_tracker/add_meal_entry_screen.dart';
 import '../screens/daily_tracker/nutrition_goals_screen.dart';
+import '../screens/shopping_list/shopping_lists_screen.dart';
+import '../screens/shopping_list/shopping_list_detail_screen.dart';
 import '../models/meal_entry.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -199,6 +201,19 @@ final GoRouter router = GoRouter(
           userId: userId,
           initialName: initialName,
         );
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/shopping-lists',
+      builder: (context, state) => const ShoppingListsScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/shopping-list/:id',
+      builder: (context, state) {
+        final listId = state.pathParameters['id']!;
+        return ShoppingListDetailScreen(listId: listId);
       },
     ),
     GoRoute(

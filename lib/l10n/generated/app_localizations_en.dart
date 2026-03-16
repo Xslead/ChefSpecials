@@ -465,4 +465,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get halal => 'Halal';
+
+  @override
+  String get shoppingLists => 'Shopping Lists';
+
+  @override
+  String get shoppingList => 'Shopping List';
+
+  @override
+  String get addToShoppingList => 'Add to Shopping List';
+
+  @override
+  String get newList => 'New List';
+
+  @override
+  String get listName => 'List name';
+
+  @override
+  String get clearChecked => 'Clear Checked';
+
+  @override
+  String get noShoppingLists => 'No shopping lists yet';
+
+  @override
+  String get noItems => 'No items';
+
+  @override
+  String get itemsChecked => 'checked';
+
+  @override
+  String get createNewList => 'Create New List';
+
+  @override
+  String addedToList(String name) {
+    return 'Added to $name';
+  }
+
+  @override
+  String get deleteList => 'Delete List';
+
+  @override
+  String get deleteListConfirm => 'Are you sure you want to delete this list?';
 }

@@ -441,4 +441,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchFeedHint => 'Search recipes or @username...';
+
+  @override
+  String get dietaryTags => 'Dietary Tags';
+
+  @override
+  String get vegan => 'Vegan';
+
+  @override
+  String get vegetarian => 'Vegetarian';
+
+  @override
+  String get glutenFree => 'Gluten Free';
+
+  @override
+  String get dairyFree => 'Dairy Free';
+
+  @override
+  String get keto => 'Keto';
+
+  @override
+  String get lowCarb => 'Low Carb';
+
+  @override
+  String get halal => 'Halal';
 }

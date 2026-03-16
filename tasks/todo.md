@@ -101,7 +101,7 @@
 ---
 
 ## Push 7: Bottom Navigation + My Recipes
-- [x] **Bottom Navigation Bar** (5 tabs): Home, My Recipes, Daily Tracker, Materials, Profile
+- [x] **Bottom Navigation Bar** (5 tabs): Home, Feed, Daily Tracker, Materials, Profile
 - [x] ShellScreen with NavigationBar + StatefulShellRoute.indexedStack
 - [x] GoRouter updated to StatefulShellRoute with 5 branches
 - [x] **My Recipes Tab:**
@@ -143,22 +143,50 @@
 
 ---
 
-## Push 9: Ratings, Comments & Dietary Filters
+## Push 9: Ratings & Comments
 - [x] **Models:** Rating, Comment
 - [x] **Services:** RatingService, CommentService
 - [x] **Providers:** RatingProvider, CommentProvider
 - [x] Star rating widget (1–5 stars) on RecipeDetailScreen
 - [x] Average rating displayed on RecipeCard
 - [x] Comments section on RecipeDetailScreen (add/view/delete)
-- [ ] **Dietary tags** on Recipe model: Vegan, Gluten-Free, Keto, Halal, etc.
-- [ ] Dietary tag picker on AddRecipeScreen
-- [ ] Filter recipes by dietary tags on HomeScreen/SearchScreen
-- [ ] Self-test: flutter analyze + build
-- **Status:** PENDING
+- **Status:** PUSHED ✅
 
 ---
 
-## Push 10: Shopping List
+## Push 10: Recipe Privacy + Social Feed + Follow System
+- [x] **Recipe Privacy:** isPrivate field on Recipe model, visibility toggle on AddRecipeScreen
+- [x] **FollowService:** follow/unfollow, getFollowerIds, getFollowingIds
+- [x] **FollowProvider:** real-time follow state, follower/following counts
+- [x] **FeedScreen:** recipes from followed users + user search by username
+- [x] **Feed tab** added to bottom nav (Tab 2)
+- [x] **PublicProfileScreen:** view other users' public recipes
+- [x] **FollowListScreen:** followers/following tabs with follow/unfollow buttons
+- [x] Follow/unfollow button on public profiles
+- [x] Follower/following counts on ProfileScreen (tappable stat cards)
+- [x] **Username system:** unique username field on UserModel, search by username
+- [x] Navigation icons on follow list tabs + chevron on stat cards
+- **Status:** PUSHED ✅
+
+---
+
+## Push 11: Dark Mode
+- [x] **ThemeProvider** with light/dark/system modes
+- [x] Persist theme preference (SharedPreferences)
+- [x] Dark mode toggle on ProfileScreen (sun/moon icon)
+- [x] All screens support dark theme colors via AppTheme helper methods
+- **Status:** PUSHED ✅
+
+---
+
+## Remaining — What's Left To Do
+
+### Push 12: Dietary Tags
+- [ ] Add dietary tags to Recipe model (Vegan, Gluten-Free, Keto, Halal, etc.)
+- [ ] Dietary tag picker on AddRecipeScreen
+- [ ] Filter recipes by dietary tags on HomeScreen/SearchScreen
+
+### Push 13: Shopping List
 - [ ] **Model:** ShoppingList, ShoppingItem (name, quantity, unit, checked)
 - [ ] **Service:** ShoppingListService (Firestore CRUD)
 - [ ] **Provider:** ShoppingListProvider
@@ -166,12 +194,8 @@
 - [ ] Auto-generate shopping list from a recipe's ingredients (button on RecipeDetailScreen)
 - [ ] Check off items as you shop
 - [ ] Clear completed items
-- [ ] Self-test: flutter analyze + build
-- **Status:** PENDING
 
----
-
-## Push 11: Recipe Collections
+### Push 14: Recipe Collections
 - [ ] **Model:** RecipeCollection (name, description, recipeIds, coverImage)
 - [ ] **Service:** CollectionService (Firestore CRUD)
 - [ ] **Provider:** CollectionProvider
@@ -179,36 +203,15 @@
 - [ ] **CollectionDetailScreen** — view recipes in a collection
 - [ ] Create/edit/delete custom folders (e.g. "Quick Meals", "Keto", "Weekend")
 - [ ] Add/remove recipes to collections from RecipeDetailScreen
-- [ ] Self-test: flutter analyze + build
-- **Status:** PENDING
 
----
-
-## Push 12: Social Feed + Follow Users
-- [ ] **Models:** Follow, ActivityFeedItem
-- [ ] **Services:** FollowService, FeedService
-- [ ] **Providers:** FollowProvider, FeedProvider
-- [ ] Follow/unfollow button on user profiles
-- [ ] Social feed tab showing new recipes from followed users
-- [ ] Follower/following counts on ProfileScreen
-- [ ] Self-test: flutter analyze + build
-- **Status:** PENDING
-
----
-
-## Push 13: Share Recipe + Recipe Import
-- [ ] **Share Recipe:** share recipe as link or image card via WhatsApp, Instagram, etc. (share_plus package)
+### Push 15: Share Recipe + Recipe Import
+- [ ] **Share Recipe:** share recipe as link or image card via share_plus
 - [ ] Generate shareable recipe card image
 - [ ] Share button on RecipeDetailScreen
 - [ ] **Recipe Import from URL:** paste a recipe link and auto-parse ingredients/steps
 - [ ] Import screen with URL input
-- [ ] Web scraping / parsing logic for common recipe sites
-- [ ] Self-test: flutter analyze + build
-- **Status:** PENDING
 
----
-
-## Push 14: Weekly Meal Planner
+### Push 16: Weekly Meal Planner
 - [ ] **Models:** MealPlan, PlannedMeal (day, mealType, recipeId)
 - [ ] **Services:** MealPlanService (Firestore CRUD)
 - [ ] **Providers:** MealPlanProvider
@@ -216,42 +219,24 @@
 - [ ] Drag/assign recipes to days and meal slots
 - [ ] Weekly nutrition totals summary
 - [ ] Auto-generate shopping list from weekly plan
-- [ ] Self-test: flutter analyze + build
-- **Status:** PENDING
 
----
-
-## Push 15: Weekly/Monthly Reports
+### Push 17: Weekly/Monthly Reports
 - [ ] **ReportsScreen** — nutrition summary over time
 - [ ] Weekly averages: calories, protein, carbs, fat
 - [ ] Monthly trends with line/bar charts (fl_chart)
 - [ ] Streak tracking (consecutive days logged)
 - [ ] Export report as PDF or image
-- [ ] Self-test: flutter analyze + build
-- **Status:** PENDING
 
----
-
-## Push 16: Dark Mode + Push Notifications
-- [ ] **Dark Mode:** theme toggle in ProfileScreen/Settings
-- [ ] ThemeProvider with light/dark/system modes
-- [ ] Persist theme preference (SharedPreferences)
-- [ ] All screens support dark theme colors
-- [ ] **Push Notifications:** Firebase Cloud Messaging setup
+### Push 18: Push Notifications
+- [ ] Firebase Cloud Messaging setup
 - [ ] Meal reminders ("Time for lunch!")
 - [ ] New recipe alerts from followed users
 - [ ] Notification settings screen (toggle per type)
-- [ ] Self-test: flutter analyze + build
-- **Status:** PENDING
 
----
-
-## Push 17: Admin Panel
+### Push 19: Admin Panel
 - [ ] Services: AdminService
 - [ ] Providers: AdminProvider
 - [ ] Screens: AdminDashboard, AdminRecipes, AdminUsers, AdminCategories, AdminNotifications
 - [ ] Widgets: StatsCard, UserListTile, AdminRecipeTile, CategoryEditDialog
 - [ ] Admin route guard
 - [ ] Firestore security rules
-- [ ] Self-test: flutter analyze + build
-- **Status:** PENDING

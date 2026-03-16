@@ -200,6 +200,41 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
                   ),
                   const SizedBox(height: 16),
 
+                  // Dietary Tags
+                  _buildSectionLabel(l10n.dietaryTags, context),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: AppConstants.defaultDietaryTags.map((tag) {
+                      final selected = formProvider.dietaryTags.contains(tag);
+                      return FilterChip(
+                        label: Text(tag),
+                        selected: selected,
+                        onSelected: (_) => formProvider.toggleDietaryTag(tag),
+                        selectedColor: AppTheme.primaryColor.withValues(alpha: 0.15),
+                        checkmarkColor: AppTheme.primaryColor,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        visualDensity: VisualDensity.compact,
+                        labelStyle: TextStyle(
+                          fontSize: 13,
+                          fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                          color: selected ? AppTheme.primaryColor : AppTheme.textSecondaryOf(context),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          side: BorderSide(
+                            color: selected
+                                ? AppTheme.primaryColor.withValues(alpha: 0.3)
+                                : AppTheme.neutralLightOf(context),
+                          ),
+                        ),
+                        backgroundColor: AppTheme.surfaceOf(context),
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 16),
+
                   // Servings, Prep, Cook time row
                   Row(
                     children: [

@@ -441,4 +441,28 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get searchFeedHint => 'Tarif veya @kullaniciadi ara...';
+
+  @override
+  String get dietaryTags => 'Diyet Etiketleri';
+
+  @override
+  String get vegan => 'Vegan';
+
+  @override
+  String get vegetarian => 'Vejetaryen';
+
+  @override
+  String get glutenFree => 'Glutensiz';
+
+  @override
+  String get dairyFree => 'Süt Ürünsüz';
+
+  @override
+  String get keto => 'Keto';
+
+  @override
+  String get lowCarb => 'Düşük Karbonhidrat';
+
+  @override
+  String get halal => 'Helal';
 }

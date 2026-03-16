@@ -245,6 +245,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             const SizedBox(height: 8),
                             DropdownButtonFormField<String>(
                               initialValue: _category,
+                              isExpanded: true,
                               decoration: _styledInputDecoration(
                                 prefixIcon: Icons.category_outlined,
                               ),
@@ -268,6 +269,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             const SizedBox(height: 8),
                             DropdownButtonFormField<String>(
                               initialValue: _unit,
+                              isExpanded: true,
                               decoration: _styledInputDecoration(
                                 prefixIcon: Icons.straighten_outlined,
                               ),
@@ -524,6 +526,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             const SizedBox(height: 8),
                             DropdownButtonFormField<String>(
                               initialValue: _nutriScore,
+                              isExpanded: true,
                               decoration: _styledInputDecoration(
                                 prefixIcon: Icons.grade_outlined,
                                 hintText: 'Optional',
@@ -547,6 +550,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             const SizedBox(height: 8),
                             DropdownButtonFormField<int>(
                               initialValue: _novaGroup,
+                              isExpanded: true,
                               decoration: _styledInputDecoration(
                                 prefixIcon: Icons.science_outlined,
                                 hintText: 'Optional',
@@ -898,6 +902,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
       prefixIcon: prefixIcon != null
           ? Icon(prefixIcon, color: AppTheme.textTertiary, size: 20)
           : null,
+      prefixIconConstraints: const BoxConstraints(minWidth: 40, minHeight: 40),
       suffixText: suffixText,
       suffixStyle: const TextStyle(
         fontSize: 12,

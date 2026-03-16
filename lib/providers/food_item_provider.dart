@@ -15,11 +15,62 @@ class FoodItemProvider extends ChangeNotifier {
 
   bool _initialized = false;
 
-  List<FoodItem> get foodItems => _foodItems;
-  List<FoodItem> get searchResults => _searchResults;
+  // Filters
+  bool _filterVegan = false;
+  bool _filterVegetarian = false;
+  bool _filterGlutenFree = false;
+  String? _filterNutriScore;
+  String _sortBy = 'name'; // name, calories, protein
+
+  List<FoodItem> get foodItems => _applyFilters(_foodItems);
+  List<FoodItem> get searchResults => _applyFilters(_searchResults);
   String get selectedCategory => _selectedCategory;
   bool get isLoading => _isLoading;
   String get searchQuery => _searchQuery;
+  bool get filterVegan => _filterVegan;
+  bool get filterVegetarian => _filterVegetarian;
+  bool get filterGlutenFree => _filterGlutenFree;
+  String? get filterNutriScore => _filterNutriScore;
+  String get sortBy => _sortBy;
+  int get activeFilterCount =>
+      (_filterVegan ? 1 : 0) +
+      (_filterVegetarian ? 1 : 0) +
+      (_filterGlutenFree ? 1 : 0) +
+      (_filterNutriScore != null ? 1 : 0);
+
+  List<FoodItem> _applyFilters(List<FoodItem> items) {
+    var result = items.where((item) {
+      if (_filterVegan && !item.isVegan) return false;
+      if (_filterVegetarian && !item.isVegetarian) return false;
+      if (_filterGlutenFree && !item.isGlutenFree) return false;
+      if (_filterNutriScore != null && item.nutriScore != _filterNutriScore) return false;
+      return true;
+    }).toList();
+
+    switch (_sortBy) {
+      case 'calories':
+        result.sort((a, b) => a.calories.compareTo(b.calories));
+      case 'protein':
+        result.sort((a, b) => b.protein.compareTo(a.protein));
+      default:
+        result.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    }
+    return result;
+  }
+
+  void setFilterVegan(bool value) { _filterVegan = value; notifyListeners(); }
+  void setFilterVegetarian(bool value) { _filterVegetarian = value; notifyListeners(); }
+  void setFilterGlutenFree(bool value) { _filterGlutenFree = value; notifyListeners(); }
+  void setFilterNutriScore(String? value) { _filterNutriScore = value; notifyListeners(); }
+  void setSortBy(String value) { _sortBy = value; notifyListeners(); }
+  void clearFilters() {
+    _filterVegan = false;
+    _filterVegetarian = false;
+    _filterGlutenFree = false;
+    _filterNutriScore = null;
+    _sortBy = 'name';
+    notifyListeners();
+  }
 
   void ensureInitialized() {
     if (!_initialized) {

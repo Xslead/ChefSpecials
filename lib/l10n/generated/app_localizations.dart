@@ -937,6 +937,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search recipes or @username...'**
   String get searchFeedHint;
+
+  /// No description provided for @dietaryTags.
+  ///
+  /// In en, this message translates to:
+  /// **'Dietary Tags'**
+  String get dietaryTags;
+
+  /// No description provided for @vegan.
+  ///
+  /// In en, this message translates to:
+  /// **'Vegan'**
+  String get vegan;
+
+  /// No description provided for @vegetarian.
+  ///
+  /// In en, this message translates to:
+  /// **'Vegetarian'**
+  String get vegetarian;
+
+  /// No description provided for @glutenFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Gluten Free'**
+  String get glutenFree;
+
+  /// No description provided for @dairyFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Dairy Free'**
+  String get dairyFree;
+
+  /// No description provided for @keto.
+  ///
+  /// In en, this message translates to:
+  /// **'Keto'**
+  String get keto;
+
+  /// No description provided for @lowCarb.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Carb'**
+  String get lowCarb;
+
+  /// No description provided for @halal.
+  ///
+  /// In en, this message translates to:
+  /// **'Halal'**
+  String get halal;
 }
 
 class _AppLocalizationsDelegate

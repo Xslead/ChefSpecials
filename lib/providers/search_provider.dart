@@ -34,7 +34,8 @@ class SearchProvider extends ChangeNotifier {
         return r.title.toLowerCase().contains(lower) ||
             r.category.toLowerCase().contains(lower) ||
             r.authorName.toLowerCase().contains(lower) ||
-            r.description.toLowerCase().contains(lower);
+            r.description.toLowerCase().contains(lower) ||
+            r.dietaryTags.any((tag) => tag.toLowerCase().contains(lower));
       }).toList();
     }
     notifyListeners();

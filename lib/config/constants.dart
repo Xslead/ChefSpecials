@@ -22,4 +22,15 @@ class AppConstants {
     'Salad',
     'Soup',
   ];
+
+  // Dietary tags
+  static const List<String> defaultDietaryTags = [
+    'Vegan',
+    'Vegetarian',
+    'Gluten Free',
+    'Dairy Free',
+    'Keto',
+    'Low Carb',
+    'Halal',
+  ];
 }

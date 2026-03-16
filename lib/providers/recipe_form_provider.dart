@@ -24,6 +24,7 @@ class RecipeFormProvider extends ChangeNotifier {
   double? carbsGrams;
   double? fatGrams;
   bool isPrivate = false;
+  List<String> dietaryTags = [];
   bool isSubmitting = false;
 
   void addIngredientFromFoodItem(FoodItem foodItem, String amount) {
@@ -136,6 +137,15 @@ class RecipeFormProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void toggleDietaryTag(String tag) {
+    if (dietaryTags.contains(tag)) {
+      dietaryTags.remove(tag);
+    } else {
+      dietaryTags.add(tag);
+    }
+    notifyListeners();
+  }
+
   void loadFromRecipe(Recipe recipe) {
     title = recipe.title;
     description = recipe.description;
@@ -153,6 +163,7 @@ class RecipeFormProvider extends ChangeNotifier {
     carbsGrams = recipe.carbsGrams;
     fatGrams = recipe.fatGrams;
     isPrivate = recipe.isPrivate;
+    dietaryTags = List.from(recipe.dietaryTags);
     notifyListeners();
   }
 
@@ -190,6 +201,7 @@ class RecipeFormProvider extends ChangeNotifier {
       fatGrams: fatGrams,
       createdAt: DateTime.now(),
       isPrivate: isPrivate,
+      dietaryTags: dietaryTags,
     );
 
     isSubmitting = false;
@@ -213,6 +225,7 @@ class RecipeFormProvider extends ChangeNotifier {
     carbsGrams = null;
     fatGrams = null;
     isPrivate = false;
+    dietaryTags = [];
     isSubmitting = false;
     notifyListeners();
   }

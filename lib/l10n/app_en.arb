@@ -149,5 +149,13 @@
   "usernameTaken": "Username is already taken",
   "usernameAvailable": "Username is available",
   "people": "People",
-  "searchFeedHint": "Search recipes or @username..."
+  "searchFeedHint": "Search recipes or @username...",
+  "dietaryTags": "Dietary Tags",
+  "vegan": "Vegan",
+  "vegetarian": "Vegetarian",
+  "glutenFree": "Gluten Free",
+  "dairyFree": "Dairy Free",
+  "keto": "Keto",
+  "lowCarb": "Low Carb",
+  "halal": "Halal"
 }

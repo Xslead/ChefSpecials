@@ -139,6 +139,31 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                     ],
                   ),
                   const Spacer(),
+                  // Filter button
+                  GestureDetector(
+                    onTap: () => _showFilterSheet(context, provider),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: provider.activeFilterCount > 0
+                            ? AppTheme.primaryColor.withValues(alpha: 0.1)
+                            : AppTheme.neutralLightOf(context),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Badge(
+                        isLabelVisible: provider.activeFilterCount > 0,
+                        label: Text('${provider.activeFilterCount}'),
+                        backgroundColor: AppTheme.primaryColor,
+                        child: Icon(
+                          Icons.tune_rounded,
+                          color: provider.activeFilterCount > 0
+                              ? AppTheme.primaryColor
+                              : AppTheme.textSecondaryOf(context),
+                          size: 22,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 14),
@@ -340,5 +365,251 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
         );
       },
     );
+  }
+
+  void _showFilterSheet(BuildContext context, FoodItemProvider provider) {
+    showModalBottomSheet(
+      context: context,
+      useRootNavigator: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => ChangeNotifierProvider.value(
+        value: provider,
+        child: const _FilterSheetBody(),
+      ),
+    );
+  }
+}
+
+class _FilterSheetBody extends StatelessWidget {
+  const _FilterSheetBody();
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = context.watch<FoodItemProvider>();
+    final l10n = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Handle
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppTheme.neutralLightOf(context),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Title row
+          Row(
+            children: [
+              const Text(
+                'Filters',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Spacer(),
+              if (provider.activeFilterCount > 0)
+                GestureDetector(
+                  onTap: () {
+                    provider.clearFilters();
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Clear all',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.primaryColor,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          // Dietary section
+          _buildLabel('DIETARY', context),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              _buildToggleChip(
+                context: context,
+                label: l10n.vegan,
+                icon: Icons.eco_outlined,
+                selected: provider.filterVegan,
+                onTap: () => provider.setFilterVegan(!provider.filterVegan),
+              ),
+              const SizedBox(width: 8),
+              _buildToggleChip(
+                context: context,
+                label: l10n.vegetarian,
+                icon: Icons.spa_outlined,
+                selected: provider.filterVegetarian,
+                onTap: () => provider.setFilterVegetarian(!provider.filterVegetarian),
+              ),
+              const SizedBox(width: 8),
+              _buildToggleChip(
+                context: context,
+                label: l10n.glutenFree,
+                icon: Icons.no_food_outlined,
+                selected: provider.filterGlutenFree,
+                onTap: () => provider.setFilterGlutenFree(!provider.filterGlutenFree),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          // Nutri-Score section
+          _buildLabel('NUTRI-SCORE', context),
+          const SizedBox(height: 10),
+          Row(
+            children: ['A', 'B', 'C', 'D', 'E'].map((score) {
+              final selected = provider.filterNutriScore == score;
+              return Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: GestureDetector(
+                  onTap: () => provider.setFilterNutriScore(selected ? null : score),
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: selected
+                          ? _nutriScoreColor(score)
+                          : AppTheme.neutralLightOf(context),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      score,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: selected ? Colors.white : AppTheme.textSecondaryOf(context),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 20),
+          // Sort section
+          _buildLabel('SORT BY', context),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              _buildSortChip(context, provider, 'name', 'Name'),
+              const SizedBox(width: 8),
+              _buildSortChip(context, provider, 'calories', l10n.calories),
+              const SizedBox(width: 8),
+              _buildSortChip(context, provider, 'protein', l10n.protein),
+            ],
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLabel(String text, BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 11,
+        fontWeight: FontWeight.w700,
+        color: AppTheme.textTertiaryOf(context),
+        letterSpacing: 0.8,
+      ),
+    );
+  }
+
+  Widget _buildToggleChip({
+    required BuildContext context,
+    required String label,
+    required IconData icon,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: selected
+                ? AppTheme.primaryColor.withValues(alpha: 0.1)
+                : AppTheme.neutralLightOf(context),
+            borderRadius: BorderRadius.circular(12),
+            border: selected
+                ? Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.3))
+                : null,
+          ),
+          child: Column(
+            children: [
+              Icon(
+                icon,
+                size: 20,
+                color: selected ? AppTheme.primaryColor : AppTheme.textTertiaryOf(context),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                  color: selected ? AppTheme.primaryColor : AppTheme.textSecondaryOf(context),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSortChip(BuildContext context, FoodItemProvider provider, String value, String label) {
+    final selected = provider.sortBy == value;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => provider.setSortBy(value),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: selected ? AppTheme.primaryColor : AppTheme.neutralLightOf(context),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: selected ? Colors.white : AppTheme.textSecondaryOf(context),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Color _nutriScoreColor(String score) {
+    switch (score) {
+      case 'A': return const Color(0xFF22C55E);
+      case 'B': return const Color(0xFF84CC16);
+      case 'C': return const Color(0xFFF59E0B);
+      case 'D': return const Color(0xFFF97316);
+      case 'E': return const Color(0xFFEF4444);
+      default: return Colors.grey;
+    }
   }
 }

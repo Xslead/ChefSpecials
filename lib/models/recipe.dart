@@ -23,6 +23,7 @@ class Recipe {
   final int ratingCount;
   final int commentCount;
   final bool isPrivate;
+  final List<String> dietaryTags;
 
   Recipe({
     this.id,
@@ -46,6 +47,7 @@ class Recipe {
     this.ratingCount = 0,
     this.commentCount = 0,
     this.isPrivate = false,
+    this.dietaryTags = const [],
   });
 
   factory Recipe.fromMap(Map<String, dynamic> map, String docId) {
@@ -75,6 +77,7 @@ class Recipe {
       ratingCount: map['ratingCount'] as int? ?? 0,
       commentCount: map['commentCount'] as int? ?? 0,
       isPrivate: map['isPrivate'] as bool? ?? false,
+      dietaryTags: List<String>.from(map['dietaryTags'] ?? []),
     );
   }
 
@@ -100,6 +103,7 @@ class Recipe {
     int? ratingCount,
     int? commentCount,
     bool? isPrivate,
+    List<String>? dietaryTags,
   }) {
     return Recipe(
       id: id ?? this.id,
@@ -123,6 +127,7 @@ class Recipe {
       ratingCount: ratingCount ?? this.ratingCount,
       commentCount: commentCount ?? this.commentCount,
       isPrivate: isPrivate ?? this.isPrivate,
+      dietaryTags: dietaryTags ?? this.dietaryTags,
     );
   }
 
@@ -145,6 +150,7 @@ class Recipe {
       'fatGrams': fatGrams,
       'createdAt': createdAt.toIso8601String(),
       'isPrivate': isPrivate,
+      'dietaryTags': dietaryTags,
     };
   }
 }

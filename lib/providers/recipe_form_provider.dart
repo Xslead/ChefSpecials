@@ -176,7 +176,7 @@ class RecipeFormProvider extends ChangeNotifier {
 
     String? imageUrl = existingImageUrl;
     if (imageFile != null) {
-      imageUrl = await _storageService.uploadRecipeImage(imageFile!);
+      imageUrl = await _storageService.uploadRecipeImage(imageFile!, authorId);
     }
 
     final validIngredients = ingredients

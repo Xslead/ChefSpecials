@@ -112,7 +112,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       String? photoUrl = user.photoUrl;
       if (_imageFile != null) {
-        photoUrl = await _storageService.uploadUserAvatar(_imageFile!);
+        photoUrl = await _storageService.uploadUserAvatar(_imageFile!, user.uid);
       }
 
       final newFirstName = _firstNameController.text.trim();

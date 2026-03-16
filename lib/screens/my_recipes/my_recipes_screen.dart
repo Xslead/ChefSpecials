@@ -175,17 +175,14 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
         ],
       ),
       floatingActionButton: isOwnProfile
-          ? Padding(
-              padding: const EdgeInsets.only(bottom: 100),
-              child: FloatingActionButton(
-                heroTag: 'my_recipes_fab',
-                onPressed: () => context.push('/add-recipe'),
-                backgroundColor: AppTheme.primaryColor,
-                foregroundColor: Colors.white,
-                elevation: 2,
-                shape: const CircleBorder(),
-                child: const Icon(Icons.add, size: 28),
-              ),
+          ? FloatingActionButton(
+              heroTag: 'my_recipes_fab',
+              onPressed: () => context.push('/add-recipe'),
+              backgroundColor: AppTheme.primaryColor,
+              foregroundColor: Colors.white,
+              elevation: 2,
+              shape: const CircleBorder(),
+              child: const Icon(Icons.add, size: 28),
             )
           : null,
     );

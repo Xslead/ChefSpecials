@@ -507,4 +507,59 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get deleteListConfirm =>
       'Bu listeyi silmek istediginize emin misiniz?';
+
+  @override
+  String get collections => 'Koleksiyonlar';
+
+  @override
+  String get collection => 'Koleksiyon';
+
+  @override
+  String get newCollection => 'Yeni Koleksiyon';
+
+  @override
+  String get collectionName => 'Koleksiyon adi';
+
+  @override
+  String get collectionDescription => 'Aciklama (istege bagli)';
+
+  @override
+  String get noCollections => 'Henuz koleksiyon yok';
+
+  @override
+  String get deleteCollection => 'Koleksiyonu Sil';
+
+  @override
+  String get deleteCollectionConfirm =>
+      'Bu koleksiyonu silmek istediginize emin misiniz?';
+
+  @override
+  String get addToCollection => 'Koleksiyona Ekle';
+
+  @override
+  String get removeFromCollection => 'Koleksiyondan Cikar';
+
+  @override
+  String get createNewCollection => 'Yeni Koleksiyon Olustur';
+
+  @override
+  String addedToCollection(String name) {
+    return '$name koleksiyonuna eklendi';
+  }
+
+  @override
+  String removedFromCollection(String name) {
+    return '$name koleksiyonundan cikarildi';
+  }
+
+  @override
+  String recipeCountInCollection(int count) {
+    return '$count tarif';
+  }
+
+  @override
+  String get emptyCollection => 'Bu koleksiyonda tarif yok';
+
+  @override
+  String get emptyCollectionSubtitle => 'Tarif detay ekranindan tarif ekleyin';
 }

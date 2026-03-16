@@ -27,6 +27,8 @@ import '../screens/daily_tracker/add_meal_entry_screen.dart';
 import '../screens/daily_tracker/nutrition_goals_screen.dart';
 import '../screens/shopping_list/shopping_lists_screen.dart';
 import '../screens/shopping_list/shopping_list_detail_screen.dart';
+import '../screens/collections/collection_list_screen.dart';
+import '../screens/collections/collection_detail_screen.dart';
 import '../models/meal_entry.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -214,6 +216,19 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         final listId = state.pathParameters['id']!;
         return ShoppingListDetailScreen(listId: listId);
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/collections',
+      builder: (context, state) => const CollectionListScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/collection/:id',
+      builder: (context, state) {
+        final collectionId = state.pathParameters['id']!;
+        return CollectionDetailScreen(collectionId: collectionId);
       },
     ),
     GoRoute(

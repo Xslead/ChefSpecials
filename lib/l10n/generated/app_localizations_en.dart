@@ -506,4 +506,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteListConfirm => 'Are you sure you want to delete this list?';
+
+  @override
+  String get collections => 'Collections';
+
+  @override
+  String get collection => 'Collection';
+
+  @override
+  String get newCollection => 'New Collection';
+
+  @override
+  String get collectionName => 'Collection name';
+
+  @override
+  String get collectionDescription => 'Description (optional)';
+
+  @override
+  String get noCollections => 'No collections yet';
+
+  @override
+  String get deleteCollection => 'Delete Collection';
+
+  @override
+  String get deleteCollectionConfirm =>
+      'Are you sure you want to delete this collection?';
+
+  @override
+  String get addToCollection => 'Add to Collection';
+
+  @override
+  String get removeFromCollection => 'Remove from Collection';
+
+  @override
+  String get createNewCollection => 'Create New Collection';
+
+  @override
+  String addedToCollection(String name) {
+    return 'Added to $name';
+  }
+
+  @override
+  String removedFromCollection(String name) {
+    return 'Removed from $name';
+  }
+
+  @override
+  String recipeCountInCollection(int count) {
+    return '$count recipes';
+  }
+
+  @override
+  String get emptyCollection => 'No recipes in this collection';
+
+  @override
+  String get emptyCollectionSubtitle =>
+      'Add recipes from the recipe detail screen';
 }

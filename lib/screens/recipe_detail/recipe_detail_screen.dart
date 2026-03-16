@@ -13,6 +13,7 @@ import '../../providers/comment_provider.dart';
 import '../../providers/rating_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../providers/shopping_list_provider.dart';
+import '../../providers/collection_provider.dart';
 import '../../models/shopping_list.dart';
 import '../../services/shopping_list_service.dart';
 import '../../widgets/gradient_button.dart';
@@ -275,6 +276,153 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     );
   }
 
+  void _showAddToCollectionSheet(BuildContext context, Recipe recipe) {
+    final l10n = AppLocalizations.of(context)!;
+    final collectionProvider = context.read<CollectionProvider>();
+    final userId = context.read<AuthProvider>().userModel?.uid;
+    if (userId != null) collectionProvider.init(userId);
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        final collections = context.read<CollectionProvider>().collections;
+        final recipeId = recipe.id;
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    l10n.addToCollection,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ListTile(
+                  leading: const CircleAvatar(
+                    backgroundColor: AppTheme.primaryColor,
+                    child: Icon(Icons.add, color: Colors.white),
+                  ),
+                  title: Text(l10n.createNewCollection),
+                  onTap: () async {
+                    Navigator.pop(ctx);
+                    await _createCollectionAndAddRecipe(context, recipe);
+                  },
+                ),
+                if (collections.isNotEmpty) const Divider(),
+                ...collections.map((collection) {
+                  final contains = recipeId != null &&
+                      collection.recipeIds.contains(recipeId);
+                  return ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor:
+                          AppTheme.primaryColor.withValues(alpha: 0.1),
+                      child: Icon(
+                        contains ? Icons.folder : Icons.folder_outlined,
+                        color: AppTheme.primaryColor,
+                      ),
+                    ),
+                    title: Text(collection.name),
+                    subtitle: Text(
+                      l10n.recipeCountInCollection(
+                          collection.recipeIds.length),
+                    ),
+                    trailing: contains
+                        ? const Icon(Icons.check_circle,
+                            color: AppTheme.primaryColor)
+                        : null,
+                    onTap: () async {
+                      Navigator.pop(ctx);
+                      if (recipeId == null) return;
+                      final messenger = ScaffoldMessenger.of(context);
+                      if (contains) {
+                        await collectionProvider.removeRecipe(
+                            collection.id!, recipeId);
+                        if (context.mounted) {
+                          messenger.showSnackBar(SnackBar(
+                            content: Text(
+                                l10n.removedFromCollection(collection.name)),
+                          ));
+                        }
+                      } else {
+                        await collectionProvider.addRecipe(
+                            collection.id!, recipeId);
+                        if (context.mounted) {
+                          messenger.showSnackBar(SnackBar(
+                            content: Text(
+                                l10n.addedToCollection(collection.name)),
+                          ));
+                        }
+                      }
+                    },
+                  );
+                }),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _createCollectionAndAddRecipe(
+      BuildContext context, Recipe recipe) async {
+    final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final name = await showDialog<String>(
+      context: context,
+      builder: (ctx) {
+        final controller = TextEditingController();
+        return AlertDialog(
+          title: Text(l10n.newCollection),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            decoration: InputDecoration(hintText: l10n.collectionName),
+            textCapitalization: TextCapitalization.sentences,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, controller.text.trim()),
+              child: Text(l10n.save),
+            ),
+          ],
+        );
+      },
+    );
+    if (name != null && name.isNotEmpty && mounted) {
+      try {
+        final provider = context.read<CollectionProvider>();
+        final collectionId = await provider.createCollection(name);
+        if (recipe.id != null && collectionId.isNotEmpty) {
+          await provider.addRecipe(collectionId, recipe.id!);
+        }
+        if (mounted) {
+          messenger.showSnackBar(
+            SnackBar(content: Text(l10n.addedToCollection(name))),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          messenger.showSnackBar(SnackBar(content: Text(l10n.error)));
+        }
+      }
+    }
+  }
+
   Future<void> _createAndAddToList(BuildContext context, Recipe recipe) async {
     final l10n = AppLocalizations.of(context)!;
     final userId = context.read<AuthProvider>().userModel?.uid;
@@ -429,6 +577,12 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                     text: l10n.addToShoppingList,
                     icon: Icons.shopping_cart_outlined,
                     onPressed: () => _showAddToShoppingListSheet(context, liveRecipe),
+                  ),
+                  const SizedBox(height: 12),
+                  GradientButton(
+                    text: l10n.addToCollection,
+                    icon: Icons.folder_outlined,
+                    onPressed: () => _showAddToCollectionSheet(context, liveRecipe),
                   ),
                   const SizedBox(height: 32),
                   _buildRatingsSection(context, l10n, theme, liveRecipe),

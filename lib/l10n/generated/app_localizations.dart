@@ -1063,6 +1063,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete this list?'**
   String get deleteListConfirm;
+
+  /// No description provided for @collections.
+  ///
+  /// In en, this message translates to:
+  /// **'Collections'**
+  String get collections;
+
+  /// No description provided for @collection.
+  ///
+  /// In en, this message translates to:
+  /// **'Collection'**
+  String get collection;
+
+  /// No description provided for @newCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'New Collection'**
+  String get newCollection;
+
+  /// No description provided for @collectionName.
+  ///
+  /// In en, this message translates to:
+  /// **'Collection name'**
+  String get collectionName;
+
+  /// No description provided for @collectionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description (optional)'**
+  String get collectionDescription;
+
+  /// No description provided for @noCollections.
+  ///
+  /// In en, this message translates to:
+  /// **'No collections yet'**
+  String get noCollections;
+
+  /// No description provided for @deleteCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Collection'**
+  String get deleteCollection;
+
+  /// No description provided for @deleteCollectionConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this collection?'**
+  String get deleteCollectionConfirm;
+
+  /// No description provided for @addToCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Collection'**
+  String get addToCollection;
+
+  /// No description provided for @removeFromCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from Collection'**
+  String get removeFromCollection;
+
+  /// No description provided for @createNewCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Collection'**
+  String get createNewCollection;
+
+  /// No description provided for @addedToCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to {name}'**
+  String addedToCollection(String name);
+
+  /// No description provided for @removedFromCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from {name}'**
+  String removedFromCollection(String name);
+
+  /// No description provided for @recipeCountInCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} recipes'**
+  String recipeCountInCollection(int count);
+
+  /// No description provided for @emptyCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'No recipes in this collection'**
+  String get emptyCollection;
+
+  /// No description provided for @emptyCollectionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add recipes from the recipe detail screen'**
+  String get emptyCollectionSubtitle;
 }
 
 class _AppLocalizationsDelegate

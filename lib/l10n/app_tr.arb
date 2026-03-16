@@ -175,5 +175,36 @@
     }
   },
   "deleteList": "Listeyi Sil",
-  "deleteListConfirm": "Bu listeyi silmek istediginize emin misiniz?"
+  "deleteListConfirm": "Bu listeyi silmek istediginize emin misiniz?",
+  "collections": "Koleksiyonlar",
+  "collection": "Koleksiyon",
+  "newCollection": "Yeni Koleksiyon",
+  "collectionName": "Koleksiyon adi",
+  "collectionDescription": "Aciklama (istege bagli)",
+  "noCollections": "Henuz koleksiyon yok",
+  "deleteCollection": "Koleksiyonu Sil",
+  "deleteCollectionConfirm": "Bu koleksiyonu silmek istediginize emin misiniz?",
+  "addToCollection": "Koleksiyona Ekle",
+  "removeFromCollection": "Koleksiyondan Cikar",
+  "createNewCollection": "Yeni Koleksiyon Olustur",
+  "addedToCollection": "{name} koleksiyonuna eklendi",
+  "@addedToCollection": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "removedFromCollection": "{name} koleksiyonundan cikarildi",
+  "@removedFromCollection": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "recipeCountInCollection": "{count} tarif",
+  "@recipeCountInCollection": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "emptyCollection": "Bu koleksiyonda tarif yok",
+  "emptyCollectionSubtitle": "Tarif detay ekranindan tarif ekleyin"
 }

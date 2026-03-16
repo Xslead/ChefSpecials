@@ -192,6 +192,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const Spacer(),
                   IconButton(
+                    icon: const Icon(Icons.folder_outlined),
+                    color: AppTheme.textSecondaryOf(context),
+                    onPressed: () => context.push('/collections'),
+                  ),
+                  IconButton(
                     icon: const Icon(Icons.shopping_cart_outlined),
                     color: AppTheme.textSecondaryOf(context),
                     onPressed: () => context.push('/shopping-lists'),

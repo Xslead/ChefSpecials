@@ -175,5 +175,36 @@
     }
   },
   "deleteList": "Delete List",
-  "deleteListConfirm": "Are you sure you want to delete this list?"
+  "deleteListConfirm": "Are you sure you want to delete this list?",
+  "collections": "Collections",
+  "collection": "Collection",
+  "newCollection": "New Collection",
+  "collectionName": "Collection name",
+  "collectionDescription": "Description (optional)",
+  "noCollections": "No collections yet",
+  "deleteCollection": "Delete Collection",
+  "deleteCollectionConfirm": "Are you sure you want to delete this collection?",
+  "addToCollection": "Add to Collection",
+  "removeFromCollection": "Remove from Collection",
+  "createNewCollection": "Create New Collection",
+  "addedToCollection": "Added to {name}",
+  "@addedToCollection": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "removedFromCollection": "Removed from {name}",
+  "@removedFromCollection": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "recipeCountInCollection": "{count} recipes",
+  "@recipeCountInCollection": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "emptyCollection": "No recipes in this collection",
+  "emptyCollectionSubtitle": "Add recipes from the recipe detail screen"
 }

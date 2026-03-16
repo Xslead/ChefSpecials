@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../models/recipe.dart';
 import '../../models/recipe_collection.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/collection_provider.dart';
+import '../../providers/recipe_provider.dart';
 
 class CollectionListScreen extends StatefulWidget {
   const CollectionListScreen({super.key});
@@ -34,6 +38,8 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
         final nameController = TextEditingController();
         final descController = TextEditingController();
         return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: Text(l10n.newCollection),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -41,13 +47,19 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
               TextField(
                 controller: nameController,
                 autofocus: true,
-                decoration: InputDecoration(hintText: l10n.collectionName),
+                decoration: InputDecoration(
+                  hintText: l10n.collectionName,
+                  prefixIcon: const Icon(Icons.folder_outlined, size: 20),
+                ),
                 textCapitalization: TextCapitalization.sentences,
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: descController,
-                decoration: InputDecoration(hintText: l10n.collectionDescription),
+                decoration: InputDecoration(
+                  hintText: l10n.collectionDescription,
+                  prefixIcon: const Icon(Icons.notes_outlined, size: 20),
+                ),
                 textCapitalization: TextCapitalization.sentences,
                 maxLines: 2,
               ),
@@ -58,11 +70,16 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
               onPressed: () => Navigator.pop(ctx),
               child: Text(l10n.cancel),
             ),
-            TextButton(
+            FilledButton(
               onPressed: () => Navigator.pop(ctx, {
                 'name': nameController.text.trim(),
                 'description': descController.text.trim(),
               }),
+              style: FilledButton.styleFrom(
+                backgroundColor: AppTheme.primaryColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
               child: Text(l10n.save),
             ),
           ],
@@ -70,12 +87,13 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
       },
     );
     if (result != null && result['name']!.isNotEmpty && mounted) {
-      final desc = result['description']!.isEmpty ? null : result['description'];
+      final desc =
+          result['description']!.isEmpty ? null : result['description'];
       try {
         await context.read<CollectionProvider>().createCollection(
-          result['name']!,
-          description: desc,
-        );
+              result['name']!,
+              description: desc,
+            );
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -91,6 +109,7 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(l10n.deleteCollection),
         content: Text(l10n.deleteCollectionConfirm),
         actions: [
@@ -107,7 +126,9 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
       ),
     );
     if (confirmed == true && mounted) {
-      await context.read<CollectionProvider>().deleteCollection(collection.id!);
+      await context
+          .read<CollectionProvider>()
+          .deleteCollection(collection.id!);
     }
   }
 
@@ -228,157 +249,261 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
 
   Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 72,
-            height: 72,
-            decoration: BoxDecoration(
-              color: AppTheme.neutralSoftOf(context),
-              borderRadius: BorderRadius.circular(20),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: AppTheme.neutralSoftOf(context),
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Icon(
+                Icons.folder_outlined,
+                size: 40,
+                color: AppTheme.neutralLightOf(context),
+              ),
             ),
-            child: Icon(
-              Icons.folder_outlined,
-              size: 36,
-              color: AppTheme.neutralLightOf(context),
+            const SizedBox(height: 20),
+            Text(
+              l10n.noCollections,
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.textSecondaryOf(context),
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            l10n.noCollections,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textSecondaryOf(context),
+            const SizedBox(height: 8),
+            Text(
+              l10n.emptyCollectionSubtitle,
+              style: TextStyle(
+                fontSize: 13,
+                color: AppTheme.textTertiaryOf(context),
+                height: 1.4,
+              ),
+              textAlign: TextAlign.center,
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            l10n.emptyCollectionSubtitle,
-            style: TextStyle(
-              fontSize: 13,
-              color: AppTheme.textTertiaryOf(context),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildListView(CollectionProvider provider, AppLocalizations l10n) {
+    final allRecipes = context.watch<RecipeProvider>().allRecipes;
+
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
       itemCount: provider.collections.length,
       itemBuilder: (context, index) {
         final collection = provider.collections[index];
-        final recipeCount = collection.recipeIds.length;
-
         return Padding(
           padding: const EdgeInsets.only(bottom: 10),
-          child: Dismissible(
-            key: Key(collection.id!),
-            direction: DismissDirection.endToStart,
-            background: Container(
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.only(right: 24),
-              decoration: BoxDecoration(
-                color: AppTheme.errorColor,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: const Icon(Icons.delete_outline, color: Colors.white),
+          child: _buildCollectionCard(
+              context, collection, l10n, allRecipes, provider),
+        );
+      },
+    );
+  }
+
+  Widget _buildCollectionCard(
+    BuildContext context,
+    RecipeCollection collection,
+    AppLocalizations l10n,
+    List<Recipe> allRecipes,
+    CollectionProvider provider,
+  ) {
+    final recipeCount = collection.recipeIds.length;
+    final coverRecipes = collection.recipeIds
+        .take(3)
+        .map((id) => allRecipes.where((r) => r.id == id).firstOrNull)
+        .whereType<Recipe>()
+        .toList();
+    final updatedDate = DateFormat('MMM d').format(collection.updatedAt);
+
+    return Dismissible(
+      key: Key(collection.id!),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 24),
+        decoration: BoxDecoration(
+          color: AppTheme.errorColor,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.delete_outline, color: Colors.white, size: 24),
+            SizedBox(height: 4),
+            Text('Delete',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600)),
+          ],
+        ),
+      ),
+      confirmDismiss: (_) async {
+        await _deleteCollection(collection);
+        return false;
+      },
+      child: GestureDetector(
+        onTap: () => context.push('/collection/${collection.id}'),
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: AppTheme.surfaceOf(context),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color:
+                  AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
             ),
-            confirmDismiss: (_) async {
-              await _deleteCollection(collection);
-              return false;
-            },
-            child: GestureDetector(
-              onTap: () => context.push('/collection/${collection.id}'),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppTheme.surfaceOf(context),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: AppTheme.neutralLightOf(context)
-                        .withValues(alpha: 0.5),
-                  ),
-                  boxShadow: [AppTheme.shadowOf(context)],
-                ),
-                child: Row(
+            boxShadow: [AppTheme.shadowOf(context)],
+          ),
+          child: Row(
+            children: [
+              // Cover image stack or folder icon
+              _buildCoverThumbnail(context, coverRecipes),
+              const SizedBox(width: 14),
+              // Title + description + meta
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color:
-                            AppTheme.primaryColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(14),
+                    Text(
+                      collection.name,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.textPrimaryOf(context),
                       ),
-                      child: const Icon(
-                        Icons.folder,
-                        color: AppTheme.primaryColor,
-                        size: 24,
-                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            collection.name,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: AppTheme.textPrimaryOf(context),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            collection.description?.isNotEmpty == true
-                                ? collection.description!
-                                : l10n.recipeCountInCollection(recipeCount),
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: AppTheme.textTertiaryOf(context),
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (recipeCount > 0)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 3),
-                        decoration: BoxDecoration(
-                          color:
-                              AppTheme.primaryColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(10),
+                    if (collection.description?.isNotEmpty == true) ...[
+                      const SizedBox(height: 3),
+                      Text(
+                        collection.description!,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppTheme.textTertiaryOf(context),
+                          height: 1.3,
                         ),
-                        child: Text(
-                          '$recipeCount',
-                          style: const TextStyle(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        Icon(Icons.menu_book,
+                            size: 13,
+                            color: AppTheme.textTertiaryOf(context)),
+                        const SizedBox(width: 4),
+                        Text(
+                          l10n.recipeCountInCollection(recipeCount),
+                          style: TextStyle(
                             fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: AppTheme.primaryColor,
+                            color: AppTheme.textTertiaryOf(context),
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                      ),
-                    const SizedBox(width: 4),
-                    Icon(
-                      Icons.chevron_right,
-                      color: AppTheme.textTertiaryOf(context),
+                        const SizedBox(width: 12),
+                        Icon(Icons.access_time,
+                            size: 13,
+                            color: AppTheme.textTertiaryOf(context)),
+                        const SizedBox(width: 4),
+                        Text(
+                          updatedDate,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppTheme.textTertiaryOf(context),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-            ),
+              const SizedBox(width: 8),
+              Icon(
+                Icons.chevron_right,
+                color: AppTheme.textTertiaryOf(context),
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCoverThumbnail(
+      BuildContext context, List<Recipe> coverRecipes) {
+    if (coverRecipes.isNotEmpty && coverRecipes.first.imageUrl != null) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: SizedBox(
+          width: 56,
+          height: 56,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Image.network(
+                  coverRecipes.first.imageUrl!,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) =>
+                      _buildFolderIcon(context),
+                ),
+              ),
+              if (coverRecipes.length > 1)
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 5, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.6),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        bottomRight: Radius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      '+${coverRecipes.length - 1}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
+    }
+    return _buildFolderIcon(context);
+  }
+
+  Widget _buildFolderIcon(BuildContext context) {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        color: AppTheme.primaryColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Icon(
+        Icons.folder,
+        color: AppTheme.primaryColor,
+        size: 26,
+      ),
     );
   }
 }

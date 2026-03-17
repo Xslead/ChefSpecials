@@ -10,6 +10,7 @@ import '../../models/recipe.dart';
 import '../../providers/daily_tracker_provider.dart';
 import '../../providers/food_item_provider.dart';
 import '../../providers/recipe_provider.dart';
+import '../../widgets/screen_header.dart';
 
 class AddMealEntryScreen extends StatefulWidget {
   final MealType mealType;
@@ -69,13 +70,13 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
   Color _mealTypeColor() {
     switch (widget.mealType) {
       case MealType.breakfast:
-        return const Color(0xFFF59E0B);
+        return AppTheme.breakfastColor;
       case MealType.lunch:
-        return const Color(0xFF0EA5E9);
+        return AppTheme.lunchColor;
       case MealType.dinner:
-        return const Color(0xFF10B981);
+        return AppTheme.dinnerColor;
       case MealType.snack:
-        return const Color(0xFF8B5CF6);
+        return AppTheme.snackColor;
     }
   }
 
@@ -220,28 +221,28 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                           l10n.calories,
                           '${calcCalories.toInt()}',
                           l10n.kcal,
-                          const Color(0xFFEF4444),
+                          AppTheme.errorColor,
                         ),
                         _buildSheetNutrition(
                           ctx,
                           l10n.protein,
                           calcProtein.toStringAsFixed(1),
                           l10n.gram,
-                          const Color(0xFF0EA5E9),
+                          AppTheme.primaryColor,
                         ),
                         _buildSheetNutrition(
                           ctx,
                           l10n.carbs,
                           calcCarbs.toStringAsFixed(1),
                           l10n.gram,
-                          const Color(0xFFF59E0B),
+                          AppTheme.starColor,
                         ),
                         _buildSheetNutrition(
                           ctx,
                           l10n.fat,
                           calcFat.toStringAsFixed(1),
                           l10n.gram,
-                          const Color(0xFF10B981),
+                          AppTheme.dinnerColor,
                         ),
                       ],
                     ),
@@ -362,130 +363,80 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
     return Scaffold(
       body: Column(
         children: [
-          // Custom header
-          Container(
-            decoration: BoxDecoration(
-              color: AppTheme.surfaceVariantOf(context),
-              border: Border(
-                bottom: BorderSide(
-                  color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
+          // Header + Tab bar
+          Column(
+            children: [
+              ScreenHeader(
+                title: l10n.addFood,
+                subtitle: _mealTypeName(l10n),
+                icon: _mealTypeIcon(),
+                iconColor: mealColor,
+              ),
+              // Tab bar
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: AppTheme.neutralLightOf(context),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.all(4),
+                child: TabBar(
+                  controller: _tabController,
+                  indicator: BoxDecoration(
+                    color: AppTheme.surfaceOf(context),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [AppTheme.shadowOf(context)],
+                  ),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  labelColor: AppTheme.textPrimaryOf(context),
+                  unselectedLabelColor: AppTheme.textSecondaryOf(context),
+                  labelStyle: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  unselectedLabelStyle: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  dividerHeight: 0,
+                  tabs: [
+                    Tab(
+                      height: 36,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.kitchen, size: 16),
+                          const SizedBox(width: 6),
+                          Flexible(
+                            child: Text(
+                              l10n.selectFoodItem,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Tab(
+                      height: 36,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.menu_book, size: 16),
+                          const SizedBox(width: 6),
+                          Flexible(
+                            child: Text(
+                              l10n.selectRecipe,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            child: SafeArea(
-              bottom: false,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(4, 8, 8, 0),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () => context.pop(),
-                          color: AppTheme.textPrimaryOf(context),
-                        ),
-                        const SizedBox(width: 4),
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: mealColor.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Icon(
-                            _mealTypeIcon(),
-                            color: mealColor,
-                            size: 20,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.addFood,
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                            Text(
-                              _mealTypeName(l10n),
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: AppTheme.textTertiaryOf(context),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  // Tab bar
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: AppTheme.neutralLightOf(context),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.all(4),
-                    child: TabBar(
-                      controller: _tabController,
-                      indicator: BoxDecoration(
-                        color: AppTheme.surfaceOf(context),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [AppTheme.shadowOf(context)],
-                      ),
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      labelColor: AppTheme.textPrimaryOf(context),
-                      unselectedLabelColor: AppTheme.textSecondaryOf(context),
-                      labelStyle: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      unselectedLabelStyle: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      dividerHeight: 0,
-                      tabs: [
-                        Tab(
-                          height: 36,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.kitchen, size: 16),
-                              const SizedBox(width: 6),
-                              Flexible(
-                                child: Text(
-                                  l10n.selectFoodItem,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Tab(
-                          height: 36,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.menu_book, size: 16),
-                              const SizedBox(width: 6),
-                              Flexible(
-                                child: Text(
-                                  l10n.selectRecipe,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                ],
-              ),
-            ),
+              const SizedBox(height: 8),
+            ],
           ),
           // Tab content
           Expanded(

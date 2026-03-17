@@ -38,6 +38,21 @@ class DailyTrackerService {
     await _logsRef.doc(id).update(log.toMap());
   }
 
+  Future<Map<String, double>> getWeeklyCalories(
+      String userId, List<String> dates) async {
+    final snapshot = await _logsRef
+        .where('userId', isEqualTo: userId)
+        .where('date', whereIn: dates)
+        .get();
+
+    final result = <String, double>{};
+    for (final doc in snapshot.docs) {
+      final log = DailyLog.fromMap(doc.data(), doc.id);
+      result[log.date] = log.totalCalories;
+    }
+    return result;
+  }
+
   // ── Nutrition Goals ──
 
   Stream<NutritionGoal?> getNutritionGoal(String userId) {

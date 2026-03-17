@@ -17,6 +17,8 @@ class DailyTrackerProvider extends ChangeNotifier {
   DateTime _selectedDate = DateTime.now();
   bool _isLoading = false;
   String? _userId;
+  Map<String, double> _weeklyCalories = {};
+  String? _loadedWeekKey;
 
   StreamSubscription? _logSubscription;
   StreamSubscription? _goalSubscription;
@@ -26,28 +28,59 @@ class DailyTrackerProvider extends ChangeNotifier {
   DateTime get selectedDate => _selectedDate;
   bool get isLoading => _isLoading;
   String get dateString => DateFormat('yyyy-MM-dd').format(_selectedDate);
+  Map<String, double> get weeklyCalories => _weeklyCalories;
 
   void init(String userId) {
     if (_userId == userId) return;
     _userId = userId;
     _listenToGoal();
     _listenToLog();
+    loadWeeklyCalories(_selectedDate);
   }
 
   void setDate(DateTime date) {
     _selectedDate = DateTime(date.year, date.month, date.day);
     _listenToLog();
+    loadWeeklyCalories(_selectedDate);
     notifyListeners();
+  }
+
+  Future<void> loadWeeklyCalories(DateTime referenceDate) async {
+    if (_userId == null) return;
+    final weekStart = referenceDate.subtract(
+        Duration(days: referenceDate.weekday - 1)); // Monday
+    final weekKey = DateFormat('yyyy-MM-dd').format(weekStart);
+    if (_loadedWeekKey == weekKey) return;
+    _loadedWeekKey = weekKey;
+
+    final dates = List.generate(7, (i) {
+      final day = weekStart.add(Duration(days: i));
+      return DateFormat('yyyy-MM-dd').format(day);
+    });
+    _weeklyCalories = await _service.getWeeklyCalories(_userId!, dates);
+    notifyListeners();
+  }
+
+  void refreshWeeklyCalories() {
+    _loadedWeekKey = null;
+    loadWeeklyCalories(_selectedDate);
   }
 
   void _listenToLog() {
     _logSubscription?.cancel();
     if (_userId == null) return;
-    _isLoading = true;
+    // Only show loading spinner on first load, not on date switches
+    if (_dailyLog == null && !_isLoading) {
+      _isLoading = true;
+    }
+    // Clear current data immediately so UI shows fresh state for new date
+    _dailyLog = null;
     _logSubscription = _service.getDailyLog(_userId!, dateString).listen(
       (log) {
         _dailyLog = log;
         _isLoading = false;
+        // Update the weekly cache for this date
+        _weeklyCalories[dateString] = log?.totalCalories ?? 0;
         notifyListeners();
       },
       onError: (_) {

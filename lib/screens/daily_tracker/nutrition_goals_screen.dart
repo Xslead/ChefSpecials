@@ -7,6 +7,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../models/nutrition_goal.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/daily_tracker_provider.dart';
+import '../../widgets/screen_header.dart';
 
 class NutritionGoalsScreen extends StatefulWidget {
   const NutritionGoalsScreen({super.key});
@@ -99,70 +100,28 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
     return Scaffold(
       body: Column(
         children: [
-          // Custom header
-          Container(
-            decoration: BoxDecoration(
-              color: AppTheme.surfaceVariant,
-              border: Border(
-                bottom: BorderSide(color: AppTheme.neutralLight.withValues(alpha: 0.5)),
+          ScreenHeader(
+            title: l10n.nutritionGoals,
+            icon: Icons.track_changes,
+            trailing: [
+              TextButton(
+                onPressed: _isSaving ? null : _saveGoals,
+                child: _isSaving
+                    ? const SizedBox(
+                        height: 18,
+                        width: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(
+                        l10n.save,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.primaryColor,
+                        ),
+                      ),
               ),
-            ),
-            child: SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(4, 8, 8, 8),
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () => context.pop(),
-                      color: AppTheme.textPrimary,
-                    ),
-                    const SizedBox(width: 4),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(
-                        Icons.track_changes,
-                        color: AppTheme.primaryColor,
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      l10n.nutritionGoals,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -0.3,
-                      ),
-                    ),
-                    const Spacer(),
-                    // Save button
-                    TextButton(
-                      onPressed: _isSaving ? null : _saveGoals,
-                      child: _isSaving
-                          ? const SizedBox(
-                              height: 18,
-                              width: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : Text(
-                              l10n.save,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.primaryColor,
-                              ),
-                            ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            ],
           ),
           // Body
           Expanded(
@@ -248,8 +207,8 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
       decoration: BoxDecoration(
         color: AppTheme.surfaceOf(context),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.warmBeige.withValues(alpha: 0.5)),
-        boxShadow: [AppTheme.warmShadowLight()],
+        border: Border.all(color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5)),
+        boxShadow: [AppTheme.shadowOf(context)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,7 +232,7 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
                   style: TextStyle(
                     fontSize: compact ? 9 : 11,
                     fontWeight: FontWeight.w700,
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.textSecondaryOf(context),
                     letterSpacing: 0.8,
                   ),
                 ),
@@ -297,10 +256,10 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
               suffixStyle: TextStyle(
                 fontSize: compact ? 12 : 14,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.textTertiary,
+                color: AppTheme.textTertiaryOf(context),
               ),
               filled: true,
-              fillColor: AppTheme.warmCream,
+              fillColor: AppTheme.neutralSoftOf(context),
               contentPadding: EdgeInsets.symmetric(
                 horizontal: compact ? 10 : 16,
                 vertical: compact ? 10 : 14,

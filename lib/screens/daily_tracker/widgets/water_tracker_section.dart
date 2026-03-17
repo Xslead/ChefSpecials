@@ -93,7 +93,7 @@ class _WaterTrackerSectionState extends State<WaterTrackerSection>
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppTheme.surfaceOf(context),
         borderRadius: BorderRadius.circular(AppTheme.radiusL),
@@ -112,25 +112,25 @@ class _WaterTrackerSectionState extends State<WaterTrackerSection>
               Row(
                 children: [
                   const Icon(Icons.water_drop,
-                      color: Color(0xFF0EA5E9), size: 22),
+                      color: Color(0xFF0EA5E9), size: 18),
                   const SizedBox(width: 8),
                   Text(
                     l10n.waterTracking,
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(context).textTheme.titleSmall,
                   ),
                 ],
               ),
               Text(
                 '${widget.currentMl} / ${widget.targetMl} ${l10n.ml}',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 13,
                   fontWeight: FontWeight.bold,
                   color: AppTheme.textPrimaryOf(context),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 12),
           // Wave progress bar
           AnimatedBuilder(
             animation: _bounceAnimation,
@@ -145,12 +145,12 @@ class _WaterTrackerSectionState extends State<WaterTrackerSection>
               onTapUp: _handleWaveBarTap,
               child: SizedBox(
                 key: _waveBarKey,
-                height: 48,
+                height: 38,
                 child: AnimatedBuilder(
                   animation: _waveController,
                   builder: (context, _) {
                     return CustomPaint(
-                      size: const Size(double.infinity, 48),
+                      size: const Size(double.infinity, 38),
                       painter: _WaveBarPainter(
                         fillPercent: fillPercent,
                         wavePhase: _waveController.value * 2 * pi,
@@ -172,13 +172,13 @@ class _WaterTrackerSectionState extends State<WaterTrackerSection>
             child: Text(
               '${(fillPercent * 100).toInt()}%',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 13,
                 fontWeight: FontWeight.bold,
                 color: AppTheme.textSecondaryOf(context),
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 10),
           // Buttons
           Row(
             children: [
@@ -241,7 +241,7 @@ class _WaterButton extends StatelessWidget {
     return GestureDetector(
       onTap: enabled ? onTap : null,
       child: Container(
-        height: 44,
+        height: 36,
         decoration: BoxDecoration(
           color: enabled
               ? activeColor.withValues(alpha: 0.08)

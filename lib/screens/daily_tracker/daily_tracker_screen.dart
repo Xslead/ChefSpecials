@@ -209,7 +209,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                     child: const Icon(
                       Icons.insights,
                       color: AppTheme.primaryColor,
-                      size: 24,
+                      size: 20,
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -217,7 +217,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                     child: Text(
                       l10n.dailyTracker,
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
                         letterSpacing: -0.3,
                       ),
@@ -240,7 +240,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                     child: Icon(
                       Icons.chevron_left,
                       color: AppTheme.textSecondaryOf(context),
-                      size: 28,
+                      size: 22,
                     ),
                   ),
                   // 7 day circles
@@ -275,8 +275,8 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                             const SizedBox(height: 4),
                             // Circle with progress ring
                             SizedBox(
-                              width: 38,
-                              height: 38,
+                              width: 32,
+                              height: 32,
                               child: CustomPaint(
                                 painter: _DayRingPainter(
                                   progress: progress,
@@ -328,7 +328,7 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
                       color: _isCurrentWeek(selectedDate)
                           ? AppTheme.textTertiaryOf(context)
                           : AppTheme.textSecondaryOf(context),
-                      size: 28,
+                      size: 22,
                     ),
                   ),
                 ],
@@ -353,13 +353,13 @@ class _DailyTrackerScreenState extends State<DailyTrackerScreen> {
 
   Widget _buildMealsHeader(AppLocalizations l10n) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             l10n.todaysMeals,
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
         ],
       ),

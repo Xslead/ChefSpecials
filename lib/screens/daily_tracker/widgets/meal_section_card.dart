@@ -104,7 +104,7 @@ class _MealSectionCardState extends State<MealSectionCard> {
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,
-                vertical: 8,
+                vertical: 6,
               ),
               child: Row(
                 children: [
@@ -112,7 +112,7 @@ class _MealSectionCardState extends State<MealSectionCard> {
                     child: Text(
                       '${entry.name} (${entry.quantity.toInt()}${entry.unit})',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         color: AppTheme.textSecondaryOf(context),
                       ),
                     ),
@@ -120,7 +120,7 @@ class _MealSectionCardState extends State<MealSectionCard> {
                   Text(
                     '${entry.calories.toInt()} ${AppLocalizations.of(context)!.kcal}',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500,
                       color: AppTheme.textPrimaryOf(context),
                     ),
@@ -157,7 +157,7 @@ class _MealSectionCardState extends State<MealSectionCard> {
           children: [
             // Header row
             Padding(
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(10),
               child: Row(
                 children: [
                   // Tappable header area (everything except add button)
@@ -173,8 +173,8 @@ class _MealSectionCardState extends State<MealSectionCard> {
                         children: [
                           // Icon
                           Container(
-                            width: 40,
-                            height: 40,
+                            width: 34,
+                            height: 34,
                             decoration: BoxDecoration(
                               color: color.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(10),
@@ -182,7 +182,7 @@ class _MealSectionCardState extends State<MealSectionCard> {
                             child: Icon(
                               _iconForMealType(widget.mealType),
                               color: color,
-                              size: 22,
+                              size: 18,
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -194,7 +194,7 @@ class _MealSectionCardState extends State<MealSectionCard> {
                                 Text(
                                   _mealTypeName(l10n, widget.mealType),
                                   style:
-                                      Theme.of(context).textTheme.titleLarge,
+                                      Theme.of(context).textTheme.titleSmall,
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
@@ -202,7 +202,7 @@ class _MealSectionCardState extends State<MealSectionCard> {
                                       ? '${totalCal.toInt()} ${l10n.kcal}'
                                       : l10n.notAddedYet,
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 12,
                                     color: AppTheme.textTertiaryOf(context),
                                   ),
                                 ),
@@ -231,12 +231,12 @@ class _MealSectionCardState extends State<MealSectionCard> {
                       onTap: widget.onAddPressed,
                       customBorder: const CircleBorder(),
                       child: const SizedBox(
-                        width: 36,
-                        height: 36,
+                        width: 30,
+                        height: 30,
                         child: Icon(
                           Icons.add,
                           color: Colors.white,
-                          size: 18,
+                          size: 16,
                         ),
                       ),
                     ),

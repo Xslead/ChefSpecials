@@ -59,7 +59,7 @@ class MacroBarChart extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             SizedBox(
-              height: 180,
+              height: 150,
               child: BarChart(
                 BarChartData(
                   maxY: 150,
@@ -183,7 +183,7 @@ class MacroBarChart extends StatelessWidget {
         BarChartRodData(
           toY: y,
           color: y > 100 ? AppTheme.errorColor : color,
-          width: 28,
+          width: 22,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
         ),
       ],

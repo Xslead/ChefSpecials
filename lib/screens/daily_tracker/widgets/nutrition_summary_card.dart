@@ -46,12 +46,12 @@ class NutritionSummaryCard extends StatelessWidget {
       children: [
         // Circular calorie ring
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
           child: Column(
             children: [
               SizedBox(
-                width: 200,
-                height: 200,
+                width: 160,
+                height: 160,
                 child: CustomPaint(
                   painter: _CalorieRingPainter(
                     progress: calorieProgress.clamp(0, 1.0),
@@ -67,7 +67,7 @@ class NutritionSummaryCard extends StatelessWidget {
                               ? '+${(-remaining).toString()}'
                               : remaining.toString(),
                           style: TextStyle(
-                            fontSize: 38,
+                            fontSize: 30,
                             fontWeight: FontWeight.w800,
                             color: isExceeded
                                 ? AppTheme.errorColor
@@ -79,7 +79,7 @@ class NutritionSummaryCard extends StatelessWidget {
                               ? '${l10n.exceeded} ${l10n.kcal}'
                               : l10n.remainingKcal,
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: 11,
                             fontWeight: FontWeight.w500,
                             color: AppTheme.textTertiaryOf(context),
                           ),
@@ -89,7 +89,7 @@ class NutritionSummaryCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               // Consumed / Target row
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -117,12 +117,12 @@ class NutritionSummaryCard extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 12),
         // Macro bars container
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: AppTheme.surfaceOf(context),
               borderRadius: BorderRadius.circular(AppTheme.radiusL),
@@ -141,7 +141,7 @@ class NutritionSummaryCard extends StatelessWidget {
                   progress: proteinProgress,
                   color: AppTheme.primaryColor,
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 10),
                 _buildMacroRow(
                   context,
                   label: l10n.carbsShort,
@@ -150,7 +150,7 @@ class NutritionSummaryCard extends StatelessWidget {
                   progress: carbsProgress,
                   color: AppTheme.starColor,
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 10),
                 _buildMacroRow(
                   context,
                   label: l10n.fat,
@@ -216,11 +216,11 @@ class NutritionSummaryCard extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         SizedBox(
-          width: 56,
+          width: 44,
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 12,
               color: AppTheme.textSecondaryOf(context),
             ),
           ),
@@ -231,12 +231,12 @@ class NutritionSummaryCard extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: SizedBox(
-              height: 8,
+              height: 6,
               child: LinearProgressIndicator(
                 value: clampedProgress,
                 backgroundColor: AppTheme.neutralLightOf(context),
                 valueColor: AlwaysStoppedAnimation<Color>(barColor),
-                minHeight: 8,
+                minHeight: 6,
               ),
             ),
           ),
@@ -246,7 +246,7 @@ class NutritionSummaryCard extends StatelessWidget {
         Text(
           '${current.toInt()}g/${target.toInt()}g',
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 12,
             color: AppTheme.textPrimaryOf(context),
           ),
         ),

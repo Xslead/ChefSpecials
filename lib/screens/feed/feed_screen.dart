@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/constants.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/recipe.dart';
@@ -38,6 +39,16 @@ class _FeedScreenState extends State<FeedScreen> {
   String _searchQuery = '';
   List<String> _followingIds = [];
   Set<String> _followingIdSet = {};
+
+  // Filters
+  String? _selectedCategory;
+  final Set<String> _selectedDietaryTags = {};
+  String _sortBy = 'newest';
+
+  int get _activeFilterCount =>
+      (_selectedCategory != null ? 1 : 0) +
+      _selectedDietaryTags.length +
+      (_sortBy != 'newest' ? 1 : 0);
 
   // User search
   Timer? _userSearchDebounce;
@@ -159,11 +170,29 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   List<Recipe> get _displayedRecipes {
-    if (_searchQuery.isEmpty) return _recipes;
-    final q = _searchQuery.toLowerCase();
-    return _recipes
-        .where((r) => r.title.toLowerCase().contains(q))
-        .toList();
+    var result = _recipes.toList();
+
+    if (_searchQuery.isNotEmpty) {
+      final q = _searchQuery.toLowerCase();
+      result = result.where((r) => r.title.toLowerCase().contains(q)).toList();
+    }
+    if (_selectedCategory != null) {
+      result = result.where((r) => r.category == _selectedCategory).toList();
+    }
+    if (_selectedDietaryTags.isNotEmpty) {
+      result = result
+          .where((r) => _selectedDietaryTags.every((t) => r.dietaryTags.contains(t)))
+          .toList();
+    }
+    switch (_sortBy) {
+      case 'oldest':
+        result.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+      case 'popular':
+        result.sort((a, b) => b.averageRating.compareTo(a.averageRating));
+      default:
+        result.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    }
+    return result;
   }
 
   @override
@@ -225,54 +254,95 @@ class _FeedScreenState extends State<FeedScreen> {
                 ],
               ),
               const SizedBox(height: 12),
-              // Search bar
-              Container(
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppTheme.neutralLightOf(context),
-                  borderRadius: BorderRadius.circular(AppTheme.radiusM),
-                ),
-                child: Row(
-                  children: [
-                    const SizedBox(width: 14),
-                    Icon(Icons.search,
-                        color: AppTheme.textTertiaryOf(context), size: 20),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText: l10n.searchFeedHint,
-                          hintStyle: TextStyle(
-                            color: AppTheme.textTertiaryOf(context),
-                            fontSize: 14,
+              // Search bar + filter button
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: AppTheme.neutralLightOf(context),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 14),
+                          Icon(Icons.search,
+                              color: AppTheme.textTertiaryOf(context), size: 22),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              decoration: InputDecoration(
+                                hintText: l10n.searchFeedHint,
+                                hintStyle: TextStyle(
+                                  color: AppTheme.textTertiaryOf(context),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                border: InputBorder.none,
+                                filled: false,
+                                contentPadding: EdgeInsets.zero,
+                                isDense: true,
+                              ),
+                              style: const TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w500),
+                              onChanged: _onSearchChanged,
+                            ),
                           ),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.zero,
-                          isDense: true,
-                        ),
-                        style: const TextStyle(fontSize: 14),
-                        onChanged: _onSearchChanged,
+                          if (_searchQuery.isNotEmpty)
+                            GestureDetector(
+                              onTap: () {
+                                _searchController.clear();
+                                setState(() {
+                                  _searchQuery = '';
+                                  _searchedUsers = [];
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Icon(Icons.close_rounded,
+                                    size: 16,
+                                    color: AppTheme.textTertiaryOf(context)),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
-                    if (_searchQuery.isNotEmpty)
-                      GestureDetector(
-                        onTap: () {
-                          _searchController.clear();
-                          setState(() {
-                            _searchQuery = '';
-                            _searchedUsers = [];
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Icon(Icons.close_rounded,
-                              size: 16,
-                              color: AppTheme.textTertiaryOf(context)),
+                  ),
+                  const SizedBox(width: 10),
+                  GestureDetector(
+                    onTap: () => _showFilterSheet(context),
+                    child: Container(
+                      width: 48,
+                      height: 48,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: _activeFilterCount > 0
+                            ? AppTheme.primaryColor
+                            : AppTheme.neutralLightOf(context),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Badge(
+                        isLabelVisible: _activeFilterCount > 0,
+                        label: Text(
+                          '$_activeFilterCount',
+                          style: const TextStyle(
+                              fontSize: 10, fontWeight: FontWeight.w700),
+                        ),
+                        backgroundColor: Colors.white,
+                        textColor: AppTheme.primaryColor,
+                        child: Icon(
+                          Icons.tune_rounded,
+                          size: 22,
+                          color: _activeFilterCount > 0
+                              ? Colors.white
+                              : AppTheme.textTertiaryOf(context),
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -399,6 +469,300 @@ class _FeedScreenState extends State<FeedScreen> {
           ),
       ],
     );
+  }
+
+  void _showFilterSheet(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      useRootNavigator: true,
+      builder: (_) => StatefulBuilder(
+        builder: (context, setSheetState) {
+          return Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.75,
+            ),
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(24)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 12, bottom: 4),
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppTheme.neutralLightOf(context),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(Icons.tune_rounded,
+                            color: AppTheme.primaryColor, size: 20),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        l10n.filters,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const Spacer(),
+                      if (_activeFilterCount > 0)
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              _selectedCategory = null;
+                              _selectedDietaryTags.clear();
+                              _sortBy = 'newest';
+                            });
+                            setSheetState(() {});
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor: AppTheme.errorColor,
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12),
+                          ),
+                          child: Text(l10n.clearAll,
+                              style: const TextStyle(
+                                  fontSize: 13, fontWeight: FontWeight.w600)),
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Divider(color: AppTheme.neutralLightOf(context), height: 1),
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSectionHeader(context,
+                            icon: Icons.category_rounded, title: l10n.category),
+                        const SizedBox(height: 12),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: AppConstants.defaultCategories.map((cat) {
+                            final isSelected = _selectedCategory == cat;
+                            return _buildChip(
+                              context: context,
+                              label: _localizeCategory(cat, l10n),
+                              selected: isSelected,
+                              onTap: () {
+                                setState(() => _selectedCategory =
+                                    isSelected ? null : cat);
+                                setSheetState(() {});
+                              },
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 24),
+                        _buildSectionHeader(context,
+                            icon: Icons.eco_rounded, title: l10n.dietaryTags),
+                        const SizedBox(height: 12),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: AppConstants.defaultDietaryTags.map((tag) {
+                            final isSelected =
+                                _selectedDietaryTags.contains(tag);
+                            return _buildChip(
+                              context: context,
+                              label: tag,
+                              selected: isSelected,
+                              outlined: true,
+                              onTap: () {
+                                setState(() {
+                                  if (isSelected) {
+                                    _selectedDietaryTags.remove(tag);
+                                  } else {
+                                    _selectedDietaryTags.add(tag);
+                                  }
+                                });
+                                setSheetState(() {});
+                              },
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 24),
+                        _buildSectionHeader(context,
+                            icon: Icons.sort_rounded, title: l10n.sortBy),
+                        const SizedBox(height: 12),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            _buildSortOption(context, setSheetState, 'newest',
+                                l10n.newest),
+                            _buildSortOption(context, setSheetState, 'oldest',
+                                l10n.oldest),
+                            _buildSortOption(context, setSheetState, 'popular',
+                                l10n.popular),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primaryColor,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        _activeFilterCount > 0
+                            ? l10n.applyFiltersCount(_activeFilterCount)
+                            : l10n.applyFilters,
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(BuildContext context,
+      {required IconData icon, required String title}) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: AppTheme.primaryColor),
+        const SizedBox(width: 8),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+            color: AppTheme.textPrimaryOf(context),
+            letterSpacing: 0.3,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildChip({
+    required BuildContext context,
+    required String label,
+    required bool selected,
+    required VoidCallback onTap,
+    bool outlined = false,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: selected
+              ? (outlined
+                  ? AppTheme.primaryColor.withValues(alpha: 0.12)
+                  : AppTheme.primaryColor)
+              : AppTheme.neutralLightOf(context),
+          borderRadius: BorderRadius.circular(50),
+          border: selected && outlined
+              ? Border.all(color: AppTheme.primaryColor, width: 1.5)
+              : Border.all(color: Colors.transparent, width: 1.5),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: selected
+                ? (outlined ? AppTheme.primaryColor : Colors.white)
+                : AppTheme.textSecondaryOf(context),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSortOption(BuildContext context, StateSetter setSheetState,
+      String value, String label) {
+    final isSelected = _sortBy == value;
+    return GestureDetector(
+      onTap: () {
+        setState(() => _sortBy = value);
+        setSheetState(() {});
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppTheme.primaryColor
+              : AppTheme.neutralLightOf(context),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (isSelected) ...[
+              const Icon(Icons.check, size: 16, color: Colors.white),
+              const SizedBox(width: 6),
+            ],
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: isSelected
+                    ? Colors.white
+                    : AppTheme.textSecondaryOf(context),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _localizeCategory(String category, AppLocalizations l10n) {
+    switch (category) {
+      case 'Breakfast': return l10n.breakfast;
+      case 'Lunch': return l10n.lunch;
+      case 'Dinner': return l10n.dinner;
+      case 'Dessert': return l10n.dessert;
+      case 'Snack': return l10n.snack;
+      case 'Drink': return l10n.drink;
+      case 'Salad': return l10n.salad;
+      case 'Soup': return l10n.soup;
+      default: return category;
+    }
   }
 
   Widget _buildUserCard(UserModel user) {

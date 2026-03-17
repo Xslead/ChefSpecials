@@ -175,15 +175,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   Row(
                     children: [
-                      Container(
+                      Image.asset(
+                        'assets/logo.png',
                         width: 32,
                         height: 32,
-                        decoration: const BoxDecoration(
-                          color: AppTheme.primaryColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.restaurant_menu,
-                            size: 18, color: Colors.white),
                       ),
                       const SizedBox(width: 12),
                       Text(

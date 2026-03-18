@@ -387,7 +387,45 @@ All bugs resolved as of Push 18.
 - [x] `test/providers/meal_plan_provider_test.dart` — 38 tests (week nav, meals, nutrition, shopping list)
 
 **Note:** Firestore security rules need updating for `meal_plans` collection (PERMISSION_DENIED on device)
-Status: IMPLEMENTED — awaiting push
+Status: PUSHED (Push 19)
+
+Push 19b: Meal Planner Improvements
+
+**Copy/Paste Overhaul**
+- [x] Copy button now copies CURRENT week (not last week)
+- [x] Paste button added next to copy in header
+- [x] Paste icon highlighted (primary color) when clipboard has meals, dimmed when empty
+- [x] Paste REPLACES entire target week (not merge)
+- [x] Re-subscribes stream after paste for reliable UI update
+
+**Servings System**
+- [x] Adding same recipe to same slot increments servings (x1 → x2 → x3) instead of duplicates
+- [x] Swipe delete removes 1 serving at a time; fully removes entry at x0
+- [x] `PlannedMeal.copyWith()` and `isSameSlotAndRecipe()` helpers added
+- [x] Service uses full array read-modify-write instead of arrayUnion/arrayRemove
+
+**Day Circle Redesign**
+- [x] Day circles ALWAYS show date number (no more meal count replacing dates)
+- [x] Days with meals get filled primary-color background
+- [x] Today gets a small dot indicator below the circle to distinguish from "has meals"
+
+**Shopping List Integration**
+- [x] Generate shopping list from actual recipe INGREDIENTS (not recipe names)
+- [x] Ingredients aggregated by name+unit across all recipes, multiplied by servings
+- [x] `ShoppingList.mealPlanWeekStart` field added — links list to a specific week
+- [x] Max 1 shopping list per week from meal planner (upsert, not create)
+- [x] Auto-sync: adding/removing/pasting meals auto-updates the week's shopping list
+- [x] Shopping cart button silently opens the list (no repeated snackbar)
+- [x] `ShoppingListService.getMealPlanShoppingList()` query method
+- [x] `ShoppingListProvider.upsertMealPlanList()` and `syncMealPlanList()` methods
+
+**l10n**
+- [x] 7 new keys in EN + TR ARBs (copyWeek, pasteWeek, weekCopied, weekPasted, etc.)
+
+**Tests**
+- [x] Updated `meal_plan_provider_test.dart` — generateShoppingList tests adapted to new generateShoppingItems API
+
+Status: PUSHED
 
 ---
 

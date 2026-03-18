@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../config/constants.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../models/recipe.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_form_provider.dart';
 import '../../providers/recipe_provider.dart';
@@ -14,12 +15,20 @@ import 'widgets/ingredient_input_list.dart';
 import 'widgets/step_input_list.dart';
 
 class AddRecipeScreen extends StatelessWidget {
-  const AddRecipeScreen({super.key});
+  final Recipe? initialRecipe;
+
+  const AddRecipeScreen({super.key, this.initialRecipe});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => RecipeFormProvider(),
+      create: (_) {
+        final provider = RecipeFormProvider();
+        if (initialRecipe != null) {
+          provider.prefillFromRecipe(initialRecipe!);
+        }
+        return provider;
+      },
       child: const _AddRecipeForm(),
     );
   }
@@ -97,6 +106,22 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 40),
                 children: [
+                  // Import from URL
+                  OutlinedButton.icon(
+                    onPressed: () => context.push('/import-recipe'),
+                    icon: const Icon(Icons.download_rounded, size: 18),
+                    label: Text(l10n.importFromUrl),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppTheme.primaryColor,
+                      side: const BorderSide(color: AppTheme.primaryColor),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      minimumSize: const Size(double.infinity, 46),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
                   // Image picker
                   const ImagePickerTile(),
                   const SizedBox(height: 20),
@@ -105,6 +130,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                   _buildSectionLabel(l10n.recipeName, context),
                   const SizedBox(height: 8),
                   TextFormField(
+                    initialValue: formProvider.title,
                     decoration: InputDecoration(
                       hintText: l10n.recipeName,
                       prefixIcon: const Icon(
@@ -122,6 +148,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                   _buildSectionLabel(l10n.description, context),
                   const SizedBox(height: 8),
                   TextFormField(
+                    initialValue: formProvider.description,
                     decoration: InputDecoration(
                       hintText: l10n.description,
                       prefixIcon: const Icon(
@@ -357,7 +384,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
           Switch(
             value: isPrivate,
             onChanged: formProvider.setIsPrivate,
-            activeColor: AppTheme.primaryColor,
+            activeThumbColor: AppTheme.primaryColor,
           ),
         ],
       ),

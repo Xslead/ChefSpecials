@@ -29,6 +29,7 @@ import '../screens/shopping_list/shopping_lists_screen.dart';
 import '../screens/shopping_list/shopping_list_detail_screen.dart';
 import '../screens/collections/collection_list_screen.dart';
 import '../screens/collections/collection_detail_screen.dart';
+import '../screens/import_recipe/import_recipe_screen.dart';
 import '../models/meal_entry.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -107,7 +108,15 @@ final GoRouter router = GoRouter(
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/add-recipe',
-      builder: (context, state) => const AddRecipeScreen(),
+      builder: (context, state) {
+        final initial = state.extra as Recipe?;
+        return AddRecipeScreen(initialRecipe: initial);
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/import-recipe',
+      builder: (context, state) => const ImportRecipeScreen(),
     ),
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,

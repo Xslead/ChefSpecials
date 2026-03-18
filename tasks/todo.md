@@ -216,8 +216,8 @@
 - [ ] **Share Recipe:** share recipe as link or image card via share_plus
 - [ ] Generate shareable recipe card image
 - [ ] Share button on RecipeDetailScreen
-- [ ] **Recipe Import from URL:** paste a recipe link and auto-parse ingredients/steps
-- [ ] Import screen with URL input
+- [x] **Recipe Import from URL:** paste a recipe link and auto-parse ingredients/steps
+- [x] Import screen with URL input
 
 ### Push 16: Weekly Meal Planner
 - [ ] **Models:** MealPlan, PlannedMeal (day, mealType, recipeId)

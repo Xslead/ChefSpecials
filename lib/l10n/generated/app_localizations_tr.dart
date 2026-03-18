@@ -584,4 +584,30 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get shoppingListEmptySubtitle =>
       'Baslamak icin herhangi bir tariften malzeme ekleyin';
+
+  @override
+  String get importRecipe => 'Tarif İçe Aktar';
+
+  @override
+  String get importFromUrl => 'URL\'den İçe Aktar';
+
+  @override
+  String get importUrlDescription =>
+      'Herhangi bir tarif sitesinden bağlantı yapıştırın, detayları sizin için dolduralım.';
+
+  @override
+  String get recipeUrl => 'Tarif URL\'si';
+
+  @override
+  String get importUrlHint => 'https://www.ornek.com/tarif/...';
+
+  @override
+  String get importButton => 'İçe Aktar';
+
+  @override
+  String get importError =>
+      'Bu URL\'den tarif içe aktarılamadı. Bir tarif sitesi olduğundan emin olun.';
+
+  @override
+  String get supportedSites => 'Desteklenen Siteler';
 }

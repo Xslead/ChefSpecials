@@ -30,6 +30,21 @@ class RecipeFormProvider extends ChangeNotifier {
   List<String> dietaryTags = [];
   bool isSubmitting = false;
 
+  void prefillFromRecipe(Recipe recipe) {
+    title = recipe.title;
+    description = recipe.description;
+    category = recipe.category;
+    servings = recipe.servings;
+    prepTimeMinutes = recipe.prepTimeMinutes;
+    cookTimeMinutes = recipe.cookTimeMinutes;
+    ingredients = List.from(recipe.ingredients);
+    steps = recipe.steps.isEmpty
+        ? [RecipeStep(order: 1, instruction: '')]
+        : List.from(recipe.steps);
+    if (recipe.imageUrl != null) existingImageUrl = recipe.imageUrl;
+    notifyListeners();
+  }
+
   void addIngredientFromFoodItem(FoodItem foodItem, String amount) {
     ingredients.add(Ingredient(
       name: foodItem.name,

@@ -584,4 +584,30 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get shoppingListEmptySubtitle =>
       'Add ingredients from any recipe to get started';
+
+  @override
+  String get importRecipe => 'Import Recipe';
+
+  @override
+  String get importFromUrl => 'Import from URL';
+
+  @override
+  String get importUrlDescription =>
+      'Paste a link from any recipe website and we\'ll fill in the details for you.';
+
+  @override
+  String get recipeUrl => 'Recipe URL';
+
+  @override
+  String get importUrlHint => 'https://www.example.com/recipe/...';
+
+  @override
+  String get importButton => 'Import';
+
+  @override
+  String get importError =>
+      'Couldn\'t import a recipe from this URL. Make sure it\'s a recipe website.';
+
+  @override
+  String get supportedSites => 'Supported Sites';
 }

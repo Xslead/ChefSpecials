@@ -217,5 +217,13 @@
     }
   },
   "favoritesEmptySubtitle": "Tap the heart icon on recipes to save them here",
-  "shoppingListEmptySubtitle": "Add ingredients from any recipe to get started"
+  "shoppingListEmptySubtitle": "Add ingredients from any recipe to get started",
+  "importRecipe": "Import Recipe",
+  "importFromUrl": "Import from URL",
+  "importUrlDescription": "Paste a link from any recipe website and we'll fill in the details for you.",
+  "recipeUrl": "Recipe URL",
+  "importUrlHint": "https://www.example.com/recipe/...",
+  "importButton": "Import",
+  "importError": "Couldn't import a recipe from this URL. Make sure it's a recipe website.",
+  "supportedSites": "Supported Sites"
 }

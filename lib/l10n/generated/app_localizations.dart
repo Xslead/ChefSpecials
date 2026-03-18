@@ -1195,6 +1195,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add ingredients from any recipe to get started'**
   String get shoppingListEmptySubtitle;
+
+  /// No description provided for @importRecipe.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Recipe'**
+  String get importRecipe;
+
+  /// No description provided for @importFromUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Import from URL'**
+  String get importFromUrl;
+
+  /// No description provided for @importUrlDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste a link from any recipe website and we\'ll fill in the details for you.'**
+  String get importUrlDescription;
+
+  /// No description provided for @recipeUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe URL'**
+  String get recipeUrl;
+
+  /// No description provided for @importUrlHint.
+  ///
+  /// In en, this message translates to:
+  /// **'https://www.example.com/recipe/...'**
+  String get importUrlHint;
+
+  /// No description provided for @importButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get importButton;
+
+  /// No description provided for @importError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t import a recipe from this URL. Make sure it\'s a recipe website.'**
+  String get importError;
+
+  /// No description provided for @supportedSites.
+  ///
+  /// In en, this message translates to:
+  /// **'Supported Sites'**
+  String get supportedSites;
 }
 
 class _AppLocalizationsDelegate

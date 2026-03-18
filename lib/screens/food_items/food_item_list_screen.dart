@@ -8,18 +8,6 @@ import '../../providers/food_item_provider.dart';
 import '../../widgets/empty_state.dart';
 import 'widgets/food_item_card.dart';
 
-const List<String> _foodItemCategories = [
-  'All',
-  'Protein',
-  'Dairy',
-  'Grains',
-  'Vegetables',
-  'Fruits',
-  'Oils & Fats',
-  'Beverages',
-  'Other',
-];
-
 class FoodItemListScreen extends StatefulWidget {
   const FoodItemListScreen({super.key});
 
@@ -276,46 +264,6 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                         ),
                 ),
               ),
-              const SizedBox(height: 14),
-              // Category pills
-              SizedBox(
-                height: 40,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: _foodItemCategories.map((category) {
-                    final isSelected = provider.selectedCategory == category;
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: GestureDetector(
-                        onTap: () => provider.setCategory(category),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 18,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? AppTheme.primaryColor
-                                : AppTheme.neutralLightOf(context),
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Text(
-                            category == 'All' ? l10n.all : category,
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: isSelected
-                                  ? Colors.white
-                                  : AppTheme.textSecondaryOf(context),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
               const SizedBox(height: 4),
             ],
           ),
@@ -353,36 +301,46 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
   }
 
   void _showFilterSheet(BuildContext context, FoodItemProvider provider) {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       useRootNavigator: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (_) => ChangeNotifierProvider.value(
         value: provider,
-        child: const _FilterSheetBody(),
+        child: _FilterSheetBody(l10n: l10n),
       ),
     );
   }
 }
 
 class _FilterSheetBody extends StatelessWidget {
-  const _FilterSheetBody();
+  final AppLocalizations l10n;
+  const _FilterSheetBody({required this.l10n});
 
   @override
   Widget build(BuildContext context) {
+    const categories = [
+      'All', 'Protein', 'Dairy', 'Grains', 'Vegetables',
+      'Fruits', 'Oils & Fats', 'Beverages', 'Other',
+    ];
     final provider = context.watch<FoodItemProvider>();
-    final l10n = AppLocalizations.of(context)!;
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.75,
+      ),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Handle
-          Center(
+          // Handle bar
+          Padding(
+            padding: const EdgeInsets.only(top: 12, bottom: 4),
             child: Container(
               width: 40,
               height: 4,
@@ -392,34 +350,83 @@ class _FilterSheetBody extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 16),
           // Title row
-          Row(
-            children: [
-              Text(
-                l10n.filters,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(Icons.tune_rounded,
+                      color: AppTheme.primaryColor, size: 20),
                 ),
-              ),
-              const Spacer(),
-              if (provider.activeFilterCount > 0)
-                GestureDetector(
-                  onTap: () {
-                    provider.clearFilters();
-                    Navigator.pop(context);
-                  },
+                const SizedBox(width: 12),
+                Text(
+                  l10n.filters,
+                  style: const TextStyle(
+                      fontSize: 17, fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                if (provider.activeFilterCount > 0)
+                  TextButton(
+                    onPressed: () => provider.clearFilters(),
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppTheme.errorColor,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                    ),
+                    child: Text(l10n.clearAll,
+                        style: const TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w600)),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Divider(color: AppTheme.neutralLightOf(context), height: 1),
+          // Scrollable content
+          Flexible(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+          const SizedBox(height: 20),
+          // Category section
+          _buildLabel('CATEGORY', context),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: categories.map((category) {
+              final isSelected = provider.selectedCategory == category;
+              return GestureDetector(
+                onTap: () => provider.setCategory(category),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? AppTheme.primaryColor
+                        : AppTheme.neutralLightOf(context),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
                   child: Text(
-                    l10n.clearAll,
-                    style: const TextStyle(
+                    category == 'All' ? l10n.all : category,
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppTheme.primaryColor,
+                      color: isSelected
+                          ? Colors.white
+                          : AppTheme.textSecondaryOf(context),
                     ),
                   ),
                 ),
-            ],
+              );
+            }).toList(),
           ),
           const SizedBox(height: 20),
           // Dietary section
@@ -499,7 +506,37 @@ class _FilterSheetBody extends StatelessWidget {
               _buildSortChip(context, provider, 'protein', l10n.protein),
             ],
           ),
-          const SizedBox(height: 8),
+                  const SizedBox(height: 32),
+                ],
+              ),
+            ),
+          ),
+          // Apply button
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            child: SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primaryColor,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  elevation: 0,
+                ),
+                child: Text(
+                  provider.activeFilterCount > 0
+                      ? l10n.applyFiltersCount(provider.activeFilterCount)
+                      : l10n.applyFilters,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

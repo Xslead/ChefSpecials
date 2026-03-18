@@ -353,7 +353,7 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
           Switch(
             value: isPrivate,
             onChanged: formProvider.setIsPrivate,
-            activeColor: AppTheme.primaryColor,
+            activeTrackColor: AppTheme.primaryColor,
           ),
         ],
       ),

@@ -164,6 +164,14 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,
+      path: '/edit-food-item',
+      builder: (context, state) {
+        final foodItem = state.extra as FoodItem?;
+        return AddFoodItemScreen(editItem: foodItem);
+      },
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
       path: '/food-item/:id',
       builder: (context, state) {
         final foodItem = state.extra as FoodItem?;

@@ -20,7 +20,9 @@ void main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-  } catch (e) {}
+  } catch (e) {
+    debugPrint('Firebase init error: $e');
+  }
   runApp(
     MultiProvider(
       providers: [

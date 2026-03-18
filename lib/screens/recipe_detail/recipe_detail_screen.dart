@@ -200,12 +200,14 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     );
     if (confirmed == true && mounted) {
       final userId = context.read<AuthProvider>().userModel?.uid;
-      await context.read<CommentProvider>().deleteComment(
+      final commentProvider = context.read<CommentProvider>();
+      final ratingProvider = context.read<RatingProvider>();
+      await commentProvider.deleteComment(
         commentId: commentId,
         recipeId: recipeId,
       );
-      if (userId != null) {
-        await context.read<RatingProvider>().deleteRating(
+      if (userId != null && mounted) {
+        await ratingProvider.deleteRating(
           recipeId: recipeId,
           userId: userId,
         );
@@ -399,6 +401,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
       BuildContext context, Recipe recipe) async {
     final l10n = AppLocalizations.of(context)!;
     final messenger = ScaffoldMessenger.of(context);
+    final collectionProvider = context.read<CollectionProvider>();
     final name = await showDialog<String>(
       context: context,
       builder: (ctx) {
@@ -427,10 +430,9 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     );
     if (name != null && name.isNotEmpty && mounted) {
       try {
-        final provider = context.read<CollectionProvider>();
-        final collectionId = await provider.createCollection(name);
+        final collectionId = await collectionProvider.createCollection(name);
         if (recipe.id != null && collectionId.isNotEmpty) {
-          await provider.addRecipe(collectionId, recipe.id!);
+          await collectionProvider.addRecipe(collectionId, recipe.id!);
         }
         if (mounted) {
           messenger.showSnackBar(

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:go_router/go_router.dart';
+
 import '../../config/theme.dart';
 import '../../models/food_item.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/food_item_provider.dart';
 import 'widgets/nutrition_facts_table.dart';
 
 class FoodItemDetailScreen extends StatelessWidget {
@@ -90,7 +93,7 @@ class FoodItemDetailScreen extends StatelessWidget {
               PopupMenuButton<String>(
                 onSelected: (value) {
                   if (value == 'edit') {
-                    // TODO: Navigate to edit screen
+                    context.push('/edit-food-item', extra: foodItem);
                   } else if (value == 'delete') {
                     _showDeleteDialog(context);
                   }
@@ -530,10 +533,18 @@ class FoodItemDetailScreen extends StatelessWidget {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.of(ctx).pop();
-              // TODO: Call provider.deleteFoodItem() and pop screen
-              Navigator.of(context).pop();
+              try {
+                await context.read<FoodItemProvider>().deleteFoodItem(foodItem.id!);
+                if (context.mounted) context.pop();
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Failed to delete')),
+                  );
+                }
+              }
             },
             child: const Text(
               'Delete',

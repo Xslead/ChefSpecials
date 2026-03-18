@@ -126,6 +126,14 @@ class FoodItemProvider extends ChangeNotifier {
     await _foodItemService.addFoodItem(item);
   }
 
+  Future<void> deleteFoodItem(String id) async {
+    await _foodItemService.deleteFoodItem(id);
+  }
+
+  Future<void> updateFoodItem(FoodItem item) async {
+    await _foodItemService.updateFoodItem(item);
+  }
+
   @override
   void dispose() {
     _subscription?.cancel();

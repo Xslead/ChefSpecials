@@ -5,9 +5,13 @@ import '../models/recipe.dart';
 import '../models/recipe_step.dart';
 
 class RecipeImportService {
+  final http.Client _client;
+
+  RecipeImportService({http.Client? client}) : _client = client ?? http.Client();
+
   Future<Recipe> importFromUrl(String url) async {
     final uri = Uri.parse(url);
-    final response = await http.get(uri, headers: {
+    final response = await _client.get(uri, headers: {
       'User-Agent':
           'Mozilla/5.0 (compatible; ChefSpecials/1.0; recipe importer)',
       'Accept': 'text/html,application/xhtml+xml',

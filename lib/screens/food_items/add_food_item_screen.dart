@@ -22,7 +22,9 @@ const List<String> _categories = [
 const List<String> _units = ['100g', 'mL'];
 
 class AddFoodItemScreen extends StatefulWidget {
-  const AddFoodItemScreen({super.key});
+  final FoodItem? editItem;
+
+  const AddFoodItemScreen({super.key, this.editItem});
 
   @override
   State<AddFoodItemScreen> createState() => _AddFoodItemScreenState();
@@ -31,6 +33,8 @@ class AddFoodItemScreen extends StatefulWidget {
 class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isSubmitting = false;
+
+  bool get _isEditing => widget.editItem != null;
 
   String _name = '';
   String? _brand;
@@ -59,6 +63,42 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
   String? _origin;
   double? _servingSize;
 
+  @override
+  void initState() {
+    super.initState();
+    final item = widget.editItem;
+    if (item != null) {
+      _name = item.name;
+      _brand = item.brand;
+      _category = item.category;
+      _unit = item.unit;
+      _packetSize = item.packetSize;
+      _barcode = item.barcode;
+      _isVegan = item.isVegan;
+      _isVegetarian = item.isVegetarian;
+      _isGlutenFree = item.isGlutenFree;
+      _calories = item.calories;
+      _protein = item.protein;
+      _carbs = item.carbs;
+      _fat = item.fat;
+      _saturatedFat = item.saturatedFat;
+      _transFat = item.transFat;
+      _cholesterol = item.cholesterol;
+      _fiber = item.fiber;
+      _sugar = item.sugar;
+      _sodium = item.sodium;
+      _salt = item.salt;
+      _nutriScore = item.nutriScore;
+      _novaGroup = item.novaGroup;
+      _allergens = List<String>.from(item.allergens);
+      _ingredientsText = item.ingredientsText;
+      _origin = item.origin;
+      _servingSize = item.servingSize;
+    }
+  }
+
+  String? _editVal(double v) => _isEditing ? v.toStringAsFixed(1) : null;
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
@@ -71,6 +111,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
 
     try {
       final foodItem = FoodItem(
+        id: _isEditing ? widget.editItem!.id : null,
         name: _name,
         brand: _brand,
         category: _category,
@@ -97,11 +138,17 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
         ingredientsText: _ingredientsText,
         origin: _origin,
         servingSize: _servingSize,
-        addedBy: user.uid,
-        createdAt: DateTime.now(),
+        imageUrl: _isEditing ? widget.editItem!.imageUrl : null,
+        addedBy: _isEditing ? widget.editItem!.addedBy : user.uid,
+        createdAt: _isEditing ? widget.editItem!.createdAt : DateTime.now(),
+        isVerified: _isEditing ? widget.editItem!.isVerified : false,
       );
 
-      await foodItemProvider.addFoodItem(foodItem);
+      if (_isEditing) {
+        await foodItemProvider.updateFoodItem(foodItem);
+      } else {
+        await foodItemProvider.addFoodItem(foodItem);
+      }
 
       if (mounted) {
         context.pop();
@@ -152,16 +199,16 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                         color: AppTheme.secondaryColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(
-                        Icons.add_box_outlined,
+                      child: Icon(
+                        _isEditing ? Icons.edit_outlined : Icons.add_box_outlined,
                         color: AppTheme.secondaryColor,
                         size: 20,
                       ),
                     ),
                     const SizedBox(width: 10),
-                    const Text(
-                      'Add Food Item',
-                      style: TextStyle(
+                    Text(
+                      _isEditing ? 'Edit Food Item' : 'Add Food Item',
+                      style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
                         letterSpacing: -0.3,
@@ -211,6 +258,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                   _buildSectionLabel('NAME'),
                   const SizedBox(height: 8),
                   TextFormField(
+                    initialValue: _isEditing ? _name : null,
                     decoration: _styledInputDecoration(
                       hintText: 'Food item name',
                       prefixIcon: Icons.label_outlined,
@@ -225,6 +273,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                   _buildSectionLabel('BRAND'),
                   const SizedBox(height: 8),
                   TextFormField(
+                    initialValue: _isEditing ? (_brand ?? '') : null,
                     decoration: _styledInputDecoration(
                       hintText: 'Brand (optional)',
                       prefixIcon: Icons.storefront_outlined,
@@ -298,6 +347,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             _buildSectionLabel('PACKET SIZE'),
                             const SizedBox(height: 8),
                             TextFormField(
+                              initialValue: _isEditing ? _packetSize.toStringAsFixed(0) : null,
                               decoration: _styledInputDecoration(
                                 hintText: 'e.g. 330',
                                 prefixIcon: Icons.inventory_2_outlined,
@@ -328,6 +378,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             _buildSectionLabel('BARCODE'),
                             const SizedBox(height: 8),
                             TextFormField(
+                              initialValue: _isEditing ? (_barcode ?? '') : null,
                               decoration: _styledInputDecoration(
                                 hintText: 'Optional',
                                 prefixIcon: Icons.qr_code_2_outlined,
@@ -357,6 +408,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                     color: AppTheme.primaryColor,
                     label: l10n.calories,
                     suffix: l10n.kcal,
+                    initialValue: _editVal(_calories),
                     onSaved: (v) =>
                         _calories = double.tryParse(v ?? '') ?? 0,
                   ),
@@ -372,6 +424,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           label: l10n.protein,
                           suffix: l10n.gram,
                           compact: true,
+                          initialValue: _editVal(_protein),
                           onSaved: (v) =>
                               _protein = double.tryParse(v ?? '') ?? 0,
                         ),
@@ -384,6 +437,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           label: l10n.carbs,
                           suffix: l10n.gram,
                           compact: true,
+                          initialValue: _editVal(_carbs),
                           onSaved: (v) =>
                               _carbs = double.tryParse(v ?? '') ?? 0,
                         ),
@@ -396,6 +450,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           label: l10n.fat,
                           suffix: l10n.gram,
                           compact: true,
+                          initialValue: _editVal(_fat),
                           onSaved: (v) =>
                               _fat = double.tryParse(v ?? '') ?? 0,
                         ),
@@ -414,6 +469,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           label: 'Fiber',
                           suffix: l10n.gram,
                           compact: true,
+                          initialValue: _editVal(_fiber),
                           onSaved: (v) =>
                               _fiber = double.tryParse(v ?? '') ?? 0,
                         ),
@@ -426,6 +482,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           label: 'Sugar',
                           suffix: l10n.gram,
                           compact: true,
+                          initialValue: _editVal(_sugar),
                           onSaved: (v) =>
                               _sugar = double.tryParse(v ?? '') ?? 0,
                         ),
@@ -438,6 +495,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           label: 'Sodium',
                           suffix: 'mg',
                           compact: true,
+                          initialValue: _editVal(_sodium),
                           onSaved: (v) =>
                               _sodium = double.tryParse(v ?? '') ?? 0,
                         ),
@@ -456,6 +514,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           label: 'Sat. Fat',
                           suffix: l10n.gram,
                           compact: true,
+                          initialValue: _editVal(_saturatedFat),
                           onSaved: (v) =>
                               _saturatedFat = double.tryParse(v ?? '') ?? 0,
                         ),
@@ -468,6 +527,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           label: 'Trans Fat',
                           suffix: l10n.gram,
                           compact: true,
+                          initialValue: _editVal(_transFat),
                           onSaved: (v) =>
                               _transFat = double.tryParse(v ?? '') ?? 0,
                         ),
@@ -480,6 +540,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           label: 'Cholesterol',
                           suffix: 'mg',
                           compact: true,
+                          initialValue: _editVal(_cholesterol),
                           onSaved: (v) =>
                               _cholesterol = double.tryParse(v ?? '') ?? 0,
                         ),
@@ -498,6 +559,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           label: 'Salt',
                           suffix: l10n.gram,
                           compact: true,
+                          initialValue: _editVal(_salt),
                           onSaved: (v) =>
                               _salt = double.tryParse(v ?? '') ?? 0,
                         ),
@@ -579,6 +641,9 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             _buildSectionLabel('SERVING SIZE'),
                             const SizedBox(height: 8),
                             TextFormField(
+                              initialValue: _isEditing && _servingSize != null
+                                  ? _servingSize!.toStringAsFixed(0)
+                                  : null,
                               decoration: _styledInputDecoration(
                                 hintText: 'Optional',
                                 prefixIcon: Icons.scale_outlined,
@@ -610,6 +675,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             _buildSectionLabel('ORIGIN'),
                             const SizedBox(height: 8),
                             TextFormField(
+                              initialValue: _isEditing ? (_origin ?? '') : null,
                               decoration: _styledInputDecoration(
                                 hintText: 'Optional',
                                 prefixIcon: Icons.public_outlined,
@@ -628,6 +694,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                   _buildSectionLabel('INGREDIENTS'),
                   const SizedBox(height: 8),
                   TextFormField(
+                    initialValue: _isEditing ? (_ingredientsText ?? '') : null,
                     decoration: _styledInputDecoration(
                       hintText: 'List of ingredients (optional)',
                       prefixIcon: Icons.receipt_long_outlined,
@@ -946,6 +1013,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
     required String suffix,
     required FormFieldSetter<String> onSaved,
     bool compact = false,
+    String? initialValue,
   }) {
     return Container(
       padding: EdgeInsets.all(compact ? 10 : 14),
@@ -978,6 +1046,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
           ),
           const SizedBox(height: 6),
           TextFormField(
+            initialValue: initialValue,
             textAlign: TextAlign.center,
             keyboardType:
                 const TextInputType.numberWithOptions(decimal: true),

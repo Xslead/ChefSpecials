@@ -511,7 +511,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 20),
 
             DropdownButtonFormField<String>(
-              value: _gender,
+              initialValue: _gender,
               decoration: const InputDecoration(
                 labelText: 'Gender',
                 prefixIcon: Icon(Icons.wc_outlined),
@@ -581,7 +581,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 16),
 
             DropdownButtonFormField<String>(
-              value: _activityLevel,
+              initialValue: _activityLevel,
               decoration: const InputDecoration(
                 labelText: 'Activity Level',
                 prefixIcon: Icon(Icons.directions_run_outlined),
@@ -594,7 +594,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 16),
 
             DropdownButtonFormField<String>(
-              value: _cookingSkillLevel,
+              initialValue: _cookingSkillLevel,
               decoration: const InputDecoration(
                 labelText: 'Cooking Skill Level',
                 prefixIcon: Icon(Icons.restaurant_outlined),

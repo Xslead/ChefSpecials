@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
-import '../../providers/favorite_provider.dart';
 import '../../providers/follow_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../providers/theme_provider.dart';
@@ -22,7 +21,6 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
     final recipeProvider = context.watch<RecipeProvider>();
-    final favoriteProvider = context.watch<FavoriteProvider>();
     final l10n = AppLocalizations.of(context)!;
 
     final user = authProvider.userModel;
@@ -37,8 +35,6 @@ class ProfileScreen extends StatelessWidget {
         .where((r) => r.authorId == user.uid)
         .toList()
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    final favoriteCount = favoriteProvider.favoriteRecipeIds.length;
-
     return Scaffold(
       body: Column(
         children: [

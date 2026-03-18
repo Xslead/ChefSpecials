@@ -1,6 +1,5 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:chef_specials/services/storage_service.dart';
 
 /// Fake [Reference] with controllable delete behaviour.

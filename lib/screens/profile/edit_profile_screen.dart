@@ -139,11 +139,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       await _userService.updateUser(user.uid, updates);
 
-      if (newFullName != user.fullName) {
-        await RecipeService().updateAuthorName(user.uid, newFullName);
-        if (mounted) {
-          context.read<RecipeProvider>().updateAuthorName(user.uid, newFullName);
-        }
+      await RecipeService().updateAuthorName(user.uid, newFullName);
+      if (mounted) {
+        context.read<RecipeProvider>().updateAuthorName(user.uid, newFullName);
       }
 
       await authProvider.refreshUser();

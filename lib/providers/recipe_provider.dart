@@ -14,6 +14,11 @@ class RecipeProvider extends ChangeNotifier {
   bool _isLoading = false;
   StreamSubscription? _subscription;
 
+  final _authorNameController =
+      StreamController<MapEntry<String, String>>.broadcast();
+  Stream<MapEntry<String, String>> get authorNameChanges =>
+      _authorNameController.stream;
+
   bool _initialized = false;
 
   List<Recipe> get recipes {
@@ -65,6 +70,7 @@ class RecipeProvider extends ChangeNotifier {
       }
       return r;
     }).toList();
+    _authorNameController.add(MapEntry(authorId, newName));
     notifyListeners();
   }
 
@@ -88,6 +94,7 @@ class RecipeProvider extends ChangeNotifier {
   @override
   void dispose() {
     _subscription?.cancel();
+    _authorNameController.close();
     super.dispose();
   }
 }

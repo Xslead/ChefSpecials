@@ -12,6 +12,7 @@ import '../../models/recipe.dart';
 import '../../models/user_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/follow_provider.dart';
+import '../../providers/recipe_provider.dart';
 import '../../services/recipe_service.dart';
 import '../../services/user_service.dart';
 import '../../widgets/empty_state.dart';
@@ -55,15 +56,34 @@ class _FeedScreenState extends State<FeedScreen> {
   List<UserModel> _searchedUsers = [];
   bool _isSearchingUsers = false;
 
+  StreamSubscription<MapEntry<String, String>>? _authorNameSub;
+
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _init());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _init();
+      _authorNameSub = context
+          .read<RecipeProvider>()
+          .authorNameChanges
+          .listen((entry) {
+        if (!mounted) return;
+        setState(() {
+          _recipes = _recipes.map((r) {
+            if (r.authorId == entry.key) {
+              return r.copyWith(authorName: entry.value);
+            }
+            return r;
+          }).toList();
+        });
+      });
+    });
   }
 
   @override
   void dispose() {
+    _authorNameSub?.cancel();
     _scrollController.dispose();
     _searchController.dispose();
     _userSearchDebounce?.cancel();

@@ -225,5 +225,15 @@
   "importUrlHint": "https://www.example.com/recipe/...",
   "importButton": "Import",
   "importError": "Couldn't import a recipe from this URL. Make sure it's a recipe website.",
-  "supportedSites": "Supported Sites"
+  "supportedSites": "Supported Sites",
+  "shareRecipe": "Share Recipe",
+  "shareRecipeText": "Check out \"{title}\" by {author} on ChefSpecials!\n\n{ingredients}\n\nOpen in ChefSpecials:\n{link}",
+  "@shareRecipeText": {
+    "placeholders": {
+      "title": {"type": "String"},
+      "author": {"type": "String"},
+      "ingredients": {"type": "String"},
+      "link": {"type": "String"}
+    }
+  }
 }

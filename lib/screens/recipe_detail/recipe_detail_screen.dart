@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -210,6 +211,23 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
         );
       }
     }
+  }
+
+  Future<void> _shareRecipe(Recipe r) async {
+    final l10n = AppLocalizations.of(context)!;
+    final ingredientsList = r.ingredients
+        .map((ing) => '- ${ing.amount} ${ing.unit} ${ing.name}')
+        .join('\n');
+    final link = 'chefspecials://recipe/${r.id}';
+    final text = l10n.shareRecipeText(
+      r.title,
+      r.authorName,
+      ingredientsList,
+      link,
+    );
+    try {
+      await SharePlus.instance.share(ShareParams(text: text));
+    } catch (_) {}
   }
 
   void _showAddToShoppingListSheet(BuildContext context, Recipe recipe) {
@@ -635,6 +653,11 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
       expandedHeight: 320,
       pinned: true,
       actions: [
+        _buildGlassCircleButton(
+          icon: Icons.share_outlined,
+          iconColor: Colors.white,
+          onPressed: () => _shareRecipe(r),
+        ),
         if (_isOwner(r)) ...[
           _buildGlassCircleButton(
             icon: Icons.edit_outlined,

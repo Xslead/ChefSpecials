@@ -225,5 +225,15 @@
   "importUrlHint": "https://www.ornek.com/tarif/...",
   "importButton": "İçe Aktar",
   "importError": "Bu URL'den tarif içe aktarılamadı. Bir tarif sitesi olduğundan emin olun.",
-  "supportedSites": "Desteklenen Siteler"
+  "supportedSites": "Desteklenen Siteler",
+  "shareRecipe": "Tarifi Paylaş",
+  "shareRecipeText": "ChefSpecials'da {author} tarafından \"{title}\" tarifine göz at!\n\n{ingredients}\n\nChefSpecials'ta aç:\n{link}",
+  "@shareRecipeText": {
+    "placeholders": {
+      "title": {"type": "String"},
+      "author": {"type": "String"},
+      "ingredients": {"type": "String"},
+      "link": {"type": "String"}
+    }
+  }
 }

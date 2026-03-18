@@ -610,4 +610,17 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get supportedSites => 'Desteklenen Siteler';
+
+  @override
+  String get shareRecipe => 'Tarifi Paylaş';
+
+  @override
+  String shareRecipeText(
+    String title,
+    String author,
+    String ingredients,
+    String link,
+  ) {
+    return 'ChefSpecials\'da $author tarafından \"$title\" tarifine göz at!\n\n$ingredients\n\nChefSpecials\'ta aç:\n$link';
+  }
 }

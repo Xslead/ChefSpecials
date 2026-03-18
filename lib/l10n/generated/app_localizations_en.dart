@@ -610,4 +610,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get supportedSites => 'Supported Sites';
+
+  @override
+  String get shareRecipe => 'Share Recipe';
+
+  @override
+  String shareRecipeText(
+    String title,
+    String author,
+    String ingredients,
+    String link,
+  ) {
+    return 'Check out \"$title\" by $author on ChefSpecials!\n\n$ingredients\n\nOpen in ChefSpecials:\n$link';
+  }
 }

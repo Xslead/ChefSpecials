@@ -1243,6 +1243,23 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Supported Sites'**
   String get supportedSites;
+
+  /// No description provided for @shareRecipe.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Recipe'**
+  String get shareRecipe;
+
+  /// No description provided for @shareRecipeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Check out \"{title}\" by {author} on ChefSpecials!\n\n{ingredients}\n\nOpen in ChefSpecials:\n{link}'**
+  String shareRecipeText(
+    String title,
+    String author,
+    String ingredients,
+    String link,
+  );
 }
 
 class _AppLocalizationsDelegate

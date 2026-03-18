@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../models/recipe.dart';
 import '../models/food_item.dart';
+import '../services/recipe_service.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/auth/forgot_password_screen.dart';
@@ -149,10 +150,11 @@ final GoRouter router = GoRouter(
       path: '/recipe/:id',
       builder: (context, state) {
         final recipe = state.extra as Recipe?;
-        if (recipe == null) {
-          return const Scaffold(body: Center(child: Text('Recipe not found')));
+        if (recipe != null) {
+          return RecipeDetailScreen(recipe: recipe);
         }
-        return RecipeDetailScreen(recipe: recipe);
+        final recipeId = state.pathParameters['id']!;
+        return _RecipeLoaderScreen(recipeId: recipeId);
       },
     ),
     GoRoute(
@@ -254,3 +256,43 @@ final GoRouter router = GoRouter(
     ),
   ],
 );
+
+class _RecipeLoaderScreen extends StatefulWidget {
+  final String recipeId;
+  const _RecipeLoaderScreen({required this.recipeId});
+
+  @override
+  State<_RecipeLoaderScreen> createState() => _RecipeLoaderScreenState();
+}
+
+class _RecipeLoaderScreenState extends State<_RecipeLoaderScreen> {
+  late Future<Recipe?> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = RecipeService().getRecipe(widget.recipeId);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Recipe?>(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        final recipe = snapshot.data;
+        if (recipe == null) {
+          return Scaffold(
+            appBar: AppBar(),
+            body: const Center(child: Text('Recipe not found')),
+          );
+        }
+        return RecipeDetailScreen(recipe: recipe);
+      },
+    );
+  }
+}

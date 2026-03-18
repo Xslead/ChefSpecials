@@ -222,26 +222,45 @@ Push 16: iOS Keychain Fix
  [x] Fixed Podfile signing config + macOS 26 xattr codesign fix
 Status: PUSHED
 
-Push 17: Share Recipe
+Push 17: Share Recipe + Deep Links
 
  [x] Added share_plus dependency to pubspec.yaml
  [x] Added l10n keys: shareRecipe, shareRecipeText (EN + TR)
  [x] Share glass circle button in RecipeDetailScreen AppBar
- [x] Share GradientButton below "Add to Collection"
  [x] _shareRecipe() method formats title, author, ingredients list
-Status: IMPLEMENTED (not yet pushed)
+ [x] Deep link support: chefspecials:// URL scheme (Android + iOS)
+ [x] _RecipeLoaderScreen — loads recipe by ID from Firestore for deep link access
+ [x] Route /recipe/:id now works without extra data (deep link compatible)
+Status: PUSHED
+
+Push 18: Bug Fixes + Analyze Cleanup
+
+ [x] Bug #1: Food item edit — AddFoodItemScreen now supports editing (editItem param, pre-fill, updateFoodItem)
+ [x] Bug #1: Route /edit-food-item added to GoRouter
+ [x] Bug #2: Food item delete — FoodItemProvider.deleteFoodItem() wired in detail screen dialog
+ [x] Bug #3: RecipeImportService test — 58 tests (DI via http.Client, JSON-LD extraction, parsing)
+ [x] FoodItemProvider: added deleteFoodItem() and updateFoodItem() methods
+ [x] Fix: empty_catches in main.dart → debugPrint
+ [x] Fix: use_build_context_synchronously in login_screen, recipe_detail_screen (3 locations)
+ [x] Fix: deprecated value → initialValue on DropdownButtonFormField (register_screen, 3 locations)
+ [x] Fix: deprecated activeColor → activeTrackColor on Switch (edit_recipe_screen)
+ [x] Fix: unused_local_variable favoriteCount/favoriteProvider in profile_screen
+ [x] Fix: unnecessary_import mockito in storage_service_test
+ [x] flutter analyze — 0 issues
+ [x] flutter test — 919 tests passing (55 files, 14,586 lines)
+Status: PUSHED
 
 Push 20: Testing
 
- [x] 765 tests passing across all layers (70 files, 12,099 lines)
- [x] DI constructors added to all 11 services and 11 providers
- [x] Dev dependencies: fake_cloud_firestore, mockito, build_runner
+ [x] 919 tests passing across all layers (55 files, 14,586 lines)
+ [x] DI constructors added to all 12 services and 11 providers
+ [x] Dev dependencies: fake_cloud_firestore, mockito, build_runner, http (MockClient)
  [x] Test helpers: 26 factory functions for all 13 models
 Unit Tests (test/)
  [x] Models (233 tests): Recipe, Ingredient, ShoppingList, ShoppingItem, FoodItem, DailyLog, MealEntry, NutritionGoal, UserModel, Rating, Comment, Favorite, RecipeStep
  [x] fromMap() / toMap() round-trip correctness
  [x] Default values, null handling, edge cases, computed properties, copyWith, enums
- [x] Services (133 tests, fake_cloud_firestore):
+ [x] Services (191 tests, fake_cloud_firestore + MockClient):
  [x] RecipeService — CRUD, streams, category filter, feed pagination, author name batch update
  [x] FavoriteService — toggle, isFavorite, streams
  [x] ShoppingListService — CRUD, toggle, clear checked, remove, add items
@@ -251,6 +270,7 @@ Unit Tests (test/)
  [x] CommentService — subcollection CRUD, transaction counters
  [x] FollowService — follow/unfollow batch writes, streams
  [x] UserService — CRUD, username claim transaction, search, migration
+ [x] RecipeImportService — importFromUrl, JSON-LD extraction, parsing, duration, servings, ingredients, steps, category, image
  [x] Providers (195 tests, fake_cloud_firestore + real services):
  [x] LocaleProvider, ThemeProvider — simple state tests
  [x] RecipeProvider — stream, filter, CRUD, author name update
@@ -280,40 +300,36 @@ Widget Tests (test/widgets/)
 Test Infrastructure
  [x] Add flutter_test, mockito, fake_cloud_firestore to dev_dependencies
  [x] Test helpers: 26 factory functions (test/helpers/test_helpers.dart)
- [x] CI-ready: flutter test runs 765 tests in ~9 seconds
+ [x] CI-ready: flutter test runs 919 tests in ~12 seconds
 Status: PUSHED
 
 ---
 
 ## App Statistics
 
- Total Dart files: 104
- Lines of code (lib/): 24,230
- Lines of code (test/): 13,527
- Total lines: 37,757
+ Total Dart files: 106 (lib) + 55 (test) = 161
+ Lines of code (lib/): 25,236
+ Lines of code (test/): 14,586
+ Total lines: 39,822
+ Tests: 919 (0 failures)
  Screens implemented: 28
  Models: 13
  Services: 13
  Providers: 14
- Routes: 24
+ Routes: 25
  l10n keys: 229 (EN + TR)
 
 ---
 
 ## Bugs
 
-### P0 — Critical
+All bugs resolved as of Push 18.
 
-| # | Bug | Location | Description |
-|---|-----|----------|-------------|
-| 1 | Food item edit not implemented | `food_item_detail_screen.dart:93` | `// TODO: Navigate to edit screen` — edit button does nothing |
-| 2 | Food item delete broken | `food_item_detail_screen.dart:535` | `// TODO: Call provider.deleteFoodItem() and pop screen` — dialog dismisses but item is NOT deleted |
-
-### P1 — High
-
-| # | Bug | Location | Description |
-|---|-----|----------|-------------|
-| 3 | Missing test | `recipe_import_service` | Only service without a test file |
+| # | Bug | Status | Resolution |
+|---|-----|--------|------------|
+| 1 | Food item edit not implemented | FIXED | AddFoodItemScreen supports editing via editItem param + /edit-food-item route |
+| 2 | Food item delete broken | FIXED | FoodItemProvider.deleteFoodItem() wired in detail screen dialog |
+| 3 | Missing test for recipe_import_service | FIXED | 58 tests added (DI via http.Client, full parsing coverage) |
 
 ---
 

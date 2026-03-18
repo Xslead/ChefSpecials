@@ -197,7 +197,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     Text(
                       l10n.editProfile,
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
                         letterSpacing: -0.3,
                       ),

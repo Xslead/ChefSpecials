@@ -162,7 +162,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                     const Text(
                       'Add Food Item',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
                         letterSpacing: -0.3,
                       ),

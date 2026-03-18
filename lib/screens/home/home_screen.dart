@@ -170,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const Text(
                     'ChefSpecials',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 17,
                       fontWeight: FontWeight.bold,
                       letterSpacing: -0.3,
                     ),
@@ -326,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         l10n.filters,
                         style: const TextStyle(
-                          fontSize: 20,
+                          fontSize: 17,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

@@ -124,7 +124,8 @@ class _FoodItemListScreenState extends State<FoodItemListScreen> {
                     children: [
                       Text(
                         l10n.materials,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        style: const TextStyle(
+                              fontSize: 17,
                               fontWeight: FontWeight.bold,
                               letterSpacing: -0.3,
                             ),

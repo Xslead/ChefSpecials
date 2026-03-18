@@ -419,7 +419,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                       const SizedBox(width: 12),
                       Text(l10n.filters,
                           style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
+                              fontSize: 17, fontWeight: FontWeight.bold)),
                       const Spacer(),
                       if (_activeFilterCount > 0)
                         TextButton(

@@ -246,7 +246,7 @@ class _FeedScreenState extends State<FeedScreen> {
                   Text(
                     l10n.feed,
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 17,
                       fontWeight: FontWeight.bold,
                       letterSpacing: -0.3,
                     ),
@@ -520,7 +520,7 @@ class _FeedScreenState extends State<FeedScreen> {
                       Text(
                         l10n.filters,
                         style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                            fontSize: 17, fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
                       if (_activeFilterCount > 0)

@@ -223,7 +223,7 @@ class ProfileScreen extends StatelessWidget {
               Text(
                 l10n.profile,
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 17,
                   fontWeight: FontWeight.bold,
                   letterSpacing: -0.3,
                 ),

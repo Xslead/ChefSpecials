@@ -684,4 +684,25 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get noMealPlanLastWeek => 'Geçen hafta için yemek planı bulunamadı';
+
+  @override
+  String get copyWeek => 'Bu haftayı kopyala';
+
+  @override
+  String get pasteWeek => 'Yemekleri buraya yapıştır';
+
+  @override
+  String get weekCopied => 'Hafta yemekleri kopyalandı';
+
+  @override
+  String get weekPasted => 'Yemekler bu haftaya yapıştırıldı';
+
+  @override
+  String get noMealsToCopy => 'Bu hafta kopyalanacak yemek yok';
+
+  @override
+  String get noCopiedMeals => 'Önce bir hafta kopyalayın';
+
+  @override
+  String get shoppingListCreated => 'Alışveriş listesi oluşturuldu';
 }

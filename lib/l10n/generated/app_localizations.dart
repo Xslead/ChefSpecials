@@ -1374,6 +1374,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No meal plan found for last week'**
   String get noMealPlanLastWeek;
+
+  /// No description provided for @copyWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy this week'**
+  String get copyWeek;
+
+  /// No description provided for @pasteWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste meals here'**
+  String get pasteWeek;
+
+  /// No description provided for @weekCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Week meals copied'**
+  String get weekCopied;
+
+  /// No description provided for @weekPasted.
+  ///
+  /// In en, this message translates to:
+  /// **'Meals pasted to this week'**
+  String get weekPasted;
+
+  /// No description provided for @noMealsToCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'No meals to copy this week'**
+  String get noMealsToCopy;
+
+  /// No description provided for @noCopiedMeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy a week first'**
+  String get noCopiedMeals;
+
+  /// No description provided for @shoppingListCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping list created'**
+  String get shoppingListCreated;
 }
 
 class _AppLocalizationsDelegate

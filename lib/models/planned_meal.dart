@@ -36,4 +36,22 @@ class PlannedMeal {
       'servings': servings,
     };
   }
+
+  PlannedMeal copyWith({int? servings}) {
+    return PlannedMeal(
+      day: day,
+      mealType: mealType,
+      recipeId: recipeId,
+      recipeName: recipeName,
+      recipeImageUrl: recipeImageUrl,
+      servings: servings ?? this.servings,
+    );
+  }
+
+  /// Same slot = same day + mealType + recipeId.
+  bool isSameSlotAndRecipe(PlannedMeal other) {
+    return day == other.day &&
+        mealType == other.mealType &&
+        recipeId == other.recipeId;
+  }
 }

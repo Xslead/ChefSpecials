@@ -390,42 +390,30 @@ void main() {
       });
     });
 
-    group('generateShoppingList', () {
-      test('returns empty map when no current plan', () {
-        expect(provider.generateShoppingList(), isEmpty);
+    group('generateShoppingItems', () {
+      test('returns empty list when no current plan', () {
+        expect(provider.generateShoppingItems([]), isEmpty);
       });
 
-      test('aggregates recipe names with servings', () async {
+      test('returns empty list when no matching recipes', () async {
         final weekStart = provider.selectedWeekStart;
         await service.createMealPlan(_makePlan(
           userId: userId,
           weekStartDate: weekStart,
           meals: [
             _makeMeal(recipeName: 'Chicken Salad', servings: 2),
-            _makeMeal(
-                day: 1,
-                recipeName: 'Chicken Salad',
-                servings: 1,
-                mealType: 'lunch'),
-            _makeMeal(
-                day: 2,
-                recipeName: 'Pasta',
-                servings: 3,
-                mealType: 'dinner'),
           ],
         ));
 
         provider.init(userId);
         await Future.delayed(Duration.zero);
 
-        final shopping = provider.generateShoppingList();
-
-        expect(shopping['Chicken Salad'], 3.0); // 2 + 1
-        expect(shopping['Pasta'], 3.0);
-        expect(shopping.length, 2);
+        // No recipes provided — cannot look up ingredients
+        final items = provider.generateShoppingItems([]);
+        expect(items, isEmpty);
       });
 
-      test('handles single meal correctly', () async {
+      test('returns empty list for single meal with no recipes', () async {
         final weekStart = provider.selectedWeekStart;
         await service.createMealPlan(_makePlan(
           userId: userId,
@@ -436,9 +424,8 @@ void main() {
         provider.init(userId);
         await Future.delayed(Duration.zero);
 
-        final shopping = provider.generateShoppingList();
-        expect(shopping['Solo Meal'], 4.0);
-        expect(shopping.length, 1);
+        final items = provider.generateShoppingItems([]);
+        expect(items, isEmpty);
       });
     });
 
@@ -628,7 +615,7 @@ void main() {
       });
     });
 
-    group('generateShoppingList — additional cases', () {
+    group('generateShoppingItems — additional cases', () {
       test('handles plan with empty meals list', () async {
         final weekStart = provider.selectedWeekStart;
         await service.createMealPlan(_makePlan(
@@ -640,10 +627,10 @@ void main() {
         provider.init(userId);
         await Future.delayed(Duration.zero);
 
-        expect(provider.generateShoppingList(), isEmpty);
+        expect(provider.generateShoppingItems([]), isEmpty);
       });
 
-      test('each unique recipe name is a separate key', () async {
+      test('returns empty when recipes not found', () async {
         final weekStart = provider.selectedWeekStart;
         await service.createMealPlan(_makePlan(
           userId: userId,
@@ -668,11 +655,9 @@ void main() {
         provider.init(userId);
         await Future.delayed(Duration.zero);
 
-        final shopping = provider.generateShoppingList();
-        expect(shopping.length, 3);
-        expect(shopping['A'], 1.0);
-        expect(shopping['B'], 2.0);
-        expect(shopping['C'], 3.0);
+        // No matching recipes provided
+        final items = provider.generateShoppingItems([]);
+        expect(items, isEmpty);
       });
     });
 

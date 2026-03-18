@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/meal_plan.dart';
 import '../models/planned_meal.dart';
 import '../models/recipe.dart';
+import '../models/shopping_list.dart';
 import '../services/meal_plan_service.dart';
 
 class MealPlanProvider extends ChangeNotifier {
@@ -16,11 +17,13 @@ class MealPlanProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _userId;
   StreamSubscription? _planSubscription;
+  List<PlannedMeal>? _copiedMeals;
 
   // Getters
   MealPlan? get currentPlan => _currentPlan;
   DateTime get selectedWeekStart => _selectedWeekStart;
   bool get isLoading => _isLoading;
+  bool get hasCopiedMeals => _copiedMeals != null && _copiedMeals!.isNotEmpty;
 
   /// Get all meals for a specific day (0=Monday through 6=Sunday).
   List<PlannedMeal> getMealsForDay(int day) {
@@ -100,16 +103,68 @@ class MealPlanProvider extends ChangeNotifier {
     await _service.copyFromPreviousWeek(userId, _selectedWeekStart);
   }
 
-  /// Aggregate ingredients across all planned meals into a shopping map.
-  /// Returns a map of ingredient name to total servings count.
-  Map<String, double> generateShoppingList() {
-    if (_currentPlan == null) return {};
-    final map = <String, double>{};
-    for (final meal in _currentPlan!.meals) {
-      final key = meal.recipeName;
-      map[key] = (map[key] ?? 0) + meal.servings;
+  /// Copy current week's meals to the in-memory clipboard.
+  void copyCurrentWeek() {
+    if (_currentPlan == null || _currentPlan!.meals.isEmpty) {
+      throw Exception('No meals to copy');
     }
-    return map;
+    _copiedMeals = List<PlannedMeal>.from(_currentPlan!.meals);
+    notifyListeners();
+  }
+
+  /// Paste the previously copied meals into the currently viewed week.
+  Future<void> pasteToCurrentWeek(String userId) async {
+    if (_copiedMeals == null || _copiedMeals!.isEmpty) {
+      throw Exception('No copied meals');
+    }
+    await _service.pasteMealsToWeek(userId, _selectedWeekStart, _copiedMeals!);
+    // Re-subscribe to ensure the stream picks up the newly created/updated plan
+    _listenToPlan();
+  }
+
+  /// Generate shopping items from planned meals by looking up recipe ingredients.
+  /// Aggregates same-name+unit ingredients across all recipes, multiplied by servings.
+  List<ShoppingItem> generateShoppingItems(List<Recipe> recipes) {
+    if (_currentPlan == null || _currentPlan!.meals.isEmpty) return [];
+
+    final recipeMap = <String, Recipe>{};
+    for (final recipe in recipes) {
+      if (recipe.id != null) recipeMap[recipe.id!] = recipe;
+    }
+
+    // key = "name|unit" for aggregation
+    final aggregated = <String, _AggregatedIngredient>{};
+
+    for (final meal in _currentPlan!.meals) {
+      final recipe = recipeMap[meal.recipeId];
+      if (recipe == null) continue;
+
+      for (final ing in recipe.ingredients) {
+        final key = '${ing.name.toLowerCase()}|${ing.unit ?? ''}';
+        final parsedAmount = double.tryParse(ing.amount) ?? 0;
+        final totalAmount = parsedAmount * meal.servings;
+
+        if (aggregated.containsKey(key)) {
+          aggregated[key]!.amount += totalAmount;
+        } else {
+          aggregated[key] = _AggregatedIngredient(
+            name: ing.name,
+            amount: totalAmount,
+            unit: ing.unit,
+          );
+        }
+      }
+    }
+
+    return aggregated.values
+        .map((a) => ShoppingItem(
+              name: a.name,
+              amount: a.amount % 1 == 0
+                  ? a.amount.toInt().toString()
+                  : a.amount.toStringAsFixed(1),
+              unit: a.unit,
+            ))
+        .toList();
   }
 
   /// Calculate weekly nutrition totals from planned meals using recipe data.
@@ -164,4 +219,16 @@ class MealPlanProvider extends ChangeNotifier {
     _planSubscription?.cancel();
     super.dispose();
   }
+}
+
+class _AggregatedIngredient {
+  final String name;
+  double amount;
+  final String? unit;
+
+  _AggregatedIngredient({
+    required this.name,
+    required this.amount,
+    this.unit,
+  });
 }

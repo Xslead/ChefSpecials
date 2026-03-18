@@ -37,6 +37,7 @@ class ShoppingList {
   final List<ShoppingItem> items;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? mealPlanWeekStart; // ISO8601 — set only for meal-planner-generated lists
 
   ShoppingList({
     this.id,
@@ -45,6 +46,7 @@ class ShoppingList {
     required this.items,
     required this.createdAt,
     required this.updatedAt,
+    this.mealPlanWeekStart,
   });
 
   factory ShoppingList.fromMap(Map<String, dynamic> map, String docId) {
@@ -58,6 +60,7 @@ class ShoppingList {
           [],
       createdAt: DateTime.parse(map['createdAt'] as String),
       updatedAt: DateTime.parse(map['updatedAt'] as String),
+      mealPlanWeekStart: map['mealPlanWeekStart'] as String?,
     );
   }
 
@@ -68,6 +71,7 @@ class ShoppingList {
       'items': items.map((e) => e.toMap()).toList(),
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      if (mealPlanWeekStart != null) 'mealPlanWeekStart': mealPlanWeekStart,
     };
   }
 }

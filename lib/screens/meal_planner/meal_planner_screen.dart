@@ -11,6 +11,7 @@ import '../../models/recipe.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/meal_plan_provider.dart';
 import '../../providers/recipe_provider.dart';
+import '../../providers/shopping_list_provider.dart';
 
 class MealPlannerScreen extends StatefulWidget {
   const MealPlannerScreen({super.key});
@@ -31,6 +32,20 @@ class _MealPlannerScreenState extends State<MealPlannerScreen> {
   }
 
   String? get _userId => context.read<AuthProvider>().userModel?.uid;
+
+  /// Auto-sync the shopping list for the current week (if one was already created).
+  Future<void> _syncShoppingList() async {
+    final userId = _userId;
+    if (userId == null) return;
+    final mealProvider = context.read<MealPlanProvider>();
+    final recipeProvider = context.read<RecipeProvider>();
+    final shoppingProvider = context.read<ShoppingListProvider>();
+    shoppingProvider.init(userId);
+
+    final items = mealProvider.generateShoppingItems(recipeProvider.allRecipes);
+    final weekStartIso = mealProvider.selectedWeekStart.toIso8601String();
+    await shoppingProvider.syncMealPlanList(weekStartIso, items);
+  }
 
   static const _mealTypes = ['breakfast', 'lunch', 'dinner', 'snack'];
 
@@ -102,157 +117,82 @@ class _MealPlannerScreenState extends State<MealPlannerScreen> {
     }
   }
 
-  Future<void> _copyFromLastWeek() async {
-    final userId = _userId;
-    if (userId == null) return;
+  void _copyCurrentWeek() {
     try {
-      await context.read<MealPlanProvider>().copyFromLastWeek(userId);
+      context.read<MealPlanProvider>().copyCurrentWeek();
       if (mounted) {
         final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.copiedFromLastWeek)),
+          SnackBar(content: Text(l10n.weekCopied)),
         );
       }
     } catch (e) {
       if (mounted) {
         final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.noMealPlanLastWeek)),
+          SnackBar(content: Text(l10n.noMealsToCopy)),
         );
       }
     }
   }
 
-  void _generateShoppingList() {
-    final provider = context.read<MealPlanProvider>();
-    final shoppingMap = provider.generateShoppingList();
-    final l10n = AppLocalizations.of(context)!;
+  Future<void> _pasteToCurrentWeek() async {
+    final userId = _userId;
+    if (userId == null) return;
+    try {
+      await context.read<MealPlanProvider>().pasteToCurrentWeek(userId);
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.weekPasted)),
+        );
+        _syncShoppingList();
+      }
+    } catch (e) {
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.noCopiedMeals)),
+        );
+      }
+    }
+  }
 
-    if (shoppingMap.isEmpty) {
+  Future<void> _generateShoppingList() async {
+    final mealProvider = context.read<MealPlanProvider>();
+    final recipeProvider = context.read<RecipeProvider>();
+    final l10n = AppLocalizations.of(context)!;
+    final userId = _userId;
+    if (userId == null) return;
+
+    final items = mealProvider.generateShoppingItems(recipeProvider.allRecipes);
+
+    if (items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.noMealsPlanned)),
       );
       return;
     }
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.vertical(top: Radius.circular(AppTheme.radiusXL)),
-      ),
-      builder: (ctx) => DraggableScrollableSheet(
-        initialChildSize: 0.5,
-        minChildSize: 0.3,
-        maxChildSize: 0.8,
-        expand: false,
-        builder: (ctx, scrollController) => Column(
-          children: [
-            const SizedBox(height: 12),
-            // Handle bar
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: AppTheme.neutralLightOf(ctx),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppTheme.secondaryColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(AppTheme.radiusS),
-                    ),
-                    child: const Icon(
-                      Icons.shopping_cart_outlined,
-                      color: AppTheme.secondaryColor,
-                      size: 20,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    l10n.generateShoppingListFromPlan,
-                    style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -0.3,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Divider(
-              height: 1,
-              color:
-                  AppTheme.neutralLightOf(ctx).withValues(alpha: 0.5),
-            ),
-            Expanded(
-              child: ListView.separated(
-                controller: scrollController,
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                itemCount: shoppingMap.length,
-                separatorBuilder: (_, _) => Divider(
-                  height: 1,
-                  indent: 16,
-                  endIndent: 16,
-                  color: AppTheme.neutralLightOf(ctx)
-                      .withValues(alpha: 0.5),
-                ),
-                itemBuilder: (ctx, index) {
-                  final entry = shoppingMap.entries.elementAt(index);
-                  return ListTile(
-                    leading: Container(
-                      width: 34,
-                      height: 34,
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                        borderRadius:
-                            BorderRadius.circular(AppTheme.radiusS),
-                      ),
-                      child: const Icon(
-                        Icons.restaurant_menu,
-                        size: 18,
-                        color: AppTheme.primaryColor,
-                      ),
-                    ),
-                    title: Text(
-                      entry.key,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    trailing: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        'x${entry.value.toStringAsFixed(0)}',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                          color: AppTheme.primaryColor,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    try {
+      final weekStart = mealProvider.selectedWeekStart;
+      final weekStartIso = weekStart.toIso8601String();
+      final listName =
+          '${l10n.mealPlanner} – ${DateFormat('MMM d').format(weekStart)}';
+      final shoppingProvider = context.read<ShoppingListProvider>();
+      shoppingProvider.init(userId);
+      final listId = await shoppingProvider.upsertMealPlanList(
+          listName, items, weekStartIso);
+      if (mounted) {
+        context.push('/shopping-list/$listId');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.error)),
+        );
+      }
+    }
   }
 
   void _showRecipePicker(int day, String mealType) {
@@ -281,6 +221,7 @@ class _MealPlannerScreenState extends State<MealPlannerScreen> {
           Navigator.of(ctx).pop();
           try {
             await context.read<MealPlanProvider>().addMeal(userId, meal);
+            if (mounted) _syncShoppingList();
           } catch (e) {
             if (mounted) {
               final l10n = AppLocalizations.of(context)!;
@@ -299,6 +240,7 @@ class _MealPlannerScreenState extends State<MealPlannerScreen> {
     if (userId == null) return;
     try {
       await context.read<MealPlanProvider>().removeMeal(userId, meal);
+      if (mounted) _syncShoppingList();
     } catch (e) {
       if (mounted) {
         final l10n = AppLocalizations.of(context)!;
@@ -389,9 +331,25 @@ class _MealPlannerScreenState extends State<MealPlannerScreen> {
                   ),
                   IconButton(
                     icon: const Icon(Icons.copy_outlined, size: 20),
-                    onPressed: _copyFromLastWeek,
+                    onPressed: _copyCurrentWeek,
                     color: AppTheme.textSecondaryOf(context),
-                    tooltip: l10n.copyFromLastWeek,
+                    tooltip: l10n.copyWeek,
+                    padding: EdgeInsets.zero,
+                    constraints:
+                        const BoxConstraints(minWidth: 36, minHeight: 36),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.paste_outlined,
+                      size: 20,
+                      color: provider.hasCopiedMeals
+                          ? AppTheme.primaryColor
+                          : AppTheme.textSecondaryOf(context)
+                              .withValues(alpha: 0.4),
+                    ),
+                    onPressed:
+                        provider.hasCopiedMeals ? _pasteToCurrentWeek : null,
+                    tooltip: l10n.pasteWeek,
                     padding: EdgeInsets.zero,
                     constraints:
                         const BoxConstraints(minWidth: 36, minHeight: 36),
@@ -425,6 +383,8 @@ class _MealPlannerScreenState extends State<MealPlannerScreen> {
                     final meals = provider.getMealsForDay(i);
                     final hasMeals = meals.isNotEmpty;
 
+                    final isFilled = isToday || hasMeals;
+
                     return Expanded(
                       child: Column(
                         children: [
@@ -433,7 +393,7 @@ class _MealPlannerScreenState extends State<MealPlannerScreen> {
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
-                              color: isToday
+                              color: isFilled
                                   ? AppTheme.primaryColor
                                   : AppTheme.textTertiaryOf(context),
                             ),
@@ -444,42 +404,45 @@ class _MealPlannerScreenState extends State<MealPlannerScreen> {
                             height: 32,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: isToday
+                              color: isFilled
                                   ? AppTheme.primaryColor
                                   : Colors.transparent,
-                              border: !isToday
+                              border: !isFilled
                                   ? Border.all(
-                                      color: hasMeals
-                                          ? AppTheme.primaryColor
-                                          : AppTheme.neutralLightOf(context),
-                                      width: hasMeals ? 2 : 1.5,
+                                      color:
+                                          AppTheme.neutralLightOf(context),
+                                      width: 1.5,
                                     )
                                   : null,
                             ),
                             child: Center(
-                              child: hasMeals && !isToday
-                                  ? Text(
-                                      '${meals.length}',
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppTheme.primaryColor,
-                                      ),
-                                    )
-                                  : Text(
-                                      '${day.day}',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: isToday
-                                            ? FontWeight.w700
-                                            : FontWeight.w500,
-                                        color: isToday
-                                            ? Colors.white
-                                            : AppTheme.textPrimaryOf(context),
-                                      ),
-                                    ),
+                              child: Text(
+                                '${day.day}',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: isFilled
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
+                                  color: isFilled
+                                      ? Colors.white
+                                      : AppTheme.textPrimaryOf(context),
+                                ),
+                              ),
                             ),
                           ),
+                          const SizedBox(height: 3),
+                          // Today indicator dot
+                          if (isToday)
+                            Container(
+                              width: 5,
+                              height: 5,
+                              decoration: const BoxDecoration(
+                                color: AppTheme.primaryColor,
+                                shape: BoxShape.circle,
+                              ),
+                            )
+                          else
+                            const SizedBox(height: 5),
                         ],
                       ),
                     );
@@ -697,15 +660,33 @@ class _MealPlannerScreenState extends State<MealPlannerScreen> {
   Widget _buildMealEntry(PlannedMeal meal) {
     return Dismissible(
       key: ValueKey(
-          '${meal.day}_${meal.mealType}_${meal.recipeId}_${meal.recipeName}'),
+          '${meal.day}_${meal.mealType}_${meal.recipeId}_${meal.servings}'),
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
         color: AppTheme.errorColor,
-        child: const Icon(Icons.delete, color: Colors.white, size: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              meal.servings > 1 ? '-1' : '',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
+              ),
+            ),
+            const SizedBox(width: 6),
+            const Icon(Icons.remove_circle_outline, color: Colors.white, size: 20),
+            const SizedBox(width: 20),
+          ],
+        ),
       ),
-      onDismissed: (_) => _removeMeal(meal),
+      confirmDismiss: (_) async {
+        await _removeMeal(meal);
+        return false; // Don't auto-remove; stream update handles UI
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         child: Row(

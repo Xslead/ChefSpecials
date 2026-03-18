@@ -264,5 +264,12 @@
   },
   "mealPlanSaved": "Yemek planı kaydedildi",
   "copiedFromLastWeek": "Geçen haftadan kopyalandı",
-  "noMealPlanLastWeek": "Geçen hafta için yemek planı bulunamadı"
+  "noMealPlanLastWeek": "Geçen hafta için yemek planı bulunamadı",
+  "copyWeek": "Bu haftayı kopyala",
+  "pasteWeek": "Yemekleri buraya yapıştır",
+  "weekCopied": "Hafta yemekleri kopyalandı",
+  "weekPasted": "Yemekler bu haftaya yapıştırıldı",
+  "noMealsToCopy": "Bu hafta kopyalanacak yemek yok",
+  "noCopiedMeals": "Önce bir hafta kopyalayın",
+  "shoppingListCreated": "Alışveriş listesi oluşturuldu"
 }

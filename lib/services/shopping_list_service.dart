@@ -13,6 +13,20 @@ class ShoppingListService {
     return doc.id;
   }
 
+  /// Find the meal-planner shopping list for a specific week.
+  Future<ShoppingList?> getMealPlanShoppingList(
+      String userId, String weekStartIso) async {
+    final snapshot = await _firestore
+        .collection(_collection)
+        .where('userId', isEqualTo: userId)
+        .where('mealPlanWeekStart', isEqualTo: weekStartIso)
+        .limit(1)
+        .get();
+    if (snapshot.docs.isEmpty) return null;
+    final doc = snapshot.docs.first;
+    return ShoppingList.fromMap(doc.data(), doc.id);
+  }
+
   Stream<List<ShoppingList>> getUserShoppingLists(String userId) {
     return _firestore
         .collection(_collection)

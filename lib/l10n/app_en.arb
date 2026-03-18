@@ -264,5 +264,12 @@
   },
   "mealPlanSaved": "Meal plan saved",
   "copiedFromLastWeek": "Copied from last week",
-  "noMealPlanLastWeek": "No meal plan found for last week"
+  "noMealPlanLastWeek": "No meal plan found for last week",
+  "copyWeek": "Copy this week",
+  "pasteWeek": "Paste meals here",
+  "weekCopied": "Week meals copied",
+  "weekPasted": "Meals pasted to this week",
+  "noMealsToCopy": "No meals to copy this week",
+  "noCopiedMeals": "Copy a week first",
+  "shoppingListCreated": "Shopping list created"
 }

@@ -61,18 +61,73 @@ class MealPlanService {
     await _mealPlansRef.doc(plan.id).update(data);
   }
 
+  /// Add a meal. If the same recipe already exists in the slot, increment servings.
   Future<void> addMealToDay(String planId, PlannedMeal meal) async {
+    final doc = await _mealPlansRef.doc(planId).get();
+    if (!doc.exists) return;
+
+    final plan = MealPlan.fromMap(doc.data()!, doc.id);
+    final meals = List<PlannedMeal>.from(plan.meals);
+    final idx = meals.indexWhere((m) => m.isSameSlotAndRecipe(meal));
+
+    if (idx >= 0) {
+      meals[idx] = meals[idx].copyWith(servings: meals[idx].servings + 1);
+    } else {
+      meals.add(meal);
+    }
+
     await _mealPlansRef.doc(planId).update({
-      'meals': FieldValue.arrayUnion([meal.toMap()]),
+      'meals': meals.map((m) => m.toMap()).toList(),
       'updatedAt': Timestamp.fromDate(DateTime.now()),
     });
   }
 
+  /// Remove 1 serving. If servings reaches 0, remove the entry entirely.
   Future<void> removeMealFromDay(String planId, PlannedMeal meal) async {
+    final doc = await _mealPlansRef.doc(planId).get();
+    if (!doc.exists) return;
+
+    final plan = MealPlan.fromMap(doc.data()!, doc.id);
+    final meals = List<PlannedMeal>.from(plan.meals);
+    final idx = meals.indexWhere((m) => m.isSameSlotAndRecipe(meal));
+
+    if (idx < 0) return;
+
+    if (meals[idx].servings > 1) {
+      meals[idx] = meals[idx].copyWith(servings: meals[idx].servings - 1);
+    } else {
+      meals.removeAt(idx);
+    }
+
     await _mealPlansRef.doc(planId).update({
-      'meals': FieldValue.arrayRemove([meal.toMap()]),
+      'meals': meals.map((m) => m.toMap()).toList(),
       'updatedAt': Timestamp.fromDate(DateTime.now()),
     });
+  }
+
+  /// Paste a list of meals into a target week. Replaces all existing meals.
+  Future<void> pasteMealsToWeek(
+      String userId, DateTime weekStart, List<PlannedMeal> meals) async {
+    final normalized = _normalizeToMonday(weekStart);
+    final existingPlan = await getMealPlan(userId, normalized);
+    final now = DateTime.now();
+
+    if (existingPlan != null) {
+      // Replace: overwrite all meals in the existing plan
+      await _mealPlansRef.doc(existingPlan.id).update({
+        'meals': meals.map((m) => m.toMap()).toList(),
+        'updatedAt': Timestamp.fromDate(now),
+      });
+    } else {
+      final newPlan = MealPlan(
+        userId: userId,
+        weekStartDate: normalized,
+        meals: List<PlannedMeal>.from(meals),
+        createdAt: now,
+        updatedAt: now,
+      );
+      await createMealPlan(newPlan);
+    }
   }
 
   Future<void> copyFromPreviousWeek(

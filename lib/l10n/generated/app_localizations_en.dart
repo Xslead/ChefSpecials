@@ -684,4 +684,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noMealPlanLastWeek => 'No meal plan found for last week';
+
+  @override
+  String get copyWeek => 'Copy this week';
+
+  @override
+  String get pasteWeek => 'Paste meals here';
+
+  @override
+  String get weekCopied => 'Week meals copied';
+
+  @override
+  String get weekPasted => 'Meals pasted to this week';
+
+  @override
+  String get noMealsToCopy => 'No meals to copy this week';
+
+  @override
+  String get noCopiedMeals => 'Copy a week first';
+
+  @override
+  String get shoppingListCreated => 'Shopping list created';
 }

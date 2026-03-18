@@ -49,6 +49,38 @@ class ShoppingListProvider extends ChangeNotifier {
     return _service.createShoppingList(list);
   }
 
+  /// Create or update the meal-planner shopping list for a given week.
+  /// Returns the list ID (existing or newly created).
+  Future<String> upsertMealPlanList(
+      String name, List<ShoppingItem> items, String weekStartIso) async {
+    if (_userId == null) return '';
+
+    final existing =
+        await _service.getMealPlanShoppingList(_userId!, weekStartIso);
+
+    if (existing != null) {
+      // Update existing list: replace items and name
+      await _service.updateShoppingList(existing.id!, {
+        'name': name,
+        'items': items.map((e) => e.toMap()).toList(),
+        'updatedAt': DateTime.now().toIso8601String(),
+      });
+      return existing.id!;
+    }
+
+    // Create new
+    final now = DateTime.now();
+    final list = ShoppingList(
+      userId: _userId!,
+      name: name,
+      items: items,
+      createdAt: now,
+      updatedAt: now,
+      mealPlanWeekStart: weekStartIso,
+    );
+    return _service.createShoppingList(list);
+  }
+
   Future<void> deleteList(String listId) async {
     await _service.deleteShoppingList(listId);
   }
@@ -68,6 +100,20 @@ class ShoppingListProvider extends ChangeNotifier {
   Future<void> addIngredientsToList(
       String listId, List<ShoppingItem> items) async {
     await _service.addItemsToList(listId, items);
+  }
+
+  /// Auto-sync: if a meal-plan shopping list exists for this week, update its items.
+  /// Does nothing if no list exists yet (user creates it via the shopping cart button).
+  Future<void> syncMealPlanList(
+      String weekStartIso, List<ShoppingItem> items) async {
+    if (_userId == null) return;
+    final existing =
+        await _service.getMealPlanShoppingList(_userId!, weekStartIso);
+    if (existing == null) return; // No list yet — skip
+    await _service.updateShoppingList(existing.id!, {
+      'items': items.map((e) => e.toMap()).toList(),
+      'updatedAt': DateTime.now().toIso8601String(),
+    });
   }
 
   @override

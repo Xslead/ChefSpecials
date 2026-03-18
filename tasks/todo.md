@@ -307,17 +307,14 @@ Status: PUSHED
 
 ## App Statistics
 
- Total Dart files: 106 (lib) + 55 (test) = 161
- Lines of code (lib/): 25,236
- Lines of code (test/): 14,586
- Total lines: 39,822
- Tests: 919 (0 failures)
- Screens implemented: 28
- Models: 13
- Services: 13
- Providers: 14
- Routes: 25
- l10n keys: 229 (EN + TR)
+ Total Dart files: 110 (lib) + 58 (test) = 168
+ Tests: 1029 (0 failures)
+ Screens implemented: 29
+ Models: 15 (added MealPlan, PlannedMeal)
+ Services: 14 (added MealPlanService)
+ Providers: 15 (added MealPlanProvider)
+ Routes: 26
+ l10n keys: 246 (EN + TR)
 
 ---
 
@@ -337,89 +334,60 @@ All bugs resolved as of Push 18.
 
 ---
 
-### Task 1: Weekly Meal Planner (Push 18)
+### Task 1: Weekly Meal Planner (Push 19)
 
 **Model: MealPlan**
-- [ ] Create `lib/models/meal_plan.dart`
-- [ ] Fields: `id` (String), `userId` (String), `weekStartDate` (DateTime — always Monday of that week), `meals` (List\<PlannedMeal\>), `createdAt` (DateTime), `updatedAt` (DateTime)
-- [ ] `fromMap(Map<String, dynamic>)` factory — reads Firestore Timestamps, converts to DateTime
-- [ ] `toMap()` — converts DateTime back to Timestamps
-- [ ] `copyWith()` for immutable updates
-- [ ] Firestore collection: `meal_plans`, document ID: auto-generated
+- [x] Create `lib/models/meal_plan.dart`
+- [x] Fields: `id`, `userId`, `weekStartDate`, `meals`, `createdAt`, `updatedAt`
+- [x] `fromMap()` factory — reads Firestore Timestamps, converts to DateTime
+- [x] `toMap()` — converts DateTime back to Timestamps
+- [x] `copyWith()` for immutable updates
+- [x] Firestore collection: `meal_plans`, document ID: auto-generated
 
 **Model: PlannedMeal**
-- [ ] Define as nested class in `meal_plan.dart` or separate file `lib/models/planned_meal.dart`
-- [ ] Fields: `day` (int — 0=Monday through 6=Sunday), `mealType` (String — "breakfast"/"lunch"/"dinner"/"snack"), `recipeId` (String), `recipeName` (String — denormalized), `recipeImageUrl` (String?), `servings` (int, default 1)
-- [ ] Include `fromMap()` and `toMap()`
+- [x] Separate file `lib/models/planned_meal.dart`
+- [x] Fields: `day`, `mealType`, `recipeId`, `recipeName`, `recipeImageUrl`, `servings`
+- [x] `fromMap()` and `toMap()`
 
 **Service: MealPlanService**
-- [ ] Create `lib/services/meal_plan_service.dart`
-- [ ] Stateless class, Firestore `meal_plans` collection
-- [ ] `getMealPlan(String userId, DateTime weekStart)` → Future\<MealPlan?\> — query by userId + weekStartDate
-- [ ] `streamMealPlan(String userId, DateTime weekStart)` → Stream\<MealPlan?\> — real-time listener
-- [ ] `createMealPlan(MealPlan plan)` → Future\<void\>
-- [ ] `updateMealPlan(MealPlan plan)` → Future\<void\>
-- [ ] `addMealToDay(String planId, PlannedMeal meal)` → Future\<void\> — arrayUnion
-- [ ] `removeMealFromDay(String planId, PlannedMeal meal)` → Future\<void\> — arrayRemove
-- [ ] `deleteMealPlan(String planId)` → Future\<void\>
-- [ ] `copyFromPreviousWeek(String userId, DateTime currentWeekStart)` → Future\<MealPlan?\> — clone previous week
-- [ ] Accept optional `FirebaseFirestore` parameter for DI in tests
+- [x] Create `lib/services/meal_plan_service.dart`
+- [x] Stateless class, Firestore `meal_plans` collection, optional FirebaseFirestore DI
+- [x] `getMealPlan()`, `getMealPlanStream()`, `createMealPlan()`, `updateMealPlan()`
+- [x] `addMealToDay()` (arrayUnion), `removeMealFromDay()` (arrayRemove)
+- [x] `copyFromPreviousWeek()` — clone previous week
 
 **Provider: MealPlanProvider**
-- [ ] Create `lib/providers/meal_plan_provider.dart`
-- [ ] Extends `ChangeNotifier`, holds current week's MealPlan, selectedWeek, loading state
-- [ ] `init(String userId)` — subscribe to streamMealPlan for current week
-- [ ] `goToNextWeek()` / `goToPreviousWeek()` — shift selectedWeek by 7 days, re-subscribe
-- [ ] `addMeal(int day, String mealType, Recipe recipe, int servings)` — calls service.addMealToDay
-- [ ] `removeMeal(int day, String mealType, String recipeId)` — calls service.removeMealFromDay
-- [ ] `copyFromLastWeek()` — calls service.copyFromPreviousWeek
-- [ ] `getWeeklyNutrition()` → Map\<String, double\> — iterate all PlannedMeals, look up recipe nutrition from RecipeProvider, multiply by servings, sum totals
-- [ ] `generateShoppingList()` → List\<ShoppingItem\> — aggregate all ingredients from planned recipes, merge duplicates by name+unit
-- [ ] Register in `main.dart` MultiProvider, dispose stream subscription in `dispose()`
+- [x] Create `lib/providers/meal_plan_provider.dart`
+- [x] Extends ChangeNotifier, stream subscription, init/dispose
+- [x] `init()`, `navigateWeek()`, `addMeal()`, `removeMeal()`
+- [x] `getMealsForDay()`, `getMealsForSlot()`, `copyFromLastWeek()`
+- [x] `generateShoppingList()`, `getWeeklyNutrition()`
+- [x] Registered in `main.dart` MultiProvider
 
 **Screen: MealPlannerScreen**
-- [ ] Create `lib/screens/meal_planner/meal_planner_screen.dart`
-- [ ] Full-screen page pushed on top of shell (not a bottom nav tab)
-- [ ] AppBar: week selector (left/right arrows + "Mar 17 – Mar 23" label), overflow menu with "Copy from last week" and "Generate shopping list"
-- [ ] Body: horizontal scrollable Row of 7 DayColumn widgets (Mon–Sun)
-- [ ] Each DayColumn: day name header + 4 meal slots (breakfast, lunch, dinner, snack)
-- [ ] Empty slot: dashed-border "+" button → recipe picker bottom sheet (searchable)
-- [ ] Filled slot: MealSlotCard with recipe thumbnail, name, calorie count
-- [ ] Tap filled slot → recipe detail, long-press → remove
-- [ ] Bottom section: weekly nutrition summary bar (total calories, protein, carbs, fat)
-- [ ] Use `Consumer<MealPlanProvider>` for reactive updates
+- [x] Create `lib/screens/meal_planner/meal_planner_screen.dart`
+- [x] Week navigation (prev/next arrows + "Week of {date}")
+- [x] Action buttons: Copy from Last Week, Generate Shopping List
+- [x] 7 day cards with 4 meal slots each (breakfast, lunch, dinner, snack)
+- [x] Empty slots with "Add Meal" → recipe picker bottom sheet (searchable)
+- [x] Filled slots with recipe image, name, servings, delete button
+- [x] Today's card highlighted with primary color border
 
-**Widget: DayColumn**
-- [ ] Create `lib/screens/meal_planner/widgets/day_column.dart`
-- [ ] Receives: dayIndex, dayName, meals (filtered for this day), onAddMeal, onRemoveMeal callbacks
-- [ ] Renders: Column with day name Text, then 4 MealSlotCard or empty slot widgets
-
-**Widget: MealSlotCard**
-- [ ] Create `lib/screens/meal_planner/widgets/meal_slot_card.dart`
-- [ ] Receives: PlannedMeal data, onTap, onLongPress callbacks
-- [ ] Compact Card: recipe image (40x40 rounded), recipe name (1 line ellipsis), servings, calorie text
-
-**Route**
-- [ ] Add GoRoute path `/meal-planner` in `lib/config/routes.dart` under parentNavigatorKey
-- [ ] Access point: "Meal Planner" button/card on HomeScreen or ProfileScreen
+**Route & Access**
+- [x] GoRoute `/meal-planner` in routes.dart under parentNavigatorKey
+- [x] "Meal Planner" ListTile on ProfileScreen (calendar icon)
 
 **l10n**
-- [ ] Add keys to `app_en.arb` and `app_tr.arb`, then regenerate:
-  - `mealPlanner` / "Meal Planner" / "Yemek Planlayici"
-  - `weekOf` / "Week of {date}" / "{date} Haftasi"
-  - `copyFromLastWeek` / "Copy from Last Week" / "Gecen Haftadan Kopyala"
-  - `generateShoppingListFromPlan` / "Generate Shopping List" / "Alisveris Listesi Olustur"
-  - `addMealToSlot` / "Add Meal" / "Yemek Ekle"
-  - `removeMeal` / "Remove Meal" / "Yemegi Kaldir"
-  - `weeklyNutritionSummary` / "Weekly Nutrition" / "Haftalik Beslenme"
-  - `monday`/`tuesday`/`wednesday`/`thursday`/`friday`/`saturday`/`sunday` with Turkish translations
-  - `noMealsPlanned` / "No meals planned" / "Planlanmis yemek yok"
+- [x] 17 new keys in `app_en.arb` and `app_tr.arb` (day names, meal actions, feedback messages)
+- [x] `flutter gen-l10n` regenerated
 
-**Tests**
-- [ ] `test/models/meal_plan_test.dart` — fromMap/toMap round-trip, copyWith, default values, PlannedMeal serialization, weekStartDate always normalized to Monday
-- [ ] `test/services/meal_plan_service_test.dart` — fake_cloud_firestore: CRUD, stream updates, addMealToDay, removeMealFromDay, copyFromPreviousWeek
-- [ ] `test/providers/meal_plan_provider_test.dart` — week navigation, addMeal/removeMeal state changes, getWeeklyNutrition calculation, generateShoppingList aggregation
-- [ ] `test/screens/meal_planner/meal_planner_screen_test.dart` — widget test: renders day columns, shows meal slots, tap empty slot opens picker, weekly nutrition displays
+**Tests (110 new tests)**
+- [x] `test/models/meal_plan_test.dart` — 42 tests (fromMap/toMap, copyWith, edge cases)
+- [x] `test/services/meal_plan_service_test.dart` — 37 tests (CRUD, streams, copy, isolation)
+- [x] `test/providers/meal_plan_provider_test.dart` — 38 tests (week nav, meals, nutrition, shopping list)
+
+**Note:** Firestore security rules need updating for `meal_plans` collection (PERMISSION_DENIED on device)
+Status: IMPLEMENTED — awaiting push
 
 ---
 

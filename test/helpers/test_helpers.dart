@@ -10,6 +10,8 @@ import 'package:chef_specials/models/daily_log.dart';
 import 'package:chef_specials/models/meal_entry.dart';
 import 'package:chef_specials/models/nutrition_goal.dart';
 import 'package:chef_specials/models/shopping_list.dart';
+import 'package:chef_specials/models/meal_plan.dart';
+import 'package:chef_specials/models/planned_meal.dart';
 
 // ---------------------------------------------------------------------------
 // Ingredient
@@ -721,4 +723,66 @@ Map<String, dynamic> createTestShoppingListMap({
     'createdAt': createdAt ?? '2025-03-01T10:00:00.000',
     'updatedAt': updatedAt ?? '2025-03-01T10:00:00.000',
   };
+}
+
+// ---------------------------------------------------------------------------
+// PlannedMeal
+// ---------------------------------------------------------------------------
+
+PlannedMeal createTestPlannedMeal({
+  int? day,
+  String? mealType,
+  String? recipeId,
+  String? recipeName,
+  String? recipeImageUrl,
+  int? servings,
+}) {
+  return PlannedMeal(
+    day: day ?? 0,
+    mealType: mealType ?? 'breakfast',
+    recipeId: recipeId ?? 'recipe_001',
+    recipeName: recipeName ?? 'Test Recipe',
+    recipeImageUrl: recipeImageUrl,
+    servings: servings ?? 1,
+  );
+}
+
+Map<String, dynamic> createTestPlannedMealMap({
+  int? day,
+  String? mealType,
+  String? recipeId,
+  String? recipeName,
+  String? recipeImageUrl,
+  int? servings,
+}) {
+  return {
+    'day': day ?? 0,
+    'mealType': mealType ?? 'breakfast',
+    'recipeId': recipeId ?? 'recipe_001',
+    'recipeName': recipeName ?? 'Test Recipe',
+    'recipeImageUrl': recipeImageUrl,
+    'servings': servings ?? 1,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// MealPlan
+// ---------------------------------------------------------------------------
+
+MealPlan createTestMealPlan({
+  String? id,
+  String? userId,
+  DateTime? weekStartDate,
+  List<PlannedMeal>? meals,
+  DateTime? createdAt,
+  DateTime? updatedAt,
+}) {
+  return MealPlan(
+    id: id ?? 'plan_001',
+    userId: userId ?? 'user_001',
+    weekStartDate: weekStartDate ?? DateTime.utc(2025, 3, 17), // a Monday
+    meals: meals ?? [createTestPlannedMeal()],
+    createdAt: createdAt ?? DateTime(2025, 3, 17, 10, 0, 0),
+    updatedAt: updatedAt ?? DateTime(2025, 3, 17, 10, 0, 0),
+  );
 }

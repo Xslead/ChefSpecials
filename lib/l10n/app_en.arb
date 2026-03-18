@@ -235,5 +235,34 @@
       "ingredients": {"type": "String"},
       "link": {"type": "String"}
     }
-  }
+  },
+  "mealPlanner": "Meal Planner",
+  "weekOf": "Week of {date}",
+  "@weekOf": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "copyFromLastWeek": "Copy from Last Week",
+  "generateShoppingListFromPlan": "Generate Shopping List",
+  "addMealToSlot": "Add Meal",
+  "removeMeal": "Remove Meal",
+  "weeklyNutritionSummary": "Weekly Nutrition",
+  "monday": "Monday",
+  "tuesday": "Tuesday",
+  "wednesday": "Wednesday",
+  "thursday": "Thursday",
+  "friday": "Friday",
+  "saturday": "Saturday",
+  "sunday": "Sunday",
+  "noMealsPlanned": "No meals planned",
+  "mealPlanServings": "{count} servings",
+  "@mealPlanServings": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "mealPlanSaved": "Meal plan saved",
+  "copiedFromLastWeek": "Copied from last week",
+  "noMealPlanLastWeek": "No meal plan found for last week"
 }

@@ -1260,6 +1260,120 @@ abstract class AppLocalizations {
     String ingredients,
     String link,
   );
+
+  /// No description provided for @mealPlanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal Planner'**
+  String get mealPlanner;
+
+  /// No description provided for @weekOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Week of {date}'**
+  String weekOf(String date);
+
+  /// No description provided for @copyFromLastWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy from Last Week'**
+  String get copyFromLastWeek;
+
+  /// No description provided for @generateShoppingListFromPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate Shopping List'**
+  String get generateShoppingListFromPlan;
+
+  /// No description provided for @addMealToSlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Meal'**
+  String get addMealToSlot;
+
+  /// No description provided for @removeMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Meal'**
+  String get removeMeal;
+
+  /// No description provided for @weeklyNutritionSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Nutrition'**
+  String get weeklyNutritionSummary;
+
+  /// No description provided for @monday.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get monday;
+
+  /// No description provided for @tuesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get tuesday;
+
+  /// No description provided for @wednesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get wednesday;
+
+  /// No description provided for @thursday.
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get thursday;
+
+  /// No description provided for @friday.
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get friday;
+
+  /// No description provided for @saturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get saturday;
+
+  /// No description provided for @sunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get sunday;
+
+  /// No description provided for @noMealsPlanned.
+  ///
+  /// In en, this message translates to:
+  /// **'No meals planned'**
+  String get noMealsPlanned;
+
+  /// No description provided for @mealPlanServings.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} servings'**
+  String mealPlanServings(int count);
+
+  /// No description provided for @mealPlanSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal plan saved'**
+  String get mealPlanSaved;
+
+  /// No description provided for @copiedFromLastWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied from last week'**
+  String get copiedFromLastWeek;
+
+  /// No description provided for @noMealPlanLastWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'No meal plan found for last week'**
+  String get noMealPlanLastWeek;
 }
 
 class _AppLocalizationsDelegate

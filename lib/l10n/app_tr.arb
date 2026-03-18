@@ -235,5 +235,34 @@
       "ingredients": {"type": "String"},
       "link": {"type": "String"}
     }
-  }
+  },
+  "mealPlanner": "Yemek Planlayıcı",
+  "weekOf": "{date} Haftası",
+  "@weekOf": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "copyFromLastWeek": "Geçen Haftadan Kopyala",
+  "generateShoppingListFromPlan": "Alışveriş Listesi Oluştur",
+  "addMealToSlot": "Yemek Ekle",
+  "removeMeal": "Yemeği Kaldır",
+  "weeklyNutritionSummary": "Haftalık Beslenme",
+  "monday": "Pazartesi",
+  "tuesday": "Salı",
+  "wednesday": "Çarşamba",
+  "thursday": "Perşembe",
+  "friday": "Cuma",
+  "saturday": "Cumartesi",
+  "sunday": "Pazar",
+  "noMealsPlanned": "Planlanmış yemek yok",
+  "mealPlanServings": "{count} porsiyon",
+  "@mealPlanServings": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "mealPlanSaved": "Yemek planı kaydedildi",
+  "copiedFromLastWeek": "Geçen haftadan kopyalandı",
+  "noMealPlanLastWeek": "Geçen hafta için yemek planı bulunamadı"
 }

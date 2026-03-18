@@ -623,4 +623,65 @@ class AppLocalizationsEn extends AppLocalizations {
   ) {
     return 'Check out \"$title\" by $author on ChefSpecials!\n\n$ingredients\n\nOpen in ChefSpecials:\n$link';
   }
+
+  @override
+  String get mealPlanner => 'Meal Planner';
+
+  @override
+  String weekOf(String date) {
+    return 'Week of $date';
+  }
+
+  @override
+  String get copyFromLastWeek => 'Copy from Last Week';
+
+  @override
+  String get generateShoppingListFromPlan => 'Generate Shopping List';
+
+  @override
+  String get addMealToSlot => 'Add Meal';
+
+  @override
+  String get removeMeal => 'Remove Meal';
+
+  @override
+  String get weeklyNutritionSummary => 'Weekly Nutrition';
+
+  @override
+  String get monday => 'Monday';
+
+  @override
+  String get tuesday => 'Tuesday';
+
+  @override
+  String get wednesday => 'Wednesday';
+
+  @override
+  String get thursday => 'Thursday';
+
+  @override
+  String get friday => 'Friday';
+
+  @override
+  String get saturday => 'Saturday';
+
+  @override
+  String get sunday => 'Sunday';
+
+  @override
+  String get noMealsPlanned => 'No meals planned';
+
+  @override
+  String mealPlanServings(int count) {
+    return '$count servings';
+  }
+
+  @override
+  String get mealPlanSaved => 'Meal plan saved';
+
+  @override
+  String get copiedFromLastWeek => 'Copied from last week';
+
+  @override
+  String get noMealPlanLastWeek => 'No meal plan found for last week';
 }

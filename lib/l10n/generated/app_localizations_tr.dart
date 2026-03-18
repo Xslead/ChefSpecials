@@ -623,4 +623,65 @@ class AppLocalizationsTr extends AppLocalizations {
   ) {
     return 'ChefSpecials\'da $author tarafından \"$title\" tarifine göz at!\n\n$ingredients\n\nChefSpecials\'ta aç:\n$link';
   }
+
+  @override
+  String get mealPlanner => 'Yemek Planlayıcı';
+
+  @override
+  String weekOf(String date) {
+    return '$date Haftası';
+  }
+
+  @override
+  String get copyFromLastWeek => 'Geçen Haftadan Kopyala';
+
+  @override
+  String get generateShoppingListFromPlan => 'Alışveriş Listesi Oluştur';
+
+  @override
+  String get addMealToSlot => 'Yemek Ekle';
+
+  @override
+  String get removeMeal => 'Yemeği Kaldır';
+
+  @override
+  String get weeklyNutritionSummary => 'Haftalık Beslenme';
+
+  @override
+  String get monday => 'Pazartesi';
+
+  @override
+  String get tuesday => 'Salı';
+
+  @override
+  String get wednesday => 'Çarşamba';
+
+  @override
+  String get thursday => 'Perşembe';
+
+  @override
+  String get friday => 'Cuma';
+
+  @override
+  String get saturday => 'Cumartesi';
+
+  @override
+  String get sunday => 'Pazar';
+
+  @override
+  String get noMealsPlanned => 'Planlanmış yemek yok';
+
+  @override
+  String mealPlanServings(int count) {
+    return '$count porsiyon';
+  }
+
+  @override
+  String get mealPlanSaved => 'Yemek planı kaydedildi';
+
+  @override
+  String get copiedFromLastWeek => 'Geçen haftadan kopyalandı';
+
+  @override
+  String get noMealPlanLastWeek => 'Geçen hafta için yemek planı bulunamadı';
 }

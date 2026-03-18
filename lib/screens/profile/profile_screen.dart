@@ -100,6 +100,130 @@ class ProfileScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                const SizedBox(height: 16),
+                // Feature links
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppTheme.surfaceOf(context),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: AppTheme.neutralLightOf(context)
+                            .withValues(alpha: 0.5),
+                      ),
+                      boxShadow: [AppTheme.shadowOf(context)],
+                    ),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppTheme.primaryColor
+                                  .withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(
+                              Icons.calendar_month,
+                              color: AppTheme.primaryColor,
+                              size: 20,
+                            ),
+                          ),
+                          title: Text(
+                            l10n.mealPlanner,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.chevron_right,
+                            color: AppTheme.textTertiaryOf(context),
+                          ),
+                          onTap: () => context.push('/meal-planner'),
+                          dense: true,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        Divider(
+                          height: 1,
+                          indent: 16,
+                          endIndent: 16,
+                          color: AppTheme.neutralLightOf(context)
+                              .withValues(alpha: 0.5),
+                        ),
+                        ListTile(
+                          leading: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppTheme.secondaryColor
+                                  .withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(
+                              Icons.shopping_cart_outlined,
+                              color: AppTheme.secondaryColor,
+                              size: 20,
+                            ),
+                          ),
+                          title: Text(
+                            l10n.shoppingLists,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.chevron_right,
+                            color: AppTheme.textTertiaryOf(context),
+                          ),
+                          onTap: () => context.push('/shopping-lists'),
+                          dense: true,
+                        ),
+                        Divider(
+                          height: 1,
+                          indent: 16,
+                          endIndent: 16,
+                          color: AppTheme.neutralLightOf(context)
+                              .withValues(alpha: 0.5),
+                        ),
+                        ListTile(
+                          leading: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppTheme.starColor
+                                  .withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(
+                              Icons.collections_bookmark_outlined,
+                              color: AppTheme.starColor,
+                              size: 20,
+                            ),
+                          ),
+                          title: Text(
+                            l10n.collections,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.chevron_right,
+                            color: AppTheme.textTertiaryOf(context),
+                          ),
+                          onTap: () => context.push('/collections'),
+                          dense: true,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 24),
                 // My Recipes header
                 Padding(

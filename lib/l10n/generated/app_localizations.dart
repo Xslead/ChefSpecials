@@ -1416,6 +1416,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Shopping list created'**
   String get shoppingListCreated;
+
+  /// No description provided for @reports.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
+  String get reports;
+
+  /// No description provided for @weekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get weekly;
+
+  /// No description provided for @monthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get monthly;
+
+  /// No description provided for @averageDailyIntake.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Daily Intake'**
+  String get averageDailyIntake;
+
+  /// No description provided for @currentStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} day streak'**
+  String currentStreak(int count);
+
+  /// No description provided for @macroDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Macro Distribution'**
+  String get macroDistribution;
+
+  /// No description provided for @exportAsImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Export as Image'**
+  String get exportAsImage;
+
+  /// No description provided for @noDataForPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'No data for this period'**
+  String get noDataForPeriod;
+
+  /// No description provided for @avgCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Calories'**
+  String get avgCalories;
+
+  /// No description provided for @avgProtein.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Protein'**
+  String get avgProtein;
+
+  /// No description provided for @avgCarbs.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Carbs'**
+  String get avgCarbs;
+
+  /// No description provided for @avgFat.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Fat'**
+  String get avgFat;
 }
 
 class _AppLocalizationsDelegate

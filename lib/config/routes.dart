@@ -32,6 +32,7 @@ import '../screens/collections/collection_list_screen.dart';
 import '../screens/collections/collection_detail_screen.dart';
 import '../screens/import_recipe/import_recipe_screen.dart';
 import '../screens/meal_planner/meal_planner_screen.dart';
+import '../screens/reports/reports_screen.dart';
 import '../models/meal_entry.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -267,6 +268,11 @@ final GoRouter router = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/meal-planner',
       builder: (context, state) => const MealPlannerScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/reports',
+      builder: (context, state) => const ReportsScreen(),
     ),
   ],
 );

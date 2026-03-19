@@ -13,6 +13,7 @@ import 'providers/theme_provider.dart';
 import 'providers/shopping_list_provider.dart';
 import 'providers/collection_provider.dart';
 import 'providers/meal_plan_provider.dart';
+import 'providers/reports_provider.dart';
 import 'app.dart';
 
 void main() async {
@@ -38,6 +39,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ShoppingListProvider()),
         ChangeNotifierProvider(create: (_) => CollectionProvider()),
         ChangeNotifierProvider(create: (_) => MealPlanProvider()),
+        ChangeNotifierProvider(create: (_) => ReportsProvider()),
       ],
       child: const ChefSpecialsApp(),
     ),

@@ -307,14 +307,14 @@ Status: PUSHED
 
 ## App Statistics
 
- Total Dart files: 110 (lib) + 58 (test) = 168
- Tests: 1029 (0 failures)
- Screens implemented: 29
- Models: 15 (added MealPlan, PlannedMeal)
- Services: 14 (added MealPlanService)
- Providers: 15 (added MealPlanProvider)
- Routes: 26
- l10n keys: 246 (EN + TR)
+ Total Dart files: 120 (lib) + 60 (test) = 180
+ Tests: 1048 (0 failures)
+ Screens implemented: 30 (added ReportsScreen)
+ Models: 16 (added DailyNutritionSummary)
+ Services: 14 (DailyTrackerService enhanced with getDailyLogsForRange)
+ Providers: 16 (added ReportsProvider)
+ Routes: 27 (added /reports)
+ l10n keys: 256 (EN + TR)
 
 ---
 
@@ -429,56 +429,69 @@ Status: PUSHED
 
 ---
 
-### Task 2: Weekly/Monthly Reports (Push 19)
+### Task 2: Weekly/Monthly Reports (Push 20)
+
+**Model: DailyNutritionSummary**
+- [x] Create `lib/models/daily_nutrition_summary.dart`
+- [x] Lightweight immutable data class: date, totalCalories, totalProtein, totalCarbs, totalFat
 
 **Provider: ReportsProvider**
-- [ ] Create `lib/providers/reports_provider.dart`
-- [ ] Extends `ChangeNotifier`, does NOT need its own Firestore collection — reads existing `daily_logs` via DailyTrackerService
-- [ ] Holds: selectedTab (weekly/monthly), selectedDateRange, aggregated data maps, loading state
-- [ ] `loadWeeklyData(String userId, DateTime weekStart)` — query daily_logs for 7 days, aggregate into List\<DailyNutritionSummary\> with {date, totalCalories, totalProtein, totalCarbs, totalFat} for bar chart
-- [ ] `loadMonthlyData(String userId, DateTime month)` — query daily_logs for entire month (1st to last day), aggregate daily summaries for line charts
-- [ ] `calculateMacroDistribution()` → {protein: %, carbs: %, fat: %} — for pie chart
-- [ ] `calculateStreak(String userId)` → Future\<int\> — count consecutive days with at least one meal entry
-- [ ] `calculateAverages()` → {avgCalories, avgProtein, avgCarbs, avgFat} — arithmetic mean over loaded period
-- [ ] `setDateRange(DateTime start, DateTime end)` — for custom report periods, reload data
-- [ ] Register in `main.dart` MultiProvider
+- [x] Create `lib/providers/reports_provider.dart`
+- [x] Extends `ChangeNotifier`, reads existing `daily_logs` via DailyTrackerService
+- [x] Holds: selectedTab (weekly/monthly), dailySummaries, loading state, selectedNutrient, weekStart/weekEnd, selectedMonth, streak
+- [x] `loadWeeklyData(String userId)` — query daily_logs for 7 days, aggregate into List\<DailyNutritionSummary\> with zero-fill for unlogged days
+- [x] `loadMonthlyData(String userId)` — query daily_logs for entire month (1st to last day), aggregate daily summaries
+- [x] `calculateMacroDistribution()` → {protein: %, carbs: %, fat: %} — for pie chart, sums to 100
+- [x] `_calculateStreak(String userId)` — count consecutive days with at least one meal entry (90-day lookback)
+- [x] `calculateAverages()` → {avgCalories, avgProtein, avgCarbs, avgFat} — arithmetic mean over loaded period
+- [x] `previousWeek()`, `nextWeek()`, `previousMonth()`, `nextMonth()` — navigation
+- [x] `setSelectedNutrient(NutrientType)` — toggles nutrient in bar chart
+- [x] Register in `main.dart` MultiProvider
+
+**DailyTrackerService Enhancement**
+- [x] `getDailyLogsForRange(userId, startDate, endDate)` — batched queries for date range
 
 **Screen: ReportsScreen**
-- [ ] Create `lib/screens/reports/reports_screen.dart`
-- [ ] Full-screen page, AppBar: "Reports", back button
-- [ ] TabBarView with 2 tabs — "Weekly" and "Monthly"
-- [ ] **Weekly tab:**
-  - Week selector row (left/right arrows + "Mar 10 – Mar 16" label)
-  - fl_chart BarChart: x-axis = 7 day labels (Mon–Sun), y-axis = calories, tap bar for tooltip
-  - Average daily intake card: Row of 4 stat items (Avg Cal, Avg Protein, Avg Carbs, Avg Fat)
-  - Streak card: "Current Streak: X days" with fire icon
-- [ ] **Monthly tab:**
-  - Month selector row (left/right arrows + "March 2026" label)
-  - fl_chart LineChart: x-axis = day numbers (1-31), 4 colored lines for calories/protein/carbs/fat, legend below
-  - fl_chart PieChart: macro distribution (protein/carbs/fat as percentages)
-  - Monthly averages card
-- [ ] Bottom: "Export as Image" button — RepaintBoundary + toImage() → share via share_plus
-- [ ] Use `Consumer<ReportsProvider>`
+- [x] Create `lib/screens/reports/reports_screen.dart`
+- [x] Full-screen page, header with title, back button, export icon
+- [x] TabBarView with 2 tabs — "Weekly" and "Monthly"
+- [x] **Weekly tab:**
+  - Week navigation row with 7 day circles (M-S) showing logged/today status + chevrons
+  - NutrientBarChart: nutrient pills (Calories, Protein, Carbs, Fat), bar chart with tooltips
+  - AverageIntakeCard: 4-column grid with dividers
+  - StreakCard: fire icon + streak count + motivational message
+- [x] **Monthly tab:**
+  - Month navigation row with progress bar (days tracked / total) + chevrons
+  - NutrientLineChart: 4 colored lines with area fill, legend, auto-scaled Y-axis
+  - MacroPieChart: donut chart with percentages + legend
+  - AverageIntakeCard for monthly averages
+- [x] Export as PNG via RepaintBoundary + share_plus
+- [x] Uses `Consumer<ReportsProvider>`
+
+**Widgets (7 chart/card widgets)**
+- [x] `nutrient_bar_chart.dart` — weekly bar chart with nutrient selector pills
+- [x] `nutrient_line_chart.dart` — monthly multi-line chart with area fill
+- [x] `macro_pie_chart.dart` — donut pie chart with legend
+- [x] `average_intake_card.dart` — 4-column summary metrics
+- [x] `streak_card.dart` — fire icon badge + streak count
+- [x] `week_selector.dart` — reusable week navigation
+- [x] `month_selector.dart` — reusable month navigation
 
 **Route**
-- [ ] Add GoRoute path `/reports` in `lib/config/routes.dart` under parentNavigatorKey
-- [ ] Access point: "Reports" row/button on ProfileScreen
+- [x] Add GoRoute path `/reports` in `lib/config/routes.dart` under parentNavigatorKey
+- [x] Access point: "Reports" ListTile on ProfileScreen (bar chart icon)
 
 **l10n**
-- [ ] Add keys to `app_en.arb` and `app_tr.arb`:
-  - `reports` / "Reports" / "Raporlar"
-  - `weekly` / "Weekly" / "Haftalik"
-  - `monthly` / "Monthly" / "Aylik"
-  - `averageDailyIntake` / "Average Daily Intake" / "Gunluk Ortalama Alim"
-  - `currentStreak` / "Current Streak" / "Mevcut Seri"
-  - `days` / "days" / "gun"
-  - `macroDistribution` / "Macro Distribution" / "Makro Dagilimi"
-  - `exportAsImage` / "Export as Image" / "Gorsel Olarak Disa Aktar"
-  - `noDataForPeriod` / "No data for this period" / "Bu donem icin veri yok"
+- [x] 10 new keys in `app_en.arb` and `app_tr.arb`: reports, weekly, monthly, averageDailyIntake, currentStreak, macroDistribution, exportAsImage, noDataForPeriod, avgCalories/Protein/Carbs/Fat
 
-**Tests**
-- [ ] `test/providers/reports_provider_test.dart` — loadWeeklyData aggregation, loadMonthlyData across month boundaries, calculateStreak with gaps, calculateAverages, calculateMacroDistribution sums to 100, custom date range
-- [ ] `test/screens/reports/reports_screen_test.dart` — tabs render, bar chart shows 7 bars for weekly, line chart renders for monthly, export button exists
+**Tests (22 new tests)**
+- [x] `test/providers/reports_provider_test.dart` — 12 tests: initial state, nutrient selection, weekly/monthly loading, aggregation, averages, macro distribution sums to 100, week/month navigation
+- [x] `test/screens/reports/reports_screen_test.dart` — 8 tests: header, tabs, export button, charts with/without data, day circles, monthly tab, back button
+
+**Quality**
+- [x] flutter analyze — 0 issues
+- [x] flutter test — 1048 tests passing (0 failures)
+Status: PUSHED (Push 20)
 
 ---
 

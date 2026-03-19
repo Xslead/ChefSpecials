@@ -705,4 +705,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shoppingListCreated => 'Shopping list created';
+
+  @override
+  String get reports => 'Reports';
+
+  @override
+  String get weekly => 'Weekly';
+
+  @override
+  String get monthly => 'Monthly';
+
+  @override
+  String get averageDailyIntake => 'Average Daily Intake';
+
+  @override
+  String currentStreak(int count) {
+    return '$count day streak';
+  }
+
+  @override
+  String get macroDistribution => 'Macro Distribution';
+
+  @override
+  String get exportAsImage => 'Export as Image';
+
+  @override
+  String get noDataForPeriod => 'No data for this period';
+
+  @override
+  String get avgCalories => 'Avg Calories';
+
+  @override
+  String get avgProtein => 'Avg Protein';
+
+  @override
+  String get avgCarbs => 'Avg Carbs';
+
+  @override
+  String get avgFat => 'Avg Fat';
 }

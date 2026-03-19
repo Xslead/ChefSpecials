@@ -271,5 +271,22 @@
   "weekPasted": "Meals pasted to this week",
   "noMealsToCopy": "No meals to copy this week",
   "noCopiedMeals": "Copy a week first",
-  "shoppingListCreated": "Shopping list created"
+  "shoppingListCreated": "Shopping list created",
+  "reports": "Reports",
+  "weekly": "Weekly",
+  "monthly": "Monthly",
+  "averageDailyIntake": "Average Daily Intake",
+  "currentStreak": "{count} day streak",
+  "@currentStreak": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "macroDistribution": "Macro Distribution",
+  "exportAsImage": "Export as Image",
+  "noDataForPeriod": "No data for this period",
+  "avgCalories": "Avg Calories",
+  "avgProtein": "Avg Protein",
+  "avgCarbs": "Avg Carbs",
+  "avgFat": "Avg Fat"
 }

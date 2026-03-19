@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import '../models/daily_log.dart';
 import '../models/nutrition_goal.dart';
 
@@ -51,6 +52,33 @@ class DailyTrackerService {
       result[log.date] = log.totalCalories;
     }
     return result;
+  }
+
+  Future<List<DailyLog>> getDailyLogsForRange(
+      String userId, String startDate, String endDate) async {
+    // Build list of all dates in range — avoids composite index requirement
+    final dates = <String>[];
+    var current = DateTime.parse(startDate);
+    final end = DateTime.parse(endDate);
+    while (!current.isAfter(end)) {
+      dates.add(DateFormat('yyyy-MM-dd').format(current));
+      current = current.add(const Duration(days: 1));
+    }
+
+    // Firestore whereIn is limited to 30 items, so batch the queries
+    final logs = <DailyLog>[];
+    for (var i = 0; i < dates.length; i += 30) {
+      final batch = dates.sublist(
+          i, i + 30 > dates.length ? dates.length : i + 30);
+      final snapshot = await _logsRef
+          .where('userId', isEqualTo: userId)
+          .where('date', whereIn: batch)
+          .get();
+      for (final doc in snapshot.docs) {
+        logs.add(DailyLog.fromMap(doc.data(), doc.id));
+      }
+    }
+    return logs;
   }
 
   // ── Nutrition Goals ──

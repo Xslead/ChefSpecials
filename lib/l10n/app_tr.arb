@@ -271,5 +271,22 @@
   "weekPasted": "Yemekler bu haftaya yapıştırıldı",
   "noMealsToCopy": "Bu hafta kopyalanacak yemek yok",
   "noCopiedMeals": "Önce bir hafta kopyalayın",
-  "shoppingListCreated": "Alışveriş listesi oluşturuldu"
+  "shoppingListCreated": "Alışveriş listesi oluşturuldu",
+  "reports": "Raporlar",
+  "weekly": "Haftalık",
+  "monthly": "Aylık",
+  "averageDailyIntake": "Günlük Ortalama Alım",
+  "currentStreak": "{count} günlük seri",
+  "@currentStreak": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "macroDistribution": "Makro Dağılımı",
+  "exportAsImage": "Görüntü Olarak Dışa Aktar",
+  "noDataForPeriod": "Bu dönem için veri yok",
+  "avgCalories": "Ort. Kalori",
+  "avgProtein": "Ort. Protein",
+  "avgCarbs": "Ort. Karbonhidrat",
+  "avgFat": "Ort. Yağ"
 }

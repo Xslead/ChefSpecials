@@ -705,4 +705,42 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get shoppingListCreated => 'Alışveriş listesi oluşturuldu';
+
+  @override
+  String get reports => 'Raporlar';
+
+  @override
+  String get weekly => 'Haftalık';
+
+  @override
+  String get monthly => 'Aylık';
+
+  @override
+  String get averageDailyIntake => 'Günlük Ortalama Alım';
+
+  @override
+  String currentStreak(int count) {
+    return '$count günlük seri';
+  }
+
+  @override
+  String get macroDistribution => 'Makro Dağılımı';
+
+  @override
+  String get exportAsImage => 'Görüntü Olarak Dışa Aktar';
+
+  @override
+  String get noDataForPeriod => 'Bu dönem için veri yok';
+
+  @override
+  String get avgCalories => 'Ort. Kalori';
+
+  @override
+  String get avgProtein => 'Ort. Protein';
+
+  @override
+  String get avgCarbs => 'Ort. Karbonhidrat';
+
+  @override
+  String get avgFat => 'Ort. Yağ';
 }

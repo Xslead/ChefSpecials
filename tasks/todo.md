@@ -307,14 +307,14 @@ Status: PUSHED
 
 ## App Statistics
 
- Total Dart files: 123 (lib) + 62 (test) = 185
- Tests: 1057 (0 failures)
- Screens implemented: 31 (added NotificationSettingsScreen)
- Models: 16
- Services: 15 (added NotificationService)
- Providers: 17 (added NotificationProvider)
- Routes: 28 (added /notification-settings)
- l10n keys: 267 (EN + TR)
+ Total Dart files: 127 (lib) + 65 (test) = 192
+ Tests: 1078 (0 failures)
+ Screens implemented: 32 (added ActivityScreen)
+ Models: 17 (added Activity)
+ Services: 16 (added ActivityService)
+ Providers: 18 (added ActivityProvider)
+ Routes: 29 (added /announcements)
+ l10n keys: 283 (EN + TR)
 
 ---
 
@@ -552,6 +552,71 @@ Status: PUSHED (Push 20b)
 
 ---
 
+### Task 3b: Announcements / Activity Feed (Push 20c)
+
+**Model: Activity**
+- [x] Create `lib/models/activity.dart`
+- [x] ActivityType enum: follow, comment, rating, newRecipe
+- [x] Fields: userId, actorId, actorName, actorAvatar, type, targetId, targetName, targetImageUrl, message, isRead, createdAt
+- [x] fromMap/toMap with type serialization
+
+**Service: ActivityService**
+- [x] Create `lib/services/activity_service.dart`
+- [x] Firestore collection `activities`, DI with optional FirebaseFirestore
+- [x] createActivity, getActivitiesStream (limit 100), getUnreadCount stream
+- [x] markAllAsRead (batch), markAsRead, markAsUnread
+- [x] deleteOldActivities (30 days, client-side filter)
+- [x] Helper methods: createFollowActivity, createCommentActivity (with optional stars), createRatingActivity, createNewRecipeActivity (batch write to all followers)
+
+**Provider: ActivityProvider**
+- [x] Create `lib/providers/activity_provider.dart`
+- [x] Dual stream subscriptions (activities + unread count)
+- [x] Error handlers to prevent infinite loading
+- [x] refresh() method to recover from stream errors
+- [x] markAsRead, markAsUnread, markAllAsRead
+- [x] Registered in main.dart MultiProvider
+
+**Screen: ActivityScreen**
+- [x] Create `lib/screens/activity/activity_screen.dart`
+- [x] ScreenHeader with unread count subtitle + "Mark All Read" button
+- [x] Card-based list matching app design (surface, border, shadow, rounded 14)
+- [x] Unread items: tinted background + colored border + dot indicator
+- [x] Avatar with type-colored ring (network image or fallback icon)
+- [x] RichText: bold actor name (16px) + action text (12px, secondary)
+- [x] Comment activities: star row + italic quote bubble
+- [x] Rating activities: star row
+- [x] New recipe activities: show recipe name in text
+- [x] Swipe left → mark as read (blue), swipe right → mark as unread (amber)
+- [x] Tap navigates: follow→profile, comment/rating/newRecipe→recipe
+- [x] Relative time formatting (just now, Nm, Nh, Nd, MMM d)
+
+**Integration**
+- [x] Bell icon with red unread badge on Home screen header (left of Collections)
+- [x] ActivityProvider initialized on HomeScreen
+- [x] FollowProvider: creates follow activity on follow action
+- [x] RecipeDetailScreen: combined comment+rating into single activity
+- [x] AddRecipeScreen: notifies all followers on new public recipe
+
+**Firestore**
+- [x] Security rules deployed for activities collection
+- [x] Composite indexes: userId+createdAt DESC, userId+isRead
+
+**l10n**
+- [x] 12 new keys (EN + TR): announcements, markAllRead, noAnnouncements, activityFollow, activityComment, activityRating, activityNewRecipe, notificationsDisabled, notificationsDisabledDescription, enableNotifications
+
+**Tests (25 new)**
+- [x] test/models/activity_test.dart — 7 tests (fromMap, toMap, round-trip, defaults, enum)
+- [x] test/services/activity_service_test.dart — 10 tests (CRUD, helpers, self-skip, batch, markAllAsRead, deleteOld)
+- [x] test/providers/activity_provider_test.dart — 5 tests (defaults, init, markAllAsRead)
+- [x] Updated test/providers/follow_provider_test.dart — ActivityService DI
+
+**Quality**
+- [x] flutter analyze — 0 issues
+- [x] flutter test — 1078 tests passing (0 failures)
+Status: PUSHED (Push 20c)
+
+---
+
 ### Task 4: Admin Panel (Push 21)
 
 **UserModel Update**
@@ -606,6 +671,12 @@ Status: PUSHED (Push 20b)
   - `totalUsers` / `totalRecipes` / `totalComments` / `activeToday`
   - `manageUsers` / `manageRecipes` / `moderateComments` / `manageCategories`
   - `banUser` / `unbanUser` / `banned` / `confirmDelete`
+
+**Admin Announcements (uses existing Activity system)**
+- [ ] `AdminService.sendAnnouncement(String title, String message)` — create Activity with type `announcement` for all users
+- [ ] `AdminDashboardScreen` — "Send Announcement" button opens form dialog
+- [ ] Add `ActivityType.announcement` to Activity model
+- [ ] ActivityScreen renders announcement items with megaphone icon
 
 **Tests**
 - [ ] `test/services/admin_service_test.dart` — getDashboardStats, ban/unban toggle, getAllUsers pagination + search, deleteRecipe cascade

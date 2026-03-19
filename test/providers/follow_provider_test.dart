@@ -2,6 +2,7 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:chef_specials/providers/follow_provider.dart';
 import 'package:chef_specials/services/follow_service.dart';
+import 'package:chef_specials/services/activity_service.dart';
 
 void main() {
   late FakeFirebaseFirestore fakeFirestore;
@@ -19,7 +20,10 @@ void main() {
   setUp(() {
     fakeFirestore = FakeFirebaseFirestore();
     followService = FollowService(firestore: fakeFirestore);
-    provider = FollowProvider(followService: followService);
+    provider = FollowProvider(
+      followService: followService,
+      activityService: ActivityService(firestore: fakeFirestore),
+    );
   });
 
   group('FollowProvider', () {

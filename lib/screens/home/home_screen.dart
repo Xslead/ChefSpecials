@@ -8,6 +8,7 @@ import '../../models/recipe.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../providers/favorite_provider.dart';
+import '../../providers/activity_provider.dart';
 import '../../widgets/empty_state.dart';
 import 'widgets/recipe_card.dart';
 
@@ -43,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final user = context.read<AuthProvider>().userModel;
       if (user != null) {
         context.read<FavoriteProvider>().listenToFavorites(user.uid);
+        context.read<ActivityProvider>().init(user.uid);
       }
     });
   }
@@ -176,6 +178,48 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const Spacer(),
+                  Stack(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.notifications_outlined),
+                        color: AppTheme.textSecondaryOf(context),
+                        onPressed: () => context.push('/announcements'),
+                      ),
+                      Consumer<ActivityProvider>(
+                        builder: (context, provider, _) {
+                          if (provider.unreadCount == 0) {
+                            return const SizedBox.shrink();
+                          }
+                          return Positioned(
+                            right: 6,
+                            top: 6,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: AppTheme.errorColor,
+                                shape: BoxShape.circle,
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 18,
+                                minHeight: 18,
+                              ),
+                              child: Text(
+                                provider.unreadCount > 99
+                                    ? '99+'
+                                    : '${provider.unreadCount}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                   IconButton(
                     icon: const Icon(Icons.folder_outlined),
                     color: AppTheme.textSecondaryOf(context),

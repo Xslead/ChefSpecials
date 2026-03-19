@@ -1555,6 +1555,48 @@ abstract class AppLocalizations {
   /// **'Enable notifications in your phone settings to receive meal reminders and alerts.'**
   String get notificationsDisabledDescription;
 
+  /// No description provided for @announcements.
+  ///
+  /// In en, this message translates to:
+  /// **'Announcements'**
+  String get announcements;
+
+  /// No description provided for @markAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark All Read'**
+  String get markAllRead;
+
+  /// No description provided for @noAnnouncements.
+  ///
+  /// In en, this message translates to:
+  /// **'No announcements yet'**
+  String get noAnnouncements;
+
+  /// No description provided for @activityFollow.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} started following you'**
+  String activityFollow(String name);
+
+  /// No description provided for @activityComment.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} commented on {recipe}'**
+  String activityComment(String name, String recipe);
+
+  /// No description provided for @activityRating.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} rated {recipe}'**
+  String activityRating(String name, String recipe);
+
+  /// No description provided for @activityNewRecipe.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} posted a new recipe'**
+  String activityNewRecipe(String name);
+
   /// No description provided for @enableNotifications.
   ///
   /// In en, this message translates to:

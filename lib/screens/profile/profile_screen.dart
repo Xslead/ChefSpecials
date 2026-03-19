@@ -29,7 +29,7 @@ class ProfileScreen extends StatelessWidget {
     }
 
     // Initialize follow provider for current user
-    context.read<FollowProvider>().initialize(user.uid);
+    context.read<FollowProvider>().initialize(user.uid, userName: user.fullName, userAvatar: user.photoUrl);
 
     final userRecipes = recipeProvider.allRecipes
         .where((r) => r.authorId == user.uid)

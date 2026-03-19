@@ -1,24 +1,31 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../services/follow_service.dart';
+import '../services/activity_service.dart';
 
 class FollowProvider extends ChangeNotifier {
   final FollowService _service;
+  final ActivityService _activityService;
 
-  FollowProvider({FollowService? followService})
-      : _service = followService ?? FollowService();
+  FollowProvider({FollowService? followService, ActivityService? activityService})
+      : _service = followService ?? FollowService(),
+        _activityService = activityService ?? ActivityService();
 
   Set<String> _followingIds = {};
   String? _currentUserId;
+  String? _currentUserName;
+  String? _currentUserAvatar;
   StreamSubscription<List<String>>? _sub;
 
   Set<String> get followingIds => _followingIds;
   List<String> get followingList => _followingIds.toList();
   bool isFollowing(String uid) => _followingIds.contains(uid);
 
-  void initialize(String currentUserId) {
+  void initialize(String currentUserId, {String? userName, String? userAvatar}) {
     if (_currentUserId == currentUserId) return;
     _currentUserId = currentUserId;
+    _currentUserName = userName;
+    _currentUserAvatar = userAvatar;
     _sub?.cancel();
     _sub = _service.watchFollowingIds(currentUserId).listen((ids) {
       _followingIds = ids.toSet();
@@ -33,6 +40,12 @@ class FollowProvider extends ChangeNotifier {
     notifyListeners();
     try {
       await _service.follow(_currentUserId!, targetId);
+      _activityService.createFollowActivity(
+        targetUserId: targetId,
+        actorId: _currentUserId!,
+        actorName: _currentUserName ?? '',
+        actorAvatar: _currentUserAvatar,
+      );
     } catch (_) {
       _followingIds = _followingIds.difference({targetId});
       notifyListeners();

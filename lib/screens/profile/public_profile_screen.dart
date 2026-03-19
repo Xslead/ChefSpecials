@@ -63,7 +63,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
     final recipeProvider = context.watch<RecipeProvider>();
 
     if (currentUser != null) {
-      context.read<FollowProvider>().initialize(currentUser.uid);
+      context.read<FollowProvider>().initialize(currentUser.uid, userName: currentUser.fullName, userAvatar: currentUser.photoUrl);
     }
 
     final isOwnProfile = currentUser?.uid == widget.userId;

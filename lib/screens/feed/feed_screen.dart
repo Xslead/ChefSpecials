@@ -93,7 +93,7 @@ class _FeedScreenState extends State<FeedScreen> {
   void _init() {
     final currentUser = context.read<AuthProvider>().userModel;
     if (currentUser != null) {
-      context.read<FollowProvider>().initialize(currentUser.uid);
+      context.read<FollowProvider>().initialize(currentUser.uid, userName: currentUser.fullName, userAvatar: currentUser.photoUrl);
     }
     _loadFeed();
   }

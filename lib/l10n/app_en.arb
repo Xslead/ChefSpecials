@@ -300,6 +300,35 @@
   "followerAlerts": "New Followers",
   "notificationsDisabled": "Notifications are disabled",
   "notificationsDisabledDescription": "Enable notifications in your phone settings to receive meal reminders and alerts.",
+  "announcements": "Announcements",
+  "markAllRead": "Mark All Read",
+  "noAnnouncements": "No announcements yet",
+  "activityFollow": "{name} started following you",
+  "@activityFollow": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "activityComment": "{name} commented on {recipe}",
+  "@activityComment": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "recipe": {"type": "String"}
+    }
+  },
+  "activityRating": "{name} rated {recipe}",
+  "@activityRating": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "recipe": {"type": "String"}
+    }
+  },
+  "activityNewRecipe": "{name} posted a new recipe",
+  "@activityNewRecipe": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
   "enableNotifications": "Enable Notifications",
   "timeForMeal": "Time for {meal}!",
   "@timeForMeal": {

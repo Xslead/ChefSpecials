@@ -779,6 +779,35 @@ class AppLocalizationsTr extends AppLocalizations {
       'Yemek hatırlatıcıları ve uyarılar almak için telefon ayarlarından bildirimleri açın.';
 
   @override
+  String get announcements => 'Duyurular';
+
+  @override
+  String get markAllRead => 'Tümünü Okundu İşaretle';
+
+  @override
+  String get noAnnouncements => 'Henüz duyuru yok';
+
+  @override
+  String activityFollow(String name) {
+    return '$name seni takip etmeye başladı';
+  }
+
+  @override
+  String activityComment(String name, String recipe) {
+    return '$name, $recipe tarifine yorum yaptı';
+  }
+
+  @override
+  String activityRating(String name, String recipe) {
+    return '$name, $recipe tarifini puanladı';
+  }
+
+  @override
+  String activityNewRecipe(String name) {
+    return '$name yeni bir tarif paylaştı';
+  }
+
+  @override
   String get enableNotifications => 'Bildirimleri Aç';
 
   @override

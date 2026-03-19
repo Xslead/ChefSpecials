@@ -300,6 +300,35 @@
   "followerAlerts": "Yeni Takipçiler",
   "notificationsDisabled": "Bildirimler kapalı",
   "notificationsDisabledDescription": "Yemek hatırlatıcıları ve uyarılar almak için telefon ayarlarından bildirimleri açın.",
+  "announcements": "Duyurular",
+  "markAllRead": "Tümünü Okundu İşaretle",
+  "noAnnouncements": "Henüz duyuru yok",
+  "activityFollow": "{name} seni takip etmeye başladı",
+  "@activityFollow": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "activityComment": "{name}, {recipe} tarifine yorum yaptı",
+  "@activityComment": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "recipe": {"type": "String"}
+    }
+  },
+  "activityRating": "{name}, {recipe} tarifini puanladı",
+  "@activityRating": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "recipe": {"type": "String"}
+    }
+  },
+  "activityNewRecipe": "{name} yeni bir tarif paylaştı",
+  "@activityNewRecipe": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
   "enableNotifications": "Bildirimleri Aç",
   "timeForMeal": "{meal} vakti!",
   "@timeForMeal": {

@@ -9,6 +9,8 @@ import '../../models/recipe.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_form_provider.dart';
 import '../../providers/recipe_provider.dart';
+import '../../services/activity_service.dart';
+import '../../services/follow_service.dart';
 import '../../widgets/screen_header.dart';
 import 'widgets/image_picker_tile.dart';
 import 'widgets/ingredient_input_list.dart';
@@ -55,7 +57,22 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
       final user = authProvider.userModel;
       if (user == null) throw Exception('User not loaded yet. Please try again.');
       final recipe = await formProvider.buildRecipe(user.uid, user.fullName);
-      await recipeProvider.createRecipe(recipe);
+      final recipeId = await recipeProvider.createRecipe(recipe);
+      // Notify followers about the new recipe (only public recipes)
+      if (!recipe.isPrivate) {
+        final followerIds = await FollowService().getFollowerIds(user.uid);
+        if (followerIds.isNotEmpty) {
+          ActivityService().createNewRecipeActivity(
+            recipeId: recipeId,
+            recipeName: recipe.title,
+            recipeImageUrl: recipe.imageUrl,
+            authorId: user.uid,
+            authorName: user.fullName,
+            authorAvatar: user.photoUrl,
+            followerIds: followerIds,
+          );
+        }
+      }
       if (mounted) {
         context.go('/home');
       }

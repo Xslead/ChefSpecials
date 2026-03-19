@@ -779,6 +779,35 @@ class AppLocalizationsEn extends AppLocalizations {
       'Enable notifications in your phone settings to receive meal reminders and alerts.';
 
   @override
+  String get announcements => 'Announcements';
+
+  @override
+  String get markAllRead => 'Mark All Read';
+
+  @override
+  String get noAnnouncements => 'No announcements yet';
+
+  @override
+  String activityFollow(String name) {
+    return '$name started following you';
+  }
+
+  @override
+  String activityComment(String name, String recipe) {
+    return '$name commented on $recipe';
+  }
+
+  @override
+  String activityRating(String name, String recipe) {
+    return '$name rated $recipe';
+  }
+
+  @override
+  String activityNewRecipe(String name) {
+    return '$name posted a new recipe';
+  }
+
+  @override
   String get enableNotifications => 'Enable Notifications';
 
   @override

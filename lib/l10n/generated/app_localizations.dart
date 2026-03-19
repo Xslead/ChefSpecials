@@ -1594,8 +1594,8 @@ abstract class AppLocalizations {
   /// No description provided for @activityNewRecipe.
   ///
   /// In en, this message translates to:
-  /// **'{name} posted a new recipe'**
-  String activityNewRecipe(String name);
+  /// **'{name} posted {recipe}'**
+  String activityNewRecipe(String name, String recipe);
 
   /// No description provided for @enableNotifications.
   ///

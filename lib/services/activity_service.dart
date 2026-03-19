@@ -48,16 +48,34 @@ class ActivityService {
     await batch.commit();
   }
 
+  Future<void> markAsRead(String activityId) async {
+    await _firestore.collection(_collection).doc(activityId).update({
+      'isRead': true,
+    });
+  }
+
+  Future<void> markAsUnread(String activityId) async {
+    await _firestore.collection(_collection).doc(activityId).update({
+      'isRead': false,
+    });
+  }
+
   Future<void> deleteOldActivities(String userId) async {
     final cutoff = DateTime.now().subtract(const Duration(days: 30));
     final snapshot = await _firestore
         .collection(_collection)
         .where('userId', isEqualTo: userId)
-        .where('createdAt', isLessThan: cutoff.toIso8601String())
         .get();
 
+    final oldDocs = snapshot.docs.where((doc) {
+      final createdAt = doc.data()['createdAt'] as String?;
+      if (createdAt == null) return true;
+      return DateTime.parse(createdAt).isBefore(cutoff);
+    });
+
+    if (oldDocs.isEmpty) return;
     final batch = _firestore.batch();
-    for (final doc in snapshot.docs) {
+    for (final doc in oldDocs) {
       batch.delete(doc.reference);
     }
     await batch.commit();
@@ -89,6 +107,7 @@ class ActivityService {
     required String recipeName,
     String? recipeImageUrl,
     required String commentText,
+    int? stars,
   }) async {
     if (actorId == recipeAuthorId) return;
 
@@ -101,7 +120,7 @@ class ActivityService {
       targetId: recipeId,
       targetName: recipeName,
       targetImageUrl: recipeImageUrl,
-      message: commentText,
+      message: stars != null ? '$stars|$commentText' : commentText,
       createdAt: DateTime.now(),
     );
     await createActivity(activity);

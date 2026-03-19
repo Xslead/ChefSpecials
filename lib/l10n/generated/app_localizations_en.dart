@@ -803,8 +803,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String activityNewRecipe(String name) {
-    return '$name posted a new recipe';
+  String activityNewRecipe(String name, String recipe) {
+    return '$name posted $recipe';
   }
 
   @override

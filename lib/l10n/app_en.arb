@@ -323,10 +323,11 @@
       "recipe": {"type": "String"}
     }
   },
-  "activityNewRecipe": "{name} posted a new recipe",
+  "activityNewRecipe": "{name} posted {recipe}",
   "@activityNewRecipe": {
     "placeholders": {
-      "name": {"type": "String"}
+      "name": {"type": "String"},
+      "recipe": {"type": "String"}
     }
   },
   "enableNotifications": "Enable Notifications",

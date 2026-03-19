@@ -1,14 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/activity.dart';
 import '../../providers/activity_provider.dart';
 import '../../providers/auth_provider.dart';
-import '../../widgets/screen_header.dart';
 import '../../widgets/empty_state.dart';
+import '../../widgets/screen_header.dart';
 
 class ActivityScreen extends StatefulWidget {
   const ActivityScreen({super.key});
@@ -22,9 +24,11 @@ class _ActivityScreenState extends State<ActivityScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final userId = context.read<AuthProvider>().firebaseUser?.uid;
+      final userId = context.read<AuthProvider>().userModel?.uid;
       if (userId != null) {
-        context.read<ActivityProvider>().init(userId);
+        final provider = context.read<ActivityProvider>();
+        provider.init(userId);
+        provider.refresh();
       }
     });
   }
@@ -32,165 +36,281 @@ class _ActivityScreenState extends State<ActivityScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final provider = context.watch<ActivityProvider>();
 
     return Scaffold(
       body: Column(
         children: [
-          Consumer<ActivityProvider>(
-            builder: (context, provider, _) {
-              return ScreenHeader(
-                title: l10n.announcements,
-                icon: Icons.notifications_outlined,
-                iconColor: AppTheme.snackColor,
-                trailing: [
-                  if (provider.unreadCount > 0)
-                    TextButton(
-                      onPressed: () => provider.markAllAsRead(),
-                      child: Text(
-                        l10n.markAllRead,
-                        style: TextStyle(
-                          color: AppTheme.primaryColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+          ScreenHeader(
+            title: l10n.announcements,
+            icon: Icons.notifications_outlined,
+            iconColor: AppTheme.snackColor,
+            subtitle: provider.unreadCount > 0
+                ? '${provider.unreadCount} unread'
+                : null,
+            trailing: [
+              if (provider.unreadCount > 0)
+                TextButton(
+                  onPressed: () => provider.markAllAsRead(),
+                  child: Text(
+                    l10n.markAllRead,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppTheme.primaryColor,
+                      fontWeight: FontWeight.w600,
                     ),
-                ],
-              );
-            },
+                  ),
+                ),
+            ],
           ),
           Expanded(
-            child: Consumer<ActivityProvider>(
-              builder: (context, provider, _) {
-                if (provider.isLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-
-                if (provider.activities.isEmpty) {
-                  return EmptyState(
-                    icon: Icons.notifications_off_outlined,
-                    title: l10n.noAnnouncements,
-                  );
-                }
-
-                return ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 40),
-                  itemCount: provider.activities.length,
-                  itemBuilder: (context, index) {
-                    return _buildActivityItem(
-                      context,
-                      provider.activities[index],
-                      l10n,
-                    );
-                  },
-                );
-              },
-            ),
+            child: provider.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : provider.activities.isEmpty
+                    ? EmptyState(
+                        icon: Icons.notifications_off_outlined,
+                        title: l10n.noAnnouncements,
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 40),
+                        itemCount: provider.activities.length,
+                        itemBuilder: (context, index) =>
+                            _buildActivityCard(context, provider.activities[index], l10n),
+                      ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildActivityItem(
+  Widget _buildActivityCard(
     BuildContext context,
     Activity activity,
     AppLocalizations l10n,
   ) {
-    return GestureDetector(
-      onTap: () => _onActivityTap(context, activity),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        decoration: BoxDecoration(
-          color: AppTheme.surfaceOf(context),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
+    final color = _colorForType(activity.type);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Dismissible(
+        key: Key(activity.id ?? activity.createdAt.toIso8601String()),
+        direction: DismissDirection.horizontal,
+        confirmDismiss: (direction) async {
+          if (activity.id == null) return false;
+          if (direction == DismissDirection.endToStart && !activity.isRead) {
+            context.read<ActivityProvider>().markAsRead(activity.id!);
+          } else if (direction == DismissDirection.startToEnd && activity.isRead) {
+            context.read<ActivityProvider>().markAsUnread(activity.id!);
+          }
+          return false;
+        },
+        background: Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.only(left: 24),
+          decoration: BoxDecoration(
+            color: AppTheme.starColor,
+            borderRadius: BorderRadius.circular(14),
           ),
-          boxShadow: [AppTheme.shadowOf(context)],
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.mark_email_unread_outlined, color: Colors.white, size: 20),
+              SizedBox(width: 6),
+              Text(
+                'Unread',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
         ),
-        child: Container(
-          decoration: !activity.isRead
-              ? BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border(
-                    left: BorderSide(
-                      color: AppTheme.primaryColor,
-                      width: 3,
-                    ),
-                  ),
-                )
-              : null,
-          padding: const EdgeInsets.all(12),
+        secondaryBackground: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 24),
+          decoration: BoxDecoration(
+            color: AppTheme.primaryColor,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.done_all, color: Colors.white, size: 20),
+              SizedBox(width: 6),
+              Text(
+                'Read',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+        ),
+        child: GestureDetector(
+          onTap: () => _onActivityTap(context, activity),
+          child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: !activity.isRead
+                ? color.withValues(alpha: 0.04)
+                : AppTheme.surfaceOf(context),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: !activity.isRead
+                  ? color.withValues(alpha: 0.3)
+                  : AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
+            ),
+            boxShadow: [AppTheme.shadowOf(context)],
+          ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildAvatar(activity),
-              const SizedBox(width: 12),
+              // Avatar / type icon
+              _buildAvatar(activity, color),
+              const SizedBox(width: 14),
+              // Content
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildTitleText(context, activity, l10n),
-                    if (activity.message != null) ...[
+                    if (activity.message != null &&
+                        activity.type == ActivityType.comment) ...[
                       const SizedBox(height: 4),
-                      Text(
-                        activity.message!,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AppTheme.textTertiaryOf(context),
-                            ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      ..._buildCommentContent(context, activity.message!),
                     ],
-                    const SizedBox(height: 4),
-                    Text(
-                      _formatTimeAgo(activity.createdAt),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    if (activity.message != null &&
+                        activity.type == ActivityType.rating) ...[
+                      const SizedBox(height: 4),
+                      _buildStarRow(int.tryParse(activity.message!) ?? 0),
+                    ],
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        Icon(
+                          _iconForType(activity.type),
+                          size: 12,
+                          color: AppTheme.textTertiaryOf(context),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          _formatTimeAgo(activity.createdAt),
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
                             color: AppTheme.textTertiaryOf(context),
                           ),
+                        ),
+                        if (!activity.isRead) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              color: color,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ],
                 ),
               ),
+              // Target image thumbnail
               if (activity.targetImageUrl != null) ...[
-                const SizedBox(width: 8),
+                const SizedBox(width: 12),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    activity.targetImageUrl!,
-                    width: 48,
-                    height: 48,
+                  borderRadius: BorderRadius.circular(10),
+                  child: CachedNetworkImage(
+                    imageUrl: activity.targetImageUrl!,
+                    width: 52,
+                    height: 52,
                     fit: BoxFit.cover,
+                    placeholder: (_, _) => Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: AppTheme.neutralSoftOf(context),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        Icons.restaurant,
+                        size: 20,
+                        color: AppTheme.textTertiaryOf(context),
+                      ),
+                    ),
+                    errorWidget: (_, _, _) => Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: AppTheme.neutralSoftOf(context),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        Icons.restaurant,
+                        size: 20,
+                        color: AppTheme.textTertiaryOf(context),
+                      ),
+                    ),
                   ),
                 ),
               ],
+              // Chevron
+              const SizedBox(width: 4),
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Icon(
+                  Icons.chevron_right,
+                  size: 18,
+                  color: AppTheme.textTertiaryOf(context).withValues(alpha: 0.5),
+                ),
+              ),
             ],
           ),
+        ),
         ),
       ),
     );
   }
 
-  Widget _buildAvatar(Activity activity) {
-    if (activity.actorAvatar != null) {
-      return CircleAvatar(
-        radius: 20,
-        backgroundImage: NetworkImage(activity.actorAvatar!),
+  Widget _buildAvatar(Activity activity, Color color) {
+    if (activity.actorAvatar != null && activity.actorAvatar!.isNotEmpty) {
+      return Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: color.withValues(alpha: 0.3),
+            width: 2,
+          ),
+        ),
+        child: CircleAvatar(
+          radius: 22,
+          backgroundImage: CachedNetworkImageProvider(activity.actorAvatar!),
+          backgroundColor: AppTheme.neutralSoftOf(context),
+        ),
       );
     }
 
-    final iconData = _iconForType(activity.type);
-    final iconColor = _colorForType(activity.type);
-
-    return CircleAvatar(
-      radius: 20,
-      backgroundColor: iconColor.withValues(alpha: 0.1),
+    return Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: color.withValues(alpha: 0.2),
+          width: 2,
+        ),
+      ),
       child: Icon(
-        iconData,
-        color: iconColor,
-        size: 20,
+        _iconForType(activity.type),
+        color: color,
+        size: 22,
       ),
     );
   }
@@ -204,53 +324,106 @@ class _ActivityScreenState extends State<ActivityScreen> {
     switch (activity.type) {
       case ActivityType.follow:
         text = l10n.activityFollow(activity.actorName);
-        break;
       case ActivityType.comment:
         text = l10n.activityComment(
-          activity.actorName,
-          activity.targetName ?? '',
-        );
-        break;
+            activity.actorName, activity.targetName ?? '');
       case ActivityType.rating:
         text = l10n.activityRating(
-          activity.actorName,
-          activity.targetName ?? '',
-        );
-        break;
+            activity.actorName, activity.targetName ?? '');
       case ActivityType.newRecipe:
-        text = l10n.activityNewRecipe(activity.actorName);
-        break;
+        text = l10n.activityNewRecipe(
+            activity.actorName, activity.targetName ?? '');
     }
 
-    final actorNameLength = activity.actorName.length;
-    final actorNameStart = text.indexOf(activity.actorName);
+    final actorStart = text.indexOf(activity.actorName);
+    final primaryColor = AppTheme.textPrimaryOf(context);
+    final secondaryColor = AppTheme.textSecondaryOf(context);
 
-    if (actorNameStart == -1) {
+    if (actorStart == -1) {
       return Text(
         text,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppTheme.textPrimaryOf(context),
-            ),
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: primaryColor,
+        ),
       );
     }
 
     return RichText(
       text: TextSpan(
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppTheme.textPrimaryOf(context),
-            ),
+        style: TextStyle(
+          fontSize: 12,
+          color: secondaryColor,
+          height: 1.3,
+        ),
         children: [
-          if (actorNameStart > 0)
-            TextSpan(text: text.substring(0, actorNameStart)),
+          if (actorStart > 0) TextSpan(text: text.substring(0, actorStart)),
           TextSpan(
             text: activity.actorName,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: primaryColor,
+            ),
           ),
-          if (actorNameStart + actorNameLength < text.length)
+          if (actorStart + activity.actorName.length < text.length)
             TextSpan(
-              text: text.substring(actorNameStart + actorNameLength),
+              text: text.substring(actorStart + activity.actorName.length),
             ),
         ],
+      ),
+    );
+  }
+
+  List<Widget> _buildCommentContent(BuildContext context, String message) {
+    // Format: "stars|commentText" or just "commentText"
+    final parts = message.split('|');
+    final int? stars;
+    final String commentText;
+    if (parts.length >= 2 && int.tryParse(parts[0]) != null) {
+      stars = int.parse(parts[0]);
+      commentText = parts.sublist(1).join('|');
+    } else {
+      stars = null;
+      commentText = message;
+    }
+
+    return [
+      if (stars != null) ...[
+        _buildStarRow(stars),
+        const SizedBox(height: 4),
+      ],
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppTheme.neutralSoftOf(context),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          '"$commentText"',
+          style: TextStyle(
+            fontSize: 12,
+            fontStyle: FontStyle.italic,
+            color: AppTheme.textSecondaryOf(context),
+            height: 1.3,
+          ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    ];
+  }
+
+  Widget _buildStarRow(int stars) {
+    return Row(
+      children: List.generate(
+        5,
+        (i) => Icon(
+          i < stars ? Icons.star : Icons.star_border,
+          size: 16,
+          color: AppTheme.starColor,
+        ),
       ),
     );
   }
@@ -259,55 +432,37 @@ class _ActivityScreenState extends State<ActivityScreen> {
     switch (activity.type) {
       case ActivityType.follow:
         context.push('/user/${activity.actorId}', extra: activity.actorName);
-        break;
       case ActivityType.comment:
       case ActivityType.rating:
       case ActivityType.newRecipe:
         context.push('/recipe/${activity.targetId}');
-        break;
     }
   }
 
   IconData _iconForType(ActivityType type) {
-    switch (type) {
-      case ActivityType.follow:
-        return Icons.person_add;
-      case ActivityType.comment:
-        return Icons.comment;
-      case ActivityType.rating:
-        return Icons.star;
-      case ActivityType.newRecipe:
-        return Icons.restaurant_menu;
-    }
+    return switch (type) {
+      ActivityType.follow => Icons.person_add,
+      ActivityType.comment => Icons.comment_outlined,
+      ActivityType.rating => Icons.star_rounded,
+      ActivityType.newRecipe => Icons.restaurant_menu,
+    };
   }
 
   Color _colorForType(ActivityType type) {
-    switch (type) {
-      case ActivityType.follow:
-        return AppTheme.snackColor;
-      case ActivityType.comment:
-        return AppTheme.secondaryColor;
-      case ActivityType.rating:
-        return AppTheme.starColor;
-      case ActivityType.newRecipe:
-        return AppTheme.primaryColor;
-    }
+    return switch (type) {
+      ActivityType.follow => AppTheme.snackColor,
+      ActivityType.comment => AppTheme.secondaryColor,
+      ActivityType.rating => AppTheme.starColor,
+      ActivityType.newRecipe => AppTheme.primaryColor,
+    };
   }
 
   String _formatTimeAgo(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
-
-    if (difference.inMinutes < 1) {
-      return 'just now';
-    } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes}m';
-    } else if (difference.inHours < 24) {
-      return '${difference.inHours}h';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays}d';
-    } else {
-      return DateFormat('MMM d').format(dateTime);
-    }
+    final diff = DateTime.now().difference(dateTime);
+    if (diff.inMinutes < 1) return 'just now';
+    if (diff.inMinutes < 60) return '${diff.inMinutes}m';
+    if (diff.inHours < 24) return '${diff.inHours}h';
+    if (diff.inDays < 7) return '${diff.inDays}d';
+    return DateFormat('MMM d').format(dateTime);
   }
 }

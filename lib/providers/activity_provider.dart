@@ -25,7 +25,8 @@ class ActivityProvider extends ChangeNotifier {
     if (_userId == userId) return;
     _userId = userId;
     _listen();
-    _service.deleteOldActivities(userId);
+    // Clean up old activities silently — don't block init
+    _service.deleteOldActivities(userId).catchError((_) {});
   }
 
   void _listen() {
@@ -36,17 +37,39 @@ class ActivityProvider extends ChangeNotifier {
     notifyListeners();
 
     _activitiesSubscription =
-        _service.getActivitiesStream(_userId!).listen((activities) {
-      _activities = activities;
-      _isLoading = false;
-      notifyListeners();
-    });
+        _service.getActivitiesStream(_userId!).listen(
+      (activities) {
+        _activities = activities;
+        _isLoading = false;
+        notifyListeners();
+      },
+      onError: (_) {
+        _isLoading = false;
+        notifyListeners();
+      },
+    );
 
     _unreadSubscription =
-        _service.getUnreadCount(_userId!).listen((count) {
-      _unreadCount = count;
-      notifyListeners();
-    });
+        _service.getUnreadCount(_userId!).listen(
+      (count) {
+        _unreadCount = count;
+        notifyListeners();
+      },
+      onError: (_) {},
+    );
+  }
+
+  void refresh() {
+    if (_userId == null) return;
+    _listen();
+  }
+
+  void markAsRead(String activityId) {
+    _service.markAsRead(activityId);
+  }
+
+  void markAsUnread(String activityId) {
+    _service.markAsUnread(activityId);
   }
 
   void markAllAsRead() {

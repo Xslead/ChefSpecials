@@ -803,8 +803,8 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String activityNewRecipe(String name) {
-    return '$name yeni bir tarif paylaştı';
+  String activityNewRecipe(String name, String recipe) {
+    return '$name yeni tarif paylaştı: $recipe';
   }
 
   @override

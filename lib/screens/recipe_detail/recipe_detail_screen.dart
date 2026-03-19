@@ -174,21 +174,11 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
       }
       _commentController.clear();
 
-      // Create activity notifications
+      // Create a single activity notification for comment+rating
       final activityService = ActivityService();
-      if (pendingStars > 0 && !hasExistingRating) {
-        activityService.createRatingActivity(
-          recipeAuthorId: r.authorId,
-          actorId: user.uid,
-          actorName: user.fullName,
-          actorAvatar: user.photoUrl,
-          recipeId: r.id!,
-          recipeName: r.title,
-          recipeImageUrl: r.imageUrl,
-          stars: pendingStars,
-        );
-      }
-      if (commentText.isNotEmpty) {
+      final hasNewRating = pendingStars > 0 && !hasExistingRating;
+      if (commentText.isNotEmpty && hasNewRating) {
+        // Combined: comment + rating → single comment activity with stars in message
         activityService.createCommentActivity(
           recipeAuthorId: r.authorId,
           actorId: user.uid,
@@ -198,6 +188,29 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
           recipeName: r.title,
           recipeImageUrl: r.imageUrl,
           commentText: commentText,
+          stars: pendingStars,
+        );
+      } else if (commentText.isNotEmpty) {
+        activityService.createCommentActivity(
+          recipeAuthorId: r.authorId,
+          actorId: user.uid,
+          actorName: user.fullName,
+          actorAvatar: user.photoUrl,
+          recipeId: r.id!,
+          recipeName: r.title,
+          recipeImageUrl: r.imageUrl,
+          commentText: commentText,
+        );
+      } else if (hasNewRating) {
+        activityService.createRatingActivity(
+          recipeAuthorId: r.authorId,
+          actorId: user.uid,
+          actorName: user.fullName,
+          actorAvatar: user.photoUrl,
+          recipeId: r.id!,
+          recipeName: r.title,
+          recipeImageUrl: r.imageUrl,
+          stars: pendingStars,
         );
       }
     } finally {

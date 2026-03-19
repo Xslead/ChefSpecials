@@ -1,4 +1,4 @@
-enum ActivityType { follow, comment, rating, newRecipe }
+enum ActivityType { follow, comment, rating, newRecipe, announcement }
 
 class Activity {
   final String? id;

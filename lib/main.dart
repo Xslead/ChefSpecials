@@ -17,6 +17,7 @@ import 'providers/meal_plan_provider.dart';
 import 'providers/reports_provider.dart';
 import 'providers/notification_provider.dart';
 import 'providers/activity_provider.dart';
+import 'providers/admin_provider.dart';
 import 'app.dart';
 
 @pragma('vm:entry-point')
@@ -51,6 +52,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ReportsProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
         ChangeNotifierProvider(create: (_) => ActivityProvider()),
+        ChangeNotifierProvider(create: (_) => AdminProvider()),
       ],
       child: const ChefSpecialsApp(),
     ),

@@ -814,4 +814,201 @@ class AppLocalizationsTr extends AppLocalizations {
   String timeForMeal(String meal) {
     return '$meal vakti!';
   }
+
+  @override
+  String get adminPanel => 'Yönetici Paneli';
+
+  @override
+  String get adminDashboard => 'Yönetici Paneli';
+
+  @override
+  String get userManagement => 'Kullanıcı Yönetimi';
+
+  @override
+  String get recipeModeration => 'Tarif Moderasyonu';
+
+  @override
+  String get categoryManagement => 'Kategori Yönetimi';
+
+  @override
+  String get adminAnnouncements => 'Duyurular';
+
+  @override
+  String get banAppeals => 'Yasaklama İtirazları';
+
+  @override
+  String get auditLog => 'İşlem Günlüğü';
+
+  @override
+  String get totalUsers => 'Toplam Kullanıcı';
+
+  @override
+  String get totalRecipes => 'Toplam Tarif';
+
+  @override
+  String get totalComments => 'Toplam Yorum';
+
+  @override
+  String get activeToday => 'Bugün Aktif';
+
+  @override
+  String get banUser => 'Kullanıcıyı Yasakla';
+
+  @override
+  String get unbanUser => 'Yasağı Kaldır';
+
+  @override
+  String get promoteToAdmin => 'Yönetici Yap';
+
+  @override
+  String get demoteToUser => 'Yetkiyi Kaldır';
+
+  @override
+  String get banned => 'Yasaklı';
+
+  @override
+  String get admin => 'Yönetici';
+
+  @override
+  String get user => 'Kullanıcı';
+
+  @override
+  String get banReason => 'Yasaklama Nedeni';
+
+  @override
+  String get enterBanReason => 'Kullanıcıyı yasaklama nedenini girin';
+
+  @override
+  String get confirmBan =>
+      'Bu kullanıcıyı yasaklamak istediğinize emin misiniz?';
+
+  @override
+  String get confirmUnban =>
+      'Bu kullanıcının yasağını kaldırmak istediğinize emin misiniz?';
+
+  @override
+  String get confirmPromote =>
+      'Bu kullanıcıyı yönetici yapmak istediğinize emin misiniz?';
+
+  @override
+  String get confirmDemote =>
+      'Bu kullanıcının yetkisini kaldırmak istediğinize emin misiniz?';
+
+  @override
+  String get recipeCategories => 'Tarif Kategorileri';
+
+  @override
+  String get foodItemCategories => 'Yiyecek Kategorileri';
+
+  @override
+  String get addCategory => 'Kategori Ekle';
+
+  @override
+  String get editCategory => 'Kategori Düzenle';
+
+  @override
+  String get deleteCategory => 'Kategori Sil';
+
+  @override
+  String get categoryName => 'Kategori Adı';
+
+  @override
+  String get enterCategoryName => 'Kategori adını girin';
+
+  @override
+  String get confirmDeleteCategory =>
+      'Bu kategoriyi silmek istediğinize emin misiniz?';
+
+  @override
+  String get createAnnouncement => 'Duyuru Oluştur';
+
+  @override
+  String get announcementTitle => 'Başlık';
+
+  @override
+  String get announcementBody => 'İçerik';
+
+  @override
+  String get confirmDeleteAnnouncement =>
+      'Bu duyuruyu silmek istediğinize emin misiniz?';
+
+  @override
+  String get pendingAppeals => 'Bekleyen';
+
+  @override
+  String get allAppeals => 'Tümü';
+
+  @override
+  String get approveAppeal => 'Onayla';
+
+  @override
+  String get rejectAppeal => 'Reddet';
+
+  @override
+  String get reviewNote => 'İnceleme Notu';
+
+  @override
+  String get confirmApproveAppeal =>
+      'Bu itirazı onaylayıp kullanıcının yasağını kaldırmak istiyor musunuz?';
+
+  @override
+  String get confirmRejectAppeal => 'Bu itirazı reddetmek istiyor musunuz?';
+
+  @override
+  String get appealSubmitted => 'İtirazınız gönderildi';
+
+  @override
+  String get submitAppeal => 'İtiraz Gönder';
+
+  @override
+  String get appealText =>
+      'Yasağınızın neden kaldırılması gerektiğini açıklayın...';
+
+  @override
+  String get accountSuspended => 'Hesap Askıya Alındı';
+
+  @override
+  String get accountSuspendedMessage =>
+      'Hesabınız topluluk kurallarını ihlal ettiği için askıya alınmıştır.';
+
+  @override
+  String get appealUnderReview => 'İtiraz İnceleniyor';
+
+  @override
+  String get noUsers => 'Kullanıcı bulunamadı';
+
+  @override
+  String get noAppeals => 'İtiraz yok';
+
+  @override
+  String get noAuditLogs => 'İşlem günlüğü yok';
+
+  @override
+  String get deleteRecipeConfirmAdmin =>
+      'Bu tarifi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.';
+
+  @override
+  String get viewRecipes => 'Tarifleri Görüntüle';
+
+  @override
+  String get searchUsers => 'Kullanıcı ara...';
+
+  @override
+  String get searchRecipes => 'Tarif ara...';
+
+  @override
+  String get actions => 'İşlemler';
+
+  @override
+  String get details => 'Detaylar';
+
+  @override
+  String by(String name) {
+    return '$name tarafından';
+  }
+
+  @override
+  String activityAnnouncement(String title) {
+    return '$title';
+  }
 }

@@ -112,11 +112,12 @@ void main() {
     });
 
     test('ActivityType enum has all expected values', () {
-      expect(ActivityType.values.length, 4);
+      expect(ActivityType.values.length, 5);
       expect(ActivityType.values, contains(ActivityType.follow));
       expect(ActivityType.values, contains(ActivityType.comment));
       expect(ActivityType.values, contains(ActivityType.rating));
       expect(ActivityType.values, contains(ActivityType.newRecipe));
+      expect(ActivityType.values, contains(ActivityType.announcement));
     });
 
     test('toMap stores all ActivityType values correctly', () {

@@ -17,6 +17,10 @@ class UserModel {
   final int followingCount;
   final int followersCount;
   final String? username;
+  final bool isBanned;
+  final String? banReason;
+  final DateTime? bannedAt;
+  final String? bannedBy;
 
   UserModel({
     required this.uid,
@@ -37,9 +41,15 @@ class UserModel {
     this.followingCount = 0,
     this.followersCount = 0,
     this.username,
+    this.isBanned = false,
+    this.banReason,
+    this.bannedAt,
+    this.bannedBy,
   });
 
   String get fullName => '$firstName $lastName'.trim();
+
+  bool get isAdmin => role == 'admin';
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     final firstName = map['firstName'] as String? ??
@@ -71,6 +81,12 @@ class UserModel {
       followingCount: map['followingCount'] as int? ?? 0,
       followersCount: map['followersCount'] as int? ?? 0,
       username: map['username'] as String?,
+      isBanned: map['isBanned'] as bool? ?? false,
+      banReason: map['banReason'] as String?,
+      bannedAt: map['bannedAt'] != null
+          ? DateTime.parse(map['bannedAt'] as String)
+          : null,
+      bannedBy: map['bannedBy'] as String?,
     );
   }
 
@@ -95,6 +111,10 @@ class UserModel {
       'followingCount': followingCount,
       'followersCount': followersCount,
       'username': username,
+      'isBanned': isBanned,
+      'banReason': banReason,
+      'bannedAt': bannedAt?.toIso8601String(),
+      'bannedBy': bannedBy,
     };
   }
 
@@ -114,6 +134,10 @@ class UserModel {
     int? followingCount,
     int? followersCount,
     String? username,
+    bool? isBanned,
+    String? banReason,
+    DateTime? bannedAt,
+    String? bannedBy,
   }) {
     return UserModel(
       uid: uid,
@@ -134,6 +158,10 @@ class UserModel {
       followingCount: followingCount ?? this.followingCount,
       followersCount: followersCount ?? this.followersCount,
       username: username ?? this.username,
+      isBanned: isBanned ?? this.isBanned,
+      banReason: banReason ?? this.banReason,
+      bannedAt: bannedAt ?? this.bannedAt,
+      bannedBy: bannedBy ?? this.bannedBy,
     );
   }
 }

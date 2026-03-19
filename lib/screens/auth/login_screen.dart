@@ -36,7 +36,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (success && mounted) {
-      context.go('/home');
+      if (authProvider.isBanned) {
+        context.go('/banned');
+      } else {
+        context.go('/home');
+      }
     }
   }
 
@@ -156,7 +160,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'test@chefspecials.com',
                                 'test123456',
                               );
-                              if (success && context.mounted) context.go('/home');
+                              if (success && context.mounted) {
+                                if (context.read<AuthProvider>().isBanned) {
+                                  context.go('/banned');
+                                } else {
+                                  context.go('/home');
+                                }
+                              }
                             },
                       icon: const Icon(Icons.bolt, size: 18),
                       label: const Text('Quick Login (Test)'),

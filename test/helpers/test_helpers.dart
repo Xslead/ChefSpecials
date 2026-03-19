@@ -12,6 +12,9 @@ import 'package:chef_specials/models/nutrition_goal.dart';
 import 'package:chef_specials/models/shopping_list.dart';
 import 'package:chef_specials/models/meal_plan.dart';
 import 'package:chef_specials/models/planned_meal.dart';
+import 'package:chef_specials/models/admin_log.dart';
+import 'package:chef_specials/models/ban_appeal.dart';
+import 'package:chef_specials/models/announcement.dart';
 
 // ---------------------------------------------------------------------------
 // Ingredient
@@ -218,6 +221,10 @@ UserModel createTestUser({
   int? followingCount,
   int? followersCount,
   String? username,
+  bool? isBanned,
+  String? banReason,
+  DateTime? bannedAt,
+  String? bannedBy,
 }) {
   return UserModel(
     uid: uid ?? 'user_001',
@@ -238,6 +245,10 @@ UserModel createTestUser({
     followingCount: followingCount ?? 0,
     followersCount: followersCount ?? 0,
     username: username,
+    isBanned: isBanned ?? false,
+    banReason: banReason,
+    bannedAt: bannedAt,
+    bannedBy: bannedBy,
   );
 }
 
@@ -260,6 +271,10 @@ Map<String, dynamic> createTestUserMap({
   int? followingCount,
   int? followersCount,
   String? username,
+  bool? isBanned,
+  String? banReason,
+  String? bannedAt,
+  String? bannedBy,
 }) {
   return {
     'uid': uid ?? 'user_001',
@@ -280,6 +295,10 @@ Map<String, dynamic> createTestUserMap({
     'followingCount': followingCount ?? 0,
     'followersCount': followersCount ?? 0,
     'username': username,
+    'isBanned': isBanned ?? false,
+    'banReason': banReason,
+    'bannedAt': bannedAt,
+    'bannedBy': bannedBy,
   };
 }
 
@@ -785,4 +804,142 @@ MealPlan createTestMealPlan({
     createdAt: createdAt ?? DateTime(2025, 3, 17, 10, 0, 0),
     updatedAt: updatedAt ?? DateTime(2025, 3, 17, 10, 0, 0),
   );
+}
+
+// ---------------------------------------------------------------------------
+// AdminLog
+// ---------------------------------------------------------------------------
+
+AdminLog createTestAdminLog({
+  String? id,
+  String? adminId,
+  String? adminName,
+  String? action,
+  String? targetId,
+  String? targetName,
+  String? details,
+  DateTime? createdAt,
+}) {
+  return AdminLog(
+    id: id ?? 'log_001',
+    adminId: adminId ?? 'admin_001',
+    adminName: adminName ?? 'Admin User',
+    action: action ?? 'ban_user',
+    targetId: targetId ?? 'user_002',
+    targetName: targetName ?? 'John Doe',
+    details: details ?? 'Violated community guidelines',
+    createdAt: createdAt ?? DateTime(2025, 3, 1, 10, 0, 0),
+  );
+}
+
+Map<String, dynamic> createTestAdminLogMap({
+  String? adminId,
+  String? adminName,
+  String? action,
+  String? targetId,
+  String? targetName,
+  String? details,
+  String? createdAt,
+}) {
+  return {
+    'adminId': adminId ?? 'admin_001',
+    'adminName': adminName ?? 'Admin User',
+    'action': action ?? 'ban_user',
+    'targetId': targetId ?? 'user_002',
+    'targetName': targetName ?? 'John Doe',
+    'details': details ?? 'Violated community guidelines',
+    'createdAt': createdAt ?? '2025-03-01T10:00:00.000',
+  };
+}
+
+// ---------------------------------------------------------------------------
+// BanAppeal
+// ---------------------------------------------------------------------------
+
+BanAppeal createTestBanAppeal({
+  String? id,
+  String? userId,
+  String? userName,
+  String? userEmail,
+  String? appealText,
+  String? status,
+  String? reviewedBy,
+  String? reviewNote,
+  DateTime? createdAt,
+  DateTime? reviewedAt,
+}) {
+  return BanAppeal(
+    id: id ?? 'appeal_001',
+    userId: userId ?? 'user_002',
+    userName: userName ?? 'John Doe',
+    userEmail: userEmail ?? 'john@example.com',
+    appealText: appealText ?? 'I believe my ban was a mistake.',
+    status: status ?? 'pending',
+    reviewedBy: reviewedBy,
+    reviewNote: reviewNote,
+    createdAt: createdAt ?? DateTime(2025, 3, 5, 14, 0, 0),
+    reviewedAt: reviewedAt,
+  );
+}
+
+Map<String, dynamic> createTestBanAppealMap({
+  String? userId,
+  String? userName,
+  String? userEmail,
+  String? appealText,
+  String? status,
+  String? reviewedBy,
+  String? reviewNote,
+  String? createdAt,
+  String? reviewedAt,
+}) {
+  return {
+    'userId': userId ?? 'user_002',
+    'userName': userName ?? 'John Doe',
+    'userEmail': userEmail ?? 'john@example.com',
+    'appealText': appealText ?? 'I believe my ban was a mistake.',
+    'status': status ?? 'pending',
+    'reviewedBy': reviewedBy,
+    'reviewNote': reviewNote,
+    'createdAt': createdAt ?? '2025-03-05T14:00:00.000',
+    'reviewedAt': reviewedAt,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Announcement
+// ---------------------------------------------------------------------------
+
+Announcement createTestAnnouncement({
+  String? id,
+  String? title,
+  String? body,
+  String? authorId,
+  String? authorName,
+  DateTime? createdAt,
+}) {
+  return Announcement(
+    id: id ?? 'ann_001',
+    title: title ?? 'Welcome to ChefSpecials!',
+    body: body ?? 'We are excited to announce new features.',
+    authorId: authorId ?? 'admin_001',
+    authorName: authorName ?? 'Admin User',
+    createdAt: createdAt ?? DateTime(2025, 3, 10, 9, 0, 0),
+  );
+}
+
+Map<String, dynamic> createTestAnnouncementMap({
+  String? title,
+  String? body,
+  String? authorId,
+  String? authorName,
+  String? createdAt,
+}) {
+  return {
+    'title': title ?? 'Welcome to ChefSpecials!',
+    'body': body ?? 'We are excited to announce new features.',
+    'authorId': authorId ?? 'admin_001',
+    'authorName': authorName ?? 'Admin User',
+    'createdAt': createdAt ?? '2025-03-10T09:00:00.000',
+  };
 }

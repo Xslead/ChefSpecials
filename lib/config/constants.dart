@@ -7,6 +7,14 @@ class AppConstants {
   static const String favoritesCollection = 'favorites';
   static const String categoriesCollection = 'categories';
 
+  static const String adminLogsCollection = 'admin_logs';
+  static const String appealsCollection = 'appeals';
+  static const String announcementsCollection = 'announcements';
+  static const String activitiesCollection = 'activities';
+  static const String commentsCollection = 'comments';
+  static const String ratingsCollection = 'ratings';
+  static const String foodItemsCollection = 'food_items';
+
   // Storage paths
   static const String recipeImagesPath = 'recipe_images';
   static const String userAvatarsPath = 'user_avatars';

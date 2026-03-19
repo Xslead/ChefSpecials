@@ -22,6 +22,10 @@ void main() {
       'followingCount': 50,
       'followersCount': 100,
       'username': 'johndoe',
+      'isBanned': true,
+      'banReason': 'Spam',
+      'bannedAt': '2024-06-01T12:00:00.000Z',
+      'bannedBy': 'admin_001',
     };
   }
 
@@ -49,6 +53,10 @@ void main() {
         expect(user.followingCount, 50);
         expect(user.followersCount, 100);
         expect(user.username, 'johndoe');
+        expect(user.isBanned, true);
+        expect(user.banReason, 'Spam');
+        expect(user.bannedAt, DateTime.parse('2024-06-01T12:00:00.000Z'));
+        expect(user.bannedBy, 'admin_001');
       });
 
       test('defaults role to user when missing', () {
@@ -62,6 +70,21 @@ void main() {
 
         final user = UserModel.fromMap(map);
         expect(user.role, 'user');
+      });
+
+      test('defaults isBanned to false when missing', () {
+        final map = {
+          'uid': 'u1',
+          'email': 'test@test.com',
+          'firstName': 'Test',
+          'lastName': 'User',
+          'createdAt': '2024-01-01T00:00:00.000Z',
+        };
+        final user = UserModel.fromMap(map);
+        expect(user.isBanned, false);
+        expect(user.banReason, isNull);
+        expect(user.bannedAt, isNull);
+        expect(user.bannedBy, isNull);
       });
 
       test('defaults followingCount and followersCount to 0', () {
@@ -171,6 +194,10 @@ void main() {
         expect(user.activityLevel, isNull);
         expect(user.cookingSkillLevel, isNull);
         expect(user.username, isNull);
+        expect(user.isBanned, false);
+        expect(user.banReason, isNull);
+        expect(user.bannedAt, isNull);
+        expect(user.bannedBy, isNull);
       });
 
       test('converts int heightCm and weightKg to double', () {
@@ -216,6 +243,10 @@ void main() {
           followingCount: 10,
           followersCount: 20,
           username: 'johnd',
+          isBanned: true,
+          banReason: 'Spam',
+          bannedAt: dt,
+          bannedBy: 'admin_001',
         );
 
         final map = user.toMap();
@@ -239,6 +270,10 @@ void main() {
         expect(map['followingCount'], 10);
         expect(map['followersCount'], 20);
         expect(map['username'], 'johnd');
+        expect(map['isBanned'], true);
+        expect(map['banReason'], 'Spam');
+        expect(map['bannedAt'], dt.toIso8601String());
+        expect(map['bannedBy'], 'admin_001');
       });
 
       test('includes fullName computed from firstName and lastName', () {
@@ -320,6 +355,43 @@ void main() {
       });
     });
 
+    group('isAdmin getter', () {
+      test('returns true when role is admin', () {
+        final user = UserModel(
+          uid: 'u1',
+          email: 'test@test.com',
+          firstName: 'Admin',
+          lastName: 'User',
+          role: 'admin',
+          createdAt: DateTime.now(),
+        );
+        expect(user.isAdmin, true);
+      });
+
+      test('returns false when role is user', () {
+        final user = UserModel(
+          uid: 'u1',
+          email: 'test@test.com',
+          firstName: 'Regular',
+          lastName: 'User',
+          role: 'user',
+          createdAt: DateTime.now(),
+        );
+        expect(user.isAdmin, false);
+      });
+
+      test('returns false with default role', () {
+        final user = UserModel(
+          uid: 'u1',
+          email: 'test@test.com',
+          firstName: 'Test',
+          lastName: 'User',
+          createdAt: DateTime.now(),
+        );
+        expect(user.isAdmin, false);
+      });
+    });
+
     group('copyWith', () {
       late UserModel original;
 
@@ -343,6 +415,7 @@ void main() {
           followingCount: 5,
           followersCount: 10,
           username: 'originaluser',
+          isBanned: false,
         );
       });
 
@@ -424,6 +497,20 @@ void main() {
         expect(copy.weightKg, 65.0);
         expect(copy.gender, 'male');
       });
+
+      test('updates ban fields', () {
+        final bannedAt = DateTime(2024, 6, 1);
+        final copy = original.copyWith(
+          isBanned: true,
+          banReason: 'Violation',
+          bannedAt: bannedAt,
+          bannedBy: 'admin_001',
+        );
+        expect(copy.isBanned, true);
+        expect(copy.banReason, 'Violation');
+        expect(copy.bannedAt, bannedAt);
+        expect(copy.bannedBy, 'admin_001');
+      });
     });
 
     group('fromMap/toMap round-trip', () {
@@ -448,6 +535,10 @@ void main() {
         expect(resultMap['followingCount'], originalMap['followingCount']);
         expect(resultMap['followersCount'], originalMap['followersCount']);
         expect(resultMap['username'], originalMap['username']);
+        expect(resultMap['isBanned'], originalMap['isBanned']);
+        expect(resultMap['banReason'], originalMap['banReason']);
+        expect(resultMap['bannedAt'], originalMap['bannedAt']);
+        expect(resultMap['bannedBy'], originalMap['bannedBy']);
       });
     });
 

@@ -188,6 +188,27 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       const SizedBox(height: 4),
                       _buildStarRow(int.tryParse(activity.message!) ?? 0),
                     ],
+                    if (activity.message != null &&
+                        activity.type == ActivityType.announcement) ...[
+                      const SizedBox(height: 4),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: AppTheme.neutralSoftOf(context),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          activity.message!,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppTheme.textSecondaryOf(context),
+                            height: 1.3,
+                          ),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 6),
                     Row(
                       children: [
@@ -333,6 +354,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
       case ActivityType.newRecipe:
         text = l10n.activityNewRecipe(
             activity.actorName, activity.targetName ?? '');
+      case ActivityType.announcement:
+        text = activity.targetName ?? '';
     }
 
     final actorStart = text.indexOf(activity.actorName);
@@ -432,6 +455,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
       case ActivityType.rating:
       case ActivityType.newRecipe:
         context.push('/recipe/${activity.targetId}');
+      case ActivityType.announcement:
+        break; // Announcements don't navigate anywhere
     }
   }
 
@@ -441,6 +466,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
       ActivityType.comment => Icons.comment_outlined,
       ActivityType.rating => Icons.star_rounded,
       ActivityType.newRecipe => Icons.restaurant_menu,
+      ActivityType.announcement => Icons.campaign,
     };
   }
 
@@ -450,6 +476,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
       ActivityType.comment => AppTheme.secondaryColor,
       ActivityType.rating => AppTheme.starColor,
       ActivityType.newRecipe => AppTheme.primaryColor,
+      ActivityType.announcement => AppTheme.snackColor,
     };
   }
 

@@ -21,6 +21,7 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isAuthenticated => _firebaseUser != null;
+  bool get isBanned => _userModel?.isBanned ?? false;
 
   AuthProvider({AuthService? authService, UserService? userService})
       : _authService = authService ?? AuthService(),

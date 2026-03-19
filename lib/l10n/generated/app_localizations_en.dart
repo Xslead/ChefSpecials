@@ -814,4 +814,196 @@ class AppLocalizationsEn extends AppLocalizations {
   String timeForMeal(String meal) {
     return 'Time for $meal!';
   }
+
+  @override
+  String get adminPanel => 'Admin Panel';
+
+  @override
+  String get adminDashboard => 'Admin Dashboard';
+
+  @override
+  String get userManagement => 'User Management';
+
+  @override
+  String get recipeModeration => 'Recipe Moderation';
+
+  @override
+  String get categoryManagement => 'Category Management';
+
+  @override
+  String get adminAnnouncements => 'Announcements';
+
+  @override
+  String get banAppeals => 'Ban Appeals';
+
+  @override
+  String get auditLog => 'Audit Log';
+
+  @override
+  String get totalUsers => 'Total Users';
+
+  @override
+  String get totalRecipes => 'Total Recipes';
+
+  @override
+  String get totalComments => 'Total Comments';
+
+  @override
+  String get activeToday => 'Active Today';
+
+  @override
+  String get banUser => 'Ban User';
+
+  @override
+  String get unbanUser => 'Unban User';
+
+  @override
+  String get promoteToAdmin => 'Promote to Admin';
+
+  @override
+  String get demoteToUser => 'Demote to User';
+
+  @override
+  String get banned => 'Banned';
+
+  @override
+  String get admin => 'Admin';
+
+  @override
+  String get user => 'User';
+
+  @override
+  String get banReason => 'Ban Reason';
+
+  @override
+  String get enterBanReason => 'Enter the reason for banning this user';
+
+  @override
+  String get confirmBan => 'Are you sure you want to ban this user?';
+
+  @override
+  String get confirmUnban => 'Are you sure you want to unban this user?';
+
+  @override
+  String get confirmPromote =>
+      'Are you sure you want to promote this user to admin?';
+
+  @override
+  String get confirmDemote => 'Are you sure you want to demote this user?';
+
+  @override
+  String get recipeCategories => 'Recipe Categories';
+
+  @override
+  String get foodItemCategories => 'Food Item Categories';
+
+  @override
+  String get addCategory => 'Add Category';
+
+  @override
+  String get editCategory => 'Edit Category';
+
+  @override
+  String get deleteCategory => 'Delete Category';
+
+  @override
+  String get categoryName => 'Category Name';
+
+  @override
+  String get enterCategoryName => 'Enter category name';
+
+  @override
+  String get confirmDeleteCategory =>
+      'Are you sure you want to delete this category?';
+
+  @override
+  String get createAnnouncement => 'Create Announcement';
+
+  @override
+  String get announcementTitle => 'Title';
+
+  @override
+  String get announcementBody => 'Body';
+
+  @override
+  String get confirmDeleteAnnouncement =>
+      'Are you sure you want to delete this announcement?';
+
+  @override
+  String get pendingAppeals => 'Pending';
+
+  @override
+  String get allAppeals => 'All';
+
+  @override
+  String get approveAppeal => 'Approve';
+
+  @override
+  String get rejectAppeal => 'Reject';
+
+  @override
+  String get reviewNote => 'Review Note';
+
+  @override
+  String get confirmApproveAppeal => 'Approve this appeal and unban the user?';
+
+  @override
+  String get confirmRejectAppeal => 'Reject this appeal?';
+
+  @override
+  String get appealSubmitted => 'Your appeal has been submitted';
+
+  @override
+  String get submitAppeal => 'Submit Appeal';
+
+  @override
+  String get appealText => 'Explain why your ban should be lifted...';
+
+  @override
+  String get accountSuspended => 'Account Suspended';
+
+  @override
+  String get accountSuspendedMessage =>
+      'Your account has been suspended for violating our community guidelines.';
+
+  @override
+  String get appealUnderReview => 'Appeal Under Review';
+
+  @override
+  String get noUsers => 'No users found';
+
+  @override
+  String get noAppeals => 'No appeals';
+
+  @override
+  String get noAuditLogs => 'No audit logs';
+
+  @override
+  String get deleteRecipeConfirmAdmin =>
+      'Are you sure you want to delete this recipe? This action cannot be undone.';
+
+  @override
+  String get viewRecipes => 'View Recipes';
+
+  @override
+  String get searchUsers => 'Search users...';
+
+  @override
+  String get searchRecipes => 'Search recipes...';
+
+  @override
+  String get actions => 'Actions';
+
+  @override
+  String get details => 'Details';
+
+  @override
+  String by(String name) {
+    return 'by $name';
+  }
+
+  @override
+  String activityAnnouncement(String title) {
+    return '$title';
+  }
 }

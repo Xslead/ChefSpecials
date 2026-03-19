@@ -116,6 +116,46 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
+                        if (user.isAdmin) ...[
+                          ListTile(
+                            leading: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: AppTheme.errorColor
+                                    .withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(
+                                Icons.admin_panel_settings,
+                                color: AppTheme.errorColor,
+                                size: 20,
+                              ),
+                            ),
+                            title: Text(
+                              l10n.adminPanel,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            trailing: Icon(
+                              Icons.chevron_right,
+                              color: AppTheme.textTertiaryOf(context),
+                            ),
+                            onTap: () => context.push('/admin'),
+                            dense: true,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          Divider(
+                            height: 1,
+                            indent: 16,
+                            endIndent: 16,
+                            color: AppTheme.neutralLightOf(context)
+                                .withValues(alpha: 0.5),
+                          ),
+                        ],
                         ListTile(
                           leading: Container(
                             padding: const EdgeInsets.all(8),

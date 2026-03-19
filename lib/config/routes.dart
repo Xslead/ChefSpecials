@@ -35,6 +35,14 @@ import '../screens/meal_planner/meal_planner_screen.dart';
 import '../screens/reports/reports_screen.dart';
 import '../screens/profile/notification_settings_screen.dart';
 import '../screens/activity/activity_screen.dart';
+import '../screens/admin/admin_dashboard_screen.dart';
+import '../screens/admin/admin_users_screen.dart';
+import '../screens/admin/admin_recipes_screen.dart';
+import '../screens/admin/admin_categories_screen.dart';
+import '../screens/admin/admin_announcements_screen.dart';
+import '../screens/admin/admin_appeals_screen.dart';
+import '../screens/admin/admin_audit_log_screen.dart';
+import '../screens/auth/banned_screen.dart';
 import '../models/meal_entry.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -285,6 +293,46 @@ final GoRouter router = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/announcements',
       builder: (context, state) => const ActivityScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/admin',
+      builder: (context, state) => const AdminDashboardScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/admin/users',
+      builder: (context, state) => const AdminUsersScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/admin/recipes',
+      builder: (context, state) => const AdminRecipesScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/admin/categories',
+      builder: (context, state) => const AdminCategoriesScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/admin/announcements',
+      builder: (context, state) => const AdminAnnouncementsScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/admin/appeals',
+      builder: (context, state) => const AdminAppealsScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/admin/audit-log',
+      builder: (context, state) => const AdminAuditLogScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/banned',
+      builder: (context, state) => const BannedScreen(),
     ),
   ],
 );

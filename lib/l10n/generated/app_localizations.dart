@@ -1608,6 +1608,372 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time for {meal}!'**
   String timeForMeal(String meal);
+
+  /// No description provided for @adminPanel.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Panel'**
+  String get adminPanel;
+
+  /// No description provided for @adminDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Dashboard'**
+  String get adminDashboard;
+
+  /// No description provided for @userManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'User Management'**
+  String get userManagement;
+
+  /// No description provided for @recipeModeration.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe Moderation'**
+  String get recipeModeration;
+
+  /// No description provided for @categoryManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Management'**
+  String get categoryManagement;
+
+  /// No description provided for @adminAnnouncements.
+  ///
+  /// In en, this message translates to:
+  /// **'Announcements'**
+  String get adminAnnouncements;
+
+  /// No description provided for @banAppeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Ban Appeals'**
+  String get banAppeals;
+
+  /// No description provided for @auditLog.
+  ///
+  /// In en, this message translates to:
+  /// **'Audit Log'**
+  String get auditLog;
+
+  /// No description provided for @totalUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Users'**
+  String get totalUsers;
+
+  /// No description provided for @totalRecipes.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Recipes'**
+  String get totalRecipes;
+
+  /// No description provided for @totalComments.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Comments'**
+  String get totalComments;
+
+  /// No description provided for @activeToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Today'**
+  String get activeToday;
+
+  /// No description provided for @banUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Ban User'**
+  String get banUser;
+
+  /// No description provided for @unbanUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Unban User'**
+  String get unbanUser;
+
+  /// No description provided for @promoteToAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Promote to Admin'**
+  String get promoteToAdmin;
+
+  /// No description provided for @demoteToUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Demote to User'**
+  String get demoteToUser;
+
+  /// No description provided for @banned.
+  ///
+  /// In en, this message translates to:
+  /// **'Banned'**
+  String get banned;
+
+  /// No description provided for @admin.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin'**
+  String get admin;
+
+  /// No description provided for @user.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get user;
+
+  /// No description provided for @banReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Ban Reason'**
+  String get banReason;
+
+  /// No description provided for @enterBanReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the reason for banning this user'**
+  String get enterBanReason;
+
+  /// No description provided for @confirmBan.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to ban this user?'**
+  String get confirmBan;
+
+  /// No description provided for @confirmUnban.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to unban this user?'**
+  String get confirmUnban;
+
+  /// No description provided for @confirmPromote.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to promote this user to admin?'**
+  String get confirmPromote;
+
+  /// No description provided for @confirmDemote.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to demote this user?'**
+  String get confirmDemote;
+
+  /// No description provided for @recipeCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe Categories'**
+  String get recipeCategories;
+
+  /// No description provided for @foodItemCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Food Item Categories'**
+  String get foodItemCategories;
+
+  /// No description provided for @addCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Category'**
+  String get addCategory;
+
+  /// No description provided for @editCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Category'**
+  String get editCategory;
+
+  /// No description provided for @deleteCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Category'**
+  String get deleteCategory;
+
+  /// No description provided for @categoryName.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Name'**
+  String get categoryName;
+
+  /// No description provided for @enterCategoryName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter category name'**
+  String get enterCategoryName;
+
+  /// No description provided for @confirmDeleteCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this category?'**
+  String get confirmDeleteCategory;
+
+  /// No description provided for @createAnnouncement.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Announcement'**
+  String get createAnnouncement;
+
+  /// No description provided for @announcementTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get announcementTitle;
+
+  /// No description provided for @announcementBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Body'**
+  String get announcementBody;
+
+  /// No description provided for @confirmDeleteAnnouncement.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this announcement?'**
+  String get confirmDeleteAnnouncement;
+
+  /// No description provided for @pendingAppeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pendingAppeals;
+
+  /// No description provided for @allAppeals.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get allAppeals;
+
+  /// No description provided for @approveAppeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get approveAppeal;
+
+  /// No description provided for @rejectAppeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get rejectAppeal;
+
+  /// No description provided for @reviewNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Review Note'**
+  String get reviewNote;
+
+  /// No description provided for @confirmApproveAppeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve this appeal and unban the user?'**
+  String get confirmApproveAppeal;
+
+  /// No description provided for @confirmRejectAppeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject this appeal?'**
+  String get confirmRejectAppeal;
+
+  /// No description provided for @appealSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Your appeal has been submitted'**
+  String get appealSubmitted;
+
+  /// No description provided for @submitAppeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Appeal'**
+  String get submitAppeal;
+
+  /// No description provided for @appealText.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain why your ban should be lifted...'**
+  String get appealText;
+
+  /// No description provided for @accountSuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Suspended'**
+  String get accountSuspended;
+
+  /// No description provided for @accountSuspendedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been suspended for violating our community guidelines.'**
+  String get accountSuspendedMessage;
+
+  /// No description provided for @appealUnderReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Appeal Under Review'**
+  String get appealUnderReview;
+
+  /// No description provided for @noUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'No users found'**
+  String get noUsers;
+
+  /// No description provided for @noAppeals.
+  ///
+  /// In en, this message translates to:
+  /// **'No appeals'**
+  String get noAppeals;
+
+  /// No description provided for @noAuditLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'No audit logs'**
+  String get noAuditLogs;
+
+  /// No description provided for @deleteRecipeConfirmAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this recipe? This action cannot be undone.'**
+  String get deleteRecipeConfirmAdmin;
+
+  /// No description provided for @viewRecipes.
+  ///
+  /// In en, this message translates to:
+  /// **'View Recipes'**
+  String get viewRecipes;
+
+  /// No description provided for @searchUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Search users...'**
+  String get searchUsers;
+
+  /// No description provided for @searchRecipes.
+  ///
+  /// In en, this message translates to:
+  /// **'Search recipes...'**
+  String get searchRecipes;
+
+  /// No description provided for @actions.
+  ///
+  /// In en, this message translates to:
+  /// **'Actions'**
+  String get actions;
+
+  /// No description provided for @details.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
+
+  /// No description provided for @by.
+  ///
+  /// In en, this message translates to:
+  /// **'by {name}'**
+  String by(String name);
+
+  /// No description provided for @activityAnnouncement.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}'**
+  String activityAnnouncement(String title);
 }
 
 class _AppLocalizationsDelegate

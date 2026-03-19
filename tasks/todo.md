@@ -307,14 +307,14 @@ Status: PUSHED
 
 ## App Statistics
 
- Total Dart files: 127 (lib) + 65 (test) = 192
- Tests: 1078 (0 failures)
- Screens implemented: 32 (added ActivityScreen)
- Models: 17 (added Activity)
- Services: 16 (added ActivityService)
- Providers: 18 (added ActivityProvider)
- Routes: 29 (added /announcements)
- l10n keys: 283 (EN + TR)
+ Total Dart files: 145 (lib) + 71 (test) = 216
+ Tests: 1148 (0 failures)
+ Screens implemented: 41 (added 8 admin screens + banned screen)
+ Models: 20 (added AdminLog, BanAppeal, Announcement)
+ Services: 17 (added AdminService)
+ Providers: 19 (added AdminProvider)
+ Routes: 37 (added 8 admin + banned routes)
+ l10n keys: 348 (EN + TR)
 
 ---
 
@@ -619,68 +619,78 @@ Status: PUSHED (Push 20c)
 
 ### Task 4: Admin Panel (Push 21)
 
-**UserModel Update**
-- [ ] Add `isAdmin` (bool, default false) to `lib/models/user_model.dart`
-- [ ] Update `fromMap()`: read `'isAdmin' ?? false`
-- [ ] Update `toMap()`: include `'isAdmin'`
-- [ ] Manually set `isAdmin: true` on your own user document in Firestore console for testing
+**Models**
+- [x] UserModel: added `isBanned`, `banReason`, `bannedAt`, `bannedBy` fields + `isAdmin` getter
+- [x] Activity: added `announcement` to ActivityType enum
+- [x] Created `AdminLog` model (id, adminId, adminName, action, targetId, targetName, details, createdAt)
+- [x] Created `BanAppeal` model (id, userId, userName, userEmail, appealText, status, reviewedBy, reviewNote, createdAt, reviewedAt)
+- [x] Created `Announcement` model (id, title, body, authorId, authorName, createdAt)
 
 **Service: AdminService**
-- [ ] Create `lib/services/admin_service.dart`
-- [ ] `getDashboardStats()` → Future\<Map\<String, int\>\> — count docs in `users`, `recipes`, `comments`, count active-today users
-- [ ] `getAllUsers({String? searchQuery, int limit, DocumentSnapshot? startAfter})` → Future\<List\<UserModel\>\> — paginated, searchable
-- [ ] `banUser(String userId)` / `unbanUser(String userId)` — set isBanned field
-- [ ] `getAllRecipes({String? searchQuery, int limit, DocumentSnapshot? startAfter})` → Future\<List\<Recipe\>\> — paginated admin review
-- [ ] `deleteRecipe(String recipeId)` — cascade cleanup (favorites, ratings, comments, collections)
-- [ ] `getFlaggedComments()` → Future\<List\<Comment\>\> — query where isFlagged == true
-- [ ] `deleteComment(String recipeId, String commentId)`
-- [ ] `getCategories()` / `addCategory(String name)` / `deleteCategory(String categoryId)`
-- [ ] Accept optional `FirebaseFirestore` parameter for DI
+- [x] Create `lib/services/admin_service.dart` with DI (optional FirebaseFirestore)
+- [x] `getDashboardStats()` — counts users, recipes, comments (from recipe commentCount), active today
+- [x] `getAllUsers({searchQuery, limit})` / `banUser()` / `unbanUser()` / `setUserRole()`
+- [x] `getAllRecipes({searchQuery, limit})` / `deleteRecipeAsAdmin()` — cascade cleanup (ratings, favorites, comments)
+- [x] `getCategories({type})` / `addCategory()` / `updateCategory()` / `deleteCategory()` / `seedDefaultCategories()`
+- [x] `createAnnouncement()` — saves to announcements + fan-out Activity to all users
+- [x] `getAnnouncements()` / `deleteAnnouncement()`
+- [x] `logAction(AdminLog)` / `getAuditLogs({limit})`
+- [x] `submitAppeal()` / `getPendingAppeals()` / `getAllAppeals()` / `reviewAppeal()` / `getUserAppeal()`
+- [x] `_notifyUser()` helper — sends activity announcement to affected user on every admin action
 
 **Provider: AdminProvider**
-- [ ] Create `lib/providers/admin_provider.dart`
-- [ ] Extends `ChangeNotifier`, holds: dashboardStats, usersList, recipesList, flaggedComments, categories, loading states
-- [ ] Methods wrap AdminService calls + notifyListeners()
-- [ ] Register in `main.dart` MultiProvider (only if user.isAdmin)
+- [x] Create `lib/providers/admin_provider.dart` — wraps AdminService, manages loading/error state
+- [x] All mutations auto-log to audit trail via `logAction()`
+- [x] Registered in `main.dart` MultiProvider
 
-**Screens**
-- [ ] `AdminDashboardScreen` — `lib/screens/admin/admin_dashboard_screen.dart`
-  - GridView: 4 stat cards (total users, recipes, comments, active today)
-  - Navigation items: Manage Users, Recipes, Comments, Categories, Food Items
-- [ ] `AdminUsersScreen` — `lib/screens/admin/admin_users_screen.dart`
-  - Search, paginated list, avatar/name/email/date/banned badge, swipe to ban/unban
-- [ ] `AdminRecipesScreen` — `lib/screens/admin/admin_recipes_screen.dart`
-  - Search, paginated list, image/title/author/date/rating, popup: View/Delete
-- [ ] `AdminCommentsScreen` — `lib/screens/admin/admin_comments_screen.dart`
-  - Flagged comments list, actions: Delete Comment, View Recipe
-- [ ] `AdminCategoriesScreen` — `lib/screens/admin/admin_categories_screen.dart`
-  - Category list with delete, FAB to add new (text input dialog), swipe-to-delete
+**Screens (8 new + 1 modified)**
+- [x] `AdminDashboardScreen` — 2x2 stat cards, 6 navigation tiles, pull-to-refresh, seeds categories on init
+- [x] `AdminUsersScreen` — search, user cards with role/ban badges, bottom sheet actions (ban/unban/promote/demote)
+- [x] `AdminRecipesScreen` — search, recipe cards, swipe-to-delete with required description dialog
+- [x] `AdminCategoriesScreen` — two tabs (recipe/food item), edit/delete per item, FAB to add
+- [x] `AdminAnnouncementsScreen` — list + FAB to create (title + body bottom sheet)
+- [x] `AdminAppealsScreen` — pending/all tabs, approve (unbans automatically) / reject with optional note
+- [x] `AdminAuditLogScreen` — chronological, color-coded by action type, read-only
+- [x] `BannedScreen` — ban reason, appeal form or "under review" status, sign out button
 
-**Route & Access**
-- [ ] Admin route guard: redirect if `!user.isAdmin` → home
-- [ ] Routes: `/admin`, `/admin/users`, `/admin/recipes`, `/admin/comments`, `/admin/categories` (all under parentNavigatorKey)
-- [ ] ProfileScreen: "Admin Panel" ListTile (shield icon) — visible only when `isAdmin == true`
+**Integration**
+- [x] Routes: `/admin`, `/admin/users`, `/admin/recipes`, `/admin/categories`, `/admin/announcements`, `/admin/appeals`, `/admin/audit-log`, `/banned`
+- [x] ProfileScreen: conditional "Admin Panel" ListTile (visible only when `user.isAdmin`)
+- [x] LoginScreen: ban check after login → redirect to `/banned`
+- [x] AuthProvider: `isBanned` getter
+- [x] ActivityScreen: handles `ActivityType.announcement` (megaphone icon, message display)
+- [x] Constants: `adminLogsCollection`, `appealsCollection`, `announcementsCollection`
+
+**User Notifications on Admin Actions**
+- [x] Ban → user gets "Account Suspended" announcement with reason
+- [x] Unban → user gets "Your account has been restored" announcement
+- [x] Delete recipe → recipe author gets notification with admin's description (required field)
+- [x] Promote/Demote → user gets role change announcement
+- [x] Appeal approved → user gets unban notification automatically
 
 **Firestore Rules**
-- [ ] Add admin rules for user updates, deploy with `firebase deploy --only firestore:rules`
+- [x] `isAdmin()` helper function (reads user doc role)
+- [x] Admin overrides on: users, recipes, comments, food_items, categories
+- [x] New rules: admin_logs (admin read/create), appeals (user create, admin read/update), announcements (admin CRUD, user read)
+- [x] Deployed with `firebase deploy --only firestore:rules`
 
 **l10n**
-- [ ] Add keys:
-  - `adminPanel` / "Admin Panel" / "Yonetici Paneli"
-  - `adminDashboard` / "Admin Dashboard" / "Yonetici Panosu"
-  - `totalUsers` / `totalRecipes` / `totalComments` / `activeToday`
-  - `manageUsers` / `manageRecipes` / `moderateComments` / `manageCategories`
-  - `banUser` / `unbanUser` / `banned` / `confirmDelete`
-
-**Admin Announcements (uses existing Activity system)**
-- [ ] `AdminService.sendAnnouncement(String title, String message)` — create Activity with type `announcement` for all users
-- [ ] `AdminDashboardScreen` — "Send Announcement" button opens form dialog
-- [ ] Add `ActivityType.announcement` to Activity model
-- [ ] ActivityScreen renders announcement items with megaphone icon
+- [x] ~65 new keys in `app_en.arb` and `app_tr.arb`
 
 **Tests**
-- [ ] `test/services/admin_service_test.dart` — getDashboardStats, ban/unban toggle, getAllUsers pagination + search, deleteRecipe cascade
-- [ ] `test/providers/admin_provider_test.dart` — loadDashboard updates stats, banUser updates list, categories CRUD
+- [x] `test/models/admin_log_test.dart` — 4 tests
+- [x] `test/models/ban_appeal_test.dart` — 6 tests
+- [x] `test/models/announcement_test.dart` — 3 tests
+- [x] `test/models/user_model_test.dart` — updated for ban fields + isAdmin
+- [x] `test/models/activity_test.dart` — updated for announcement enum
+- [x] `test/services/admin_service_test.dart` — 28 tests
+- [x] `test/providers/admin_provider_test.dart` — 24 tests
+- [x] `test/helpers/test_helpers.dart` — factories for new models + ban fields
+
+**Quality**
+- [x] flutter analyze — 0 issues
+- [x] flutter test — 1148 tests passing (0 failures)
+Status: PUSHED (Push 21)
 
 ---
 

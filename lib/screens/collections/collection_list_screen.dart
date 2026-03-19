@@ -183,7 +183,7 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
         foregroundColor: Colors.white,
         elevation: 2,
         shape: const CircleBorder(),
-        child: const Icon(Icons.add, size: 28),
+        child: const Icon(Icons.add, size: 24),
       ),
     );
   }
@@ -228,7 +228,7 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
         padding: const EdgeInsets.only(right: 24),
         decoration: BoxDecoration(
           color: AppTheme.errorColor,
-          borderRadius: BorderRadius.circular(AppTheme.radiusL),
+          borderRadius: BorderRadius.circular(AppTheme.radiusM),
         ),
         child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -250,10 +250,10 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
       child: GestureDetector(
         onTap: () => context.push('/collection/${collection.id}'),
         child: Container(
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: AppTheme.surfaceOf(context),
-            borderRadius: BorderRadius.circular(AppTheme.radiusL),
+            borderRadius: BorderRadius.circular(AppTheme.radiusM),
             border: Border.all(
               color:
                   AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
@@ -272,11 +272,7 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
                   children: [
                     Text(
                       collection.name,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.textPrimaryOf(context),
-                      ),
+                      style: Theme.of(context).textTheme.titleSmall,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -284,9 +280,8 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
                       const SizedBox(height: 3),
                       Text(
                         collection.description!,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: AppTheme.textTertiaryOf(context),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppTheme.textSecondaryOf(context),
                           height: 1.3,
                         ),
                         maxLines: 1,
@@ -302,10 +297,8 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
                         const SizedBox(width: 4),
                         Text(
                           l10n.recipeCountInCollection(recipeCount),
-                          style: TextStyle(
-                            fontSize: 12,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppTheme.textTertiaryOf(context),
-                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -315,8 +308,7 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
                         const SizedBox(width: 4),
                         Text(
                           updatedDate,
-                          style: TextStyle(
-                            fontSize: 12,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppTheme.textTertiaryOf(context),
                           ),
                         ),
@@ -341,10 +333,10 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
       BuildContext context, List<Recipe> coverRecipes) {
     if (coverRecipes.isNotEmpty && coverRecipes.first.imageUrl != null) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
         child: SizedBox(
-          width: 56,
-          height: 56,
+          width: 48,
+          height: 48,
           child: Stack(
             children: [
               Positioned.fill(
@@ -389,16 +381,16 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
 
   Widget _buildFolderIcon(BuildContext context) {
     return Container(
-      width: 56,
-      height: 56,
+      width: 48,
+      height: 48,
       decoration: BoxDecoration(
         color: AppTheme.primaryColor.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: const Icon(
         Icons.folder,
         color: AppTheme.primaryColor,
-        size: 26,
+        size: 22,
       ),
     );
   }

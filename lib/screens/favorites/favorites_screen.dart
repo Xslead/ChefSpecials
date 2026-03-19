@@ -34,7 +34,7 @@ class FavoritesScreen extends StatelessWidget {
               if (favoriteRecipes.isNotEmpty)
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 4),
+                      horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
                     color: AppTheme.errorColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -42,7 +42,7 @@ class FavoritesScreen extends StatelessWidget {
                   child: Text(
                     '${favoriteRecipes.length}',
                     style: const TextStyle(
-                      fontSize: 13,
+                      fontSize: 12,
                       fontWeight: FontWeight.w700,
                       color: AppTheme.errorColor,
                     ),
@@ -60,11 +60,11 @@ class FavoritesScreen extends StatelessWidget {
                     subtitle: l10n.favoritesEmptySubtitle,
                   )
                 : ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 40),
                     itemCount: favoriteRecipes.length,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.only(bottom: 10),
                         child: RecipeCard(recipe: favoriteRecipes[index]),
                       );
                     },

@@ -153,7 +153,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
         child: GestureDetector(
           onTap: () => _onActivityTap(context, activity),
           child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: !activity.isRead
                 ? color.withValues(alpha: 0.04)
@@ -228,12 +228,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   borderRadius: BorderRadius.circular(10),
                   child: CachedNetworkImage(
                     imageUrl: activity.targetImageUrl!,
-                    width: 52,
-                    height: 52,
+                    width: 44,
+                    height: 44,
                     fit: BoxFit.cover,
                     placeholder: (_, _) => Container(
-                      width: 52,
-                      height: 52,
+                      width: 44,
+                      height: 44,
                       decoration: BoxDecoration(
                         color: AppTheme.neutralSoftOf(context),
                         borderRadius: BorderRadius.circular(10),
@@ -245,8 +245,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       ),
                     ),
                     errorWidget: (_, _, _) => Container(
-                      width: 52,
-                      height: 52,
+                      width: 44,
+                      height: 44,
                       decoration: BoxDecoration(
                         color: AppTheme.neutralSoftOf(context),
                         borderRadius: BorderRadius.circular(10),
@@ -266,7 +266,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 padding: const EdgeInsets.only(top: 4),
                 child: Icon(
                   Icons.chevron_right,
-                  size: 18,
+                  size: 16,
                   color: AppTheme.textTertiaryOf(context).withValues(alpha: 0.5),
                 ),
               ),
@@ -289,7 +289,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
           ),
         ),
         child: CircleAvatar(
-          radius: 22,
+          radius: 18,
           backgroundImage: CachedNetworkImageProvider(activity.actorAvatar!),
           backgroundColor: AppTheme.neutralSoftOf(context),
         ),
@@ -297,8 +297,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
     }
 
     return Container(
-      width: 48,
-      height: 48,
+      width: 40,
+      height: 40,
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         shape: BoxShape.circle,
@@ -310,7 +310,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
       child: Icon(
         _iconForType(activity.type),
         color: color,
-        size: 22,
+        size: 18,
       ),
     );
   }
@@ -339,21 +339,19 @@ class _ActivityScreenState extends State<ActivityScreen> {
     final primaryColor = AppTheme.textPrimaryOf(context);
     final secondaryColor = AppTheme.textSecondaryOf(context);
 
+    final titleSmall = Theme.of(context).textTheme.titleSmall;
+    final bodySmall = Theme.of(context).textTheme.bodySmall;
+
     if (actorStart == -1) {
       return Text(
         text,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: primaryColor,
-        ),
+        style: titleSmall,
       );
     }
 
     return RichText(
       text: TextSpan(
-        style: TextStyle(
-          fontSize: 12,
+        style: bodySmall?.copyWith(
           color: secondaryColor,
           height: 1.3,
         ),
@@ -361,9 +359,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
           if (actorStart > 0) TextSpan(text: text.substring(0, actorStart)),
           TextSpan(
             text: activity.actorName,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+            style: titleSmall?.copyWith(
               color: primaryColor,
             ),
           ),

@@ -93,7 +93,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                                   Text(
                                     l10n.addToCollection,
                                     style: const TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       letterSpacing: -0.3,
                                     ),
@@ -247,11 +247,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                   children: [
                     Text(
                       recipe.title,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.textPrimaryOf(context),
-                      ),
+                      style: Theme.of(context).textTheme.titleSmall,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -467,7 +463,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                     child: Text(
                       collection.description!,
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 12,
                         color: AppTheme.textSecondaryOf(context),
                         height: 1.4,
                       ),
@@ -551,15 +547,15 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 80,
-              height: 80,
+              width: 64,
+              height: 64,
               decoration: BoxDecoration(
                 color: AppTheme.neutralSoftOf(context),
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(18),
               ),
               child: Icon(
                 Icons.restaurant_menu,
-                size: 40,
+                size: 30,
                 color: AppTheme.neutralLightOf(context),
               ),
             ),
@@ -567,7 +563,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
             Text(
               l10n.emptyCollection,
               style: TextStyle(
-                fontSize: 17,
+                fontSize: 15,
                 fontWeight: FontWeight.w600,
                 color: AppTheme.textSecondaryOf(context),
               ),

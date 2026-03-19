@@ -73,7 +73,7 @@ class _NotificationSettingsScreenState
                     _buildSectionLabel(context, l10n.mealReminders),
                     const SizedBox(height: 8),
                     _buildMealRemindersCard(context, provider, l10n),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 20),
                     // Social Alerts section
                     _buildSectionLabel(context, l10n.socialAlerts),
                     const SizedBox(height: 8),
@@ -111,7 +111,7 @@ class _NotificationSettingsScreenState
               child: const Icon(
                 Icons.notifications_off_outlined,
                 color: AppTheme.errorColor,
-                size: 22,
+                size: 20,
               ),
             ),
             const SizedBox(width: 12),
@@ -121,9 +121,7 @@ class _NotificationSettingsScreenState
                 children: [
                   Text(
                     l10n.notificationsDisabled,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       color: AppTheme.errorColor,
                     ),
                   ),
@@ -177,7 +175,7 @@ class _NotificationSettingsScreenState
     return Text(
       title.toUpperCase(),
       style: TextStyle(
-        fontSize: 12,
+        fontSize: 11,
         fontWeight: FontWeight.w700,
         color: AppTheme.textTertiaryOf(context),
         letterSpacing: 0.8,
@@ -276,10 +274,7 @@ class _NotificationSettingsScreenState
               children: [
                 Text(
                   label,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: Theme.of(context).textTheme.titleSmall,
                 ),
                 if (enabled)
                   GestureDetector(
@@ -380,10 +375,7 @@ class _NotificationSettingsScreenState
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+              style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
           Switch.adaptive(

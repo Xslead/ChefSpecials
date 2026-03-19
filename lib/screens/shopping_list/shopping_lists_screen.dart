@@ -117,7 +117,7 @@ class _ShoppingListsScreenState extends State<ShoppingListsScreen> {
         foregroundColor: Colors.white,
         elevation: 2,
         shape: const CircleBorder(),
-        child: const Icon(Icons.add, size: 28),
+        child: const Icon(Icons.add, size: 24),
       ),
     );
   }
@@ -142,7 +142,7 @@ class _ShoppingListsScreenState extends State<ShoppingListsScreen> {
               padding: const EdgeInsets.only(right: 24),
               decoration: BoxDecoration(
                 color: AppTheme.errorColor,
-                borderRadius: BorderRadius.circular(AppTheme.radiusL),
+                borderRadius: BorderRadius.circular(AppTheme.radiusM),
               ),
               child: const Icon(Icons.delete_outline, color: Colors.white),
             ),
@@ -156,7 +156,7 @@ class _ShoppingListsScreenState extends State<ShoppingListsScreen> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: AppTheme.surfaceOf(context),
-                  borderRadius: BorderRadius.circular(AppTheme.radiusL),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusM),
                   border: Border.all(
                     color:
                         AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
@@ -167,14 +167,14 @@ class _ShoppingListsScreenState extends State<ShoppingListsScreen> {
                   children: [
                     // Progress circle
                     SizedBox(
-                      width: 48,
-                      height: 48,
+                      width: 40,
+                      height: 40,
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
                           CircularProgressIndicator(
                             value: progress,
-                            strokeWidth: 3,
+                            strokeWidth: 2.5,
                             backgroundColor: AppTheme.neutralLightOf(context),
                             valueColor: const AlwaysStoppedAnimation<Color>(
                                 AppTheme.primaryColor),
@@ -186,7 +186,7 @@ class _ShoppingListsScreenState extends State<ShoppingListsScreen> {
                             color: checkedCount == totalCount && totalCount > 0
                                 ? AppTheme.primaryColor
                                 : AppTheme.textTertiaryOf(context),
-                            size: 20,
+                            size: 18,
                           ),
                         ],
                       ),
@@ -198,20 +198,15 @@ class _ShoppingListsScreenState extends State<ShoppingListsScreen> {
                         children: [
                           Text(
                             list.name,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: AppTheme.textPrimaryOf(context),
-                            ),
+                            style: Theme.of(context).textTheme.titleSmall,
                           ),
                           const SizedBox(height: 4),
                           Text(
                             totalCount == 0
                                 ? l10n.noItems
                                 : '$checkedCount / $totalCount ${l10n.itemsChecked}',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: AppTheme.textTertiaryOf(context),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: AppTheme.textSecondaryOf(context),
                             ),
                           ),
                         ],

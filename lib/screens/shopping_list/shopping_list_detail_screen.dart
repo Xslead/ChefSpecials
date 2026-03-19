@@ -167,32 +167,29 @@ class ShoppingListDetailScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 72,
-            height: 72,
+            width: 64,
+            height: 64,
             decoration: BoxDecoration(
               color: AppTheme.neutralSoftOf(context),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
               Icons.shopping_basket_outlined,
-              size: 36,
+              size: 30,
               color: AppTheme.neutralLightOf(context),
             ),
           ),
           const SizedBox(height: 16),
           Text(
             l10n.noItems,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
               color: AppTheme.textSecondaryOf(context),
             ),
           ),
           const SizedBox(height: 6),
           Text(
             'Add ingredients from a recipe',
-            style: TextStyle(
-              fontSize: 13,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: AppTheme.textTertiaryOf(context),
             ),
           ),
@@ -284,12 +281,10 @@ class ShoppingListDetailScreen extends StatelessWidget {
                     children: [
                       Text(
                         item.name,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: isChecked
                               ? AppTheme.textTertiaryOf(context)
-                              : AppTheme.textPrimaryOf(context),
+                              : AppTheme.textSecondaryOf(context),
                           decoration: isChecked
                               ? TextDecoration.lineThrough
                               : TextDecoration.none,
@@ -298,8 +293,7 @@ class ShoppingListDetailScreen extends StatelessWidget {
                       if (subtitle.isNotEmpty)
                         Text(
                           subtitle,
-                          style: TextStyle(
-                            fontSize: 12,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: AppTheme.textTertiaryOf(context),
                             decoration: isChecked
                                 ? TextDecoration.lineThrough

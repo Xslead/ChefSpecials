@@ -288,5 +288,23 @@
   "avgCalories": "Ort. Kalori",
   "avgProtein": "Ort. Protein",
   "avgCarbs": "Ort. Karbonhidrat",
-  "avgFat": "Ort. Yağ"
+  "avgFat": "Ort. Yağ",
+  "notificationSettings": "Bildirim Ayarları",
+  "mealReminders": "Yemek Hatırlatıcıları",
+  "socialAlerts": "Sosyal Bildirimler",
+  "breakfastReminder": "Kahvaltı Hatırlatıcı",
+  "lunchReminder": "Öğle Yemeği Hatırlatıcı",
+  "dinnerReminder": "Akşam Yemeği Hatırlatıcı",
+  "newRecipeAlerts": "Takip Ettiklerden Yeni Tarifler",
+  "commentAlerts": "Tariflerime Yapılan Yorumlar",
+  "followerAlerts": "Yeni Takipçiler",
+  "notificationsDisabled": "Bildirimler kapalı",
+  "notificationsDisabledDescription": "Yemek hatırlatıcıları ve uyarılar almak için telefon ayarlarından bildirimleri açın.",
+  "enableNotifications": "Bildirimleri Aç",
+  "timeForMeal": "{meal} vakti!",
+  "@timeForMeal": {
+    "placeholders": {
+      "meal": {"type": "String"}
+    }
+  }
 }

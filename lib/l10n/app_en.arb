@@ -288,5 +288,23 @@
   "avgCalories": "Avg Calories",
   "avgProtein": "Avg Protein",
   "avgCarbs": "Avg Carbs",
-  "avgFat": "Avg Fat"
+  "avgFat": "Avg Fat",
+  "notificationSettings": "Notification Settings",
+  "mealReminders": "Meal Reminders",
+  "socialAlerts": "Social Alerts",
+  "breakfastReminder": "Breakfast Reminder",
+  "lunchReminder": "Lunch Reminder",
+  "dinnerReminder": "Dinner Reminder",
+  "newRecipeAlerts": "New Recipes from Followed Users",
+  "commentAlerts": "Comments on My Recipes",
+  "followerAlerts": "New Followers",
+  "notificationsDisabled": "Notifications are disabled",
+  "notificationsDisabledDescription": "Enable notifications in your phone settings to receive meal reminders and alerts.",
+  "enableNotifications": "Enable Notifications",
+  "timeForMeal": "Time for {meal}!",
+  "@timeForMeal": {
+    "placeholders": {
+      "meal": {"type": "String"}
+    }
+  }
 }

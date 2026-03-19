@@ -743,4 +743,46 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get avgFat => 'Ort. Yağ';
+
+  @override
+  String get notificationSettings => 'Bildirim Ayarları';
+
+  @override
+  String get mealReminders => 'Yemek Hatırlatıcıları';
+
+  @override
+  String get socialAlerts => 'Sosyal Bildirimler';
+
+  @override
+  String get breakfastReminder => 'Kahvaltı Hatırlatıcı';
+
+  @override
+  String get lunchReminder => 'Öğle Yemeği Hatırlatıcı';
+
+  @override
+  String get dinnerReminder => 'Akşam Yemeği Hatırlatıcı';
+
+  @override
+  String get newRecipeAlerts => 'Takip Ettiklerden Yeni Tarifler';
+
+  @override
+  String get commentAlerts => 'Tariflerime Yapılan Yorumlar';
+
+  @override
+  String get followerAlerts => 'Yeni Takipçiler';
+
+  @override
+  String get notificationsDisabled => 'Bildirimler kapalı';
+
+  @override
+  String get notificationsDisabledDescription =>
+      'Yemek hatırlatıcıları ve uyarılar almak için telefon ayarlarından bildirimleri açın.';
+
+  @override
+  String get enableNotifications => 'Bildirimleri Aç';
+
+  @override
+  String timeForMeal(String meal) {
+    return '$meal vakti!';
+  }
 }

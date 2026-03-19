@@ -1488,6 +1488,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Avg Fat'**
   String get avgFat;
+
+  /// No description provided for @notificationSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Settings'**
+  String get notificationSettings;
+
+  /// No description provided for @mealReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal Reminders'**
+  String get mealReminders;
+
+  /// No description provided for @socialAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Social Alerts'**
+  String get socialAlerts;
+
+  /// No description provided for @breakfastReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Breakfast Reminder'**
+  String get breakfastReminder;
+
+  /// No description provided for @lunchReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Lunch Reminder'**
+  String get lunchReminder;
+
+  /// No description provided for @dinnerReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Dinner Reminder'**
+  String get dinnerReminder;
+
+  /// No description provided for @newRecipeAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'New Recipes from Followed Users'**
+  String get newRecipeAlerts;
+
+  /// No description provided for @commentAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments on My Recipes'**
+  String get commentAlerts;
+
+  /// No description provided for @followerAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'New Followers'**
+  String get followerAlerts;
+
+  /// No description provided for @notificationsDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are disabled'**
+  String get notificationsDisabled;
+
+  /// No description provided for @notificationsDisabledDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable notifications in your phone settings to receive meal reminders and alerts.'**
+  String get notificationsDisabledDescription;
+
+  /// No description provided for @enableNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Notifications'**
+  String get enableNotifications;
+
+  /// No description provided for @timeForMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Time for {meal}!'**
+  String timeForMeal(String meal);
 }
 
 class _AppLocalizationsDelegate

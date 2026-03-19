@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'providers/auth_provider.dart';
@@ -14,7 +15,13 @@ import 'providers/shopping_list_provider.dart';
 import 'providers/collection_provider.dart';
 import 'providers/meal_plan_provider.dart';
 import 'providers/reports_provider.dart';
+import 'providers/notification_provider.dart';
 import 'app.dart';
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +29,7 @@ void main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   } catch (e) {
     debugPrint('Firebase init error: $e');
   }
@@ -40,6 +48,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => CollectionProvider()),
         ChangeNotifierProvider(create: (_) => MealPlanProvider()),
         ChangeNotifierProvider(create: (_) => ReportsProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ],
       child: const ChefSpecialsApp(),
     ),

@@ -743,4 +743,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get avgFat => 'Avg Fat';
+
+  @override
+  String get notificationSettings => 'Notification Settings';
+
+  @override
+  String get mealReminders => 'Meal Reminders';
+
+  @override
+  String get socialAlerts => 'Social Alerts';
+
+  @override
+  String get breakfastReminder => 'Breakfast Reminder';
+
+  @override
+  String get lunchReminder => 'Lunch Reminder';
+
+  @override
+  String get dinnerReminder => 'Dinner Reminder';
+
+  @override
+  String get newRecipeAlerts => 'New Recipes from Followed Users';
+
+  @override
+  String get commentAlerts => 'Comments on My Recipes';
+
+  @override
+  String get followerAlerts => 'New Followers';
+
+  @override
+  String get notificationsDisabled => 'Notifications are disabled';
+
+  @override
+  String get notificationsDisabledDescription =>
+      'Enable notifications in your phone settings to receive meal reminders and alerts.';
+
+  @override
+  String get enableNotifications => 'Enable Notifications';
+
+  @override
+  String timeForMeal(String meal) {
+    return 'Time for $meal!';
+  }
 }

@@ -120,6 +120,44 @@ class ProfileScreen extends StatelessWidget {
                           leading: Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
+                              color: AppTheme.snackColor
+                                  .withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(
+                              Icons.notifications_outlined,
+                              color: AppTheme.snackColor,
+                              size: 20,
+                            ),
+                          ),
+                          title: Text(
+                            l10n.notificationSettings,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.chevron_right,
+                            color: AppTheme.textTertiaryOf(context),
+                          ),
+                          onTap: () => context.push('/notification-settings'),
+                          dense: true,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        Divider(
+                          height: 1,
+                          indent: 16,
+                          endIndent: 16,
+                          color: AppTheme.neutralLightOf(context)
+                              .withValues(alpha: 0.5),
+                        ),
+                        ListTile(
+                          leading: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
                               color: AppTheme.primaryColor
                                   .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(10),

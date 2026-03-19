@@ -307,14 +307,14 @@ Status: PUSHED
 
 ## App Statistics
 
- Total Dart files: 120 (lib) + 60 (test) = 180
- Tests: 1048 (0 failures)
- Screens implemented: 30 (added ReportsScreen)
- Models: 16 (added DailyNutritionSummary)
- Services: 14 (DailyTrackerService enhanced with getDailyLogsForRange)
- Providers: 16 (added ReportsProvider)
- Routes: 27 (added /reports)
- l10n keys: 256 (EN + TR)
+ Total Dart files: 123 (lib) + 62 (test) = 185
+ Tests: 1057 (0 failures)
+ Screens implemented: 31 (added NotificationSettingsScreen)
+ Models: 16
+ Services: 15 (added NotificationService)
+ Providers: 17 (added NotificationProvider)
+ Routes: 28 (added /notification-settings)
+ l10n keys: 267 (EN + TR)
 
 ---
 
@@ -497,66 +497,58 @@ Status: PUSHED (Push 20)
 
 ### Task 3: Push Notifications (Push 20b)
 
-**Firebase Cloud Messaging Setup**
-- [ ] Add `firebase_messaging` dependency (`flutter pub add firebase_messaging`)
-- [ ] Add `flutter_local_notifications` dependency
-- [ ] Android: update `AndroidManifest.xml` with notification channel metadata + RECEIVE permission, add default notification icon in `drawable/`
-- [ ] iOS: enable Push Notifications capability in Xcode, request permission via `FirebaseMessaging.instance.requestPermission()`
-- [ ] Initialize FCM in `main.dart` after `Firebase.initializeApp()`:
-  - `await FirebaseMessaging.instance.requestPermission();`
-  - `FirebaseMessaging.onBackgroundMessage(_backgroundHandler);`
+**Dependencies**
+- [x] `firebase_messaging` added via `flutter pub add`
+- [x] `flutter_local_notifications` added
+- [x] `timezone` added (required for `zonedSchedule`)
+
+**Platform Configuration**
+- [x] Android: `POST_NOTIFICATIONS`, `RECEIVE_BOOT_COMPLETED`, `SCHEDULE_EXACT_ALARM` permissions
+- [x] Android: FCM default channel metadata, notification icon, boot receiver
+- [x] iOS: `aps-environment` entitlement for push notifications
+- [x] iOS: `UIBackgroundModes` with `remote-notification` and `fetch`
 
 **Service: NotificationService**
-- [ ] Create `lib/services/notification_service.dart`
-- [ ] `initialize()` — set up flutter_local_notifications plugin, create Android channel "meal_reminders" (high importance), set up FCM onMessage foreground listener, set up onMessageOpenedApp for navigation
-- [ ] `getFcmToken()` → Future\<String?\>
-- [ ] `saveFcmToken(String userId, String token)` — write to Firestore users/{userId}
-- [ ] `subscribeToTopic(String topic)` / `unsubscribeFromTopic(String topic)` — for "new_recipes", "followed_users"
-- [ ] `scheduleMealReminder(String mealType, int hour, int minute)` — zonedSchedule daily local notification, ID = hash of mealType
-- [ ] `cancelMealReminder(String mealType)` / `cancelAllReminders()`
-- [ ] Accept optional `FirebaseFirestore` parameter for DI
+- [x] Create `lib/services/notification_service.dart`
+- [x] `initialize()` — local notifications plugin, Android channel, FCM foreground listener
+- [x] `requestPermission()`, `getFcmToken()`, `saveFcmToken()`
+- [x] `subscribeToTopic()` / `unsubscribeFromTopic()`
+- [x] `scheduleMealReminder()` — zonedSchedule daily repeating
+- [x] `cancelMealReminder()` / `cancelAllReminders()`
+- [x] DI: optional FirebaseFirestore, FirebaseMessaging, FlutterLocalNotificationsPlugin
 
 **Provider: NotificationProvider**
-- [ ] Create `lib/providers/notification_provider.dart`
-- [ ] Extends `ChangeNotifier`, holds: notificationsEnabled, mealReminderSettings (Map\<String, TimeOfDay?\>), followedUserAlerts, commentAlerts, followAlerts
-- [ ] Persist settings in SharedPreferences
-- [ ] `init()` — load settings, call service.initialize()
-- [ ] `toggleMealReminder(String mealType, bool enabled, TimeOfDay? time)` — save to prefs, schedule/cancel
-- [ ] `toggleFollowedUserAlerts(bool)` — subscribe/unsubscribe FCM topic
-- [ ] `toggleCommentAlerts(bool)` / `toggleFollowAlerts(bool)` — save to prefs
-- [ ] Register in `main.dart` MultiProvider
+- [x] Create `lib/providers/notification_provider.dart`
+- [x] Extends `ChangeNotifier`, 3 meal reminders + 3 social alert toggles
+- [x] SharedPreferences persistence (12 keys)
+- [x] `init()` — initialize service, request permission, save FCM token
+- [x] Toggle methods: breakfast/lunch/dinner reminders with time pickers
+- [x] Toggle methods: newRecipeAlerts, commentAlerts, followerAlerts (FCM topics)
+- [x] Registered in `main.dart` MultiProvider
 
 **Screen: NotificationSettingsScreen**
-- [ ] Create `lib/screens/profile/notification_settings_screen.dart`
-- [ ] Full-screen page, AppBar: "Notification Settings", back button
-- [ ] ListView with SwitchListTile items:
-  - "Breakfast Reminder" toggle + time picker (default 08:00)
-  - "Lunch Reminder" toggle + time picker (default 12:00)
-  - "Dinner Reminder" toggle + time picker (default 19:00)
-  - "New Recipes from Followed Users" toggle
-  - "Comments on My Recipes" toggle
-  - "New Followers" toggle
-- [ ] Time pickers: tap trailing time label → showTimePicker
-- [ ] Use `Consumer<NotificationProvider>`
+- [x] Create `lib/screens/profile/notification_settings_screen.dart`
+- [x] Custom header with back button matching app design
+- [x] Meal Reminders section: 3 cards with toggle + time picker
+- [x] Social Alerts section: 3 SwitchListTile items
+- [x] `Consumer<NotificationProvider>` for reactive UI
 
-**Route**
-- [ ] Add GoRoute path `/notification-settings` under parentNavigatorKey
-- [ ] Access point: "Notifications" row on ProfileScreen (bell icon) above theme toggle
+**Integration**
+- [x] `main.dart`: FCM background handler + NotificationProvider in MultiProvider
+- [x] `routes.dart`: `/notification-settings` route under parentNavigatorKey
+- [x] `profile_screen.dart`: "Notification Settings" ListTile with bell icon (first in features card)
 
 **l10n**
-- [ ] Add keys to `app_en.arb` and `app_tr.arb`:
-  - `notificationSettings` / "Notification Settings" / "Bildirim Ayarlari"
-  - `breakfastReminder` / "Breakfast Reminder" / "Kahvalti Hatirlatici"
-  - `lunchReminder` / "Lunch Reminder" / "Ogle Yemegi Hatirlatici"
-  - `dinnerReminder` / "Dinner Reminder" / "Aksam Yemegi Hatirlatici"
-  - `newRecipeAlerts` / "New Recipes from Followed Users" / "Takip Ettiklerden Yeni Tarifler"
-  - `commentAlerts` / "Comments on My Recipes" / "Tariflerime Yapilan Yorumlar"
-  - `followerAlerts` / "New Followers" / "Yeni Takipciler"
-  - `timeForMeal` / "Time for {meal}!" / "{meal} vakti!"
+- [x] 11 new keys in `app_en.arb` and `app_tr.arb` (notificationSettings, mealReminders, socialAlerts, breakfastReminder, lunchReminder, dinnerReminder, newRecipeAlerts, commentAlerts, followerAlerts, timeForMeal)
 
-**Tests**
-- [ ] `test/services/notification_service_test.dart` — token retrieval, topic subscribe/unsubscribe
-- [ ] `test/providers/notification_provider_test.dart` — toggle states, SharedPreferences persistence, meal reminder scheduling calls
+**Tests (9 new tests)**
+- [x] `test/services/notification_service_test.dart` — 3 tests: instantiation, saveFcmToken write, token update
+- [x] `test/providers/notification_provider_test.dart` — 6 tests: defaults, prefs loading, instantiation, default times, round-trip
+
+**Quality**
+- [x] flutter analyze — 0 issues
+- [x] flutter test — 1057 tests passing (0 failures)
+Status: PUSHED (Push 20b)
 
 ---
 

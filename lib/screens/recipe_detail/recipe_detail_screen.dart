@@ -299,56 +299,61 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (ctx) {
-        final lists = context.read<ShoppingListProvider>().lists;
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    l10n.addToShoppingList,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                ListTile(
-                  leading: const CircleAvatar(
-                    backgroundColor: AppTheme.primaryColor,
-                    child: Icon(Icons.add, color: Colors.white),
-                  ),
-                  title: Text(l10n.createNewList),
-                  onTap: () async {
-                    Navigator.pop(ctx);
-                    await _createAndAddToList(context, recipe);
-                  },
-                ),
-                if (lists.isNotEmpty) const Divider(),
-                ...lists.map((list) => ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor:
-                            AppTheme.primaryColor.withValues(alpha: 0.1),
-                        child: const Icon(Icons.list_alt,
-                            color: AppTheme.primaryColor),
+        return ListenableBuilder(
+          listenable: provider,
+          builder: (_, _) {
+            final lists = provider.lists;
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        l10n.addToShoppingList,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
-                      title: Text(list.name),
-                      subtitle: Text(
-                        '${list.items.length} ${l10n.ingredients.toLowerCase()}',
+                    ),
+                    const SizedBox(height: 12),
+                    ListTile(
+                      leading: const CircleAvatar(
+                        backgroundColor: AppTheme.primaryColor,
+                        child: Icon(Icons.add, color: Colors.white),
                       ),
+                      title: Text(l10n.createNewList),
                       onTap: () async {
                         Navigator.pop(ctx);
-                        await _addIngredientsToList(
-                            context, list.id!, list.name, recipe);
+                        await _createAndAddToList(context, recipe);
                       },
-                    )),
-              ],
-            ),
-          ),
+                    ),
+                    if (lists.isNotEmpty) const Divider(),
+                    ...lists.map((list) => ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor:
+                                AppTheme.primaryColor.withValues(alpha: 0.1),
+                            child: const Icon(Icons.list_alt,
+                                color: AppTheme.primaryColor),
+                          ),
+                          title: Text(list.name),
+                          subtitle: Text(
+                            '${list.items.length} ${l10n.ingredients.toLowerCase()}',
+                          ),
+                          onTap: () async {
+                            Navigator.pop(ctx);
+                            await _addIngredientsToList(
+                                context, list.id!, list.name, recipe);
+                          },
+                        )),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );
@@ -366,87 +371,92 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (ctx) {
-        final collections = context.read<CollectionProvider>().collections;
-        final recipeId = recipe.id;
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    l10n.addToCollection,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                ListTile(
-                  leading: const CircleAvatar(
-                    backgroundColor: AppTheme.primaryColor,
-                    child: Icon(Icons.add, color: Colors.white),
-                  ),
-                  title: Text(l10n.createNewCollection),
-                  onTap: () async {
-                    Navigator.pop(ctx);
-                    await _createCollectionAndAddRecipe(context, recipe);
-                  },
-                ),
-                if (collections.isNotEmpty) const Divider(),
-                ...collections.map((collection) {
-                  final contains = recipeId != null &&
-                      collection.recipeIds.contains(recipeId);
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor:
-                          AppTheme.primaryColor.withValues(alpha: 0.1),
-                      child: Icon(
-                        contains ? Icons.folder : Icons.folder_outlined,
-                        color: AppTheme.primaryColor,
+        return ListenableBuilder(
+          listenable: collectionProvider,
+          builder: (_, _) {
+            final collections = collectionProvider.collections;
+            final recipeId = recipe.id;
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        l10n.addToCollection,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                     ),
-                    title: Text(collection.name),
-                    subtitle: Text(
-                      l10n.recipeCountInCollection(
-                          collection.recipeIds.length),
+                    const SizedBox(height: 12),
+                    ListTile(
+                      leading: const CircleAvatar(
+                        backgroundColor: AppTheme.primaryColor,
+                        child: Icon(Icons.add, color: Colors.white),
+                      ),
+                      title: Text(l10n.createNewCollection),
+                      onTap: () async {
+                        Navigator.pop(ctx);
+                        await _createCollectionAndAddRecipe(context, recipe);
+                      },
                     ),
-                    trailing: contains
-                        ? const Icon(Icons.check_circle,
-                            color: AppTheme.primaryColor)
-                        : null,
-                    onTap: () async {
-                      Navigator.pop(ctx);
-                      if (recipeId == null) return;
-                      final messenger = ScaffoldMessenger.of(context);
-                      if (contains) {
-                        await collectionProvider.removeRecipe(
-                            collection.id!, recipeId);
-                        if (context.mounted) {
-                          messenger.showSnackBar(SnackBar(
-                            content: Text(
-                                l10n.removedFromCollection(collection.name)),
-                          ));
-                        }
-                      } else {
-                        await collectionProvider.addRecipe(
-                            collection.id!, recipeId);
-                        if (context.mounted) {
-                          messenger.showSnackBar(SnackBar(
-                            content: Text(
-                                l10n.addedToCollection(collection.name)),
-                          ));
-                        }
-                      }
-                    },
-                  );
-                }),
-              ],
-            ),
-          ),
+                    if (collections.isNotEmpty) const Divider(),
+                    ...collections.map((collection) {
+                      final contains = recipeId != null &&
+                          collection.recipeIds.contains(recipeId);
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor:
+                              AppTheme.primaryColor.withValues(alpha: 0.1),
+                          child: Icon(
+                            contains ? Icons.folder : Icons.folder_outlined,
+                            color: AppTheme.primaryColor,
+                          ),
+                        ),
+                        title: Text(collection.name),
+                        subtitle: Text(
+                          l10n.recipeCountInCollection(
+                              collection.recipeIds.length),
+                        ),
+                        trailing: contains
+                            ? const Icon(Icons.check_circle,
+                                color: AppTheme.primaryColor)
+                            : null,
+                        onTap: () async {
+                          Navigator.pop(ctx);
+                          if (recipeId == null) return;
+                          final messenger = ScaffoldMessenger.of(context);
+                          if (contains) {
+                            await collectionProvider.removeRecipe(
+                                collection.id!, recipeId);
+                            if (context.mounted) {
+                              messenger.showSnackBar(SnackBar(
+                                content: Text(
+                                    l10n.removedFromCollection(collection.name)),
+                              ));
+                            }
+                          } else {
+                            await collectionProvider.addRecipe(
+                                collection.id!, recipeId);
+                            if (context.mounted) {
+                              messenger.showSnackBar(SnackBar(
+                                content: Text(
+                                    l10n.addedToCollection(collection.name)),
+                              ));
+                            }
+                          }
+                        },
+                      );
+                    }),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );

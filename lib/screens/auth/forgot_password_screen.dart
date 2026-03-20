@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
-import '../../services/auth_service.dart';
+import '../../providers/auth_provider.dart';
 import '../../widgets/gradient_button.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -16,11 +16,9 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final _authService = AuthService();
 
   bool _isLoading = false;
   bool _emailSent = false;
-  String? _error;
 
   @override
   void dispose() {
@@ -31,33 +29,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Future<void> _handleSend() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
+    setState(() => _isLoading = true);
 
-    try {
-      await _authService.sendPasswordResetEmail(_emailController.text.trim());
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-          _emailSent = true;
-        });
-      }
-    } on FirebaseAuthException catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-          _error = e.message;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-          _error = 'Something went wrong. Please try again.';
-        });
-      }
+    final authProvider = context.read<AuthProvider>();
+    final success =
+        await authProvider.sendPasswordResetEmail(_emailController.text.trim());
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+        _emailSent = success;
+      });
     }
   }
 
@@ -65,6 +47,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final l10n = AppLocalizations.of(context)!;
+    final authProvider = context.watch<AuthProvider>();
 
     return Scaffold(
       appBar: AppBar(
@@ -78,7 +61,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           child: Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
-              child: _emailSent ? _buildSuccessView(textTheme, l10n) : _buildFormView(textTheme, l10n),
+              child: _emailSent ? _buildSuccessView(textTheme, l10n) : _buildFormView(textTheme, l10n, authProvider),
             ),
           ),
         ),
@@ -86,7 +69,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  Widget _buildFormView(TextTheme textTheme, AppLocalizations l10n) {
+  Widget _buildFormView(TextTheme textTheme, AppLocalizations l10n, AuthProvider authProvider) {
     return Form(
       key: _formKey,
       child: Column(
@@ -132,10 +115,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               return null;
             },
           ),
-          if (_error != null) ...[
+          if (authProvider.error != null) ...[
             const SizedBox(height: 16),
             Text(
-              _error!,
+              authProvider.error!,
               style: const TextStyle(color: AppTheme.errorColor),
               textAlign: TextAlign.center,
             ),

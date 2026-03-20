@@ -519,5 +519,46 @@ void main() {
         provider.dispose();
       });
     });
+
+    group('isUsernameAvailable', () {
+      test('returns true for available username', () async {
+        provider = createProvider();
+        final result = await provider.isUsernameAvailable('newuser');
+        expect(result, true);
+      });
+
+      test('returns false for taken username', () async {
+        await fakeFirestore.collection('usernames').doc('taken').set({
+          'uid': 'someone',
+        });
+        provider = createProvider();
+        final result = await provider.isUsernameAvailable('taken');
+        expect(result, false);
+      });
+    });
+
+    group('sendPasswordResetEmail', () {
+      test('returns true on success', () async {
+        provider = createProvider();
+        final result =
+            await provider.sendPasswordResetEmail('test@email.com');
+        expect(result, true);
+        expect(provider.error, isNull);
+      });
+
+      test('returns false and sets error on failure', () async {
+        fakeAuth.onSendPasswordReset = (_) {
+          throw FirebaseAuthException(
+            code: 'user-not-found',
+            message: 'No user found',
+          );
+        };
+        provider = createProvider();
+        final result =
+            await provider.sendPasswordResetEmail('bad@email.com');
+        expect(result, false);
+        expect(provider.error, isNotNull);
+      });
+    });
   });
 }

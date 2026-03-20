@@ -590,5 +590,14 @@
   "cookingSkillLevel": "Yemek Yapma Seviyesi",
   "skillBeginner": "Başlangıç",
   "skillIntermediate": "Orta",
-  "skillAdvanced": "İleri"
+  "skillAdvanced": "İleri",
+  "phoneNumberRequired": "Lütfen telefon numaranızı girin",
+  "invalidPhoneNumber": "Lütfen geçerli bir telefon numarası girin",
+  "passwordsDoNotMatch": "Şifreler eşleşmiyor",
+  "personalInformation": "Kişisel Bilgiler",
+  "helpsPersonalizeExperience": "İsteğe bağlı — deneyiminizi kişiselleştirmemize yardımcı olur",
+  "editRecipe": "Tarifi Düzenle",
+  "syncFailed": "Senkronizasyon başarısız",
+  "commentSubmitted": "Yorum gönderildi",
+  "ratingSubmitted": "Puan gönderildi"
 }

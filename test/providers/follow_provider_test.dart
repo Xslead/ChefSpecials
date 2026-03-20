@@ -185,5 +185,27 @@ void main() {
       expect(provider.followingList, isA<List<String>>());
       expect(provider.followingList, contains('user2'));
     });
+
+    test('getFollowerIds returns list of follower user IDs', () async {
+      await fakeFirestore.collection('follows').doc('user2_user1').set({
+        'followerId': 'user2',
+        'followedId': 'user1',
+        'createdAt': DateTime.now().toIso8601String(),
+      });
+      await fakeFirestore.collection('follows').doc('user3_user1').set({
+        'followerId': 'user3',
+        'followedId': 'user1',
+        'createdAt': DateTime.now().toIso8601String(),
+      });
+
+      final ids = await provider.getFollowerIds('user1');
+      expect(ids, containsAll(['user2', 'user3']));
+      expect(ids.length, 2);
+    });
+
+    test('getFollowerIds returns empty list when no followers', () async {
+      final ids = await provider.getFollowerIds('lonely_user');
+      expect(ids, isEmpty);
+    });
   });
 }

@@ -75,5 +75,54 @@ void main() {
       final provider = ActivityProvider(service: service);
       provider.markAllAsRead(); // should not throw
     });
+
+    test('createCommentActivity delegates to service', () async {
+      final provider = ActivityProvider(service: service);
+
+      await provider.createCommentActivity(
+        recipeAuthorId: 'author1',
+        actorId: 'user1',
+        actorName: 'Test User',
+        recipeId: 'recipe1',
+        recipeName: 'Test Recipe',
+        commentText: 'Great!',
+      );
+
+      final snapshot = await fakeFirestore.collection('activities').get();
+      expect(snapshot.docs.length, 1);
+      expect(snapshot.docs.first.data()['type'], 'comment');
+    });
+
+    test('createRatingActivity delegates to service', () async {
+      final provider = ActivityProvider(service: service);
+
+      await provider.createRatingActivity(
+        recipeAuthorId: 'author1',
+        actorId: 'user1',
+        actorName: 'Test User',
+        recipeId: 'recipe1',
+        recipeName: 'Test Recipe',
+        stars: 5,
+      );
+
+      final snapshot = await fakeFirestore.collection('activities').get();
+      expect(snapshot.docs.length, 1);
+      expect(snapshot.docs.first.data()['type'], 'rating');
+    });
+
+    test('createNewRecipeActivity delegates to service', () async {
+      final provider = ActivityProvider(service: service);
+
+      await provider.createNewRecipeActivity(
+        recipeId: 'recipe1',
+        recipeName: 'New Recipe',
+        authorId: 'author1',
+        authorName: 'Chef',
+        followerIds: ['f1', 'f2'],
+      );
+
+      final snapshot = await fakeFirestore.collection('activities').get();
+      expect(snapshot.docs.length, 2); // one per follower
+    });
   });
 }

@@ -73,7 +73,7 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
       body: Column(
         children: [
           ScreenHeader(
-            title: 'Edit Recipe',
+            title: l10n.editRecipe,
             icon: Icons.edit_outlined,
             trailing: [
               TextButton(
@@ -117,7 +117,7 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
                       ),
                     ),
                     validator: (v) =>
-                        (v == null || v.isEmpty) ? 'Required' : null,
+                        (v == null || v.isEmpty) ? l10n.requiredField : null,
                     onChanged: (v) => formProvider.title = v,
                   ),
                   const SizedBox(height: 16),
@@ -136,7 +136,7 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
                     ),
                     maxLines: 3,
                     validator: (v) =>
-                        (v == null || v.isEmpty) ? 'Required' : null,
+                        (v == null || v.isEmpty) ? l10n.requiredField : null,
                     onChanged: (v) => formProvider.description = v,
                   ),
                   const SizedBox(height: 16),

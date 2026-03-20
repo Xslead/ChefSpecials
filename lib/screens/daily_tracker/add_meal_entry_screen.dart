@@ -254,7 +254,7 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                     height: 52,
                     child: ElevatedButton(
                       onPressed: qty > 0
-                          ? () {
+                          ? () async {
                               final entry = MealEntry(
                                 name: item.name,
                                 mealType: widget.mealType,
@@ -266,11 +266,20 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
                                 carbs: calcCarbs,
                                 fat: calcFat,
                               );
-                              context
-                                  .read<DailyTrackerProvider>()
-                                  .addMealEntry(entry);
-                              Navigator.pop(ctx);
-                              context.pop();
+                              try {
+                                final nav = Navigator.of(ctx);
+                                await context
+                                    .read<DailyTrackerProvider>()
+                                    .addMealEntry(entry);
+                                nav.pop();
+                                if (mounted) context.pop();
+                              } catch (e) {
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(AppLocalizations.of(context)!.error)),
+                                  );
+                                }
+                              }
                             }
                           : null,
                       style: ElevatedButton.styleFrom(
@@ -333,7 +342,7 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
     );
   }
 
-  void _addRecipeToMeal(Recipe recipe) {
+  Future<void> _addRecipeToMeal(Recipe recipe) async {
     final cals = (recipe.caloriesPerServing ?? 0).toDouble();
     final prot = recipe.proteinGrams ?? 0;
     final carb = recipe.carbsGrams ?? 0;
@@ -351,8 +360,16 @@ class _AddMealEntryScreenState extends State<AddMealEntryScreen>
       fat: f,
     );
 
-    context.read<DailyTrackerProvider>().addMealEntry(entry);
-    context.pop();
+    try {
+      await context.read<DailyTrackerProvider>().addMealEntry(entry);
+      if (mounted) context.pop();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.error)),
+        );
+      }
+    }
   }
 
   @override

@@ -17,9 +17,8 @@ import '../../providers/favorite_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../providers/shopping_list_provider.dart';
 import '../../providers/collection_provider.dart';
+import '../../providers/activity_provider.dart';
 import '../../models/shopping_list.dart';
-import '../../services/shopping_list_service.dart';
-import '../../services/activity_service.dart';
 import '../../utils/category_helpers.dart';
 import '../../widgets/gradient_button.dart';
 import '../../widgets/serving_size_selector.dart';
@@ -127,6 +126,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
   Future<void> _onSendPressed(Recipe r) async {
     final ratingProvider = context.read<RatingProvider>();
     final commentProvider = context.read<CommentProvider>();
+    final activityProvider = context.read<ActivityProvider>();
     final user = context.read<AuthProvider>().userModel;
     if (user == null) return;
 
@@ -190,11 +190,10 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
       _commentController.clear();
 
       // Create a single activity notification for comment+rating
-      final activityService = ActivityService();
       final hasNewRating = pendingStars > 0 && !hasExistingRating;
       if (commentText.isNotEmpty && hasNewRating) {
         // Combined: comment + rating → single comment activity with stars in message
-        activityService.createCommentActivity(
+        await activityProvider.createCommentActivity(
           recipeAuthorId: r.authorId,
           actorId: user.uid,
           actorName: user.fullName,
@@ -206,7 +205,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
           stars: pendingStars,
         );
       } else if (commentText.isNotEmpty) {
-        activityService.createCommentActivity(
+        await activityProvider.createCommentActivity(
           recipeAuthorId: r.authorId,
           actorId: user.uid,
           actorName: user.fullName,
@@ -217,7 +216,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
           commentText: commentText,
         );
       } else if (hasNewRating) {
-        activityService.createRatingActivity(
+        await activityProvider.createRatingActivity(
           recipeAuthorId: r.authorId,
           actorId: user.uid,
           actorName: user.fullName,
@@ -227,6 +226,16 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
           recipeImageUrl: r.imageUrl,
           stars: pendingStars,
         );
+      }
+
+      // Show success feedback
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        if (commentText.isNotEmpty) {
+          _showSnackBar(l10n.commentSubmitted);
+        } else if (hasNewRating) {
+          _showSnackBar(l10n.ratingSubmitted);
+        }
       }
     } finally {
       if (mounted) setState(() => _submittingComment = false);
@@ -517,6 +526,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     final l10n = AppLocalizations.of(context)!;
     final userId = context.read<AuthProvider>().userModel?.uid;
     final messenger = ScaffoldMessenger.of(context);
+    final shoppingProvider = context.read<ShoppingListProvider>();
     if (userId == null) return;
     final name = await showDialog<String>(
       context: context,
@@ -553,15 +563,10 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                   unit: ing.unit,
                 ))
             .toList();
-        final now = DateTime.now();
-        final newList = ShoppingList(
-          userId: userId,
-          name: name,
-          items: items,
-          createdAt: now,
-          updatedAt: now,
-        );
-        await ShoppingListService().createShoppingList(newList);
+        final listId = await shoppingProvider.createList(name);
+        if (listId.isNotEmpty) {
+          await shoppingProvider.addIngredientsToList(listId, items);
+        }
         if (mounted) {
           messenger.showSnackBar(
             SnackBar(content: Text(l10n.addedToList(name))),

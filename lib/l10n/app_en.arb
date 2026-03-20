@@ -590,5 +590,14 @@
   "cookingSkillLevel": "Cooking Skill Level",
   "skillBeginner": "Beginner",
   "skillIntermediate": "Intermediate",
-  "skillAdvanced": "Advanced"
+  "skillAdvanced": "Advanced",
+  "phoneNumberRequired": "Please enter your phone number",
+  "invalidPhoneNumber": "Please enter a valid phone number",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "personalInformation": "Personal Information",
+  "helpsPersonalizeExperience": "Optional — helps us personalize your experience",
+  "editRecipe": "Edit Recipe",
+  "syncFailed": "Sync failed",
+  "commentSubmitted": "Comment submitted",
+  "ratingSubmitted": "Rating submitted"
 }

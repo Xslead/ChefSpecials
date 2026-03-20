@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
-import '../../services/user_service.dart';
 import '../../widgets/gradient_button.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -35,7 +34,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   DateTime? _birthDate;
 
   // Username availability
-  final UserService _userService = UserService();
   Timer? _usernameDebounce;
   bool _checkingUsername = false;
   bool? _usernameAvailable;
@@ -86,7 +84,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
     setState(() => _checkingUsername = true);
     _usernameDebounce = Timer(const Duration(milliseconds: 500), () async {
-      final available = await _userService.isUsernameAvailable(trimmed);
+      final available =
+          await context.read<AuthProvider>().isUsernameAvailable(trimmed);
       if (mounted && _usernameController.text.trim() == trimmed) {
         setState(() {
           _usernameAvailable = available;
@@ -364,17 +363,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'[0-9+\-\s()]')),
               ],
-              decoration: const InputDecoration(
-                labelText: 'Phone Number',
-                prefixIcon: Icon(Icons.phone_outlined),
+              decoration: InputDecoration(
+                labelText: l10n.phoneNumber,
+                prefixIcon: const Icon(Icons.phone_outlined),
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Please enter your phone number';
+                  return l10n.phoneNumberRequired;
                 }
                 final digits = value.replaceAll(RegExp(r'\D'), '');
                 if (digits.length < 7) {
-                  return 'Please enter a valid phone number';
+                  return l10n.invalidPhoneNumber;
                 }
                 return null;
               },
@@ -386,7 +385,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               onTap: _pickBirthDate,
               child: InputDecorator(
                 decoration: InputDecoration(
-                  labelText: 'Date of Birth *',
+                  labelText: '${l10n.dateOfBirth} *',
                   prefixIcon: const Icon(Icons.cake_outlined),
                   suffixIcon:
                       const Icon(Icons.calendar_today_outlined, size: 20),
@@ -462,7 +461,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               validator: (value) {
                 if (value != _passwordController.text) {
-                  return 'Passwords do not match';
+                  return l10n.passwordsDoNotMatch;
                 }
                 return null;
               },
@@ -497,7 +496,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: [
             const SizedBox(height: 8),
             Text(
-              'Personal Information',
+              l10n.personalInformation,
               style: textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: AppTheme.textSecondaryOf(context),
@@ -505,7 +504,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Optional — helps us personalize your experience',
+              l10n.helpsPersonalizeExperience,
               style: textTheme.bodySmall
                   ?.copyWith(color: AppTheme.textTertiaryOf(context)),
             ),
@@ -513,13 +512,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
             DropdownButtonFormField<String>(
               initialValue: _gender,
-              decoration: const InputDecoration(
-                labelText: 'Gender',
-                prefixIcon: Icon(Icons.wc_outlined),
+              decoration: InputDecoration(
+                labelText: l10n.gender,
+                prefixIcon: const Icon(Icons.wc_outlined),
               ),
-              items: _genderOptions
-                  .map((g) => DropdownMenuItem(value: g, child: Text(g)))
-                  .toList(),
+              items: _genderOptions.map((g) {
+                final label = switch (g) {
+                  'Male' => l10n.genderMale,
+                  'Female' => l10n.genderFemale,
+                  'Other' => l10n.genderOther,
+                  'Prefer not to say' => l10n.genderPreferNotToSay,
+                  _ => g,
+                };
+                return DropdownMenuItem(value: g, child: Text(label));
+              }).toList(),
               onChanged: (v) => setState(() => _gender = v),
             ),
             const SizedBox(height: 16),
@@ -535,9 +541,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       FilteringTextInputFormatter.allow(
                           RegExp(r'^\d{0,3}\.?\d{0,1}')),
                     ],
-                    decoration: const InputDecoration(
-                      labelText: 'Height',
-                      prefixIcon: Icon(Icons.height),
+                    decoration: InputDecoration(
+                      labelText: l10n.height,
+                      prefixIcon: const Icon(Icons.height),
                       suffixText: 'cm',
                     ),
                     validator: (value) {
@@ -561,9 +567,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       FilteringTextInputFormatter.allow(
                           RegExp(r'^\d{0,3}\.?\d{0,1}')),
                     ],
-                    decoration: const InputDecoration(
-                      labelText: 'Weight',
-                      prefixIcon: Icon(Icons.monitor_weight_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.weight,
+                      prefixIcon: const Icon(Icons.monitor_weight_outlined),
                       suffixText: 'kg',
                     ),
                     validator: (value) {
@@ -583,26 +589,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
             DropdownButtonFormField<String>(
               initialValue: _activityLevel,
-              decoration: const InputDecoration(
-                labelText: 'Activity Level',
-                prefixIcon: Icon(Icons.directions_run_outlined),
+              decoration: InputDecoration(
+                labelText: l10n.activityLevel,
+                prefixIcon: const Icon(Icons.directions_run_outlined),
               ),
-              items: _activityOptions
-                  .map((a) => DropdownMenuItem(value: a, child: Text(a)))
-                  .toList(),
+              items: _activityOptions.map((a) {
+                final label = switch (a) {
+                  'Sedentary' => l10n.activitySedentary,
+                  'Lightly Active' => l10n.activityLightlyActive,
+                  'Moderately Active' => l10n.activityModeratelyActive,
+                  'Very Active' => l10n.activityVeryActive,
+                  'Extra Active' => l10n.activityExtraActive,
+                  _ => a,
+                };
+                return DropdownMenuItem(value: a, child: Text(label));
+              }).toList(),
               onChanged: (v) => setState(() => _activityLevel = v),
             ),
             const SizedBox(height: 16),
 
             DropdownButtonFormField<String>(
               initialValue: _cookingSkillLevel,
-              decoration: const InputDecoration(
-                labelText: 'Cooking Skill Level',
-                prefixIcon: Icon(Icons.restaurant_outlined),
+              decoration: InputDecoration(
+                labelText: l10n.cookingSkillLevel,
+                prefixIcon: const Icon(Icons.restaurant_outlined),
               ),
-              items: _skillOptions
-                  .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-                  .toList(),
+              items: _skillOptions.map((s) {
+                final label = switch (s) {
+                  'Beginner' => l10n.skillBeginner,
+                  'Intermediate' => l10n.skillIntermediate,
+                  'Advanced' => l10n.skillAdvanced,
+                  _ => s,
+                };
+                return DropdownMenuItem(value: s, child: Text(label));
+              }).toList(),
               onChanged: (v) => setState(() => _cookingSkillLevel = v),
             ),
 

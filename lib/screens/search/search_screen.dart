@@ -139,7 +139,6 @@ class _SearchBodyState extends State<_SearchBody> {
                         controller: _controller,
                         autofocus: true,
                         onChanged: (value) {
-                          setState(() {});
                           searchProvider.search(value);
                         },
                         decoration: InputDecoration(
@@ -154,12 +153,11 @@ class _SearchBodyState extends State<_SearchBody> {
                             color: AppTheme.textTertiaryOf(context),
                             size: 22,
                           ),
-                          suffixIcon: _controller.text.isNotEmpty
+                          suffixIcon: searchProvider.query.isNotEmpty
                               ? IconButton(
                                   icon: Icon(Icons.clear, color: AppTheme.textTertiaryOf(context), size: 20),
                                   onPressed: () {
                                     _controller.clear();
-                                    setState(() {});
                                     searchProvider.search('');
                                   },
                                 )
@@ -197,7 +195,6 @@ class _SearchBodyState extends State<_SearchBody> {
               return GestureDetector(
                 onTap: () {
                   _controller.text = _localizeCategory(category, l10n);
-                  setState(() {});
                   searchProvider.search(category);
                 },
                 child: Container(

@@ -53,6 +53,10 @@ class FollowProvider extends ChangeNotifier {
     }
   }
 
+  Future<List<String>> getFollowerIds(String userId) {
+    return _service.getFollowerIds(userId);
+  }
+
   Future<void> unfollow(String targetId) async {
     if (_currentUserId == null) return;
     // Optimistic update — create a new set so reference changes

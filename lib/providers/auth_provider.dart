@@ -176,6 +176,27 @@ class AuthProvider extends ChangeNotifier {
     await _authService.signOut();
   }
 
+  Future<bool> isUsernameAvailable(String username) {
+    return _userService.isUsernameAvailable(username);
+  }
+
+  Future<bool> sendPasswordResetEmail(String email) async {
+    _error = null;
+    notifyListeners();
+    try {
+      await _authService.sendPasswordResetEmail(email);
+      return true;
+    } on FirebaseAuthException catch (e) {
+      _error = e.message;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
   void clearError() {
     _error = null;
     notifyListeners();

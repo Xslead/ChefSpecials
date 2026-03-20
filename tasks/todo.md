@@ -305,16 +305,54 @@ Status: PUSHED
 
 ---
 
+Push 23: Screen Logic Refactoring
+
+**Phase 0: Shared Infrastructure (L10n Keys)**
+- [x] Added 9 new l10n keys to `app_en.arb` and `app_tr.arb`: phoneNumberRequired, invalidPhoneNumber, passwordsDoNotMatch, personalInformation, helpsPersonalizeExperience, editRecipe, syncFailed, commentSubmitted, ratingSubmitted
+
+**Phase 1: Critical & High Severity**
+- [x] **Feed Screen** — Created `FeedProvider` (screen-scoped), refactored `feed_screen.dart` to remove direct `RecipeService`/`UserService`, replaced 12+ setState calls with provider methods, added SnackBar error feedback (35 new tests)
+- [x] **Register Screen** — Localized 14 hardcoded strings, removed direct `UserService`, routed username check through `AuthProvider.isUsernameAvailable()`, localized dropdown display text
+- [x] **Home Screen** — Removed duplicate `listenToFavorites()` call from `build()` (was running every frame)
+- [x] **Recipe Detail** — Added 3 passthrough methods to `ActivityProvider`, removed direct `ActivityService`/`ShoppingListService` instantiation, added success SnackBars for comment/rating submission
+
+**Phase 2: Medium Severity**
+- [x] **Add Food Item Screen** — Created `FoodItemFormProvider` (26 state fields, nutrition unit conversion), refactored screen to use provider (36 new tests)
+- [x] **Add Meal Entry Screen** — Added try-catch + SnackBar around `addMealEntry` calls
+- [x] **Meal Planner Screen** — Added try-catch + SnackBar to `_syncShoppingList()`
+
+**Phase 3: Low Severity**
+- [x] **Search Screen** — Removed 3 redundant `setState(() {})` calls, switched clear icon to `searchProvider.query.isNotEmpty`
+- [x] **Forgot Password Screen** — Removed direct `AuthService`, routed through `AuthProvider.sendPasswordResetEmail()`
+- [x] **Add Recipe Screen** — Added `getFollowerIds()` to `FollowProvider`, removed direct `FollowService`/`ActivityService`
+- [x] **Edit Recipe Screen** — Replaced 3 hardcoded strings with l10n keys (`editRecipe`, `requiredField` x2)
+
+**New Files (4)**
+- `lib/providers/feed_provider.dart`
+- `lib/providers/food_item_form_provider.dart`
+- `test/providers/feed_provider_test.dart` (35 tests)
+- `test/providers/food_item_form_provider_test.dart` (36 tests)
+
+**Modified Files (19)**: app_en.arb, app_tr.arb, auth_provider, activity_provider, follow_provider, feed_screen, register_screen, home_screen, recipe_detail_screen, add_food_item_screen, add_meal_entry_screen, meal_planner_screen, search_screen, forgot_password_screen, add_recipe_screen, edit_recipe_screen + 3 test files
+
+**Quality**
+- [x] flutter analyze — 0 issues
+- [x] flutter test — 1269 tests passing (80 new tests)
+- [x] Emulator smoke test — all 11 refactored screens working
+Status: PUSHED
+
+---
+
 ## App Statistics
 
- Total Dart files: 148 (lib) + 74 (test) = 222
- Tests: 1189 (0 failures)
+ Total Dart files: 150 (lib) + 76 (test) = 226
+ Tests: 1269 (0 failures)
  Screens implemented: 41
  Models: 20
  Services: 17
- Providers: 19
+ Providers: 21
  Routes: 37
- l10n keys: 358 (EN + TR)
+ l10n keys: 367 (EN + TR)
  Widgets: 3 new (ServingSizeSelector, UnitConverterSheet, unit_converter utility)
 
 ---

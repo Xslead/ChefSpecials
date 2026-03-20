@@ -1443,4 +1443,32 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get skillAdvanced => 'İleri';
+
+  @override
+  String get phoneNumberRequired => 'Lütfen telefon numaranızı girin';
+
+  @override
+  String get invalidPhoneNumber => 'Lütfen geçerli bir telefon numarası girin';
+
+  @override
+  String get passwordsDoNotMatch => 'Şifreler eşleşmiyor';
+
+  @override
+  String get personalInformation => 'Kişisel Bilgiler';
+
+  @override
+  String get helpsPersonalizeExperience =>
+      'İsteğe bağlı — deneyiminizi kişiselleştirmemize yardımcı olur';
+
+  @override
+  String get editRecipe => 'Tarifi Düzenle';
+
+  @override
+  String get syncFailed => 'Senkronizasyon başarısız';
+
+  @override
+  String get commentSubmitted => 'Yorum gönderildi';
+
+  @override
+  String get ratingSubmitted => 'Puan gönderildi';
 }

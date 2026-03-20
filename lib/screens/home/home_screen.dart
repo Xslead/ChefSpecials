@@ -79,11 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final recipeProvider = context.watch<RecipeProvider>();
-    final user = context.watch<AuthProvider>().userModel;
-    if (user != null) {
-      context.read<FavoriteProvider>().listenToFavorites(user.uid);
-    }
-
     final allPublic = recipeProvider.allRecipes.where((r) => !r.isPrivate).toList();
     final filteredRecipes = _applyLocalFilters(allPublic);
 

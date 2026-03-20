@@ -7,11 +7,11 @@ import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../utils/category_helpers.dart';
 import '../../models/recipe.dart';
+import '../../providers/activity_provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/follow_provider.dart';
 import '../../providers/recipe_form_provider.dart';
 import '../../providers/recipe_provider.dart';
-import '../../services/activity_service.dart';
-import '../../services/follow_service.dart';
 import '../../widgets/screen_header.dart';
 import 'widgets/image_picker_tile.dart';
 import 'widgets/ingredient_input_list.dart';
@@ -57,13 +57,16 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
     try {
       final user = authProvider.userModel;
       if (user == null) throw Exception('User not loaded yet. Please try again.');
+      final followProvider = context.read<FollowProvider>();
+      final activityProvider = context.read<ActivityProvider>();
       final recipe = await formProvider.buildRecipe(user.uid, user.fullName);
       final recipeId = await recipeProvider.createRecipe(recipe);
       // Notify followers about the new recipe (only public recipes)
       if (!recipe.isPrivate) {
-        final followerIds = await FollowService().getFollowerIds(user.uid);
+        final followerIds =
+            await followProvider.getFollowerIds(user.uid);
         if (followerIds.isNotEmpty) {
-          ActivityService().createNewRecipeActivity(
+          activityProvider.createNewRecipeActivity(
             recipeId: recipeId,
             recipeName: recipe.title,
             recipeImageUrl: recipe.imageUrl,

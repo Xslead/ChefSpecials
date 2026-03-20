@@ -37,14 +37,22 @@ class _MealPlannerScreenState extends State<MealPlannerScreen> {
   Future<void> _syncShoppingList() async {
     final userId = _userId;
     if (userId == null) return;
-    final mealProvider = context.read<MealPlanProvider>();
-    final recipeProvider = context.read<RecipeProvider>();
-    final shoppingProvider = context.read<ShoppingListProvider>();
-    shoppingProvider.init(userId);
+    try {
+      final mealProvider = context.read<MealPlanProvider>();
+      final recipeProvider = context.read<RecipeProvider>();
+      final shoppingProvider = context.read<ShoppingListProvider>();
+      shoppingProvider.init(userId);
 
-    final items = mealProvider.generateShoppingItems(recipeProvider.allRecipes);
-    final weekStartIso = mealProvider.selectedWeekStart.toIso8601String();
-    await shoppingProvider.syncMealPlanList(weekStartIso, items);
+      final items = mealProvider.generateShoppingItems(recipeProvider.allRecipes);
+      final weekStartIso = mealProvider.selectedWeekStart.toIso8601String();
+      await shoppingProvider.syncMealPlanList(weekStartIso, items);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.syncFailed)),
+        );
+      }
+    }
   }
 
   static const _mealTypes = ['breakfast', 'lunch', 'dinner', 'snack'];

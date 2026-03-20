@@ -1439,4 +1439,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get skillAdvanced => 'Advanced';
+
+  @override
+  String get phoneNumberRequired => 'Please enter your phone number';
+
+  @override
+  String get invalidPhoneNumber => 'Please enter a valid phone number';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get personalInformation => 'Personal Information';
+
+  @override
+  String get helpsPersonalizeExperience =>
+      'Optional — helps us personalize your experience';
+
+  @override
+  String get editRecipe => 'Edit Recipe';
+
+  @override
+  String get syncFailed => 'Sync failed';
+
+  @override
+  String get commentSubmitted => 'Comment submitted';
+
+  @override
+  String get ratingSubmitted => 'Rating submitted';
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/ingredient.dart';
+import '../utils/unit_converter.dart';
 import '../models/recipe_step.dart';
 import '../models/recipe.dart';
 import '../models/food_item.dart';
@@ -49,7 +50,7 @@ class RecipeFormProvider extends ChangeNotifier {
     ingredients.add(Ingredient(
       name: foodItem.name,
       amount: amount,
-      unit: foodItem.unit == '100g' ? 'g' : 'mL',
+      unit: UnitConverter.isVolumeUnit(foodItem.unit) ? 'mL' : 'g',
       foodItemId: foodItem.id,
       caloriesPer100: foodItem.calories,
       proteinPer100: foodItem.protein,

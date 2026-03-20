@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../config/theme.dart';
 import '../../models/recipe.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../widgets/unit_converter_sheet.dart';
 import 'widgets/step_page.dart';
 
 class CookingModeScreen extends StatefulWidget {
@@ -47,6 +48,13 @@ class _CookingModeScreenState extends State<CookingModeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.recipe.title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.swap_horiz),
+            tooltip: l10n.unitConverter,
+            onPressed: () => UnitConverterSheet.show(context),
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: Container(

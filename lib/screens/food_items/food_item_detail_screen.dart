@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/theme.dart';
+import '../../utils/unit_converter.dart';
 import '../../models/food_item.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/food_item_provider.dart';
@@ -136,7 +137,7 @@ class FoodItemDetailScreen extends StatelessWidget {
   }
 
   Widget _buildHeader(ThemeData theme) {
-    final unitSuffix = foodItem.unit == 'mL' ? 'mL' : 'g';
+    final unitSuffix = UnitConverter.isVolumeUnit(foodItem.unit) ? 'mL' : 'g';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

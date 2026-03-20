@@ -1011,4 +1011,36 @@ class AppLocalizationsTr extends AppLocalizations {
   String activityAnnouncement(String title) {
     return '$title';
   }
+
+  @override
+  String get unitConverter => 'Birim Dönüştürücü';
+
+  @override
+  String serves(int count) {
+    return '$count Kişilik';
+  }
+
+  @override
+  String get fromUnit => 'Kaynak';
+
+  @override
+  String get toUnit => 'Hedef';
+
+  @override
+  String get weight => 'Ağırlık';
+
+  @override
+  String get volume => 'Hacim';
+
+  @override
+  String get temperature => 'Sıcaklık';
+
+  @override
+  String get tapToConvert => 'Dönüştürmek için dokun';
+
+  @override
+  String get copied => 'Kopyalandı';
+
+  @override
+  String get result => 'Sonuç';
 }

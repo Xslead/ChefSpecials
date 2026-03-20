@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../config/theme.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../models/food_item.dart';
+import '../../../utils/unit_converter.dart';
 
 class FoodItemCard extends StatelessWidget {
   final FoodItem foodItem;
@@ -170,7 +171,7 @@ class FoodItemCard extends StatelessWidget {
                     _buildMiniNutrition(
                       context,
                       l10n.per100,
-                      '${foodItem.packetSize.toStringAsFixed(0)}${foodItem.unit == 'mL' ? 'mL' : 'g'}',
+                      '${foodItem.packetSize.toStringAsFixed(0)}${UnitConverter.isVolumeUnit(foodItem.unit) ? 'mL' : 'g'}',
                       AppTheme.textSecondaryOf(context),
                     ),
                   ],

@@ -20,6 +20,8 @@ import '../../models/shopping_list.dart';
 import '../../services/shopping_list_service.dart';
 import '../../services/activity_service.dart';
 import '../../widgets/gradient_button.dart';
+import '../../widgets/serving_size_selector.dart';
+import '../../widgets/unit_converter_sheet.dart';
 import 'widgets/ingredient_list_view.dart';
 import 'widgets/step_overview_list.dart';
 
@@ -51,10 +53,12 @@ class _RecipeDetailBody extends StatefulWidget {
 class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
   final TextEditingController _commentController = TextEditingController();
   bool _submittingComment = false;
+  late int _selectedServings;
 
   @override
   void initState() {
     super.initState();
+    _selectedServings = widget.recipe.servings;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final recipeId = widget.recipe.id;
       if (recipeId == null) return;
@@ -70,6 +74,15 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
   void dispose() {
     _commentController.dispose();
     super.dispose();
+  }
+
+  String _scaledAmount(String originalAmount, int originalServings) {
+    final parsed = double.tryParse(originalAmount);
+    if (parsed == null || originalServings <= 0) return originalAmount;
+    final scaled = parsed * _selectedServings / originalServings;
+    return scaled == scaled.roundToDouble()
+        ? scaled.toInt().toString()
+        : scaled.toStringAsFixed(2).replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
   }
 
   bool _isOwner(Recipe r) {
@@ -524,7 +537,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
         final items = recipe.ingredients
             .map((ing) => ShoppingItem(
                   name: ing.name,
-                  amount: ing.amount,
+                  amount: _scaledAmount(ing.amount, recipe.servings),
                   unit: ing.unit,
                 ))
             .toList();
@@ -565,7 +578,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
       final items = recipe.ingredients
           .map((ing) => ShoppingItem(
                 name: ing.name,
-                amount: ing.amount,
+                amount: _scaledAmount(ing.amount, recipe.servings),
                 unit: ing.unit,
               ))
           .toList();
@@ -611,7 +624,10 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                     _buildNutritionCard(context, l10n, theme, liveRecipe),
                   ],
                   const SizedBox(height: 16),
-                  _buildServingsInfo(context, l10n, theme, liveRecipe),
+                  ServingSizeSelector(
+                    currentServings: _selectedServings,
+                    onChanged: (v) => setState(() => _selectedServings = v),
+                  ),
                   const SizedBox(height: 24),
                   Text(
                     l10n.ingredients,
@@ -620,7 +636,24 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  IngredientListView(ingredients: liveRecipe.ingredients),
+                  IngredientListView(
+                    ingredients: liveRecipe.ingredients,
+                    scaleFactor: liveRecipe.servings > 0
+                        ? _selectedServings / liveRecipe.servings
+                        : null,
+                    onIngredientTap: (ingredient) {
+                      final parsed = double.tryParse(ingredient.amount);
+                      final scaleFactor = liveRecipe.servings > 0
+                          ? _selectedServings / liveRecipe.servings
+                          : 1.0;
+                      final scaledValue = parsed != null ? parsed * scaleFactor : null;
+                      UnitConverterSheet.show(
+                        context,
+                        initialValue: scaledValue,
+                        initialUnit: ingredient.unit,
+                      );
+                    },
+                  ),
                   const SizedBox(height: 24),
                   Text(
                     l10n.steps,
@@ -899,6 +932,15 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     ThemeData theme,
     Recipe r,
   ) {
+    final scale = r.servings > 0 ? _selectedServings / r.servings : 1.0;
+
+    String scaleVal(num val) {
+      final scaled = val * scale;
+      return scaled == scaled.roundToDouble()
+          ? scaled.toInt().toString()
+          : scaled.toStringAsFixed(1);
+    }
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
@@ -908,28 +950,28 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
             if (r.caloriesPerServing != null)
               _buildNutritionItem(
                 label: l10n.calories,
-                value: '${r.caloriesPerServing}',
+                value: scaleVal(r.caloriesPerServing!),
                 unit: 'kcal',
                 theme: theme,
               ),
             if (r.proteinGrams != null)
               _buildNutritionItem(
                 label: l10n.protein,
-                value: r.proteinGrams!.toStringAsFixed(1),
+                value: scaleVal(r.proteinGrams!),
                 unit: 'g',
                 theme: theme,
               ),
             if (r.carbsGrams != null)
               _buildNutritionItem(
                 label: l10n.carbs,
-                value: r.carbsGrams!.toStringAsFixed(1),
+                value: scaleVal(r.carbsGrams!),
                 unit: 'g',
                 theme: theme,
               ),
             if (r.fatGrams != null)
               _buildNutritionItem(
                 label: l10n.fat,
-                value: r.fatGrams!.toStringAsFixed(1),
+                value: scaleVal(r.fatGrams!),
                 unit: 'g',
                 theme: theme,
               ),
@@ -970,25 +1012,6 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     );
   }
 
-  Widget _buildServingsInfo(
-    BuildContext context,
-    AppLocalizations l10n,
-    ThemeData theme,
-    Recipe r,
-  ) {
-    return Row(
-      children: [
-        Icon(Icons.people_outline, size: 20, color: theme.colorScheme.primary),
-        const SizedBox(width: 6),
-        Text(
-          '${l10n.servings}: ${r.servings}',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildRatingsSection(
     BuildContext context,

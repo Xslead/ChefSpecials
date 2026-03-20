@@ -407,5 +407,20 @@
     "placeholders": {
       "title": {"type": "String"}
     }
-  }
+  },
+  "unitConverter": "Birim Dönüştürücü",
+  "serves": "{count} Kişilik",
+  "@serves": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "fromUnit": "Kaynak",
+  "toUnit": "Hedef",
+  "weight": "Ağırlık",
+  "volume": "Hacim",
+  "temperature": "Sıcaklık",
+  "tapToConvert": "Dönüştürmek için dokun",
+  "copied": "Kopyalandı",
+  "result": "Sonuç"
 }

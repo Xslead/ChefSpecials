@@ -1006,4 +1006,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String activityAnnouncement(String title) {
     return '$title';
   }
+
+  @override
+  String get unitConverter => 'Unit Converter';
+
+  @override
+  String serves(int count) {
+    return 'Serves $count';
+  }
+
+  @override
+  String get fromUnit => 'From';
+
+  @override
+  String get toUnit => 'To';
+
+  @override
+  String get weight => 'Weight';
+
+  @override
+  String get volume => 'Volume';
+
+  @override
+  String get temperature => 'Temperature';
+
+  @override
+  String get tapToConvert => 'Tap to convert';
+
+  @override
+  String get copied => 'Copied';
+
+  @override
+  String get result => 'Result';
 }

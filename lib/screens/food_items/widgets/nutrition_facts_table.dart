@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../config/theme.dart';
 import '../../../models/food_item.dart';
+import '../../../utils/unit_converter.dart';
 
 class NutritionFactsTable extends StatelessWidget {
   final FoodItem foodItem;
@@ -11,7 +12,7 @@ class NutritionFactsTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final unitSuffix = foodItem.unit == 'mL' ? 'mL' : 'g';
+    final unitSuffix = UnitConverter.isVolumeUnit(foodItem.unit) ? 'mL' : 'g';
 
     return Card(
       child: Padding(

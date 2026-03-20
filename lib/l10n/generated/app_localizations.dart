@@ -1974,6 +1974,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{title}'**
   String activityAnnouncement(String title);
+
+  /// No description provided for @unitConverter.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit Converter'**
+  String get unitConverter;
+
+  /// No description provided for @serves.
+  ///
+  /// In en, this message translates to:
+  /// **'Serves {count}'**
+  String serves(int count);
+
+  /// No description provided for @fromUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get fromUnit;
+
+  /// No description provided for @toUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get toUnit;
+
+  /// No description provided for @weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get weight;
+
+  /// No description provided for @volume.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get volume;
+
+  /// No description provided for @temperature.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperature'**
+  String get temperature;
+
+  /// No description provided for @tapToConvert.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to convert'**
+  String get tapToConvert;
+
+  /// No description provided for @copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get copied;
+
+  /// No description provided for @result.
+  ///
+  /// In en, this message translates to:
+  /// **'Result'**
+  String get result;
 }
 
 class _AppLocalizationsDelegate

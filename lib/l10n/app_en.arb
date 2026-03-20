@@ -407,5 +407,20 @@
     "placeholders": {
       "title": {"type": "String"}
     }
-  }
+  },
+  "unitConverter": "Unit Converter",
+  "serves": "Serves {count}",
+  "@serves": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "fromUnit": "From",
+  "toUnit": "To",
+  "weight": "Weight",
+  "volume": "Volume",
+  "temperature": "Temperature",
+  "tapToConvert": "Tap to convert",
+  "copied": "Copied",
+  "result": "Result"
 }

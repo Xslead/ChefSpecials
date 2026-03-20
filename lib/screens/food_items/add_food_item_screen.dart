@@ -7,6 +7,8 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../models/food_item.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/food_item_provider.dart';
+import '../../utils/unit_converter.dart';
+import '../../widgets/unit_converter_sheet.dart';
 
 const List<String> _categories = [
   'Protein',
@@ -19,7 +21,7 @@ const List<String> _categories = [
   'Other',
 ];
 
-const List<String> _units = ['100g', 'mL'];
+const List<String> _units = ['100g', '100mL', 'oz', 'lb', 'kg', 'cups', 'tbsp', 'tsp', 'fl oz', 'L'];
 
 class AddFoodItemScreen extends StatefulWidget {
   final FoodItem? editItem;
@@ -35,6 +37,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
   bool _isSubmitting = false;
 
   bool get _isEditing => widget.editItem != null;
+  bool get _isBaseUnit => _unit == '100g' || _unit == '100mL';
 
   String _name = '';
   String? _brand;
@@ -99,6 +102,34 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
 
   String? _editVal(double v) => _isEditing ? v.toStringAsFixed(1) : null;
 
+  double _conversionFactor() {
+    if (_isBaseUnit) return 1.0;
+    final isVolume = UnitConverter.isVolumeUnit(_unit);
+    // How many g or mL does 1 of the selected unit equal?
+    double unitInBase;
+    if (isVolume) {
+      switch (_unit) {
+        case 'mL': unitInBase = 1; break;
+        case 'L': unitInBase = 1000; break;
+        case 'cups': unitInBase = 236.588; break;
+        case 'tbsp': unitInBase = 14.787; break;
+        case 'tsp': unitInBase = 4.929; break;
+        case 'fl oz': unitInBase = 29.5735; break;
+        default: unitInBase = 1; break;
+      }
+    } else {
+      switch (_unit) {
+        case 'g': unitInBase = 1; break;
+        case 'kg': unitInBase = 1000; break;
+        case 'oz': unitInBase = 28.3495; break;
+        case 'lb': unitInBase = 453.592; break;
+        default: unitInBase = 1; break;
+      }
+    }
+    // per 1 unit → per 100 base: multiply by (100 / unitInBase)
+    return 100.0 / unitInBase;
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
@@ -109,29 +140,35 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
     final foodItemProvider = context.read<FoodItemProvider>();
     final user = authProvider.userModel!;
 
+    // Auto-convert nutrition from "per 1 [unit]" to "per 100g/100mL"
+    final factor = _conversionFactor();
+    final storedUnit = _isBaseUnit
+        ? _unit
+        : (UnitConverter.isVolumeUnit(_unit) ? '100mL' : '100g');
+
     try {
       final foodItem = FoodItem(
         id: _isEditing ? widget.editItem!.id : null,
         name: _name,
         brand: _brand,
         category: _category,
-        unit: _unit,
+        unit: storedUnit,
         packetSize: _packetSize,
         barcode: _barcode,
         isVegan: _isVegan,
         isVegetarian: _isVegetarian,
         isGlutenFree: _isGlutenFree,
-        calories: _calories,
-        protein: _protein,
-        carbs: _carbs,
-        fat: _fat,
-        saturatedFat: _saturatedFat,
-        transFat: _transFat,
-        cholesterol: _cholesterol,
-        fiber: _fiber,
-        sugar: _sugar,
-        sodium: _sodium,
-        salt: _salt,
+        calories: _calories * factor,
+        protein: _protein * factor,
+        carbs: _carbs * factor,
+        fat: _fat * factor,
+        saturatedFat: _saturatedFat * factor,
+        transFat: _transFat * factor,
+        cholesterol: _cholesterol * factor,
+        fiber: _fiber * factor,
+        sugar: _sugar * factor,
+        sodium: _sodium * factor,
+        salt: _salt * factor,
         nutriScore: _nutriScore,
         novaGroup: _novaGroup,
         allergens: _allergens,
@@ -215,6 +252,11 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                       ),
                     ),
                     const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.swap_horiz, color: AppTheme.primaryColor),
+                      tooltip: 'Unit Converter',
+                      onPressed: () => UnitConverterSheet.show(context),
+                    ),
                     TextButton(
                       onPressed: _isSubmitting ? null : _submit,
                       child: _isSubmitting
@@ -303,7 +345,14 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                                       value: c, child: Text(c)))
                                   .toList(),
                               onChanged: (v) {
-                                if (v != null) setState(() => _category = v);
+                                if (v != null) {
+                                  setState(() {
+                                    _category = v;
+                                    if (v == 'Beverages') {
+                                      _unit = '100mL';
+                                    }
+                                  });
+                                }
                               },
                             ),
                           ],
@@ -317,6 +366,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             _buildSectionLabel('UNIT'),
                             const SizedBox(height: 8),
                             DropdownButtonFormField<String>(
+                              key: ValueKey(_unit),
                               initialValue: _unit,
                               isExpanded: true,
                               decoration: _styledInputDecoration(
@@ -338,39 +388,66 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                   const SizedBox(height: 16),
 
                   // Packet size & Barcode row
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  if (!_isBaseUnit)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
                           children: [
-                            _buildSectionLabel('PACKET SIZE'),
-                            const SizedBox(height: 8),
-                            TextFormField(
-                              initialValue: _isEditing ? _packetSize.toStringAsFixed(0) : null,
-                              decoration: _styledInputDecoration(
-                                hintText: 'e.g. 330',
-                                prefixIcon: Icons.inventory_2_outlined,
-                                suffixText: 'g/mL',
+                            const Icon(Icons.info_outline, size: 16, color: AppTheme.primaryColor),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Enter nutrition per 1 $_unit — values will be auto-converted to per 100${UnitConverter.isVolumeUnit(_unit) ? 'mL' : 'g'}',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: AppTheme.primaryColor,
+                                ),
                               ),
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                      decimal: true),
-                              validator: (v) {
-                                if (v == null || v.isEmpty) return 'Required';
-                                if (double.tryParse(v) == null) {
-                                  return 'Invalid';
-                                }
-                                return null;
-                              },
-                              onSaved: (v) =>
-                                  _packetSize =
-                                      double.tryParse(v ?? '') ?? 100,
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(width: 12),
+                    ),
+                  Row(
+                    children: [
+                      if (_isBaseUnit)
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildSectionLabel('PACKET SIZE'),
+                              const SizedBox(height: 8),
+                              TextFormField(
+                                initialValue: _isEditing ? _packetSize.toStringAsFixed(0) : null,
+                                decoration: _styledInputDecoration(
+                                  hintText: 'e.g. 330',
+                                  prefixIcon: Icons.inventory_2_outlined,
+                                  suffixText: UnitConverter.isVolumeUnit(_unit) ? 'mL' : 'g',
+                                ),
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
+                                validator: (v) {
+                                  if (v == null || v.isEmpty) return 'Required';
+                                  if (double.tryParse(v) == null) {
+                                    return 'Invalid';
+                                  }
+                                  return null;
+                                },
+                                onSaved: (v) =>
+                                    _packetSize =
+                                        double.tryParse(v ?? '') ?? 100,
+                              ),
+                            ],
+                          ),
+                        ),
+                      if (_isBaseUnit) const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -398,7 +475,9 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                   _buildSectionHeader(
                     icon: Icons.analytics_outlined,
                     color: AppTheme.secondaryColor,
-                    label: 'NUTRITION VALUES',
+                    label: _isBaseUnit
+                        ? 'NUTRITION VALUES (per $_unit)'
+                        : 'NUTRITION VALUES (per 1 $_unit)',
                   ),
                   const SizedBox(height: 12),
 
@@ -647,7 +726,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                               decoration: _styledInputDecoration(
                                 hintText: 'Optional',
                                 prefixIcon: Icons.scale_outlined,
-                                suffixText: 'g',
+                                suffixText: UnitConverter.isVolumeUnit(_unit) ? 'mL' : 'g',
                               ),
                               keyboardType:
                                   const TextInputType.numberWithOptions(

@@ -21,6 +21,7 @@ class UserModel {
   final String? banReason;
   final DateTime? bannedAt;
   final String? bannedBy;
+  final List<String> dietaryPreferences;
 
   UserModel({
     required this.uid,
@@ -45,6 +46,7 @@ class UserModel {
     this.banReason,
     this.bannedAt,
     this.bannedBy,
+    this.dietaryPreferences = const [],
   });
 
   String get fullName => '$firstName $lastName'.trim();
@@ -87,6 +89,9 @@ class UserModel {
           ? DateTime.parse(map['bannedAt'] as String)
           : null,
       bannedBy: map['bannedBy'] as String?,
+      dietaryPreferences: (map['dietaryPreferences'] as List<dynamic>?)
+              ?.cast<String>() ??
+          const [],
     );
   }
 
@@ -115,6 +120,7 @@ class UserModel {
       'banReason': banReason,
       'bannedAt': bannedAt?.toIso8601String(),
       'bannedBy': bannedBy,
+      'dietaryPreferences': dietaryPreferences,
     };
   }
 
@@ -138,6 +144,7 @@ class UserModel {
     String? banReason,
     DateTime? bannedAt,
     String? bannedBy,
+    List<String>? dietaryPreferences,
   }) {
     return UserModel(
       uid: uid,
@@ -162,6 +169,7 @@ class UserModel {
       banReason: banReason ?? this.banReason,
       bannedAt: bannedAt ?? this.bannedAt,
       bannedBy: bannedBy ?? this.bannedBy,
+      dietaryPreferences: dietaryPreferences ?? this.dietaryPreferences,
     );
   }
 }

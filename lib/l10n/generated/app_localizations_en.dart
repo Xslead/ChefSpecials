@@ -1467,4 +1467,44 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ratingSubmitted => 'Rating submitted';
+
+  @override
+  String get welcomeToChefSpecials => 'Welcome to ChefSpecials';
+
+  @override
+  String get discoverCookShare => 'Discover, cook, and share delicious recipes';
+
+  @override
+  String get trackYourNutrition => 'Track Your Nutrition';
+
+  @override
+  String get logMealsMonitor => 'Log meals and monitor your daily intake';
+
+  @override
+  String get planYourMeals => 'Plan Your Meals';
+
+  @override
+  String get organizeWeeklyMealPlan => 'Organize your weekly meal plan';
+
+  @override
+  String get shareRecipes => 'Share Recipes';
+
+  @override
+  String get connectWithFoodLovers =>
+      'Connect with food lovers and share your creations';
+
+  @override
+  String get selectDietaryPreferences => 'Select your dietary preferences';
+
+  @override
+  String get setDailyGoals => 'Set your daily goals';
+
+  @override
+  String get nutFree => 'Nut-Free';
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  String get getStarted => 'Get Started';
 }

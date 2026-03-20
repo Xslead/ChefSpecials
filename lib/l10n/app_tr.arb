@@ -599,5 +599,18 @@
   "editRecipe": "Tarifi Düzenle",
   "syncFailed": "Senkronizasyon başarısız",
   "commentSubmitted": "Yorum gönderildi",
-  "ratingSubmitted": "Puan gönderildi"
+  "ratingSubmitted": "Puan gönderildi",
+  "welcomeToChefSpecials": "ChefSpecials'a Hoş Geldiniz",
+  "discoverCookShare": "Lezzetli tarifleri keşfedin, pişirin ve paylaşın",
+  "trackYourNutrition": "Beslenmenizi Takip Edin",
+  "logMealsMonitor": "Öğünlerinizi kaydedin ve günlük alımınızı izleyin",
+  "planYourMeals": "Yemeklerinizi Planlayın",
+  "organizeWeeklyMealPlan": "Haftalık yemek planınızı düzenleyin",
+  "shareRecipes": "Tarif Paylaşın",
+  "connectWithFoodLovers": "Yemek severlerle bağlantı kurun ve tariflerinizi paylaşın",
+  "selectDietaryPreferences": "Diyet tercihlerinizi seçin",
+  "setDailyGoals": "Günlük hedeflerinizi belirleyin",
+  "nutFree": "Fındıksız",
+  "skip": "Atla",
+  "getStarted": "Başlayın"
 }

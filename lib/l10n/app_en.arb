@@ -599,5 +599,18 @@
   "editRecipe": "Edit Recipe",
   "syncFailed": "Sync failed",
   "commentSubmitted": "Comment submitted",
-  "ratingSubmitted": "Rating submitted"
+  "ratingSubmitted": "Rating submitted",
+  "welcomeToChefSpecials": "Welcome to ChefSpecials",
+  "discoverCookShare": "Discover, cook, and share delicious recipes",
+  "trackYourNutrition": "Track Your Nutrition",
+  "logMealsMonitor": "Log meals and monitor your daily intake",
+  "planYourMeals": "Plan Your Meals",
+  "organizeWeeklyMealPlan": "Organize your weekly meal plan",
+  "shareRecipes": "Share Recipes",
+  "connectWithFoodLovers": "Connect with food lovers and share your creations",
+  "selectDietaryPreferences": "Select your dietary preferences",
+  "setDailyGoals": "Set your daily goals",
+  "nutFree": "Nut-Free",
+  "skip": "Skip",
+  "getStarted": "Get Started"
 }

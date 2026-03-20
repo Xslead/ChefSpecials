@@ -225,6 +225,7 @@ UserModel createTestUser({
   String? banReason,
   DateTime? bannedAt,
   String? bannedBy,
+  List<String>? dietaryPreferences,
 }) {
   return UserModel(
     uid: uid ?? 'user_001',
@@ -249,6 +250,7 @@ UserModel createTestUser({
     banReason: banReason,
     bannedAt: bannedAt,
     bannedBy: bannedBy,
+    dietaryPreferences: dietaryPreferences ?? const [],
   );
 }
 
@@ -275,6 +277,7 @@ Map<String, dynamic> createTestUserMap({
   String? banReason,
   String? bannedAt,
   String? bannedBy,
+  List<String>? dietaryPreferences,
 }) {
   return {
     'uid': uid ?? 'user_001',
@@ -299,6 +302,7 @@ Map<String, dynamic> createTestUserMap({
     'banReason': banReason,
     'bannedAt': bannedAt,
     'bannedBy': bannedBy,
+    'dietaryPreferences': dietaryPreferences ?? const [],
   };
 }
 

@@ -2838,6 +2838,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rating submitted'**
   String get ratingSubmitted;
+
+  /// No description provided for @welcomeToChefSpecials.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to ChefSpecials'**
+  String get welcomeToChefSpecials;
+
+  /// No description provided for @discoverCookShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover, cook, and share delicious recipes'**
+  String get discoverCookShare;
+
+  /// No description provided for @trackYourNutrition.
+  ///
+  /// In en, this message translates to:
+  /// **'Track Your Nutrition'**
+  String get trackYourNutrition;
+
+  /// No description provided for @logMealsMonitor.
+  ///
+  /// In en, this message translates to:
+  /// **'Log meals and monitor your daily intake'**
+  String get logMealsMonitor;
+
+  /// No description provided for @planYourMeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Your Meals'**
+  String get planYourMeals;
+
+  /// No description provided for @organizeWeeklyMealPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Organize your weekly meal plan'**
+  String get organizeWeeklyMealPlan;
+
+  /// No description provided for @shareRecipes.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Recipes'**
+  String get shareRecipes;
+
+  /// No description provided for @connectWithFoodLovers.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect with food lovers and share your creations'**
+  String get connectWithFoodLovers;
+
+  /// No description provided for @selectDietaryPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your dietary preferences'**
+  String get selectDietaryPreferences;
+
+  /// No description provided for @setDailyGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your daily goals'**
+  String get setDailyGoals;
+
+  /// No description provided for @nutFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Nut-Free'**
+  String get nutFree;
+
+  /// No description provided for @skip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skip;
+
+  /// No description provided for @getStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get getStarted;
 }
 
 class _AppLocalizationsDelegate

@@ -1471,4 +1471,46 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get ratingSubmitted => 'Puan gönderildi';
+
+  @override
+  String get welcomeToChefSpecials => 'ChefSpecials\'a Hoş Geldiniz';
+
+  @override
+  String get discoverCookShare =>
+      'Lezzetli tarifleri keşfedin, pişirin ve paylaşın';
+
+  @override
+  String get trackYourNutrition => 'Beslenmenizi Takip Edin';
+
+  @override
+  String get logMealsMonitor =>
+      'Öğünlerinizi kaydedin ve günlük alımınızı izleyin';
+
+  @override
+  String get planYourMeals => 'Yemeklerinizi Planlayın';
+
+  @override
+  String get organizeWeeklyMealPlan => 'Haftalık yemek planınızı düzenleyin';
+
+  @override
+  String get shareRecipes => 'Tarif Paylaşın';
+
+  @override
+  String get connectWithFoodLovers =>
+      'Yemek severlerle bağlantı kurun ve tariflerinizi paylaşın';
+
+  @override
+  String get selectDietaryPreferences => 'Diyet tercihlerinizi seçin';
+
+  @override
+  String get setDailyGoals => 'Günlük hedeflerinizi belirleyin';
+
+  @override
+  String get nutFree => 'Fındıksız';
+
+  @override
+  String get skip => 'Atla';
+
+  @override
+  String get getStarted => 'Başlayın';
 }

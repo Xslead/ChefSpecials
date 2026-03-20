@@ -43,6 +43,8 @@ import '../screens/admin/admin_announcements_screen.dart';
 import '../screens/admin/admin_appeals_screen.dart';
 import '../screens/admin/admin_audit_log_screen.dart';
 import '../screens/auth/banned_screen.dart';
+import '../screens/onboarding/onboarding_screen.dart';
+import '../providers/onboarding_provider.dart';
 import '../models/meal_entry.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -50,7 +52,19 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final GoRouter router = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/login',
+  redirect: (context, state) async {
+    final path = state.uri.path;
+    if (path == '/login' || path == '/register') {
+      final completed = await OnboardingProvider.hasCompletedOnboarding();
+      if (!completed) return '/onboarding';
+    }
+    return null;
+  },
   routes: [
+    GoRoute(
+      path: '/onboarding',
+      builder: (context, state) => const OnboardingScreen(),
+    ),
     GoRoute(
       path: '/login',
       builder: (context, state) => const LoginScreen(),

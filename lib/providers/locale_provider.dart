@@ -1,8 +1,10 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocaleProvider extends ChangeNotifier {
   static const _key = 'locale';
+  static const _supportedCodes = {'en', 'tr'};
   Locale _locale = const Locale('en');
 
   Locale get locale => _locale;
@@ -12,8 +14,13 @@ class LocaleProvider extends ChangeNotifier {
     final code = prefs.getString(_key);
     if (code != null) {
       _locale = Locale(code);
-      notifyListeners();
+    } else {
+      final systemCode = ui.PlatformDispatcher.instance.locale.languageCode;
+      _locale = _supportedCodes.contains(systemCode)
+          ? Locale(systemCode)
+          : const Locale('en');
     }
+    notifyListeners();
   }
 
   void setLocale(Locale locale) {

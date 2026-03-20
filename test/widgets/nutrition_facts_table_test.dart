@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:chef_specials/l10n/generated/app_localizations.dart';
 import 'package:chef_specials/models/food_item.dart';
 import 'package:chef_specials/screens/food_items/widgets/nutrition_facts_table.dart';
 
@@ -43,6 +44,9 @@ FoodItem _testFoodItem({
 void main() {
   Widget buildTestWidget(FoodItem foodItem) {
     return MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('en'),
       home: Scaffold(
         body: SingleChildScrollView(
           child: NutritionFactsTable(foodItem: foodItem),

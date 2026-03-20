@@ -7,6 +7,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../models/food_item.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/food_item_provider.dart';
+import '../../utils/category_helpers.dart';
 import '../../utils/unit_converter.dart';
 import '../../widgets/unit_converter_sheet.dart';
 
@@ -244,7 +245,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      _isEditing ? 'Edit Food Item' : 'Add Food Item',
+                      _isEditing ? l10n.editFoodItem : l10n.addFoodItem,
                       style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
@@ -254,7 +255,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                     const Spacer(),
                     IconButton(
                       icon: const Icon(Icons.swap_horiz, color: AppTheme.primaryColor),
-                      tooltip: 'Unit Converter',
+                      tooltip: l10n.unitConverter,
                       onPressed: () => UnitConverterSheet.show(context),
                     ),
                     TextButton(
@@ -292,7 +293,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                   _buildSectionHeader(
                     icon: Icons.info_outlined,
                     color: AppTheme.primaryColor,
-                    label: 'BASIC INFO',
+                    label: l10n.basicInfo,
                   ),
                   const SizedBox(height: 12),
 
@@ -302,11 +303,11 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                   TextFormField(
                     initialValue: _isEditing ? _name : null,
                     decoration: _styledInputDecoration(
-                      hintText: 'Food item name',
+                      hintText: l10n.foodItemName,
                       prefixIcon: Icons.label_outlined,
                     ),
                     validator: (v) =>
-                        (v == null || v.isEmpty) ? 'Required' : null,
+                        (v == null || v.isEmpty) ? l10n.requiredField : null,
                     onSaved: (v) => _name = v ?? '',
                   ),
                   const SizedBox(height: 12),
@@ -317,7 +318,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                   TextFormField(
                     initialValue: _isEditing ? (_brand ?? '') : null,
                     decoration: _styledInputDecoration(
-                      hintText: 'Brand (optional)',
+                      hintText: l10n.brandOptional,
                       prefixIcon: Icons.storefront_outlined,
                     ),
                     onSaved: (v) =>
@@ -342,7 +343,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                               ),
                               items: _categories
                                   .map((c) => DropdownMenuItem(
-                                      value: c, child: Text(c)))
+                                      value: c, child: Text(localizeFoodCategory(c, l10n))))
                                   .toList(),
                               onChanged: (v) {
                                 if (v != null) {
@@ -363,7 +364,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildSectionLabel('UNIT'),
+                            _buildSectionLabel(l10n.unit),
                             const SizedBox(height: 8),
                             DropdownButtonFormField<String>(
                               key: ValueKey(_unit),
@@ -403,7 +404,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                'Enter nutrition per 1 $_unit — values will be auto-converted to per 100${UnitConverter.isVolumeUnit(_unit) ? 'mL' : 'g'}',
+                                l10n.nutritionAutoConvertInfo(_unit, UnitConverter.isVolumeUnit(_unit) ? 'mL' : 'g'),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: AppTheme.primaryColor,
@@ -421,7 +422,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _buildSectionLabel('PACKET SIZE'),
+                              _buildSectionLabel(l10n.packetSize),
                               const SizedBox(height: 8),
                               TextFormField(
                                 initialValue: _isEditing ? _packetSize.toStringAsFixed(0) : null,
@@ -434,9 +435,9 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                                     const TextInputType.numberWithOptions(
                                         decimal: true),
                                 validator: (v) {
-                                  if (v == null || v.isEmpty) return 'Required';
+                                  if (v == null || v.isEmpty) return l10n.requiredField;
                                   if (double.tryParse(v) == null) {
-                                    return 'Invalid';
+                                    return l10n.invalid;
                                   }
                                   return null;
                                 },
@@ -452,12 +453,12 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildSectionLabel('BARCODE'),
+                            _buildSectionLabel(l10n.barcode),
                             const SizedBox(height: 8),
                             TextFormField(
                               initialValue: _isEditing ? (_barcode ?? '') : null,
                               decoration: _styledInputDecoration(
-                                hintText: 'Optional',
+                                hintText: l10n.optional,
                                 prefixIcon: Icons.qr_code_2_outlined,
                               ),
                               keyboardType: TextInputType.number,
@@ -476,8 +477,8 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                     icon: Icons.analytics_outlined,
                     color: AppTheme.secondaryColor,
                     label: _isBaseUnit
-                        ? 'NUTRITION VALUES (per $_unit)'
-                        : 'NUTRITION VALUES (per 1 $_unit)',
+                        ? l10n.nutritionValuesPer(_unit)
+                        : l10n.nutritionValuesPer('1 $_unit'),
                   ),
                   const SizedBox(height: 12),
 
@@ -545,7 +546,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                         child: _buildNutritionCard(
                           icon: Icons.grass_outlined,
                           color: const Color(0xFF22C55E),
-                          label: 'Fiber',
+                          label: l10n.fiber,
                           suffix: l10n.gram,
                           compact: true,
                           initialValue: _editVal(_fiber),
@@ -558,7 +559,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                         child: _buildNutritionCard(
                           icon: Icons.cookie_outlined,
                           color: const Color(0xFFA855F7),
-                          label: 'Sugar',
+                          label: l10n.sugar,
                           suffix: l10n.gram,
                           compact: true,
                           initialValue: _editVal(_sugar),
@@ -571,7 +572,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                         child: _buildNutritionCard(
                           icon: Icons.water_drop_outlined,
                           color: const Color(0xFF6366F1),
-                          label: 'Sodium',
+                          label: l10n.sodium,
                           suffix: 'mg',
                           compact: true,
                           initialValue: _editVal(_sodium),
@@ -590,7 +591,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                         child: _buildNutritionCard(
                           icon: Icons.opacity_outlined,
                           color: const Color(0xFFEC4899),
-                          label: 'Sat. Fat',
+                          label: l10n.saturatedFat,
                           suffix: l10n.gram,
                           compact: true,
                           initialValue: _editVal(_saturatedFat),
@@ -603,7 +604,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                         child: _buildNutritionCard(
                           icon: Icons.warning_amber_outlined,
                           color: const Color(0xFFF97316),
-                          label: 'Trans Fat',
+                          label: l10n.transFat,
                           suffix: l10n.gram,
                           compact: true,
                           initialValue: _editVal(_transFat),
@@ -616,7 +617,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                         child: _buildNutritionCard(
                           icon: Icons.favorite_outline,
                           color: const Color(0xFFDC2626),
-                          label: 'Cholesterol',
+                          label: l10n.cholesterol,
                           suffix: 'mg',
                           compact: true,
                           initialValue: _editVal(_cholesterol),
@@ -635,7 +636,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                         child: _buildNutritionCard(
                           icon: Icons.scatter_plot_outlined,
                           color: const Color(0xFF0EA5E9),
-                          label: 'Salt',
+                          label: l10n.salt,
                           suffix: l10n.gram,
                           compact: true,
                           initialValue: _editVal(_salt),
@@ -652,7 +653,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                   _buildSectionHeader(
                     icon: Icons.tune_outlined,
                     color: const Color(0xFF8B5CF6),
-                    label: 'ADDITIONAL INFO',
+                    label: l10n.additionalInfo,
                   ),
                   const SizedBox(height: 12),
 
@@ -663,14 +664,14 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildSectionLabel('NUTRI-SCORE'),
+                            _buildSectionLabel(l10n.nutriScore),
                             const SizedBox(height: 8),
                             DropdownButtonFormField<String>(
                               initialValue: _nutriScore,
                               isExpanded: true,
                               decoration: _styledInputDecoration(
                                 prefixIcon: Icons.grade_outlined,
-                                hintText: 'Optional',
+                                hintText: l10n.optional,
                               ),
                               items: ['A', 'B', 'C', 'D', 'E']
                                   .map((s) => DropdownMenuItem(
@@ -687,14 +688,14 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildSectionLabel('NOVA GROUP'),
+                            _buildSectionLabel(l10n.novaGroup),
                             const SizedBox(height: 8),
                             DropdownButtonFormField<int>(
                               initialValue: _novaGroup,
                               isExpanded: true,
                               decoration: _styledInputDecoration(
                                 prefixIcon: Icons.science_outlined,
-                                hintText: 'Optional',
+                                hintText: l10n.optional,
                               ),
                               items: [1, 2, 3, 4]
                                   .map((n) => DropdownMenuItem(
@@ -717,14 +718,14 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildSectionLabel('SERVING SIZE'),
+                            _buildSectionLabel(l10n.servingSize),
                             const SizedBox(height: 8),
                             TextFormField(
                               initialValue: _isEditing && _servingSize != null
                                   ? _servingSize!.toStringAsFixed(0)
                                   : null,
                               decoration: _styledInputDecoration(
-                                hintText: 'Optional',
+                                hintText: l10n.optional,
                                 prefixIcon: Icons.scale_outlined,
                                 suffixText: UnitConverter.isVolumeUnit(_unit) ? 'mL' : 'g',
                               ),
@@ -734,7 +735,7 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                               validator: (v) {
                                 if (v == null || v.isEmpty) return null;
                                 if (double.tryParse(v) == null) {
-                                  return 'Invalid';
+                                  return l10n.invalid;
                                 }
                                 return null;
                               },
@@ -751,12 +752,12 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildSectionLabel('ORIGIN'),
+                            _buildSectionLabel(l10n.origin),
                             const SizedBox(height: 8),
                             TextFormField(
                               initialValue: _isEditing ? (_origin ?? '') : null,
                               decoration: _styledInputDecoration(
-                                hintText: 'Optional',
+                                hintText: l10n.optional,
                                 prefixIcon: Icons.public_outlined,
                               ),
                               onSaved: (v) => _origin =
@@ -770,12 +771,12 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                   const SizedBox(height: 12),
 
                   // Ingredients text field
-                  _buildSectionLabel('INGREDIENTS'),
+                  _buildSectionLabel(l10n.ingredients),
                   const SizedBox(height: 8),
                   TextFormField(
                     initialValue: _isEditing ? (_ingredientsText ?? '') : null,
                     decoration: _styledInputDecoration(
-                      hintText: 'List of ingredients (optional)',
+                      hintText: l10n.ingredientsListOptional,
                       prefixIcon: Icons.receipt_long_outlined,
                     ),
                     maxLines: 3,
@@ -785,25 +786,29 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                   const SizedBox(height: 16),
 
                   // Allergens
-                  _buildSectionLabel('ALLERGENS'),
+                  _buildSectionLabel(l10n.allergens),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
-                    children: [
-                      'Gluten',
-                      'Peanuts',
-                      'Tree Nuts',
-                      'Milk',
-                      'Eggs',
-                      'Fish',
-                      'Shellfish',
-                      'Soy',
-                      'Sesame',
-                    ]
+                    children: {
+                      'Gluten': l10n.allergenGluten,
+                      'Peanuts': l10n.allergenPeanuts,
+                      'Tree Nuts': l10n.allergenTreeNuts,
+                      'Milk': l10n.allergenMilk,
+                      'Eggs': l10n.allergenEggs,
+                      'Fish': l10n.allergenFish,
+                      'Shellfish': l10n.allergenShellfish,
+                      'Soy': l10n.allergenSoy,
+                      'Sesame': l10n.allergenSesame,
+                    }
+                        .entries
                         .map(
-                          (allergen) => FilterChip(
-                            label: Text(allergen),
+                          (entry) {
+                            final allergen = entry.key;
+                            final label = entry.value;
+                            return FilterChip(
+                            label: Text(label),
                             selected: _allergens.contains(allergen),
                             onSelected: (selected) {
                               setState(() {
@@ -837,7 +842,8 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                                     : AppTheme.warmBeige,
                               ),
                             ),
-                          ),
+                          );
+                          },
                         )
                         .toList(),
                   ),
@@ -870,10 +876,10 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        const Expanded(
+                        Expanded(
                           child: Text(
-                            'Vegan',
-                            style: TextStyle(
+                            l10n.vegan,
+                            style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
                             ),
@@ -918,10 +924,10 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        const Expanded(
+                        Expanded(
                           child: Text(
-                            'Vegetarian',
-                            style: TextStyle(
+                            l10n.vegetarian,
+                            style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
                             ),
@@ -966,10 +972,10 @@ class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        const Expanded(
+                        Expanded(
                           child: Text(
-                            'Gluten Free',
-                            style: TextStyle(
+                            l10n.glutenFree,
+                            style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
                             ),

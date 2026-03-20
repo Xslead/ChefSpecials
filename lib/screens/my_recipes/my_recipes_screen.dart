@@ -5,6 +5,7 @@ import '../../config/theme.dart';
 import '../../config/constants.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/recipe.dart';
+import '../../utils/category_helpers.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../widgets/empty_state.dart';
@@ -483,7 +484,7 @@ class _MyRecipesScreenState extends State<MyRecipesScreen> {
                                 _selectedDietaryTags.contains(tag);
                             return _buildChip(
                               context: context,
-                              label: tag,
+                              label: localizeDietaryTag(tag, l10n),
                               selected: isSelected,
                               outlined: true,
                               onTap: () {

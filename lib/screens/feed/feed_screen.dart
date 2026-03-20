@@ -9,6 +9,7 @@ import '../../config/constants.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/recipe.dart';
+import '../../utils/category_helpers.dart';
 import '../../models/user_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/follow_provider.dart';
@@ -605,7 +606,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                 _selectedDietaryTags.contains(tag);
                             return _buildChip(
                               context: context,
-                              label: tag,
+                              label: localizeDietaryTag(tag, l10n),
                               selected: isSelected,
                               outlined: true,
                               onTap: () {

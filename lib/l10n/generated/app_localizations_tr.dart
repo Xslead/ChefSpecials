@@ -1027,7 +1027,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get toUnit => 'Hedef';
 
   @override
-  String get weight => 'Ağırlık';
+  String get weight => 'Kilo';
 
   @override
   String get volume => 'Hacim';
@@ -1043,4 +1043,404 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get result => 'Sonuç';
+
+  @override
+  String get forgotPassword => 'Şifremi Unuttum';
+
+  @override
+  String get resetYourPassword => 'Şifrenizi sıfırlayın';
+
+  @override
+  String get resetPasswordDescription =>
+      'Hesabınızla ilişkili e-posta adresini girin. Size şifrenizi sıfırlamak için bir bağlantı göndereceğiz.';
+
+  @override
+  String get sendResetLink => 'Sıfırlama Bağlantısı Gönder';
+
+  @override
+  String get backToLogin => 'Giriş\'e Dön';
+
+  @override
+  String get checkYourEmail => 'E-postanızı kontrol edin';
+
+  @override
+  String resetLinkSent(String email) {
+    return '$email adresine şifre sıfırlama bağlantısı gönderdik';
+  }
+
+  @override
+  String get checkInboxDescription =>
+      'Gelen kutunuzu kontrol edin ve şifrenizi sıfırlamak için bağlantıyı takip edin.';
+
+  @override
+  String get resendEmail => 'Tekrar Gönder';
+
+  @override
+  String get pleaseEnterEmail => 'Lütfen e-postanızı girin';
+
+  @override
+  String get pleaseEnterValidEmail => 'Lütfen geçerli bir e-posta girin';
+
+  @override
+  String get pleaseEnterPassword => 'Lütfen şifrenizi girin';
+
+  @override
+  String get passwordTooShort => 'Şifre en az 6 karakter olmalı';
+
+  @override
+  String get quickLoginTest => 'Hızlı Giriş (Test)';
+
+  @override
+  String get pleaseSelectDateOfBirth => 'Lütfen doğum tarihinizi seçin';
+
+  @override
+  String get pleaseChooseAvailableUsername =>
+      'Lütfen uygun bir kullanıcı adı seçin';
+
+  @override
+  String get selectDateOfBirth => 'Doğum tarihi seçin';
+
+  @override
+  String get account => 'Hesap';
+
+  @override
+  String get accountInformation => 'Hesap Bilgileri';
+
+  @override
+  String get firstName => 'Ad';
+
+  @override
+  String get lastName => 'Soyad';
+
+  @override
+  String get goodMorning => 'Günaydın';
+
+  @override
+  String get goodAfternoon => 'İyi günler';
+
+  @override
+  String get goodEvening => 'İyi akşamlar';
+
+  @override
+  String get requiredField => 'Zorunlu';
+
+  @override
+  String get enterValidNumber => 'Geçerli bir sayı girin';
+
+  @override
+  String get basicInfo => 'TEMEL BİLGİLER';
+
+  @override
+  String get foodItemName => 'Yiyecek adı';
+
+  @override
+  String get brandOptional => 'Marka (isteğe bağlı)';
+
+  @override
+  String get unit => 'Birim';
+
+  @override
+  String get packetSize => 'Paket Boyutu';
+
+  @override
+  String get barcode => 'Barkod';
+
+  @override
+  String get invalid => 'Geçersiz';
+
+  @override
+  String get fiber => 'Lif';
+
+  @override
+  String get sugar => 'Şeker';
+
+  @override
+  String get sodium => 'Sodyum';
+
+  @override
+  String get saturatedFat => 'Doymuş Yağ';
+
+  @override
+  String get transFat => 'Trans Yağ';
+
+  @override
+  String get cholesterol => 'Kolesterol';
+
+  @override
+  String get salt => 'Tuz';
+
+  @override
+  String get additionalInfo => 'EK BİLGİLER';
+
+  @override
+  String get nutriScore => 'Nutri-Score';
+
+  @override
+  String get novaGroup => 'NOVA Grubu';
+
+  @override
+  String get servingSize => 'Porsiyon Boyutu';
+
+  @override
+  String get origin => 'Menşei';
+
+  @override
+  String get optional => 'İsteğe bağlı';
+
+  @override
+  String get ingredientsListOptional => 'Malzeme listesi (isteğe bağlı)';
+
+  @override
+  String get allergens => 'Alerjenler';
+
+  @override
+  String get addFoodItem => 'Yiyecek Ekle';
+
+  @override
+  String get editFoodItem => 'Yiyecek Düzenle';
+
+  @override
+  String nutritionAutoConvertInfo(String unit, String baseUnit) {
+    return '1 $unit başına besin değeri girin — değerler otomatik olarak 100$baseUnit başına dönüştürülecek';
+  }
+
+  @override
+  String get allergenPeanuts => 'Yer Fıstığı';
+
+  @override
+  String get allergenTreeNuts => 'Kabuklu Yemiş';
+
+  @override
+  String get allergenMilk => 'Süt';
+
+  @override
+  String get allergenEggs => 'Yumurta';
+
+  @override
+  String get allergenFish => 'Balık';
+
+  @override
+  String get allergenShellfish => 'Kabuklu Deniz Ürünü';
+
+  @override
+  String get allergenSoy => 'Soya';
+
+  @override
+  String get allergenSesame => 'Susam';
+
+  @override
+  String get allergenGluten => 'Gluten';
+
+  @override
+  String get nonVegan => 'Vegan Değil';
+
+  @override
+  String get verified => 'Doğrulanmış';
+
+  @override
+  String nutriScoreLabel(String score) {
+    return 'Nutri-Score: $score';
+  }
+
+  @override
+  String novaGroupLabel(String group) {
+    return 'NOVA $group';
+  }
+
+  @override
+  String get deleteFoodItem => 'Yiyeceği Sil';
+
+  @override
+  String confirmDeleteFoodItem(String name) {
+    return '\"$name\" yiyeceğini silmek istediğinize emin misiniz?';
+  }
+
+  @override
+  String get failedToDelete => 'Silme başarısız';
+
+  @override
+  String get nutritionFacts => 'Besin Değerleri';
+
+  @override
+  String perUnit(String unit) {
+    return '$unit başına';
+  }
+
+  @override
+  String perPacket(String size, String unit) {
+    return 'Paket başına ($size$unit)';
+  }
+
+  @override
+  String get carbohydrates => 'Karbonhidrat';
+
+  @override
+  String get ratingCommentDeleteWarning =>
+      'Puanınız ve yorumunuz birlikte silinecek.';
+
+  @override
+  String get cannotRateOwnRecipe => 'Kendi tarifinizi puanlayamazsınız.';
+
+  @override
+  String get deleteRatingFirst =>
+      'Yeni puan vermek için mevcut puanınızı silin.';
+
+  @override
+  String get deleteCommentFirst =>
+      'Yeni yorum yazmak için mevcut yorumunuzu silin.';
+
+  @override
+  String get pleaseSelectStarsOrComment =>
+      'Lütfen yıldız seçin veya yorum yazın.';
+
+  @override
+  String get deleteCommentToWriteNew =>
+      'Yeni yorum yazmak için yorumunuzu silin';
+
+  @override
+  String get cannotRateOwnRecipeShort => 'Kendi tarifinizi puanlayamazsınız.';
+
+  @override
+  String get deleteReviewToRerate =>
+      'Tekrar puanlamak için incelemenizi silin (yorum kartından).';
+
+  @override
+  String get timerDone => 'Bitti!';
+
+  @override
+  String get pause => 'Duraklat';
+
+  @override
+  String get start => 'Başlat';
+
+  @override
+  String get reset => 'Sıfırla';
+
+  @override
+  String get instruction => 'Talimat';
+
+  @override
+  String get timerSeconds => 'Zamanlayıcı (saniye)';
+
+  @override
+  String get tapToAddSteps => 'Adım eklemek için + ya dokunun';
+
+  @override
+  String get tapToAddIngredients => 'Malzeme eklemek için + ya dokunun';
+
+  @override
+  String get searchMaterials => 'Malzeme ara...';
+
+  @override
+  String get noMaterialsFound => 'Malzeme bulunamadı';
+
+  @override
+  String get addButton => 'Ekle';
+
+  @override
+  String get remove => 'Kaldır';
+
+  @override
+  String get undo => 'Geri Al';
+
+  @override
+  String get nutritionValues => 'BESİN DEĞERLERİ';
+
+  @override
+  String nutritionValuesPer(String unit) {
+    return 'BESİN DEĞERLERİ ($unit başına)';
+  }
+
+  @override
+  String get saturatedFatFull => 'Doymuş Yağ';
+
+  @override
+  String get tapToAddPhoto => 'Fotoğraf eklemek için dokunun';
+
+  @override
+  String get foodCategoryDairy => 'Süt Ürünleri';
+
+  @override
+  String get foodCategoryGrains => 'Tahıllar';
+
+  @override
+  String get foodCategoryVegetables => 'Sebzeler';
+
+  @override
+  String get foodCategoryFruits => 'Meyveler';
+
+  @override
+  String get foodCategoryOilsFats => 'Yağlar';
+
+  @override
+  String get foodCategoryBeverages => 'İçecekler';
+
+  @override
+  String get foodCategoryOther => 'Diğer';
+
+  @override
+  String get dietary => 'Diyet';
+
+  @override
+  String get name => 'İsim';
+
+  @override
+  String get personalInfo => 'Kişisel Bilgiler';
+
+  @override
+  String get physicalInfo => 'Fiziksel Bilgiler';
+
+  @override
+  String get phoneNumber => 'Telefon Numarası';
+
+  @override
+  String get dateOfBirth => 'Doğum Tarihi';
+
+  @override
+  String get gender => 'Cinsiyet';
+
+  @override
+  String get genderMale => 'Erkek';
+
+  @override
+  String get genderFemale => 'Kadın';
+
+  @override
+  String get genderOther => 'Diğer';
+
+  @override
+  String get genderPreferNotToSay => 'Belirtmek istemiyorum';
+
+  @override
+  String get height => 'Boy';
+
+  @override
+  String get activityLevel => 'Aktivite Seviyesi';
+
+  @override
+  String get activitySedentary => 'Hareketsiz';
+
+  @override
+  String get activityLightlyActive => 'Az Aktif';
+
+  @override
+  String get activityModeratelyActive => 'Orta Aktif';
+
+  @override
+  String get activityVeryActive => 'Çok Aktif';
+
+  @override
+  String get activityExtraActive => 'Ekstra Aktif';
+
+  @override
+  String get cookingSkillLevel => 'Yemek Yapma Seviyesi';
+
+  @override
+  String get skillBeginner => 'Başlangıç';
+
+  @override
+  String get skillIntermediate => 'Orta';
+
+  @override
+  String get skillAdvanced => 'İleri';
 }

@@ -54,14 +54,14 @@ class IngredientInputList extends StatelessWidget {
                   color: AppTheme.primaryColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.add, size: 16, color: Colors.white),
-                    SizedBox(width: 4),
+                    const Icon(Icons.add, size: 16, color: Colors.white),
+                    const SizedBox(width: 4),
                     Text(
-                      'Add',
-                      style: TextStyle(
+                      l10n.addButton,
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
@@ -88,7 +88,7 @@ class IngredientInputList extends StatelessWidget {
                 Icon(Icons.egg_alt, size: 32, color: AppTheme.neutralLightOf(context)),
                 const SizedBox(height: 8),
                 Text(
-                  'Tap + to add ingredients',
+                  l10n.tapToAddIngredients,
                   style: TextStyle(
                     fontSize: 13,
                     color: AppTheme.textTertiaryOf(context),
@@ -506,7 +506,7 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
                   child: TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
-                      hintText: 'Search materials...',
+                      hintText: AppLocalizations.of(context)!.searchMaterials,
                       hintStyle: TextStyle(
                         color: AppTheme.textTertiaryOf(context),
                         fontSize: 14,
@@ -535,7 +535,7 @@ class _FoodItemPickerSheetState extends State<_FoodItemPickerSheet> {
                               size: 48, color: AppTheme.neutralLightOf(context)),
                           const SizedBox(height: 12),
                           Text(
-                            'No materials found',
+                            AppLocalizations.of(context)!.noMaterialsFound,
                             style: TextStyle(
                               fontSize: 14,
                               color: AppTheme.textTertiaryOf(context),

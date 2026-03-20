@@ -497,14 +497,14 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                     color: AppTheme.errorColor,
                     borderRadius: BorderRadius.circular(22),
                   ),
-                  child: const Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.remove_circle_outline,
+                      const Icon(Icons.remove_circle_outline,
                           color: Colors.white, size: 24),
-                      SizedBox(height: 4),
-                      Text('Remove',
-                          style: TextStyle(
+                      const SizedBox(height: 4),
+                      Text(l10n.remove,
+                          style: const TextStyle(
                               color: Colors.white,
                               fontSize: 11,
                               fontWeight: FontWeight.w600)),
@@ -518,7 +518,7 @@ class _CollectionDetailScreenState extends State<CollectionDetailScreen> {
                       content:
                           Text(l10n.removedFromCollection(collection.name)),
                       action: SnackBarAction(
-                        label: 'Undo',
+                        label: l10n.undo,
                         onPressed: () {
                           provider.addRecipe(widget.collectionId, recipe.id!);
                         },

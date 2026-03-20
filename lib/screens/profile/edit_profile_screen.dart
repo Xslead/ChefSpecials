@@ -94,7 +94,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       initialDate: _birthDate ?? DateTime(now.year - 25, now.month, now.day),
       firstDate: DateTime(1900),
       lastDate: DateTime(now.year - 10, now.month, now.day),
-      helpText: 'Select date of birth',
+      helpText: AppLocalizations.of(context)!.selectDateOfBirth,
     );
     if (picked != null) {
       setState(() => _birthDate = picked);
@@ -296,7 +296,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   const SizedBox(height: 32),
 
                   // ── Personal Info Section ──
-                  _sectionLabel('PERSONAL INFO', context),
+                  _sectionLabel(l10n.personalInfo.toUpperCase(), context),
                   const SizedBox(height: 12),
 
                   // Username (read-only)
@@ -326,12 +326,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: TextFormField(
                           controller: _firstNameController,
                           textCapitalization: TextCapitalization.words,
-                          decoration: const InputDecoration(
-                            labelText: 'First Name',
-                            prefixIcon: Icon(Icons.person_outlined),
+                          decoration: InputDecoration(
+                            labelText: l10n.firstName,
+                            prefixIcon: const Icon(Icons.person_outlined),
                           ),
                           validator: (v) =>
-                              (v == null || v.trim().isEmpty) ? 'Required' : null,
+                              (v == null || v.trim().isEmpty) ? l10n.requiredField : null,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -339,12 +339,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: TextFormField(
                           controller: _lastNameController,
                           textCapitalization: TextCapitalization.words,
-                          decoration: const InputDecoration(
-                            labelText: 'Last Name',
-                            prefixIcon: Icon(Icons.person_outlined),
+                          decoration: InputDecoration(
+                            labelText: l10n.lastName,
+                            prefixIcon: const Icon(Icons.person_outlined),
                           ),
                           validator: (v) =>
-                              (v == null || v.trim().isEmpty) ? 'Required' : null,
+                              (v == null || v.trim().isEmpty) ? l10n.requiredField : null,
                         ),
                       ),
                     ],
@@ -358,9 +358,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9+\-\s()]')),
                     ],
-                    decoration: const InputDecoration(
-                      labelText: 'Phone Number',
-                      prefixIcon: Icon(Icons.phone_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.phoneNumber,
+                      prefixIcon: const Icon(Icons.phone_outlined),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -370,7 +370,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     onTap: _pickBirthDate,
                     child: InputDecorator(
                       decoration: InputDecoration(
-                        labelText: 'Date of Birth',
+                        labelText: l10n.dateOfBirth,
                         prefixIcon: const Icon(Icons.cake_outlined),
                         suffixIcon: const Icon(Icons.calendar_today_outlined,
                             size: 20),
@@ -393,7 +393,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ? '${_birthDate!.day.toString().padLeft(2, '0')}/'
                                 '${_birthDate!.month.toString().padLeft(2, '0')}/'
                                 '${_birthDate!.year}'
-                            : 'Select your date of birth',
+                            : l10n.selectDateOfBirth,
                         style: TextStyle(
                           color:
                               _birthDate != null ? null : AppTheme.textTertiaryOf(context),
@@ -419,18 +419,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   const SizedBox(height: 24),
 
                   // ── Physical Info Section ──
-                  _sectionLabel('PHYSICAL INFO', context),
+                  _sectionLabel(l10n.physicalInfo.toUpperCase(), context),
                   const SizedBox(height: 12),
 
                   // Gender
                   DropdownButtonFormField<String>(
                     initialValue: _gender,
-                    decoration: const InputDecoration(
-                      labelText: 'Gender',
-                      prefixIcon: Icon(Icons.wc_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.gender,
+                      prefixIcon: const Icon(Icons.wc_outlined),
                     ),
                     items: _genderOptions
-                        .map((g) => DropdownMenuItem(value: g, child: Text(g)))
+                        .map((g) => DropdownMenuItem(value: g, child: Text(_localizeGender(g, l10n))))
                         .toList(),
                     onChanged: (v) => setState(() => _gender = v),
                   ),
@@ -448,16 +448,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             FilteringTextInputFormatter.allow(
                                 RegExp(r'^\d{0,3}\.?\d{0,1}')),
                           ],
-                          decoration: const InputDecoration(
-                            labelText: 'Height',
-                            prefixIcon: Icon(Icons.height),
+                          decoration: InputDecoration(
+                            labelText: l10n.height,
+                            prefixIcon: const Icon(Icons.height),
                             suffixText: 'cm',
                           ),
                           validator: (value) {
                             if (value != null && value.isNotEmpty) {
                               final v = double.tryParse(value);
                               if (v == null || v < 50 || v > 300) {
-                                return 'Invalid';
+                                return l10n.invalid;
                               }
                             }
                             return null;
@@ -474,16 +474,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             FilteringTextInputFormatter.allow(
                                 RegExp(r'^\d{0,3}\.?\d{0,1}')),
                           ],
-                          decoration: const InputDecoration(
-                            labelText: 'Weight',
-                            prefixIcon: Icon(Icons.monitor_weight_outlined),
+                          decoration: InputDecoration(
+                            labelText: l10n.weight,
+                            prefixIcon: const Icon(Icons.monitor_weight_outlined),
                             suffixText: 'kg',
                           ),
                           validator: (value) {
                             if (value != null && value.isNotEmpty) {
                               final v = double.tryParse(value);
                               if (v == null || v < 20 || v > 500) {
-                                return 'Invalid';
+                                return l10n.invalid;
                               }
                             }
                             return null;
@@ -497,13 +497,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   // Activity Level
                   DropdownButtonFormField<String>(
                     initialValue: _activityLevel,
-                    decoration: const InputDecoration(
-                      labelText: 'Activity Level',
-                      prefixIcon: Icon(Icons.directions_run_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.activityLevel,
+                      prefixIcon: const Icon(Icons.directions_run_outlined),
                     ),
                     items: _activityOptions
                         .map(
-                            (a) => DropdownMenuItem(value: a, child: Text(a)))
+                            (a) => DropdownMenuItem(value: a, child: Text(_localizeActivity(a, l10n))))
                         .toList(),
                     onChanged: (v) => setState(() => _activityLevel = v),
                   ),
@@ -512,13 +512,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   // Cooking Skill Level
                   DropdownButtonFormField<String>(
                     initialValue: _cookingSkillLevel,
-                    decoration: const InputDecoration(
-                      labelText: 'Cooking Skill Level',
-                      prefixIcon: Icon(Icons.restaurant_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.cookingSkillLevel,
+                      prefixIcon: const Icon(Icons.restaurant_outlined),
                     ),
                     items: _skillOptions
                         .map(
-                            (s) => DropdownMenuItem(value: s, child: Text(s)))
+                            (s) => DropdownMenuItem(value: s, child: Text(_localizeSkill(s, l10n))))
                         .toList(),
                     onChanged: (v) => setState(() => _cookingSkillLevel = v),
                   ),
@@ -530,6 +530,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ],
       ),
     );
+  }
+
+  String _localizeGender(String gender, AppLocalizations l10n) {
+    switch (gender) {
+      case 'Male': return l10n.genderMale;
+      case 'Female': return l10n.genderFemale;
+      case 'Other': return l10n.genderOther;
+      case 'Prefer not to say': return l10n.genderPreferNotToSay;
+      default: return gender;
+    }
+  }
+
+  String _localizeActivity(String activity, AppLocalizations l10n) {
+    switch (activity) {
+      case 'Sedentary': return l10n.activitySedentary;
+      case 'Lightly Active': return l10n.activityLightlyActive;
+      case 'Moderately Active': return l10n.activityModeratelyActive;
+      case 'Very Active': return l10n.activityVeryActive;
+      case 'Extra Active': return l10n.activityExtraActive;
+      default: return activity;
+    }
+  }
+
+  String _localizeSkill(String skill, AppLocalizations l10n) {
+    switch (skill) {
+      case 'Beginner': return l10n.skillBeginner;
+      case 'Intermediate': return l10n.skillIntermediate;
+      case 'Advanced': return l10n.skillAdvanced;
+      default: return skill;
+    }
   }
 
   Widget _sectionLabel(String text, BuildContext context) {

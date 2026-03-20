@@ -85,10 +85,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
+                          return l10n.pleaseEnterEmail;
                         }
                         if (!value.contains('@')) {
-                          return 'Please enter a valid email';
+                          return l10n.pleaseEnterValidEmail;
                         }
                         return null;
                       },
@@ -115,10 +115,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
+                          return l10n.pleaseEnterPassword;
                         }
                         if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
+                          return l10n.passwordTooShort;
                         }
                         return null;
                       },
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        child: const Text('Forgot Password?'),
+                        child: Text('${l10n.forgotPassword}?'),
                       ),
                     ),
                     if (authProvider.error != null) ...[
@@ -169,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             },
                       icon: const Icon(Icons.bolt, size: 18),
-                      label: const Text('Quick Login (Test)'),
+                      label: Text(l10n.quickLoginTest),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppTheme.textSecondaryOf(context),
                         side: BorderSide(color: AppTheme.neutralLightOf(context)),

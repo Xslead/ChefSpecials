@@ -20,6 +20,7 @@ import '../../providers/collection_provider.dart';
 import '../../models/shopping_list.dart';
 import '../../services/shopping_list_service.dart';
 import '../../services/activity_service.dart';
+import '../../utils/category_helpers.dart';
 import '../../widgets/gradient_button.dart';
 import '../../widgets/serving_size_selector.dart';
 import '../../widgets/unit_converter_sheet.dart';
@@ -130,7 +131,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     if (user == null) return;
 
     if (_isOwner(r)) {
-      _showSnackBar('You cannot rate or comment on your own recipe.');
+      _showSnackBar(AppLocalizations.of(context)!.cannotRateOwnRecipe);
       return;
     }
 
@@ -144,17 +145,17 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     final hasTextComment = myEntry != null && myEntry.text.isNotEmpty;
 
     if (pendingStars == 0 && commentText.isEmpty) {
-      _showSnackBar('Please select stars or write a comment.');
+      _showSnackBar(AppLocalizations.of(context)!.pleaseSelectStarsOrComment);
       return;
     }
 
     if (pendingStars > 0 && hasExistingRating) {
-      _showSnackBar('Delete your existing rating first to submit a new one.');
+      _showSnackBar(AppLocalizations.of(context)!.deleteRatingFirst);
       return;
     }
 
     if (commentText.isNotEmpty && hasTextComment) {
-      _showSnackBar('Delete your existing comment first to submit a new one.');
+      _showSnackBar(AppLocalizations.of(context)!.deleteCommentFirst);
       return;
     }
 
@@ -239,7 +240,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(l10n.deleteComment),
-        content: const Text('Your rating and comment will both be deleted.'),
+        content: Text(l10n.ratingCommentDeleteWarning),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -874,7 +875,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
             ),
             const SizedBox(width: 12),
             Chip(
-              label: Text(r.category),
+              label: Text(localizeCategory(r.category, l10n)),
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               visualDensity: VisualDensity.compact,
               padding: EdgeInsets.zero,
@@ -1090,12 +1091,11 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
             currentStars: ratingProvider.displayStars,
             onRate: (stars) async {
               if (isOwner) {
-                _showSnackBar('You cannot rate your own recipe.');
+                _showSnackBar(l10n.cannotRateOwnRecipeShort);
                 return;
               }
               if (hasExistingRating) {
-                _showSnackBar(
-                    'Delete your review (via the comment card) to re-rate.');
+                _showSnackBar(l10n.deleteReviewToRerate);
                 return;
               }
               context.read<RatingProvider>().selectStars(stars);
@@ -1129,7 +1129,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                   controller: _commentController,
                   decoration: InputDecoration(
                     hintText: hasMyTextComment
-                        ? 'Delete your comment to write a new one'
+                        ? l10n.deleteCommentToWriteNew
                         : l10n.writeComment,
                     hintStyle: TextStyle(
                       color: hasMyTextComment

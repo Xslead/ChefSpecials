@@ -107,15 +107,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _nextPage() {
     if (!_step1Key.currentState!.validate()) return;
+    final l10n = AppLocalizations.of(context)!;
     if (_birthDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select your date of birth')),
+        SnackBar(content: Text(l10n.pleaseSelectDateOfBirth)),
       );
       return;
     }
     if (_usernameAvailable != true) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please choose an available username')),
+        SnackBar(content: Text(l10n.pleaseChooseAvailableUsername)),
       );
       return;
     }
@@ -153,7 +154,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       initialDate: _birthDate ?? DateTime(now.year - 25, now.month, now.day),
       firstDate: DateTime(1900),
       lastDate: DateTime(now.year - 10, now.month, now.day),
-      helpText: 'Select date of birth',
+      helpText: AppLocalizations.of(context)!.selectDateOfBirth,
     );
     if (picked != null) {
       setState(() => _birthDate = picked);
@@ -197,7 +198,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         index: 1,
                         active: _currentPage == 0,
                         done: _currentPage > 0,
-                        label: 'Account',
+                        label: l10n.account,
                       ),
                       Expanded(
                         child: Divider(
@@ -211,7 +212,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         index: 2,
                         active: _currentPage == 1,
                         done: false,
-                        label: 'Profile',
+                        label: l10n.profile,
                       ),
                     ],
                   ),
@@ -244,7 +245,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: [
             const SizedBox(height: 8),
             Text(
-              'Account Information',
+              l10n.accountInformation,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: AppTheme.textSecondaryOf(context),
@@ -259,13 +260,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: TextFormField(
                     controller: _firstNameController,
                     textCapitalization: TextCapitalization.words,
-                    decoration: const InputDecoration(
-                      labelText: 'First Name',
-                      prefixIcon: Icon(Icons.person_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.firstName,
+                      prefixIcon: const Icon(Icons.person_outlined),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Required';
+                        return l10n.requiredField;
                       }
                       return null;
                     },
@@ -276,13 +277,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: TextFormField(
                     controller: _lastNameController,
                     textCapitalization: TextCapitalization.words,
-                    decoration: const InputDecoration(
-                      labelText: 'Last Name',
-                      prefixIcon: Icon(Icons.person_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.lastName,
+                      prefixIcon: const Icon(Icons.person_outlined),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Required';
+                        return l10n.requiredField;
                       }
                       return null;
                     },
@@ -347,10 +348,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter your email';
+                  return l10n.pleaseEnterEmail;
                 }
                 if (!value.contains('@')) {
-                  return 'Please enter a valid email';
+                  return l10n.pleaseEnterValidEmail;
                 }
                 return null;
               },
@@ -408,7 +409,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ? '${_birthDate!.day.toString().padLeft(2, '0')}/'
                           '${_birthDate!.month.toString().padLeft(2, '0')}/'
                           '${_birthDate!.year}'
-                      : 'Select your date of birth',
+                      : l10n.selectDateOfBirth,
                   style: TextStyle(
                     color: _birthDate != null
                         ? null
@@ -435,10 +436,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter a password';
+                  return l10n.pleaseEnterPassword;
                 }
                 if (value.length < 6) {
-                  return 'Password must be at least 6 characters';
+                  return l10n.passwordTooShort;
                 }
                 return null;
               },
@@ -543,7 +544,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       if (value != null && value.isNotEmpty) {
                         final v = double.tryParse(value);
                         if (v == null || v < 50 || v > 300) {
-                          return 'Invalid';
+                          return l10n.invalid;
                         }
                       }
                       return null;
@@ -569,7 +570,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       if (value != null && value.isNotEmpty) {
                         final v = double.tryParse(value);
                         if (v == null || v < 20 || v > 500) {
-                          return 'Invalid';
+                          return l10n.invalid;
                         }
                       }
                       return null;

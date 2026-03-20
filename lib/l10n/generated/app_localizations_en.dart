@@ -1038,4 +1038,405 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get result => 'Result';
+
+  @override
+  String get forgotPassword => 'Forgot Password';
+
+  @override
+  String get resetYourPassword => 'Reset your password';
+
+  @override
+  String get resetPasswordDescription =>
+      'Enter the email address associated with your account. We\'ll send you a link to reset your password.';
+
+  @override
+  String get sendResetLink => 'Send Reset Link';
+
+  @override
+  String get backToLogin => 'Back to Login';
+
+  @override
+  String get checkYourEmail => 'Check your email';
+
+  @override
+  String resetLinkSent(String email) {
+    return 'We sent a password reset link to\n$email';
+  }
+
+  @override
+  String get checkInboxDescription =>
+      'Check your inbox and follow the link to reset your password.';
+
+  @override
+  String get resendEmail => 'Resend Email';
+
+  @override
+  String get pleaseEnterEmail => 'Please enter your email';
+
+  @override
+  String get pleaseEnterValidEmail => 'Please enter a valid email';
+
+  @override
+  String get pleaseEnterPassword => 'Please enter your password';
+
+  @override
+  String get passwordTooShort => 'Password must be at least 6 characters';
+
+  @override
+  String get quickLoginTest => 'Quick Login (Test)';
+
+  @override
+  String get pleaseSelectDateOfBirth => 'Please select your date of birth';
+
+  @override
+  String get pleaseChooseAvailableUsername =>
+      'Please choose an available username';
+
+  @override
+  String get selectDateOfBirth => 'Select date of birth';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get accountInformation => 'Account Information';
+
+  @override
+  String get firstName => 'First Name';
+
+  @override
+  String get lastName => 'Last Name';
+
+  @override
+  String get goodMorning => 'Good morning';
+
+  @override
+  String get goodAfternoon => 'Good afternoon';
+
+  @override
+  String get goodEvening => 'Good evening';
+
+  @override
+  String get requiredField => 'Required';
+
+  @override
+  String get enterValidNumber => 'Enter a valid number';
+
+  @override
+  String get basicInfo => 'BASIC INFO';
+
+  @override
+  String get foodItemName => 'Food item name';
+
+  @override
+  String get brandOptional => 'Brand (optional)';
+
+  @override
+  String get unit => 'Unit';
+
+  @override
+  String get packetSize => 'Packet Size';
+
+  @override
+  String get barcode => 'Barcode';
+
+  @override
+  String get invalid => 'Invalid';
+
+  @override
+  String get fiber => 'Fiber';
+
+  @override
+  String get sugar => 'Sugar';
+
+  @override
+  String get sodium => 'Sodium';
+
+  @override
+  String get saturatedFat => 'Sat. Fat';
+
+  @override
+  String get transFat => 'Trans Fat';
+
+  @override
+  String get cholesterol => 'Cholesterol';
+
+  @override
+  String get salt => 'Salt';
+
+  @override
+  String get additionalInfo => 'ADDITIONAL INFO';
+
+  @override
+  String get nutriScore => 'NUTRI-SCORE';
+
+  @override
+  String get novaGroup => 'NOVA GROUP';
+
+  @override
+  String get servingSize => 'SERVING SIZE';
+
+  @override
+  String get origin => 'Origin';
+
+  @override
+  String get optional => 'Optional';
+
+  @override
+  String get ingredientsListOptional => 'List of ingredients (optional)';
+
+  @override
+  String get allergens => 'Allergens';
+
+  @override
+  String get addFoodItem => 'Add Food Item';
+
+  @override
+  String get editFoodItem => 'Edit Food Item';
+
+  @override
+  String nutritionAutoConvertInfo(String unit, String baseUnit) {
+    return 'Enter nutrition per 1 $unit — values will be auto-converted to per 100$baseUnit';
+  }
+
+  @override
+  String get allergenPeanuts => 'Peanuts';
+
+  @override
+  String get allergenTreeNuts => 'Tree Nuts';
+
+  @override
+  String get allergenMilk => 'Milk';
+
+  @override
+  String get allergenEggs => 'Eggs';
+
+  @override
+  String get allergenFish => 'Fish';
+
+  @override
+  String get allergenShellfish => 'Shellfish';
+
+  @override
+  String get allergenSoy => 'Soy';
+
+  @override
+  String get allergenSesame => 'Sesame';
+
+  @override
+  String get allergenGluten => 'Gluten';
+
+  @override
+  String get nonVegan => 'Non-Vegan';
+
+  @override
+  String get verified => 'Verified';
+
+  @override
+  String nutriScoreLabel(String score) {
+    return 'Nutri-Score: $score';
+  }
+
+  @override
+  String novaGroupLabel(String group) {
+    return 'NOVA $group';
+  }
+
+  @override
+  String get deleteFoodItem => 'Delete Food Item';
+
+  @override
+  String confirmDeleteFoodItem(String name) {
+    return 'Are you sure you want to delete \"$name\"?';
+  }
+
+  @override
+  String get failedToDelete => 'Failed to delete';
+
+  @override
+  String get nutritionFacts => 'Nutrition Facts';
+
+  @override
+  String perUnit(String unit) {
+    return 'Per $unit';
+  }
+
+  @override
+  String perPacket(String size, String unit) {
+    return 'Per Packet ($size$unit)';
+  }
+
+  @override
+  String get carbohydrates => 'Carbohydrates';
+
+  @override
+  String get ratingCommentDeleteWarning =>
+      'Your rating and comment will both be deleted.';
+
+  @override
+  String get cannotRateOwnRecipe =>
+      'You cannot rate or comment on your own recipe.';
+
+  @override
+  String get deleteRatingFirst =>
+      'Delete your existing rating first to submit a new one.';
+
+  @override
+  String get deleteCommentFirst =>
+      'Delete your existing comment first to submit a new one.';
+
+  @override
+  String get pleaseSelectStarsOrComment =>
+      'Please select stars or write a comment.';
+
+  @override
+  String get deleteCommentToWriteNew =>
+      'Delete your comment to write a new one';
+
+  @override
+  String get cannotRateOwnRecipeShort => 'You cannot rate your own recipe.';
+
+  @override
+  String get deleteReviewToRerate =>
+      'Delete your review (via the comment card) to re-rate.';
+
+  @override
+  String get timerDone => 'Done!';
+
+  @override
+  String get pause => 'Pause';
+
+  @override
+  String get start => 'Start';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get instruction => 'Instruction';
+
+  @override
+  String get timerSeconds => 'Timer (seconds)';
+
+  @override
+  String get tapToAddSteps => 'Tap + to add steps';
+
+  @override
+  String get tapToAddIngredients => 'Tap + to add ingredients';
+
+  @override
+  String get searchMaterials => 'Search materials...';
+
+  @override
+  String get noMaterialsFound => 'No materials found';
+
+  @override
+  String get addButton => 'Add';
+
+  @override
+  String get remove => 'Remove';
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get nutritionValues => 'NUTRITION VALUES';
+
+  @override
+  String nutritionValuesPer(String unit) {
+    return 'NUTRITION VALUES (per $unit)';
+  }
+
+  @override
+  String get saturatedFatFull => 'Saturated Fat';
+
+  @override
+  String get tapToAddPhoto => 'Tap to add photo';
+
+  @override
+  String get foodCategoryDairy => 'Dairy';
+
+  @override
+  String get foodCategoryGrains => 'Grains';
+
+  @override
+  String get foodCategoryVegetables => 'Vegetables';
+
+  @override
+  String get foodCategoryFruits => 'Fruits';
+
+  @override
+  String get foodCategoryOilsFats => 'Oils & Fats';
+
+  @override
+  String get foodCategoryBeverages => 'Beverages';
+
+  @override
+  String get foodCategoryOther => 'Other';
+
+  @override
+  String get dietary => 'Dietary';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get personalInfo => 'Personal Info';
+
+  @override
+  String get physicalInfo => 'Physical Info';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get dateOfBirth => 'Date of Birth';
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get genderMale => 'Male';
+
+  @override
+  String get genderFemale => 'Female';
+
+  @override
+  String get genderOther => 'Other';
+
+  @override
+  String get genderPreferNotToSay => 'Prefer not to say';
+
+  @override
+  String get height => 'Height';
+
+  @override
+  String get activityLevel => 'Activity Level';
+
+  @override
+  String get activitySedentary => 'Sedentary';
+
+  @override
+  String get activityLightlyActive => 'Lightly Active';
+
+  @override
+  String get activityModeratelyActive => 'Moderately Active';
+
+  @override
+  String get activityVeryActive => 'Very Active';
+
+  @override
+  String get activityExtraActive => 'Extra Active';
+
+  @override
+  String get cookingSkillLevel => 'Cooking Skill Level';
+
+  @override
+  String get skillBeginner => 'Beginner';
+
+  @override
+  String get skillIntermediate => 'Intermediate';
+
+  @override
+  String get skillAdvanced => 'Advanced';
 }

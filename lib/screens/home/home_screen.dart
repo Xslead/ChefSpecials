@@ -5,6 +5,7 @@ import '../../config/constants.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/recipe.dart';
+import '../../utils/category_helpers.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../providers/favorite_provider.dart';
@@ -29,11 +30,11 @@ class _HomeScreenState extends State<HomeScreen> {
       _selectedDietaryTags.length +
       (_sortBy != 'newest' ? 1 : 0);
 
-  String _getGreeting() {
+  String _getGreeting(AppLocalizations l10n) {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return l10n.goodMorning;
+    if (hour < 17) return l10n.goodAfternoon;
+    return l10n.goodEvening;
   }
 
   @override
@@ -148,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 4),
                   child: Text(
-                    '${_getGreeting()}, $firstName!',
+                    '${_getGreeting(l10n)}, $firstName!',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppTheme.textSecondaryOf(context),
                         ),
@@ -446,7 +447,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             final isSelected = _selectedDietaryTags.contains(tag);
                             return _buildChip(
                               context: context,
-                              label: tag,
+                              label: localizeDietaryTag(tag, l10n),
                               selected: isSelected,
                               outlined: true,
                               onTap: () {

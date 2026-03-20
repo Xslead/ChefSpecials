@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/theme.dart';
+import '../../l10n/generated/app_localizations.dart';
+import '../../utils/category_helpers.dart';
 import '../../utils/unit_converter.dart';
 import '../../models/food_item.dart';
 import '../../providers/auth_provider.dart';
@@ -18,6 +20,7 @@ class FoodItemDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final authProvider = context.watch<AuthProvider>();
     final isOwner = authProvider.userModel?.uid == foodItem.addedBy;
 
@@ -31,21 +34,21 @@ class FoodItemDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildHeader(theme),
+                  _buildHeader(theme, l10n),
                   const SizedBox(height: 24),
-                  _buildMacroSummary(theme),
+                  _buildMacroSummary(theme, l10n),
                   const SizedBox(height: 24),
                   NutritionFactsTable(foodItem: foodItem),
                   const SizedBox(height: 24),
                   _buildFooterInfo(theme),
                   if (foodItem.allergens.isNotEmpty) ...[
                     const SizedBox(height: 24),
-                    _buildAllergensCard(theme),
+                    _buildAllergensCard(theme, l10n),
                   ],
                   if (foodItem.ingredientsText != null &&
                       foodItem.ingredientsText!.isNotEmpty) ...[
                     const SizedBox(height: 24),
-                    _buildIngredientsCard(theme),
+                    _buildIngredientsCard(theme, l10n),
                   ],
                   const SizedBox(height: 32),
                 ],
@@ -99,28 +102,31 @@ class FoodItemDetailScreen extends StatelessWidget {
                     _showDeleteDialog(context);
                   }
                 },
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'edit',
-                    child: Row(
-                      children: [
-                        Icon(Icons.edit_outlined, size: 20),
-                        SizedBox(width: 8),
-                        Text('Edit'),
-                      ],
+                itemBuilder: (ctx) {
+                  final l10n = AppLocalizations.of(ctx)!;
+                  return [
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: Row(
+                        children: [
+                          const Icon(Icons.edit_outlined, size: 20),
+                          const SizedBox(width: 8),
+                          Text(l10n.edit),
+                        ],
+                      ),
                     ),
-                  ),
-                  const PopupMenuItem(
-                    value: 'delete',
-                    child: Row(
-                      children: [
-                        Icon(Icons.delete_outline, size: 20, color: AppTheme.errorColor),
-                        SizedBox(width: 8),
-                        Text('Delete', style: TextStyle(color: AppTheme.errorColor)),
-                      ],
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          const Icon(Icons.delete_outline, size: 20, color: AppTheme.errorColor),
+                          const SizedBox(width: 8),
+                          Text(l10n.delete, style: const TextStyle(color: AppTheme.errorColor)),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ];
+                },
               ),
             ]
           : null,
@@ -136,7 +142,7 @@ class FoodItemDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(ThemeData theme) {
+  Widget _buildHeader(ThemeData theme, AppLocalizations l10n) {
     final unitSuffix = UnitConverter.isVolumeUnit(foodItem.unit) ? 'mL' : 'g';
 
     return Column(
@@ -163,11 +169,11 @@ class FoodItemDetailScreen extends StatelessWidget {
           runSpacing: 6,
           children: [
             _buildBadge(
-              label: foodItem.category,
+              label: localizeFoodCategory(foodItem.category, l10n),
               color: AppTheme.secondaryColor,
             ),
             _buildBadge(
-              label: 'Per ${foodItem.unit}',
+              label: l10n.perUnit(foodItem.unit),
               color: AppTheme.primaryColor,
             ),
             _buildBadge(
@@ -175,9 +181,9 @@ class FoodItemDetailScreen extends StatelessWidget {
               color: AppTheme.primaryColor,
             ),
             if (foodItem.isVegan)
-              _buildBadge(label: 'VEGAN', color: const Color(0xFF10B981))
+              _buildBadge(label: l10n.vegan.toUpperCase(), color: const Color(0xFF10B981))
             else
-              _buildBadge(label: 'NON-VEGAN', color: AppTheme.textTertiary),
+              _buildBadge(label: l10n.nonVegan.toUpperCase(), color: AppTheme.textTertiary),
             if (foodItem.isVerified)
               Container(
                 padding:
@@ -186,14 +192,14 @@ class FoodItemDetailScreen extends StatelessWidget {
                   color: const Color(0xFF10B981).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.verified_outlined, size: 14, color: Color(0xFF10B981)),
-                    SizedBox(width: 4),
+                    const Icon(Icons.verified_outlined, size: 14, color: Color(0xFF10B981)),
+                    const SizedBox(width: 4),
                     Text(
-                      'Verified',
-                      style: TextStyle(
+                      l10n.verified,
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                         color: Color(0xFF10B981),
@@ -203,17 +209,17 @@ class FoodItemDetailScreen extends StatelessWidget {
                 ),
               ),
             if (foodItem.isVegetarian)
-              _buildBadge(label: 'VEGETARIAN', color: const Color(0xFFF97316)),
+              _buildBadge(label: l10n.vegetarian.toUpperCase(), color: const Color(0xFFF97316)),
             if (foodItem.isGlutenFree)
-              _buildBadge(label: 'GLUTEN FREE', color: AppTheme.primaryColor),
+              _buildBadge(label: l10n.glutenFree.toUpperCase(), color: AppTheme.primaryColor),
             if (foodItem.nutriScore != null)
               _buildBadge(
-                label: 'Nutri-Score: ${foodItem.nutriScore!.toUpperCase()}',
+                label: l10n.nutriScoreLabel(foodItem.nutriScore!.toUpperCase()),
                 color: _nutriScoreColor(foodItem.nutriScore!),
               ),
             if (foodItem.novaGroup != null)
               _buildBadge(
-                label: 'NOVA ${foodItem.novaGroup}',
+                label: l10n.novaGroupLabel(foodItem.novaGroup.toString()),
                 color: _novaGroupColor(foodItem.novaGroup!),
               ),
             if (foodItem.origin != null)
@@ -266,7 +272,7 @@ class FoodItemDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMacroSummary(ThemeData theme) {
+  Widget _buildMacroSummary(ThemeData theme, AppLocalizations l10n) {
     final totalMacros = foodItem.protein + foodItem.carbs + foodItem.fat;
     final proteinRatio = totalMacros > 0 ? foodItem.protein / totalMacros : 0.0;
     final carbsRatio = totalMacros > 0 ? foodItem.carbs / totalMacros : 0.0;
@@ -327,21 +333,21 @@ class FoodItemDetailScreen extends StatelessWidget {
               children: [
                 _buildMacroItem(
                   theme: theme,
-                  label: 'Protein',
+                  label: l10n.protein,
                   value: '${foodItem.protein.toStringAsFixed(1)}g',
                   percentage: '${(proteinRatio * 100).toStringAsFixed(0)}%',
                   color: const Color(0xFF0EA5E9),
                 ),
                 _buildMacroItem(
                   theme: theme,
-                  label: 'Carbs',
+                  label: l10n.carbs,
                   value: '${foodItem.carbs.toStringAsFixed(1)}g',
                   percentage: '${(carbsRatio * 100).toStringAsFixed(0)}%',
                   color: const Color(0xFFF59E0B),
                 ),
                 _buildMacroItem(
                   theme: theme,
-                  label: 'Fat',
+                  label: l10n.fat,
                   value: '${foodItem.fat.toStringAsFixed(1)}g',
                   percentage: '${(fatRatio * 100).toStringAsFixed(0)}%',
                   color: const Color(0xFFEF4444),
@@ -451,7 +457,7 @@ class FoodItemDetailScreen extends StatelessWidget {
     }
   }
 
-  Widget _buildAllergensCard(ThemeData theme) {
+  Widget _buildAllergensCard(ThemeData theme, AppLocalizations l10n) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -459,7 +465,7 @@ class FoodItemDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Allergens',
+              l10n.allergens,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -494,7 +500,7 @@ class FoodItemDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildIngredientsCard(ThemeData theme) {
+  Widget _buildIngredientsCard(ThemeData theme, AppLocalizations l10n) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -502,7 +508,7 @@ class FoodItemDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Ingredients',
+              l10n.ingredients,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -522,16 +528,17 @@ class FoodItemDetailScreen extends StatelessWidget {
   }
 
   void _showDeleteDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Delete Food Item'),
+        title: Text(l10n.deleteFoodItem),
         content:
-            Text('Are you sure you want to delete "${foodItem.name}"?'),
+            Text(l10n.confirmDeleteFoodItem(foodItem.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -542,14 +549,14 @@ class FoodItemDetailScreen extends StatelessWidget {
               } catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Failed to delete')),
+                    SnackBar(content: Text(l10n.failedToDelete)),
                   );
                 }
               }
             },
-            child: const Text(
-              'Delete',
-              style: TextStyle(color: AppTheme.errorColor),
+            child: Text(
+              l10n.delete,
+              style: const TextStyle(color: AppTheme.errorColor),
             ),
           ),
         ],

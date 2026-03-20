@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../../config/theme.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../models/recipe.dart';
+import '../../../utils/category_helpers.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/favorite_provider.dart';
 
@@ -184,7 +185,7 @@ class _RecipeCardState extends State<RecipeCard> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              tag,
+                              localizeDietaryTag(tag, l10n),
                               style: const TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,

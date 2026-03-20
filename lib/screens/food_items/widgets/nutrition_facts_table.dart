@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../config/theme.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../models/food_item.dart';
 import '../../../utils/unit_converter.dart';
 
@@ -12,6 +13,7 @@ class NutritionFactsTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final unitSuffix = UnitConverter.isVolumeUnit(foodItem.unit) ? 'mL' : 'g';
 
     return Card(
@@ -21,14 +23,14 @@ class NutritionFactsTable extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Nutrition Facts',
+              l10n.nutritionFacts,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 4),
             Text(
-              'Per ${foodItem.unit}',
+              l10n.perUnit(foodItem.unit),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: AppTheme.textSecondary,
               ),
@@ -39,7 +41,7 @@ class NutritionFactsTable extends StatelessWidget {
             const Divider(height: 1),
             _buildRow(
               context,
-              label: 'Calories',
+              label: l10n.calories,
               value: '${foodItem.calories.toStringAsFixed(1)} kcal',
               perPacketValue: '${foodItem.caloriesPerPacket.toStringAsFixed(1)} kcal',
               isBold: true,
@@ -47,7 +49,7 @@ class NutritionFactsTable extends StatelessWidget {
             const Divider(height: 1),
             _buildRow(
               context,
-              label: 'Protein',
+              label: l10n.protein,
               value: '${foodItem.protein.toStringAsFixed(1)} g',
               perPacketValue: '${foodItem.proteinPerPacket.toStringAsFixed(1)} g',
               barColor: const Color(0xFF0EA5E9),
@@ -56,7 +58,7 @@ class NutritionFactsTable extends StatelessWidget {
             const Divider(height: 1),
             _buildRow(
               context,
-              label: 'Carbohydrates',
+              label: l10n.carbohydrates,
               value: '${foodItem.carbs.toStringAsFixed(1)} g',
               perPacketValue: '${foodItem.carbsPerPacket.toStringAsFixed(1)} g',
               barColor: const Color(0xFFF59E0B),
@@ -69,7 +71,7 @@ class NutritionFactsTable extends StatelessWidget {
                   const Divider(height: 1),
                   _buildRow(
                     context,
-                    label: 'Sugar',
+                    label: l10n.sugar,
                     value: '${foodItem.sugar.toStringAsFixed(1)} g',
                     perPacketValue: '${foodItem.sugarPerPacket.toStringAsFixed(1)} g',
                     isSubRow: true,
@@ -77,7 +79,7 @@ class NutritionFactsTable extends StatelessWidget {
                   const Divider(height: 1),
                   _buildRow(
                     context,
-                    label: 'Fiber',
+                    label: l10n.fiber,
                     value: '${foodItem.fiber.toStringAsFixed(1)} g',
                     perPacketValue: '${foodItem.fiberPerPacket.toStringAsFixed(1)} g',
                     isSubRow: true,
@@ -88,7 +90,7 @@ class NutritionFactsTable extends StatelessWidget {
             const Divider(height: 1),
             _buildRow(
               context,
-              label: 'Fat',
+              label: l10n.fat,
               value: '${foodItem.fat.toStringAsFixed(1)} g',
               perPacketValue: '${foodItem.fatPerPacket.toStringAsFixed(1)} g',
               barColor: const Color(0xFFEF4444),
@@ -101,7 +103,7 @@ class NutritionFactsTable extends StatelessWidget {
                   const Divider(height: 1),
                   _buildRow(
                     context,
-                    label: 'Saturated Fat',
+                    label: l10n.saturatedFatFull,
                     value: '${foodItem.saturatedFat.toStringAsFixed(1)} g',
                     perPacketValue: '${foodItem.saturatedFatPerPacket.toStringAsFixed(1)} g',
                     isSubRow: true,
@@ -109,7 +111,7 @@ class NutritionFactsTable extends StatelessWidget {
                   const Divider(height: 1),
                   _buildRow(
                     context,
-                    label: 'Trans Fat',
+                    label: l10n.transFat,
                     value: '${foodItem.transFat.toStringAsFixed(1)} g',
                     perPacketValue: '${foodItem.transFatPerPacket.toStringAsFixed(1)} g',
                     isSubRow: true,
@@ -120,21 +122,21 @@ class NutritionFactsTable extends StatelessWidget {
             const Divider(height: 1),
             _buildRow(
               context,
-              label: 'Sodium',
+              label: l10n.sodium,
               value: '${foodItem.sodium.toStringAsFixed(1)} mg',
               perPacketValue: '${foodItem.sodiumPerPacket.toStringAsFixed(1)} mg',
             ),
             const Divider(height: 1),
             _buildRow(
               context,
-              label: 'Cholesterol',
+              label: l10n.cholesterol,
               value: '${foodItem.cholesterol.toStringAsFixed(1)} mg',
               perPacketValue: '${foodItem.cholesterolPerPacket.toStringAsFixed(1)} mg',
             ),
             const Divider(height: 1),
             _buildRow(
               context,
-              label: 'Salt',
+              label: l10n.salt,
               value: '${foodItem.salt.toStringAsFixed(1)} g',
               perPacketValue: '${foodItem.saltPerPacket.toStringAsFixed(1)} g',
             ),
@@ -146,6 +148,7 @@ class NutritionFactsTable extends StatelessWidget {
 
   Widget _buildColumnHeaders(BuildContext context, String unitSuffix) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
@@ -160,7 +163,7 @@ class NutritionFactsTable extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Text(
-              'Per ${foodItem.unit}',
+              l10n.perUnit(foodItem.unit),
               style: theme.textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: AppTheme.textSecondary,
@@ -172,7 +175,7 @@ class NutritionFactsTable extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Text(
-              'Per Packet (${foodItem.packetSize.toStringAsFixed(0)}$unitSuffix)',
+              l10n.perPacket(foodItem.packetSize.toStringAsFixed(0), unitSuffix),
               style: theme.textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: AppTheme.textSecondary,

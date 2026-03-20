@@ -87,9 +87,10 @@ class _NutritionGoalsScreenState extends State<NutritionGoalsScreen> {
   }
 
   String? _validateNumber(String? value) {
-    if (value == null || value.isEmpty) return 'Required';
+    final l10n = AppLocalizations.of(context)!;
+    if (value == null || value.isEmpty) return l10n.requiredField;
     final number = double.tryParse(value);
-    if (number == null || number <= 0) return 'Enter a valid number';
+    if (number == null || number <= 0) return l10n.enterValidNumber;
     return null;
   }
 

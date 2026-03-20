@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../config/theme.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../models/food_item.dart';
+import '../../../utils/category_helpers.dart';
 import '../../../utils/unit_converter.dart';
 
 class FoodItemCard extends StatelessWidget {
@@ -102,8 +103,8 @@ class FoodItemCard extends StatelessWidget {
                         const SizedBox(height: 3),
                         Text(
                           foodItem.brand != null
-                              ? '${foodItem.brand} \u2022 ${foodItem.category}'
-                              : foodItem.category,
+                              ? '${foodItem.brand} \u2022 ${localizeFoodCategory(foodItem.category, l10n)}'
+                              : localizeFoodCategory(foodItem.category, l10n),
                           style: TextStyle(
                             fontSize: 12,
                             color: AppTheme.textTertiaryOf(context),

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../config/theme.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class CountdownTimerWidget extends StatefulWidget {
   final int totalSeconds;
@@ -62,6 +63,7 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final progress = widget.totalSeconds > 0
         ? _remaining / widget.totalSeconds
         : 0.0;
@@ -93,7 +95,7 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
                   ),
                 ),
                 Text(
-                  isDone ? 'Done!' : _formatTime(_remaining),
+                  isDone ? l10n.timerDone : _formatTime(_remaining),
                   style: theme.textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: isDone ? const Color(0xFF10B981) : theme.colorScheme.primary,
@@ -110,13 +112,13 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
                 FilledButton.icon(
                   onPressed: _isRunning ? _pause : _start,
                   icon: Icon(_isRunning ? Icons.pause : Icons.play_arrow),
-                  label: Text(_isRunning ? 'Pause' : 'Start'),
+                  label: Text(_isRunning ? l10n.pause : l10n.start),
                 ),
               const SizedBox(width: 12),
               OutlinedButton.icon(
                 onPressed: _reset,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Reset'),
+                label: Text(l10n.reset),
               ),
             ],
           ),

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../config/constants.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../utils/category_helpers.dart';
 import '../../models/recipe.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/recipe_form_provider.dart';
@@ -152,7 +153,7 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
                     ),
                     items: AppConstants.defaultCategories
                         .map((c) =>
-                            DropdownMenuItem(value: c, child: Text(c)))
+                            DropdownMenuItem(value: c, child: Text(localizeCategory(c, l10n))))
                         .toList(),
                     onChanged: (v) {
                       if (v != null) formProvider.category = v;
@@ -169,7 +170,7 @@ class _EditRecipeFormState extends State<_EditRecipeForm> {
                     children: AppConstants.defaultDietaryTags.map((tag) {
                       final selected = formProvider.dietaryTags.contains(tag);
                       return FilterChip(
-                        label: Text(tag),
+                        label: Text(localizeDietaryTag(tag, l10n)),
                         selected: selected,
                         onSelected: (_) => formProvider.toggleDietaryTag(tag),
                         selectedColor: AppTheme.primaryColor.withValues(alpha: 0.15),

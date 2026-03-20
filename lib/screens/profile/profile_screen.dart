@@ -9,6 +9,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/follow_provider.dart';
 import '../../providers/recipe_provider.dart';
+import '../../providers/locale_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../widgets/empty_state.dart';
 import '../home/widgets/privacy_badge.dart';
@@ -462,6 +463,20 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(),
+              IconButton(
+                icon: Text(
+                  context.watch<LocaleProvider>().locale.languageCode == 'en'
+                      ? 'TR'
+                      : 'EN',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                    color: AppTheme.textSecondary,
+                  ),
+                ),
+                onPressed: () =>
+                    context.read<LocaleProvider>().toggleLocale(),
+              ),
               IconButton(
                 icon: Icon(
                   Theme.of(context).brightness == Brightness.dark

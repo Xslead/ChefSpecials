@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:chef_specials/l10n/generated/app_localizations.dart';
 import 'package:chef_specials/screens/cooking_mode/widgets/countdown_timer_widget.dart';
 
 void main() {
   Widget buildTestWidget({int totalSeconds = 90}) {
     return MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('en'),
       home: Scaffold(
         body: CountdownTimerWidget(totalSeconds: totalSeconds),
       ),

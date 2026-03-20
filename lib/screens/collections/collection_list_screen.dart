@@ -230,13 +230,13 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
           color: AppTheme.errorColor,
           borderRadius: BorderRadius.circular(AppTheme.radiusM),
         ),
-        child: const Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.delete_outline, color: Colors.white, size: 24),
-            SizedBox(height: 4),
-            Text('Delete',
-                style: TextStyle(
+            const Icon(Icons.delete_outline, color: Colors.white, size: 24),
+            const SizedBox(height: 4),
+            Text(l10n.delete,
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: 11,
                     fontWeight: FontWeight.w600)),

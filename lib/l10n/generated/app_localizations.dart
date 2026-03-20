@@ -2034,6 +2034,756 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Result'**
   String get result;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password'**
+  String get forgotPassword;
+
+  /// No description provided for @resetYourPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset your password'**
+  String get resetYourPassword;
+
+  /// No description provided for @resetPasswordDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the email address associated with your account. We\'ll send you a link to reset your password.'**
+  String get resetPasswordDescription;
+
+  /// No description provided for @sendResetLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Reset Link'**
+  String get sendResetLink;
+
+  /// No description provided for @backToLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Login'**
+  String get backToLogin;
+
+  /// No description provided for @checkYourEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your email'**
+  String get checkYourEmail;
+
+  /// No description provided for @resetLinkSent.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a password reset link to\n{email}'**
+  String resetLinkSent(String email);
+
+  /// No description provided for @checkInboxDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your inbox and follow the link to reset your password.'**
+  String get checkInboxDescription;
+
+  /// No description provided for @resendEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Email'**
+  String get resendEmail;
+
+  /// No description provided for @pleaseEnterEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email'**
+  String get pleaseEnterEmail;
+
+  /// No description provided for @pleaseEnterValidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get pleaseEnterValidEmail;
+
+  /// No description provided for @pleaseEnterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password'**
+  String get pleaseEnterPassword;
+
+  /// No description provided for @passwordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get passwordTooShort;
+
+  /// No description provided for @quickLoginTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Login (Test)'**
+  String get quickLoginTest;
+
+  /// No description provided for @pleaseSelectDateOfBirth.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select your date of birth'**
+  String get pleaseSelectDateOfBirth;
+
+  /// No description provided for @pleaseChooseAvailableUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'Please choose an available username'**
+  String get pleaseChooseAvailableUsername;
+
+  /// No description provided for @selectDateOfBirth.
+  ///
+  /// In en, this message translates to:
+  /// **'Select date of birth'**
+  String get selectDateOfBirth;
+
+  /// No description provided for @account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get account;
+
+  /// No description provided for @accountInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Information'**
+  String get accountInformation;
+
+  /// No description provided for @firstName.
+  ///
+  /// In en, this message translates to:
+  /// **'First Name'**
+  String get firstName;
+
+  /// No description provided for @lastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Name'**
+  String get lastName;
+
+  /// No description provided for @goodMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get goodMorning;
+
+  /// No description provided for @goodAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get goodAfternoon;
+
+  /// No description provided for @goodEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get goodEvening;
+
+  /// No description provided for @requiredField.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get requiredField;
+
+  /// No description provided for @enterValidNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid number'**
+  String get enterValidNumber;
+
+  /// No description provided for @basicInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'BASIC INFO'**
+  String get basicInfo;
+
+  /// No description provided for @foodItemName.
+  ///
+  /// In en, this message translates to:
+  /// **'Food item name'**
+  String get foodItemName;
+
+  /// No description provided for @brandOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Brand (optional)'**
+  String get brandOptional;
+
+  /// No description provided for @unit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get unit;
+
+  /// No description provided for @packetSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Packet Size'**
+  String get packetSize;
+
+  /// No description provided for @barcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode'**
+  String get barcode;
+
+  /// No description provided for @invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid'**
+  String get invalid;
+
+  /// No description provided for @fiber.
+  ///
+  /// In en, this message translates to:
+  /// **'Fiber'**
+  String get fiber;
+
+  /// No description provided for @sugar.
+  ///
+  /// In en, this message translates to:
+  /// **'Sugar'**
+  String get sugar;
+
+  /// No description provided for @sodium.
+  ///
+  /// In en, this message translates to:
+  /// **'Sodium'**
+  String get sodium;
+
+  /// No description provided for @saturatedFat.
+  ///
+  /// In en, this message translates to:
+  /// **'Sat. Fat'**
+  String get saturatedFat;
+
+  /// No description provided for @transFat.
+  ///
+  /// In en, this message translates to:
+  /// **'Trans Fat'**
+  String get transFat;
+
+  /// No description provided for @cholesterol.
+  ///
+  /// In en, this message translates to:
+  /// **'Cholesterol'**
+  String get cholesterol;
+
+  /// No description provided for @salt.
+  ///
+  /// In en, this message translates to:
+  /// **'Salt'**
+  String get salt;
+
+  /// No description provided for @additionalInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'ADDITIONAL INFO'**
+  String get additionalInfo;
+
+  /// No description provided for @nutriScore.
+  ///
+  /// In en, this message translates to:
+  /// **'NUTRI-SCORE'**
+  String get nutriScore;
+
+  /// No description provided for @novaGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'NOVA GROUP'**
+  String get novaGroup;
+
+  /// No description provided for @servingSize.
+  ///
+  /// In en, this message translates to:
+  /// **'SERVING SIZE'**
+  String get servingSize;
+
+  /// No description provided for @origin.
+  ///
+  /// In en, this message translates to:
+  /// **'Origin'**
+  String get origin;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
+  /// No description provided for @ingredientsListOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'List of ingredients (optional)'**
+  String get ingredientsListOptional;
+
+  /// No description provided for @allergens.
+  ///
+  /// In en, this message translates to:
+  /// **'Allergens'**
+  String get allergens;
+
+  /// No description provided for @addFoodItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Food Item'**
+  String get addFoodItem;
+
+  /// No description provided for @editFoodItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Food Item'**
+  String get editFoodItem;
+
+  /// No description provided for @nutritionAutoConvertInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter nutrition per 1 {unit} — values will be auto-converted to per 100{baseUnit}'**
+  String nutritionAutoConvertInfo(String unit, String baseUnit);
+
+  /// No description provided for @allergenPeanuts.
+  ///
+  /// In en, this message translates to:
+  /// **'Peanuts'**
+  String get allergenPeanuts;
+
+  /// No description provided for @allergenTreeNuts.
+  ///
+  /// In en, this message translates to:
+  /// **'Tree Nuts'**
+  String get allergenTreeNuts;
+
+  /// No description provided for @allergenMilk.
+  ///
+  /// In en, this message translates to:
+  /// **'Milk'**
+  String get allergenMilk;
+
+  /// No description provided for @allergenEggs.
+  ///
+  /// In en, this message translates to:
+  /// **'Eggs'**
+  String get allergenEggs;
+
+  /// No description provided for @allergenFish.
+  ///
+  /// In en, this message translates to:
+  /// **'Fish'**
+  String get allergenFish;
+
+  /// No description provided for @allergenShellfish.
+  ///
+  /// In en, this message translates to:
+  /// **'Shellfish'**
+  String get allergenShellfish;
+
+  /// No description provided for @allergenSoy.
+  ///
+  /// In en, this message translates to:
+  /// **'Soy'**
+  String get allergenSoy;
+
+  /// No description provided for @allergenSesame.
+  ///
+  /// In en, this message translates to:
+  /// **'Sesame'**
+  String get allergenSesame;
+
+  /// No description provided for @allergenGluten.
+  ///
+  /// In en, this message translates to:
+  /// **'Gluten'**
+  String get allergenGluten;
+
+  /// No description provided for @nonVegan.
+  ///
+  /// In en, this message translates to:
+  /// **'Non-Vegan'**
+  String get nonVegan;
+
+  /// No description provided for @verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get verified;
+
+  /// No description provided for @nutriScoreLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutri-Score: {score}'**
+  String nutriScoreLabel(String score);
+
+  /// No description provided for @novaGroupLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'NOVA {group}'**
+  String novaGroupLabel(String group);
+
+  /// No description provided for @deleteFoodItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Food Item'**
+  String get deleteFoodItem;
+
+  /// No description provided for @confirmDeleteFoodItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{name}\"?'**
+  String confirmDeleteFoodItem(String name);
+
+  /// No description provided for @failedToDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete'**
+  String get failedToDelete;
+
+  /// No description provided for @nutritionFacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition Facts'**
+  String get nutritionFacts;
+
+  /// No description provided for @perUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Per {unit}'**
+  String perUnit(String unit);
+
+  /// No description provided for @perPacket.
+  ///
+  /// In en, this message translates to:
+  /// **'Per Packet ({size}{unit})'**
+  String perPacket(String size, String unit);
+
+  /// No description provided for @carbohydrates.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbohydrates'**
+  String get carbohydrates;
+
+  /// No description provided for @ratingCommentDeleteWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Your rating and comment will both be deleted.'**
+  String get ratingCommentDeleteWarning;
+
+  /// No description provided for @cannotRateOwnRecipe.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot rate or comment on your own recipe.'**
+  String get cannotRateOwnRecipe;
+
+  /// No description provided for @deleteRatingFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your existing rating first to submit a new one.'**
+  String get deleteRatingFirst;
+
+  /// No description provided for @deleteCommentFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your existing comment first to submit a new one.'**
+  String get deleteCommentFirst;
+
+  /// No description provided for @pleaseSelectStarsOrComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select stars or write a comment.'**
+  String get pleaseSelectStarsOrComment;
+
+  /// No description provided for @deleteCommentToWriteNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your comment to write a new one'**
+  String get deleteCommentToWriteNew;
+
+  /// No description provided for @cannotRateOwnRecipeShort.
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot rate your own recipe.'**
+  String get cannotRateOwnRecipeShort;
+
+  /// No description provided for @deleteReviewToRerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your review (via the comment card) to re-rate.'**
+  String get deleteReviewToRerate;
+
+  /// No description provided for @timerDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done!'**
+  String get timerDone;
+
+  /// No description provided for @pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// No description provided for @start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get start;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Instruction'**
+  String get instruction;
+
+  /// No description provided for @timerSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer (seconds)'**
+  String get timerSeconds;
+
+  /// No description provided for @tapToAddSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to add steps'**
+  String get tapToAddSteps;
+
+  /// No description provided for @tapToAddIngredients.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to add ingredients'**
+  String get tapToAddIngredients;
+
+  /// No description provided for @searchMaterials.
+  ///
+  /// In en, this message translates to:
+  /// **'Search materials...'**
+  String get searchMaterials;
+
+  /// No description provided for @noMaterialsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No materials found'**
+  String get noMaterialsFound;
+
+  /// No description provided for @addButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get addButton;
+
+  /// No description provided for @remove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// No description provided for @nutritionValues.
+  ///
+  /// In en, this message translates to:
+  /// **'NUTRITION VALUES'**
+  String get nutritionValues;
+
+  /// No description provided for @nutritionValuesPer.
+  ///
+  /// In en, this message translates to:
+  /// **'NUTRITION VALUES (per {unit})'**
+  String nutritionValuesPer(String unit);
+
+  /// No description provided for @saturatedFatFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturated Fat'**
+  String get saturatedFatFull;
+
+  /// No description provided for @tapToAddPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to add photo'**
+  String get tapToAddPhoto;
+
+  /// No description provided for @foodCategoryDairy.
+  ///
+  /// In en, this message translates to:
+  /// **'Dairy'**
+  String get foodCategoryDairy;
+
+  /// No description provided for @foodCategoryGrains.
+  ///
+  /// In en, this message translates to:
+  /// **'Grains'**
+  String get foodCategoryGrains;
+
+  /// No description provided for @foodCategoryVegetables.
+  ///
+  /// In en, this message translates to:
+  /// **'Vegetables'**
+  String get foodCategoryVegetables;
+
+  /// No description provided for @foodCategoryFruits.
+  ///
+  /// In en, this message translates to:
+  /// **'Fruits'**
+  String get foodCategoryFruits;
+
+  /// No description provided for @foodCategoryOilsFats.
+  ///
+  /// In en, this message translates to:
+  /// **'Oils & Fats'**
+  String get foodCategoryOilsFats;
+
+  /// No description provided for @foodCategoryBeverages.
+  ///
+  /// In en, this message translates to:
+  /// **'Beverages'**
+  String get foodCategoryBeverages;
+
+  /// No description provided for @foodCategoryOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get foodCategoryOther;
+
+  /// No description provided for @dietary.
+  ///
+  /// In en, this message translates to:
+  /// **'Dietary'**
+  String get dietary;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @personalInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Info'**
+  String get personalInfo;
+
+  /// No description provided for @physicalInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Physical Info'**
+  String get physicalInfo;
+
+  /// No description provided for @phoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// No description provided for @dateOfBirth.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of Birth'**
+  String get dateOfBirth;
+
+  /// No description provided for @gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// No description provided for @genderMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get genderMale;
+
+  /// No description provided for @genderFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get genderFemale;
+
+  /// No description provided for @genderOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get genderOther;
+
+  /// No description provided for @genderPreferNotToSay.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer not to say'**
+  String get genderPreferNotToSay;
+
+  /// No description provided for @height.
+  ///
+  /// In en, this message translates to:
+  /// **'Height'**
+  String get height;
+
+  /// No description provided for @activityLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity Level'**
+  String get activityLevel;
+
+  /// No description provided for @activitySedentary.
+  ///
+  /// In en, this message translates to:
+  /// **'Sedentary'**
+  String get activitySedentary;
+
+  /// No description provided for @activityLightlyActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Lightly Active'**
+  String get activityLightlyActive;
+
+  /// No description provided for @activityModeratelyActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderately Active'**
+  String get activityModeratelyActive;
+
+  /// No description provided for @activityVeryActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Very Active'**
+  String get activityVeryActive;
+
+  /// No description provided for @activityExtraActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Extra Active'**
+  String get activityExtraActive;
+
+  /// No description provided for @cookingSkillLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking Skill Level'**
+  String get cookingSkillLevel;
+
+  /// No description provided for @skillBeginner.
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get skillBeginner;
+
+  /// No description provided for @skillIntermediate.
+  ///
+  /// In en, this message translates to:
+  /// **'Intermediate'**
+  String get skillIntermediate;
+
+  /// No description provided for @skillAdvanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get skillAdvanced;
 }
 
 class _AppLocalizationsDelegate

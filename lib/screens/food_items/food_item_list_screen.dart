@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers/food_item_provider.dart';
+import '../../utils/category_helpers.dart';
 import '../../widgets/empty_state.dart';
 import 'widgets/food_item_card.dart';
 
@@ -396,7 +397,7 @@ class _FilterSheetBody extends StatelessWidget {
                 children: [
           const SizedBox(height: 20),
           // Category section
-          _buildLabel('CATEGORY', context),
+          _buildLabel(l10n.category.toUpperCase(), context),
           const SizedBox(height: 10),
           Wrap(
             spacing: 8,
@@ -415,7 +416,7 @@ class _FilterSheetBody extends StatelessWidget {
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: Text(
-                    category == 'All' ? l10n.all : category,
+                    category == 'All' ? l10n.all : localizeFoodCategory(category, l10n),
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
@@ -430,7 +431,7 @@ class _FilterSheetBody extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           // Dietary section
-          _buildLabel('DIETARY', context),
+          _buildLabel(l10n.dietary.toUpperCase(), context),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -461,7 +462,7 @@ class _FilterSheetBody extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           // Nutri-Score section
-          _buildLabel('NUTRI-SCORE', context),
+          _buildLabel(l10n.nutriScore.toUpperCase(), context),
           const SizedBox(height: 10),
           Row(
             children: ['A', 'B', 'C', 'D', 'E'].map((score) {
@@ -495,11 +496,11 @@ class _FilterSheetBody extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           // Sort section
-          _buildLabel('SORT BY', context),
+          _buildLabel(l10n.sortBy.toUpperCase(), context),
           const SizedBox(height: 10),
           Row(
             children: [
-              _buildSortChip(context, provider, 'name', 'Name'),
+              _buildSortChip(context, provider, 'name', l10n.name),
               const SizedBox(width: 8),
               _buildSortChip(context, provider, 'calories', l10n.calories),
               const SizedBox(width: 8),

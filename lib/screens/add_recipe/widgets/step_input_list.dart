@@ -50,14 +50,14 @@ class StepInputList extends StatelessWidget {
                   color: AppTheme.primaryColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.add, size: 16, color: Colors.white),
-                    SizedBox(width: 4),
+                    const Icon(Icons.add, size: 16, color: Colors.white),
+                    const SizedBox(width: 4),
                     Text(
-                      'Add',
-                      style: TextStyle(
+                      l10n.addButton,
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
@@ -112,7 +112,7 @@ class StepInputList extends StatelessWidget {
                         TextFormField(
                           initialValue: step.instruction,
                           decoration: InputDecoration(
-                            hintText: 'Instruction',
+                            hintText: l10n.instruction,
                             hintStyle: TextStyle(
                               color: AppTheme.textTertiaryOf(context),
                               fontSize: 13,
@@ -143,7 +143,7 @@ class StepInputList extends StatelessWidget {
                         TextFormField(
                           initialValue: step.timerSeconds?.toString(),
                           decoration: InputDecoration(
-                            hintText: 'Timer (seconds)',
+                            hintText: l10n.timerSeconds,
                             hintStyle: TextStyle(
                               color: AppTheme.textTertiaryOf(context),
                               fontSize: 13,

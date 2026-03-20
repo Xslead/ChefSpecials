@@ -13,6 +13,7 @@ import '../../models/recipe.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/comment_provider.dart';
 import '../../providers/rating_provider.dart';
+import '../../providers/favorite_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../providers/shopping_list_provider.dart';
 import '../../providers/collection_provider.dart';
@@ -729,6 +730,17 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
       expandedHeight: 320,
       pinned: true,
       actions: [
+        Builder(builder: (ctx) {
+          final favProvider = ctx.watch<FavoriteProvider>();
+          final isFav = r.id != null && favProvider.isFavorite(r.id!);
+          return _buildGlassCircleButton(
+            icon: isFav ? Icons.favorite : Icons.favorite_border,
+            iconColor: isFav ? AppTheme.errorColor : Colors.white,
+            onPressed: () {
+              if (r.id != null) favProvider.toggleFavorite(r.id!);
+            },
+          );
+        }),
         _buildGlassCircleButton(
           icon: Icons.share_outlined,
           iconColor: Colors.white,

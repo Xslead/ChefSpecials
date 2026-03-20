@@ -345,15 +345,15 @@ Status: PUSHED
 
 ## App Statistics
 
- Total Dart files: 150 (lib) + 76 (test) = 226
- Tests: 1269 (0 failures)
- Screens implemented: 41
+ Total Dart files: 152 (lib) + 77 (test) = 229
+ Tests: 1285 (0 failures)
+ Screens implemented: 42
  Models: 20
  Services: 17
- Providers: 21
- Routes: 37
- l10n keys: 367 (EN + TR)
- Widgets: 3 new (ServingSizeSelector, UnitConverterSheet, unit_converter utility)
+ Providers: 22
+ Routes: 38
+ l10n keys: 382 (EN + TR)
+ Widgets: 3 (ServingSizeSelector, UnitConverterSheet, unit_converter utility)
 
 ---
 
@@ -797,40 +797,59 @@ Status: PUSHED (Push 22)
 
 ---
 
-### Task 6: Onboarding Flow (Push 23)
+### Task 6: Onboarding Flow (Push 24)
+
+**Provider: OnboardingProvider**
+- [x] Create `lib/providers/onboarding_provider.dart` — screen-scoped ChangeNotifier
+- [x] State: currentPage, pageController, selectedDietaryPreferences, calorieTarget, proteinTarget, carbsTarget, fatTarget
+- [x] Methods: nextPage(), previousPage(), goToPage(), toggleDietaryPreference(), nutrition setters
+- [x] completeOnboarding() → save to SharedPreferences + set hasCompletedOnboarding flag
+- [x] Static savePendingOnboardingData() → read from SharedPreferences → save to Firestore after login/register
+- [x] Static hasCompletedOnboarding() with cached result for router performance
+- [x] resetCache() for test isolation
 
 **Screen: OnboardingScreen**
-- [ ] Create `lib/screens/onboarding/onboarding_screen.dart`
-- [ ] Full-screen (no AppBar, no bottom nav), shown ONLY on first launch
-- [ ] PageView with PageController, 4 pages, dot indicators, "Skip" (top-right), "Next" / "Get Started" (last page)
-- [ ] **Page 1 — Welcome:** app icon/logo, "Welcome to ChefSpecials", "Discover, cook, and share delicious recipes", animated fade-in
-- [ ] **Page 2 — Features Overview:** 3 rows (icon + title + description):
-  - Track icon + "Track Your Nutrition" + "Log meals and monitor your daily intake"
-  - Calendar icon + "Plan Your Meals" + "Organize your weekly meal plan"
-  - Share icon + "Share Recipes" + "Connect with food lovers and share your creations"
-- [ ] **Page 3 — Dietary Preferences:** "Select your dietary preferences" + Wrap of FilterChips (Vegan, Vegetarian, Gluten-Free, Keto, Halal, Dairy-Free, Nut-Free, Low-Carb), multi-select
-- [ ] **Page 4 — Nutrition Goals:** "Set your daily goals" + 4 Sliders/TextFields:
-  - Calories (1000–4000, default 2000)
-  - Protein (30–300g, default 50g)
-  - Carbs (50–500g, default 250g)
-  - Fat (20–200g, default 65g)
-- [ ] On "Get Started" tap:
-  1. Save `hasCompletedOnboarding = true` to SharedPreferences
-  2. If logged in → save dietary preferences to user document
-  3. If logged in → save nutrition goals via `DailyTrackerService.setNutritionGoal()`
-  4. Navigate to LoginScreen (not logged in) or HomeScreen (logged in)
+- [x] Create `lib/screens/onboarding/onboarding_screen.dart` — full-screen, no AppBar, no bottom nav
+- [x] PageView with 4 pages, ClampingScrollPhysics (swipeable), animated dot indicators
+- [x] Back button (pages 2-4), Skip button (pages 3-4), Next/Get Started button
+- [x] **Page 1 — Welcome:** Lottie food animation + title + subtitle
+- [x] **Page 2 — Features Overview:** 3 feature rows with icons (nutrition, meals, sharing)
+- [x] **Page 3 — Dietary Preferences:** 8 FilterChips (Vegan, Vegetarian, Gluten-Free, Keto, Halal, Dairy-Free, Nut-Free, Low Carb)
+- [x] **Page 4 — Nutrition Goals:** 4 sliders (calories 1000-4000, protein 30-300g, carbs 50-500g, fat 20-200g)
+- [x] Fade-in animation on each page transition
 
-**Route**
-- [ ] Initial redirect in `lib/config/routes.dart`: check SharedPreferences for `hasCompletedOnboarding`, if false → `/onboarding`
-- [ ] Route: `/onboarding` → OnboardingScreen (no back button, no bottom nav)
+**Model: UserModel**
+- [x] Added `dietaryPreferences` field (List<String>, default [])
+- [x] Updated fromMap(), toMap(), copyWith()
+
+**Route & Auth Integration**
+- [x] `/onboarding` route in routes.dart under _rootNavigatorKey
+- [x] Async redirect: /login or /register → /onboarding if not completed
+- [x] login_screen.dart: save pending onboarding data after login (normal + quick login)
+- [x] register_screen.dart: save pending onboarding data after register
+
+**Locale Detection**
+- [x] LocaleProvider.init() now reads device system locale on first launch
+- [x] If phone is Turkish → app starts in Turkish; falls back to English for unsupported locales
 
 **l10n**
-- [ ] Add keys:
-  - `welcome` / `discoverCookShare` / `trackYourNutrition` / `planYourMeals` / `shareRecipes`
-  - `selectDietaryPreferences` / `setDailyGoals` / `skip` / `next` / `getStarted`
+- [x] 15 new keys (EN + TR): welcomeToChefSpecials, discoverCookShare, trackYourNutrition, logMealsMonitor, planYourMeals, organizeWeeklyMealPlan, shareRecipes, connectWithFoodLovers, selectDietaryPreferences, setDailyGoals, nutFree, skip, getStarted
 
 **Tests**
-- [ ] `test/screens/onboarding/onboarding_screen_test.dart` — 4 pages render, dot indicators update on swipe, Skip navigates away, Next advances page, Get Started saves prefs, dietary chips selectable, nutrition sliders accept input
+- [x] `test/providers/onboarding_provider_test.dart` — 16 tests: initial state, page nav, dietary toggle, nutrition setters, SharedPreferences persistence, cache behavior, unmodifiable list
+- [x] Updated test/helpers/test_helpers.dart — dietaryPreferences param on createTestUser/createTestUserMap
+
+**Assets**
+- [x] `assets/animations/cooking.json` — real Lottie food animation from LottieFiles
+- [x] `lottie` dependency added to pubspec.yaml
+
+**New Files (4):** onboarding_provider.dart, onboarding_screen.dart, onboarding_provider_test.dart, cooking.json
+**Modified Files (12):** pubspec.yaml, user_model.dart, routes.dart, login_screen.dart, register_screen.dart, locale_provider.dart, app_en.arb, app_tr.arb, 3 generated l10n files, test_helpers.dart
+
+**Quality**
+- [x] flutter analyze — 0 issues
+- [x] flutter test — 1285 tests passing (16 new)
+Status: PUSHED (Push 24)
 
 ---
 

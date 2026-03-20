@@ -307,14 +307,15 @@ Status: PUSHED
 
 ## App Statistics
 
- Total Dart files: 145 (lib) + 71 (test) = 216
- Tests: 1148 (0 failures)
- Screens implemented: 41 (added 8 admin screens + banned screen)
- Models: 20 (added AdminLog, BanAppeal, Announcement)
- Services: 17 (added AdminService)
- Providers: 19 (added AdminProvider)
- Routes: 37 (added 8 admin + banned routes)
- l10n keys: 348 (EN + TR)
+ Total Dart files: 148 (lib) + 74 (test) = 222
+ Tests: 1189 (0 failures)
+ Screens implemented: 41
+ Models: 20
+ Services: 17
+ Providers: 19
+ Routes: 37
+ l10n keys: 358 (EN + TR)
+ Widgets: 3 new (ServingSizeSelector, UnitConverterSheet, unit_converter utility)
 
 ---
 
@@ -697,45 +698,64 @@ Status: PUSHED (Push 21)
 ### Task 5: Unit Converter + Recipe Scaling (Push 22)
 
 **Utility: UnitConverter**
-- [ ] Create `lib/utils/unit_converter.dart` — pure static class
-- [ ] `convertWeight(double value, WeightUnit from, WeightUnit to)` — Enums: g, kg, oz, lb (1 kg=1000g, 1 oz=28.3495g, 1 lb=453.592g)
-- [ ] `convertVolume(double value, VolumeUnit from, VolumeUnit to)` — Enums: mL, L, cups, tbsp, tsp, flOz (1 L=1000mL, 1 cup=236.588mL, 1 tbsp=14.787mL, 1 tsp=4.929mL, 1 fl oz=29.5735mL)
-- [ ] `convertTemperature(double value, TempUnit from, TempUnit to)` — celsius/fahrenheit
-- [ ] `scaleIngredient(double originalAmount, int originalServings, int newServings)` → double
-- [ ] `smartFormat(double value, String unit)` → String — auto-simplify (1000g→kg, 1000mL→L), round 1 decimal
+- [x] Create `lib/utils/unit_converter.dart` — pure static class
+- [x] `convertWeight(double value, WeightUnit from, WeightUnit to)` — Enums: g, kg, oz, lb
+- [x] `convertVolume(double value, VolumeUnit from, VolumeUnit to)` — Enums: mL, L, cups, tbsp, tsp, flOz
+- [x] `convertTemperature(double value, TempUnit from, TempUnit to)` — celsius/fahrenheit
+- [x] `scaleIngredient(double originalAmount, int originalServings, int newServings)` → double
+- [x] `smartFormat(double value, String unit)` → String — auto-simplify (1000g→kg, 1000mL→L)
+- [x] `isVolumeUnit(String unit)` — shared helper for weight vs volume detection
 
 **Widget: UnitConverterSheet**
-- [ ] Create `lib/widgets/unit_converter_sheet.dart` — showModalBottomSheet
-- [ ] TextField for input value, two DropdownButtons (From/To unit), SegmentedButton for category (Weight | Volume | Temperature)
-- [ ] Result display (large, bold), "Copy" button
-- [ ] Triggered from: RecipeDetailScreen ingredient list (tap → pre-filled) and CookingModeScreen AppBar icon
+- [x] Create `lib/widgets/unit_converter_sheet.dart` — showModalBottomSheet
+- [x] SegmentedButton (Weight | Volume | Temperature), TextField, two DropdownButtons (From/To), Result + Copy
+- [x] Pre-fill from ingredient tap, auto-detect category from unit
 
 **Widget: ServingSizeSelector**
-- [ ] Create `lib/widgets/serving_size_selector.dart`
-- [ ] Row: minus IconButton, serving count Text, plus IconButton
-- [ ] Min 1, max 20, displays "Serves X"
-- [ ] Placed on RecipeDetailScreen below recipe info, above ingredient list
+- [x] Create `lib/widgets/serving_size_selector.dart`
+- [x] Row: minus button, "Serves X" text, plus button (min 1, max 20)
 
 **RecipeDetailScreen Modifications**
-- [ ] Add ServingSizeSelector between recipe info and ingredients
-- [ ] Track selectedServings in local state (default = recipe.servings)
-- [ ] Recalculate ingredient amounts via `UnitConverter.scaleIngredient()`
-- [ ] Recalculate displayed nutrition totals: per-serving nutrition x selectedServings
-- [ ] Each ingredient row: onTap opens UnitConverterSheet pre-filled
+- [x] Replace static servings with ServingSizeSelector
+- [x] Ingredients auto-scale with scaleFactor
+- [x] Nutrition card scales with serving count
+- [x] Ingredient tap opens UnitConverterSheet pre-filled
+- [x] Shopping list uses scaled ingredient amounts
+- [x] Favorite button added to AppBar (heart icon, before share)
+- [x] Shopping list & collection sheets use ListenableBuilder (fix empty on first open)
 
 **CookingModeScreen Modification**
-- [ ] Add unit converter icon button in AppBar → opens empty UnitConverterSheet
+- [x] Unit converter icon button in AppBar → opens empty UnitConverterSheet
+
+**Add Recipe — Ingredient Input**
+- [x] Unit selector dropdown in amount dialog (g/kg/oz/lb for weight, mL/L/cups/tbsp/tsp/fl oz for volume)
+- [x] Auto-converts to base unit (g or mL) on save
+- [x] Converter icon (↔) on each ingredient row for quick reference
+
+**Add Food Item (Materials)**
+- [x] Unit dropdown expanded: 100g, 100mL, oz, lb, kg, cups, tbsp, tsp, fl oz, L
+- [x] Non-base units: nutrition entered "per 1 [unit]", auto-converted to per 100g/100mL on save
+- [x] Info banner explains conversion, packet size hidden for non-base units
+- [x] Auto-select mL for Beverages category
+- [x] Unit converter button in header
+- [x] Dynamic suffixes (packet size, serving size, nutrition header) based on selected unit
+
+**Downstream Fixes**
+- [x] All food item display (card, detail, nutrition table) uses `UnitConverter.isVolumeUnit()` for correct g/mL display
+- [x] `RecipeFormProvider.addIngredientFromFoodItem()` uses `isVolumeUnit()` for unit detection
 
 **l10n**
-- [ ] Add keys:
-  - `unitConverter` / `serves` / `fromUnit` / `toUnit`
-  - `weight` / `volume` / `temperature`
-  - `tapToConvert` / `copied`
+- [x] 10 new keys (EN + TR): unitConverter, serves, fromUnit, toUnit, weight, volume, temperature, tapToConvert, copied, result
 
-**Tests**
-- [ ] `test/utils/unit_converter_test.dart` — all weight conversions, all volume conversions, temperature (0C=32F, 100C=212F, -40C=-40F), scaleIngredient, smartFormat
-- [ ] `test/widgets/unit_converter_sheet_test.dart` — category switching, input/output, pre-fill from ingredient
-- [ ] `test/widgets/serving_size_selector_test.dart` — increment/decrement, min/max bounds, callback
+**Tests (41 new)**
+- [x] `test/utils/unit_converter_test.dart` — 32 tests: all weight/volume/temp conversions, scaling, smartFormat
+- [x] `test/widgets/unit_converter_sheet_test.dart` — 4 tests: rendering, category switching, conversion, pre-fill
+- [x] `test/widgets/serving_size_selector_test.dart` — 5 tests: rendering, callbacks, min/max bounds
+
+**Quality**
+- [x] flutter analyze — 0 issues
+- [x] flutter test — 1189 tests passing (0 failures)
+Status: PUSHED (Push 22)
 
 ---
 

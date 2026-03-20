@@ -252,8 +252,9 @@ class _CreateAnnouncementSheetState
   final _searchController = TextEditingController();
   bool _sendToAll = true;
   final List<UserModel> _selectedUsers = [];
-  List<UserModel> _searchResults = [];
-  bool _isSearching = false;
+  List<UserModel> _allUsers = [];
+  List<UserModel> _filteredUsers = [];
+  bool _isLoadingUsers = false;
 
   @override
   void dispose() {
@@ -263,34 +264,40 @@ class _CreateAnnouncementSheetState
     super.dispose();
   }
 
-  Future<void> _onSearch(String query) async {
-    if (query.length < 2) {
-      setState(() {
-        _searchResults = [];
-        _isSearching = false;
-      });
-      return;
-    }
-    setState(() => _isSearching = true);
-    final results = await widget.parentContext
-        .read<AdminProvider>()
-        .searchUsers(query);
+  Future<void> _loadAllUsers() async {
+    if (_allUsers.isNotEmpty) return;
+    setState(() => _isLoadingUsers = true);
+    final provider = widget.parentContext.read<AdminProvider>();
+    await provider.loadUsers();
+    final users = provider.users;
     if (mounted) {
       setState(() {
-        _searchResults = results
-            .where((u) => !_selectedUsers.any((s) => s.uid == u.uid))
-            .toList();
-        _isSearching = false;
+        _allUsers = users;
+        _filteredUsers = users;
+        _isLoadingUsers = false;
       });
     }
+  }
+
+  void _filterUsers(String query) {
+    if (query.isEmpty) {
+      setState(() => _filteredUsers = _allUsers);
+      return;
+    }
+    final lower = query.toLowerCase();
+    setState(() {
+      _filteredUsers = _allUsers
+          .where((u) =>
+              u.fullName.toLowerCase().contains(lower) ||
+              (u.username?.toLowerCase().contains(lower) ?? false) ||
+              u.email.toLowerCase().contains(lower))
+          .toList();
+    });
   }
 
   void _addUser(UserModel user) {
     setState(() {
       _selectedUsers.add(user);
-      _searchResults.removeWhere((u) => u.uid == user.uid);
-      _searchController.clear();
-      _searchResults = [];
     });
   }
 
@@ -429,7 +436,10 @@ class _CreateAnnouncementSheetState
                   ),
                   Expanded(
                     child: GestureDetector(
-                      onTap: () => setState(() => _sendToAll = false),
+                      onTap: () {
+                        setState(() => _sendToAll = false);
+                        _loadAllUsers();
+                      },
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         decoration: BoxDecoration(
@@ -512,20 +522,17 @@ class _CreateAnnouncementSheetState
               // Search field
               TextField(
                 controller: _searchController,
-                onChanged: _onSearch,
+                onChanged: _filterUsers,
                 decoration: InputDecoration(
                   hintText: l10n.searchUsers,
                   prefixIcon: const Icon(Icons.search, size: 20),
-                  suffixIcon: _isSearching
-                      ? const Padding(
-                          padding: EdgeInsets.all(12),
-                          child: SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
-                          ),
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear, size: 18),
+                          onPressed: () {
+                            _searchController.clear();
+                            _filterUsers('');
+                          },
                         )
                       : null,
                   border: OutlineInputBorder(
@@ -537,11 +544,16 @@ class _CreateAnnouncementSheetState
                   ),
                 ),
               ),
-              // Search results
-              if (_searchResults.isNotEmpty)
+              const SizedBox(height: 8),
+              // User list
+              if (_isLoadingUsers)
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else
                 Container(
-                  margin: const EdgeInsets.only(top: 4),
-                  constraints: const BoxConstraints(maxHeight: 180),
+                  constraints: const BoxConstraints(maxHeight: 200),
                   decoration: BoxDecoration(
                     color: AppTheme.surfaceOf(context),
                     borderRadius: BorderRadius.circular(12),
@@ -549,63 +561,94 @@ class _CreateAnnouncementSheetState
                       color: AppTheme.neutralLightOf(context)
                           .withValues(alpha: 0.5),
                     ),
-                    boxShadow: [AppTheme.shadowOf(context)],
                   ),
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    itemCount: _searchResults.length,
-                    separatorBuilder: (_, _) => Divider(
-                      height: 1,
-                      indent: 52,
-                      color: AppTheme.neutralLightOf(context)
-                          .withValues(alpha: 0.5),
-                    ),
-                    itemBuilder: (context, index) {
-                      final user = _searchResults[index];
-                      return ListTile(
-                        dense: true,
-                        leading: CircleAvatar(
-                          radius: 16,
-                          backgroundColor: AppTheme.primaryColor
-                              .withValues(alpha: 0.1),
-                          child: Text(
-                            user.firstName.isNotEmpty
-                                ? user.firstName[0].toUpperCase()
-                                : '?',
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                              color: AppTheme.primaryColor,
+                  child: _filteredUsers.isEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Center(
+                            child: Text(
+                              l10n.noUsers,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: AppTheme.textTertiaryOf(context),
+                              ),
                             ),
                           ),
-                        ),
-                        title: Text(
-                          user.fullName,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.textPrimaryOf(context),
+                        )
+                      : ListView.separated(
+                          shrinkWrap: true,
+                          padding:
+                              const EdgeInsets.symmetric(vertical: 4),
+                          itemCount: _filteredUsers.length,
+                          separatorBuilder: (_, _) => Divider(
+                            height: 1,
+                            indent: 52,
+                            color: AppTheme.neutralLightOf(context)
+                                .withValues(alpha: 0.5),
                           ),
+                          itemBuilder: (context, index) {
+                            final user = _filteredUsers[index];
+                            final isSelected = _selectedUsers
+                                .any((s) => s.uid == user.uid);
+                            return ListTile(
+                              dense: true,
+                              leading: CircleAvatar(
+                                radius: 16,
+                                backgroundColor: isSelected
+                                    ? AppTheme.primaryColor
+                                    : AppTheme.primaryColor
+                                        .withValues(alpha: 0.1),
+                                child: Text(
+                                  user.firstName.isNotEmpty
+                                      ? user.firstName[0].toUpperCase()
+                                      : '?',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: isSelected
+                                        ? Colors.white
+                                        : AppTheme.primaryColor,
+                                  ),
+                                ),
+                              ),
+                              title: Text(
+                                user.fullName,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color:
+                                      AppTheme.textPrimaryOf(context),
+                                ),
+                              ),
+                              subtitle: Text(
+                                user.username != null
+                                    ? '@${user.username}'
+                                    : user.email,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color:
+                                      AppTheme.textTertiaryOf(context),
+                                ),
+                              ),
+                              trailing: Icon(
+                                isSelected
+                                    ? Icons.check_circle
+                                    : Icons.circle_outlined,
+                                size: 22,
+                                color: isSelected
+                                    ? AppTheme.primaryColor
+                                    : AppTheme.textTertiaryOf(context),
+                              ),
+                              onTap: () {
+                                if (isSelected) {
+                                  _removeUser(user.uid);
+                                } else {
+                                  _addUser(user);
+                                }
+                              },
+                            );
+                          },
                         ),
-                        subtitle: Text(
-                          user.username != null
-                              ? '@${user.username}'
-                              : user.email,
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: AppTheme.textTertiaryOf(context),
-                          ),
-                        ),
-                        trailing: Icon(
-                          Icons.add_circle_outline,
-                          size: 20,
-                          color: AppTheme.primaryColor,
-                        ),
-                        onTap: () => _addUser(user),
-                      );
-                    },
-                  ),
                 ),
             ],
             const SizedBox(height: 16),

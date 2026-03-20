@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/user_model.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/follow_provider.dart';
 import '../../services/follow_service.dart';
 import '../../services/user_service.dart';
@@ -243,6 +244,8 @@ class _FollowListScreenState extends State<FollowListScreen>
 
   Widget _buildUserTile(UserModel user) {
     final followProvider = context.watch<FollowProvider>();
+    final currentUserId = context.read<AuthProvider>().userModel?.uid;
+    final isOwnAccount = user.uid == currentUserId;
     final isFollowing = followProvider.isFollowing(user.uid);
 
     return ListTile(
@@ -300,8 +303,14 @@ class _FollowListScreenState extends State<FollowListScreen>
               : AppTheme.textTertiaryOf(context),
         ),
       ),
-      trailing: _buildFollowButton(user.uid, isFollowing, followProvider),
-      onTap: () => context.push('/user/${user.uid}', extra: user.fullName),
+      trailing: isOwnAccount ? null : _buildFollowButton(user.uid, isFollowing, followProvider),
+      onTap: () {
+        if (isOwnAccount) {
+          context.go('/profile');
+        } else {
+          context.push('/user/${user.uid}', extra: user.fullName);
+        }
+      },
     );
   }
 

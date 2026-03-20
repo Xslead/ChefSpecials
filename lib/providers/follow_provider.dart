@@ -35,6 +35,7 @@ class FollowProvider extends ChangeNotifier {
 
   Future<void> follow(String targetId) async {
     if (_currentUserId == null) return;
+    if (targetId == _currentUserId) return;
     // Optimistic update — create a new set so reference changes
     _followingIds = {..._followingIds, targetId};
     notifyListeners();

@@ -331,6 +331,41 @@ class AdminProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> createTargetedAnnouncement({
+    required String title,
+    required String body,
+    required String adminId,
+    required String adminName,
+    required List<String> targetUserIds,
+    required List<String> targetUserNames,
+  }) async {
+    try {
+      await _adminService.createTargetedAnnouncement(
+        title: title,
+        body: body,
+        adminId: adminId,
+        adminName: adminName,
+        targetUserIds: targetUserIds,
+      );
+      await _adminService.logAction(AdminLog(
+        adminId: adminId,
+        adminName: adminName,
+        action: 'create_targeted_announcement',
+        targetName: title,
+        details: 'Sent to: ${targetUserNames.join(", ")}',
+        createdAt: DateTime.now(),
+      ));
+      await loadAnnouncements();
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+    }
+  }
+
+  Future<List<UserModel>> searchUsers(String query) async {
+    return _adminService.searchUsers(query);
+  }
+
   Future<void> deleteAnnouncement({
     required String id,
     required String title,

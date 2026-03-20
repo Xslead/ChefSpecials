@@ -385,6 +385,57 @@ class AdminService {
     await batch.commit();
   }
 
+  Future<void> createTargetedAnnouncement({
+    required String title,
+    required String body,
+    required String adminId,
+    required String adminName,
+    required List<String> targetUserIds,
+  }) async {
+    await _firestore.collection(AppConstants.announcementsCollection).add({
+      'title': title,
+      'body': body,
+      'authorId': adminId,
+      'authorName': adminName,
+      'targetUserIds': targetUserIds,
+      'createdAt': DateTime.now().toIso8601String(),
+    });
+
+    final batch = _firestore.batch();
+    for (final userId in targetUserIds) {
+      final ref =
+          _firestore.collection(AppConstants.activitiesCollection).doc();
+      batch.set(ref, {
+        'userId': userId,
+        'actorId': adminId,
+        'actorName': adminName,
+        'actorAvatar': null,
+        'type': 'announcement',
+        'targetId': null,
+        'targetName': title,
+        'targetImageUrl': null,
+        'message': body,
+        'isRead': false,
+        'createdAt': DateTime.now().toIso8601String(),
+      });
+    }
+    await batch.commit();
+  }
+
+  Future<List<UserModel>> searchUsers(String query) async {
+    if (query.isEmpty) return [];
+    final lower = query.toLowerCase();
+    final snapshot =
+        await _firestore.collection(AppConstants.usersCollection).get();
+    return snapshot.docs
+        .map((doc) => UserModel.fromMap(doc.data()))
+        .where((u) =>
+            u.fullName.toLowerCase().contains(lower) ||
+            (u.username?.toLowerCase().contains(lower) ?? false) ||
+            u.email.toLowerCase().contains(lower))
+        .toList();
+  }
+
   Future<List<Announcement>> getAnnouncements() async {
     final snapshot = await _firestore
         .collection(AppConstants.announcementsCollection)

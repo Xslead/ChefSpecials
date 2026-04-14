@@ -355,6 +355,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get darkMode => 'Dark Mode';
+
+  @override
+  String get lightMode => 'Light Mode';
+
+  @override
   String get deleteRating => 'Delete Rating';
 
   @override

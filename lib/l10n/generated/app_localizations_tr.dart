@@ -355,6 +355,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settings => 'Ayarlar';
 
   @override
+  String get appearance => 'Görünüm';
+
+  @override
+  String get darkMode => 'Karanlık Mod';
+
+  @override
+  String get lightMode => 'Aydınlık Mod';
+
+  @override
   String get deleteRating => 'Puanı Sil';
 
   @override

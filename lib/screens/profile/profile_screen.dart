@@ -9,8 +9,6 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/follow_provider.dart';
 import '../../providers/recipe_provider.dart';
-import '../../providers/locale_provider.dart';
-import '../../providers/theme_provider.dart';
 import '../../widgets/empty_state.dart';
 import '../home/widgets/privacy_badge.dart';
 import '../home/widgets/recipe_card.dart';
@@ -161,44 +159,6 @@ class ProfileScreen extends StatelessWidget {
                                 .withValues(alpha: 0.5),
                           ),
                         ],
-                        ListTile(
-                          leading: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: AppTheme.snackColor
-                                  .withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Icon(
-                              Icons.notifications_outlined,
-                              color: AppTheme.snackColor,
-                              size: 20,
-                            ),
-                          ),
-                          title: Text(
-                            l10n.notificationSettings,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          trailing: Icon(
-                            Icons.chevron_right,
-                            color: AppTheme.textTertiaryOf(context),
-                          ),
-                          onTap: () => context.push('/notification-settings'),
-                          dense: true,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                        ),
-                        Divider(
-                          height: 1,
-                          indent: 16,
-                          endIndent: 16,
-                          color: AppTheme.neutralLightOf(context)
-                              .withValues(alpha: 0.5),
-                        ),
                         ListTile(
                           leading: Container(
                             padding: const EdgeInsets.all(8),
@@ -468,37 +428,8 @@ class ProfileScreen extends StatelessWidget {
               ),
               const Spacer(),
               IconButton(
-                icon: Text(
-                  context.watch<LocaleProvider>().locale.languageCode == 'en'
-                      ? 'TR'
-                      : 'EN',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 13,
-                    color: AppTheme.textSecondary,
-                  ),
-                ),
-                onPressed: () =>
-                    context.read<LocaleProvider>().toggleLocale(),
-              ),
-              IconButton(
-                icon: Icon(
-                  Theme.of(context).brightness == Brightness.dark
-                      ? Icons.light_mode_outlined
-                      : Icons.dark_mode_outlined,
-                ),
-                onPressed: () =>
-                    context.read<ThemeProvider>().toggleTheme(),
-                color: AppTheme.textSecondary,
-              ),
-              IconButton(
-                icon: const Icon(Icons.edit_outlined),
-                onPressed: () => context.push('/edit-profile'),
-                color: AppTheme.textSecondary,
-              ),
-              IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () => _showLogoutDialog(context),
+                icon: const Icon(Icons.settings_outlined),
+                onPressed: () => context.push('/settings'),
                 color: AppTheme.textSecondary,
               ),
             ],
@@ -508,34 +439,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  void _showLogoutDialog(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(l10n.logout),
-        content: Text(l10n.logoutConfirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(l10n.cancel),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(ctx).pop();
-              await context.read<AuthProvider>().signOut();
-              if (context.mounted) {
-                context.go('/login');
-              }
-            },
-            style: TextButton.styleFrom(foregroundColor: AppTheme.errorColor),
-            child: Text(l10n.logout),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildProfileCard(
     BuildContext context,

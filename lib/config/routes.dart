@@ -34,6 +34,7 @@ import '../screens/import_recipe/import_recipe_screen.dart';
 import '../screens/meal_planner/meal_planner_screen.dart';
 import '../screens/reports/reports_screen.dart';
 import '../screens/profile/notification_settings_screen.dart';
+import '../screens/profile/settings_screen.dart';
 import '../screens/activity/activity_screen.dart';
 import '../screens/admin/admin_dashboard_screen.dart';
 import '../screens/admin/admin_users_screen.dart';
@@ -301,6 +302,11 @@ final GoRouter router = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/notification-settings',
       builder: (context, state) => const NotificationSettingsScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/settings',
+      builder: (context, state) => const SettingsScreen(),
     ),
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,

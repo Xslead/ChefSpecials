@@ -188,6 +188,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   Row(
                     children: [
+                      if (context.canPop())
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: () => context.pop(),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                      if (context.canPop()) const SizedBox(width: 8),
                       Image.asset(
                         'assets/logo.png',
                         width: 32,

@@ -42,6 +42,17 @@ class AppLocalizationsTr extends AppLocalizations {
   String get signIn => 'Giriş Yap';
 
   @override
+  String get loginRequired => 'Giriş Gerekli';
+
+  @override
+  String get loginRequiredFeedMessage =>
+      'Takip ettiğin kişilerin tariflerini görmek için giriş yap.';
+
+  @override
+  String get loginRequiredProfileMessage =>
+      'Profilini görüntülemek ve yönetmek için giriş yap.';
+
+  @override
   String get logout => 'Çıkış Yap';
 
   @override

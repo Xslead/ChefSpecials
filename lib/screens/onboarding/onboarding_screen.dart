@@ -71,7 +71,7 @@ class _OnboardingViewState extends State<_OnboardingView> {
                       onPressed: provider.currentPage >= 2
                           ? () async {
                               await provider.completeOnboarding();
-                              if (context.mounted) context.go('/login');
+                              if (context.mounted) context.go('/home');
                             }
                           : null,
                       child: Text(l10n.skip),
@@ -134,7 +134,7 @@ class _OnboardingViewState extends State<_OnboardingView> {
                     onPressed: () async {
                       if (provider.isLastPage) {
                         await provider.completeOnboarding();
-                        if (context.mounted) context.go('/login');
+                        if (context.mounted) context.go('/home');
                       } else {
                         provider.nextPage();
                       }

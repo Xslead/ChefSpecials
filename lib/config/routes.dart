@@ -51,13 +51,12 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter router = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: '/login',
+  initialLocation: '/home',
   redirect: (context, state) async {
     final path = state.uri.path;
-    if (path == '/login' || path == '/register') {
-      final completed = await OnboardingProvider.hasCompletedOnboarding();
-      if (!completed) return '/onboarding';
-    }
+    if (path == '/onboarding') return null;
+    final completed = await OnboardingProvider.hasCompletedOnboarding();
+    if (!completed) return '/onboarding';
     return null;
   },
   routes: [

@@ -74,10 +74,8 @@ class _ReportsScreenState extends State<ReportsScreen>
     if (byteData == null) return;
 
     final bytes = byteData.buffer.asUint8List();
-    await SharePlus.instance.share(
-      ShareParams(files: [
-        XFile.fromData(bytes, mimeType: 'image/png', name: 'report.png')
-      ]),
+    await Share.shareXFiles(
+      [XFile.fromData(bytes, mimeType: 'image/png', name: 'report.png')],
     );
   }
 

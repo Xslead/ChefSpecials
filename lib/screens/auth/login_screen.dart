@@ -66,8 +66,10 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Container(
         color: AppTheme.backgroundOf(context),
         child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Center(
+                child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
               child: Form(
                 key: _formKey,
@@ -211,6 +213,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
+          ),
+              if (context.canPop())
+                Positioned(
+                  top: 4,
+                  left: 4,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => context.pop(),
+                  ),
+                ),
+            ],
           ),
         ),
       ),

@@ -164,6 +164,24 @@ abstract class AppLocalizations {
   /// **'Sign In'**
   String get signIn;
 
+  /// No description provided for @loginRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Login Required'**
+  String get loginRequired;
+
+  /// No description provided for @loginRequiredFeedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to see recipes from people you follow.'**
+  String get loginRequiredFeedMessage;
+
+  /// No description provided for @loginRequiredProfileMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to view and manage your profile.'**
+  String get loginRequiredProfileMessage;
+
   /// No description provided for @logout.
   ///
   /// In en, this message translates to:

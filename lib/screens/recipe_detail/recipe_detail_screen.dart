@@ -293,7 +293,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
       link,
     );
     try {
-      await SharePlus.instance.share(ShareParams(text: text));
+      await Share.share(text);
     } catch (_) {}
   }
 

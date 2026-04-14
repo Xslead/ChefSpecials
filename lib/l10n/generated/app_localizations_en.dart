@@ -42,6 +42,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signIn => 'Sign In';
 
   @override
+  String get loginRequired => 'Login Required';
+
+  @override
+  String get loginRequiredFeedMessage =>
+      'Sign in to see recipes from people you follow.';
+
+  @override
+  String get loginRequiredProfileMessage =>
+      'Sign in to view and manage your profile.';
+
+  @override
   String get logout => 'Logout';
 
   @override

@@ -271,6 +271,41 @@ class ProfileScreen extends StatelessWidget {
                           leading: Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
+                              color: AppTheme.primaryColor
+                                  .withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(
+                              Icons.history,
+                              color: AppTheme.primaryColor,
+                              size: 20,
+                            ),
+                          ),
+                          title: Text(
+                            l10n.cookingHistory,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.chevron_right,
+                            color: AppTheme.textTertiaryOf(context),
+                          ),
+                          onTap: () => context.push('/cooking-history'),
+                          dense: true,
+                        ),
+                        Divider(
+                          height: 1,
+                          indent: 16,
+                          endIndent: 16,
+                          color: AppTheme.neutralLightOf(context)
+                              .withValues(alpha: 0.5),
+                        ),
+                        ListTile(
+                          leading: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
                               color: AppTheme.dinnerColor
                                   .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(10),

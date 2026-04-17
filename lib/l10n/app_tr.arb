@@ -635,5 +635,24 @@
       "current": { "type": "int" },
       "total": { "type": "int" }
     }
-  }
+  },
+  "cookingHistory": "Pişirme Geçmişi",
+  "iCookedThis": "Bunu Pişirdim",
+  "logCook": "Kaydet",
+  "cookedTimes": "{count} porsiyon",
+  "@cookedTimes": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "cookedCount": "{count}× pişirildi",
+  "@cookedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "personalNotes": "Kişisel notlar (isteğe bağlı)",
+  "noCookingHistory": "Henüz pişirme geçmişi yok",
+  "noCookingHistorySubtitle": "Herhangi bir tarifte \"Bunu Pişirdim\" butonuna basarak pişirmenizi kaydedin",
+  "cookLogged": "Pişirme kaydedildi!"
 }

@@ -853,139 +853,143 @@ Status: PUSHED (Push 24)
 
 ---
 
-### Task 7: Recipe Photo Gallery (Push 24)
+### Task 7: Recipe Photo Gallery (Push 24b)
 
 **Model Updates**
-- [ ] Update `lib/models/recipe.dart`: add `photos` (List\<String\>, default []) — additional gallery images alongside existing `imageUrl`
-- [ ] Update `fromMap()`: read `'photos' as List<String> ?? []`
-- [ ] Update `toMap()`: write `'photos'`
-- [ ] Update RecipeStep model: add `imageUrl` (String?, default null) — optional photo per step
-- [ ] Update RecipeStep `fromMap()` and `toMap()`
+- [x] Update `lib/models/recipe.dart`: add `photos` (List\<String\>, default []) — additional gallery images alongside existing `imageUrl`
+- [x] Update `fromMap()`: read `'photos' as List<String> ?? []`
+- [x] Update `toMap()`: write `'photos'`
+- [x] Update RecipeStep model: add `imageUrl` (String?, default null) — optional photo per step
+- [x] Update RecipeStep `fromMap()` and `toMap()`
 
 **Widget: PhotoCarousel**
-- [ ] Create `lib/widgets/photo_carousel.dart`
-- [ ] PageView.builder, dot indicators, image count badge "1/5" in top-right
-- [ ] Tap image → opens PhotoViewer (full-screen)
-- [ ] Single image: show without dots/pagination
+- [x] Create `lib/widgets/photo_carousel.dart`
+- [x] PageView.builder, dot indicators, image count badge "1/5" in top-right
+- [x] Tap image → opens PhotoViewer (full-screen)
+- [x] Single image: show without dots/pagination
 
 **Widget: PhotoViewer**
-- [ ] Create `lib/widgets/photo_viewer.dart`
-- [ ] Full-screen overlay, black background, InteractiveViewer (pinch-to-zoom, pan)
-- [ ] Close button (X), swipe left/right for multiple images, counter "2 of 5"
+- [x] Create `lib/widgets/photo_viewer.dart`
+- [x] Full-screen overlay, black background, InteractiveViewer (pinch-to-zoom, pan)
+- [x] Close button (X), swipe left/right for multiple images, counter "2 of 5"
 
 **Widget: PhotoGrid**
-- [ ] Create `lib/widgets/photo_grid.dart`
-- [ ] 1 image → full-width; 2 → side-by-side; 3 → one large + two small; 4+ → 2x2 grid, last cell "+N more" overlay
-- [ ] Tap any image → PhotoViewer at that index
+- [x] Create `lib/widgets/photo_grid.dart`
+- [x] 1 image → full-width; 2 → side-by-side; 3 → one large + two small; 4+ → 2x2 grid, last cell "+N more" overlay
+- [x] Tap any image → PhotoViewer at that index
 
 **AddRecipeScreen Modifications**
-- [ ] Replace single ImagePickerTile with multi-image picker section
-- [ ] Horizontal scrollable list + "Add Photo" button at end
-- [ ] ReorderableListView / LongPressDraggable for drag-to-reorder
-- [ ] First image = cover image (imageUrl field)
-- [ ] Use `ImagePicker().pickMultiImage()`
+- [x] Replace single ImagePickerTile with multi-image picker section
+- [x] Horizontal scrollable list + "Add Photo" button at end
+- [x] ReorderableListView / LongPressDraggable for drag-to-reorder
+- [x] First image = cover image (imageUrl field)
+- [x] Use `ImagePicker().pickMultiImage()`
 
 **RecipeDetailScreen Modifications**
-- [ ] Replace single cover image with PhotoCarousel if `recipe.photos` is not empty
-- [ ] Fallback to single `imageUrl` display (backward compatible)
+- [x] Replace single cover image with PhotoCarousel if `recipe.photos` is not empty
+- [x] Fallback to single `imageUrl` display (backward compatible)
 
 **CookingModeScreen Modifications**
-- [ ] If RecipeStep has imageUrl, show it above step instruction text (height ~150, rounded corners)
+- [x] If RecipeStep has imageUrl, show it above step instruction text (height ~150, rounded corners)
 
 **StorageService Modifications**
-- [ ] `uploadRecipePhotos(String recipeId, List<File> files, {onProgress})` → Future\<List\<String\>\> — upload to `recipes/{recipeId}/photos/{index}`
-- [ ] `deleteRecipePhotos(String recipeId)` → Future\<void\>
+- [x] `uploadRecipePhotos(String recipeId, List<File> files, {onProgress})` → Future\<List\<String\>\> — upload to `recipes/{recipeId}/photos/{index}`
+- [x] `deleteRecipePhotos(String recipeId)` → Future\<void\>
 
 **RecipeFormProvider Modifications**
-- [ ] Add `additionalPhotos` (List\<File\>) field
-- [ ] `addPhotos(List<File>)`, `removePhoto(int index)`, `reorderPhotos(int oldIndex, int newIndex)`
-- [ ] Submit: upload all photos, update recipe document with returned URLs
+- [x] Add `additionalPhotos` (List\<File\>) field
+- [x] `addPhotos(List<File>)`, `removePhoto(int index)`, `reorderPhotos(int oldIndex, int newIndex)`
+- [x] Submit: upload all photos, update recipe document with returned URLs
 
 **Image Compression**
-- [ ] Add `flutter_image_compress` dependency
-- [ ] Resize to max 1200px width, 80% quality JPEG before uploading
+- [x] Add `flutter_image_compress` dependency
+- [x] Resize to max 1200px width, 80% quality JPEG before uploading
 
 **l10n**
-- [ ] Add keys:
+- [x] Add keys:
   - `addPhotos` / `photoGallery` / `dragToReorder` / `coverPhoto` / `morePhotos` / `photoOf`
 
 **Tests**
-- [ ] `test/models/recipe_test.dart` — update: photos field serialization, empty default
-- [ ] `test/models/recipe_step_test.dart` — update: imageUrl field serialization
-- [ ] `test/widgets/photo_carousel_test.dart` — renders images, dot indicators, page navigation, count badge
-- [ ] `test/widgets/photo_viewer_test.dart` — renders full-screen, close button, zoom gesture
-- [ ] `test/widgets/photo_grid_test.dart` — grid layouts for 1/2/3/4+ images, "+N more" overlay
+- [x] `test/models/recipe_test.dart` — update: photos field serialization, empty default
+- [x] `test/models/recipe_step_test.dart` — update: imageUrl field serialization
+- [x] `test/widgets/photo_carousel_test.dart` — renders images, dot indicators, page navigation, count badge
+- [x] `test/widgets/photo_viewer_test.dart` — renders full-screen, close button, zoom gesture
+- [x] `test/widgets/photo_grid_test.dart` — grid layouts for 1/2/3/4+ images, "+N more" overlay
+
+Status: PUSHED (Push 24b)
 
 ---
 
 ### Task 8: Cooking History — "Cooked It" Log (Push 25)
 
 **Model: CookingLog**
-- [ ] Create `lib/models/cooking_log.dart`
-- [ ] Fields: `id`, `recipeId`, `recipeName` (denormalized), `recipeImageUrl` (denormalized), `userId`, `cookedAt` (DateTime), `personalRating` (int? 1-5), `notes` (String?), `photoUrl` (String?), `servings` (int)
-- [ ] Include `fromMap()`, `toMap()`, `copyWith()`
-- [ ] Firestore collection: `cooking_logs`, document ID: auto-generated
+- [x] Create `lib/models/cooking_log.dart`
+- [x] Fields: `id`, `recipeId`, `recipeName` (denormalized), `recipeImageUrl` (denormalized), `userId`, `cookedAt` (DateTime), `personalRating` (int? 1-5), `notes` (String?), `photoUrl` (String?), `servings` (int)
+- [x] Include `fromMap()`, `toMap()`, `copyWith()`
+- [x] Firestore collection: `cooking_logs`, document ID: auto-generated
 
 **Service: CookingLogService**
-- [ ] Create `lib/services/cooking_log_service.dart`
-- [ ] `logCook(CookingLog log)` → Future\<void\>
-- [ ] `getCookingHistory(String userId, {int limit, DocumentSnapshot? startAfter})` → Future\<List\<CookingLog\>\> — paginated, ordered by cookedAt desc
-- [ ] `getCookCountForRecipe(String userId, String recipeId)` → Future\<int\>
-- [ ] `getTotalCooksForRecipe(String recipeId)` → Future\<int\> — all users
-- [ ] `deleteCookingLog(String logId)` / `updateCookingLog(CookingLog log)`
-- [ ] `streamCookingHistory(String userId)` → Stream\<List\<CookingLog\>\>
-- [ ] Accept optional `FirebaseFirestore` for DI
+- [x] Create `lib/services/cooking_log_service.dart`
+- [x] `logCook(CookingLog log)` → Future\<void\>
+- [x] `getCookingHistory(String userId, {int limit, DocumentSnapshot? startAfter})` → Future\<List\<CookingLog\>\> — paginated, ordered by cookedAt desc
+- [x] `getCookCountForRecipe(String userId, String recipeId)` → Future\<int\>
+- [x] `getTotalCooksForRecipe(String recipeId)` → Future\<int\> — all users
+- [x] `deleteCookingLog(String logId)` / `updateCookingLog(CookingLog log)`
+- [x] `streamCookingHistory(String userId)` → Stream\<List\<CookingLog\>\>
+- [x] Accept optional `FirebaseFirestore` for DI
 
 **Provider: CookingLogProvider**
-- [ ] Create `lib/providers/cooking_log_provider.dart`
-- [ ] Holds: cookingHistory, loading state, cookCountCache (Map\<String, int\>)
-- [ ] `init(String userId)` — subscribe to stream
-- [ ] `logCook(Recipe recipe, {int? personalRating, String? notes, File? photo, int servings})` — upload photo if provided, create CookingLog, auto-add meal entry to DailyTracker (before 11am=breakfast, 11am-3pm=lunch, 3pm-8pm=dinner, after 8pm=snack)
-- [ ] `getCookCount(String recipeId)` — from cache or fetch
-- [ ] `deleteCookingLog(String logId)` — call service, update local list
-- [ ] Register in `main.dart` MultiProvider
+- [x] Create `lib/providers/cooking_log_provider.dart`
+- [x] Holds: cookingHistory, loading state, cookCountCache (Map\<String, int\>)
+- [x] `init(String userId)` — subscribe to stream
+- [x] `logCook(Recipe recipe, {int? personalRating, String? notes, File? photo, int servings})` — upload photo if provided, create CookingLog, auto-add meal entry to DailyTracker (before 11am=breakfast, 11am-3pm=lunch, 3pm-8pm=dinner, after 8pm=snack)
+- [x] `getCookCount(String recipeId)` — from cache or fetch
+- [x] `deleteCookingLog(String logId)` — call service, update local list
+- [x] Register in `main.dart` MultiProvider
 
 **Screen: CookingHistoryScreen**
-- [ ] Create `lib/screens/cooking_history/cooking_history_screen.dart`
-- [ ] AppBar: "Cooking History", back button
-- [ ] ListView.builder of CookingLogCard widgets (newest first)
-- [ ] Tap card → RecipeDetailScreen; long-press/swipe → delete with confirmation
-- [ ] Empty state: "You haven't cooked anything yet!" with chef hat icon
-- [ ] Pull-to-refresh, pagination with ScrollController
+- [x] Create `lib/screens/cooking_history/cooking_history_screen.dart`
+- [x] AppBar: "Cooking History", back button
+- [x] ListView.builder of CookingLogCard widgets (newest first)
+- [x] Tap card → RecipeDetailScreen; long-press/swipe → delete with confirmation
+- [x] Empty state: "You haven't cooked anything yet!" with chef hat icon
+- [x] Pull-to-refresh, pagination with ScrollController
 
 **Widget: CookingLogCard**
-- [ ] Create `lib/screens/cooking_history/widgets/cooking_log_card.dart`
-- [ ] Row: recipe image (60x60), Column (name, date, rating stars, notes preview), trailing photo thumbnail (40x40)
+- [x] Create `lib/screens/cooking_history/widgets/cooking_log_card.dart`
+- [x] Row: recipe image (60x60), Column (name, date, rating stars, notes preview), trailing photo thumbnail (40x40)
 
 **RecipeDetailScreen Modifications**
-- [ ] "I Cooked This!" GradientButton below existing action buttons
-- [ ] Tap → bottom sheet: star rating, notes TextField, image picker, servings selector, "Log Cook" submit
-- [ ] After logging → SnackBar "Cook logged!"
-- [ ] Show cook count badge: "Cooked 3 times"
+- [x] "I Cooked This" GradientButton below existing action buttons
+- [x] Tap → bottom sheet: star rating, notes TextField, image picker, servings selector, "Log Cook" submit
+- [x] After logging → SnackBar "Cook logged!"
+- [x] Show cook count badge: "Cooked 3 times"
 
 **CookingModeScreen Modifications**
-- [ ] On last step completion → show "Log This Cook" prompt, auto-open cook logging sheet
+- [x] On last step completion → show "Log This Cook" prompt, auto-open cook logging sheet
 
 **RecipeCard Modifications**
-- [ ] If cook count > 0, show small badge/chip "Cooked x3"
+- [x] If cook count > 0, show small badge/chip "Cooked x3"
 
 **Route & Access**
-- [ ] Add GoRoute path `/cooking-history` under parentNavigatorKey
-- [ ] Access: "Cooking History" row on ProfileScreen (history/clock icon)
+- [x] Add GoRoute path `/cooking-history` under parentNavigatorKey
+- [x] Access: "Cooking History" row on ProfileScreen (history/clock icon)
 
 **Firestore Rules**
-- [ ] `cooking_logs` — owner can read/write own documents only
+- [x] `cooking_logs` — owner can read/write own documents only
 
 **l10n**
-- [ ] Add keys:
+- [x] Add keys:
   - `cookingHistory` / `iCookedThis` / `logCook` / `cookedOn` / `cookedTimes`
   - `personalNotes` / `addResultPhoto` / `noCookingHistory` / `cookLogged`
 
 **Tests**
-- [ ] `test/models/cooking_log_test.dart` — fromMap/toMap, copyWith, defaults
-- [ ] `test/services/cooking_log_service_test.dart` — logCook, getCookingHistory pagination, getCookCountForRecipe, delete
-- [ ] `test/providers/cooking_log_provider_test.dart` — logCook updates list, getCookCount cached, auto-add to daily tracker
-- [ ] `test/screens/cooking_history/cooking_history_screen_test.dart` — renders list, empty state, card taps
+- [x] `test/models/cooking_log_test.dart` — fromMap/toMap, copyWith, defaults
+- [x] `test/services/cooking_log_service_test.dart` — logCook, getCookingHistory pagination, getCookCountForRecipe, delete
+- [x] `test/providers/cooking_log_provider_test.dart` — logCook updates list, getCookCount cached, auto-add to daily tracker
+- [x] `test/screens/cooking_history/cooking_history_screen_test.dart` — renders list, empty state, card taps
+
+Status: PUSHED (Push 25)
 
 ---
 

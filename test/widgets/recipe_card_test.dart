@@ -6,7 +6,9 @@ import 'package:chef_specials/l10n/generated/app_localizations.dart';
 import 'package:chef_specials/models/recipe.dart';
 import 'package:chef_specials/models/ingredient.dart';
 import 'package:chef_specials/models/recipe_step.dart';
+import 'package:chef_specials/models/cooking_log.dart';
 import 'package:chef_specials/providers/auth_provider.dart';
+import 'package:chef_specials/providers/cooking_log_provider.dart';
 import 'package:chef_specials/providers/favorite_provider.dart';
 import 'package:chef_specials/screens/home/widgets/recipe_card.dart';
 
@@ -36,6 +38,18 @@ class FakeFavoriteProvider extends ChangeNotifier implements FavoriteProvider {
 
 /// A minimal AuthProvider stub for testing.
 class FakeAuthProvider extends ChangeNotifier implements AuthProvider {
+  @override
+  dynamic noSuchMethod(Invocation invocation) => null;
+}
+
+class FakeCookingLogProvider extends ChangeNotifier
+    implements CookingLogProvider {
+  @override
+  List<CookingLog> get cookingHistory => [];
+  @override
+  bool get isLoading => false;
+  @override
+  int getCookCountFromCache(String recipeId) => 0;
   @override
   dynamic noSuchMethod(Invocation invocation) => null;
 }
@@ -94,6 +108,9 @@ void main() {
         ),
         ChangeNotifierProvider<AuthProvider>(
           create: (_) => FakeAuthProvider(),
+        ),
+        ChangeNotifierProvider<CookingLogProvider>(
+          create: (_) => FakeCookingLogProvider(),
         ),
       ],
       child: MaterialApp(

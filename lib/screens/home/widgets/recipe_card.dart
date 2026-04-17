@@ -11,6 +11,7 @@ import '../../../models/recipe.dart';
 import '../../../utils/category_helpers.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/favorite_provider.dart';
+import '../../../providers/cooking_log_provider.dart';
 
 class RecipeCard extends StatefulWidget {
   final Recipe recipe;
@@ -198,7 +199,7 @@ class _RecipeCardState extends State<RecipeCard> {
                     ],
                     const SizedBox(height: 8),
                     // Rating + comment row
-                    _buildRatingRow(),
+                    _buildRatingRow(context),
                     // Nutrition grid
                     if (recipe.caloriesPerServing != null) ...[
                       const SizedBox(height: 14),
@@ -260,7 +261,12 @@ class _RecipeCardState extends State<RecipeCard> {
     }
   }
 
-  Widget _buildRatingRow() {
+  Widget _buildRatingRow(BuildContext context) {
+    final cookCount = recipe.id != null
+        ? context.watch<CookingLogProvider>().getCookCountFromCache(recipe.id!)
+        : 0;
+    final l10n = AppLocalizations.of(context)!;
+
     return Row(
       children: [
         Icon(
@@ -302,6 +308,33 @@ class _RecipeCardState extends State<RecipeCard> {
             color: AppTheme.textSecondaryOf(context),
           ),
         ),
+        if (cookCount > 0) ...[
+          const SizedBox(width: 10),
+          Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: AppTheme.primaryColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.outdoor_grill,
+                    size: 11, color: AppTheme.primaryColor),
+                const SizedBox(width: 3),
+                Text(
+                  l10n.cookedCount(cookCount),
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }

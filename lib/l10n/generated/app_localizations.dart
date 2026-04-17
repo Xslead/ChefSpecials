@@ -2988,6 +2988,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{current} of {total}'**
   String photoOf(int current, int total);
+
+  /// No description provided for @cookingHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking History'**
+  String get cookingHistory;
+
+  /// No description provided for @iCookedThis.
+  ///
+  /// In en, this message translates to:
+  /// **'I Cooked This'**
+  String get iCookedThis;
+
+  /// No description provided for @logCook.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Cook'**
+  String get logCook;
+
+  /// No description provided for @cookedTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} serving(s)'**
+  String cookedTimes(int count);
+
+  /// No description provided for @cookedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Cooked {count}×'**
+  String cookedCount(int count);
+
+  /// No description provided for @personalNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal notes (optional)'**
+  String get personalNotes;
+
+  /// No description provided for @noCookingHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'No cooking history yet'**
+  String get noCookingHistory;
+
+  /// No description provided for @noCookingHistorySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap \"I Cooked This\" on any recipe to log your cook'**
+  String get noCookingHistorySubtitle;
+
+  /// No description provided for @cookLogged.
+  ///
+  /// In en, this message translates to:
+  /// **'Cook logged!'**
+  String get cookLogged;
 }
 
 class _AppLocalizationsDelegate

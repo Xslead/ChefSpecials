@@ -635,5 +635,24 @@
       "current": { "type": "int" },
       "total": { "type": "int" }
     }
-  }
+  },
+  "cookingHistory": "Cooking History",
+  "iCookedThis": "I Cooked This",
+  "logCook": "Log Cook",
+  "cookedTimes": "{count} serving(s)",
+  "@cookedTimes": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "cookedCount": "Cooked {count}×",
+  "@cookedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "personalNotes": "Personal notes (optional)",
+  "noCookingHistory": "No cooking history yet",
+  "noCookingHistorySubtitle": "Tap \"I Cooked This\" on any recipe to log your cook",
+  "cookLogged": "Cook logged!"
 }

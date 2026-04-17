@@ -15,6 +15,7 @@ import 'package:chef_specials/models/planned_meal.dart';
 import 'package:chef_specials/models/admin_log.dart';
 import 'package:chef_specials/models/ban_appeal.dart';
 import 'package:chef_specials/models/announcement.dart';
+import 'package:chef_specials/models/cooking_log.dart';
 
 // ---------------------------------------------------------------------------
 // Ingredient
@@ -946,4 +947,34 @@ Map<String, dynamic> createTestAnnouncementMap({
     'authorName': authorName ?? 'Admin User',
     'createdAt': createdAt ?? '2025-03-10T09:00:00.000',
   };
+}
+
+// ---------------------------------------------------------------------------
+// CookingLog
+// ---------------------------------------------------------------------------
+
+CookingLog createTestCookingLog({
+  String? id,
+  String? recipeId,
+  String? recipeName,
+  String? recipeImageUrl,
+  String? userId,
+  DateTime? cookedAt,
+  int? personalRating,
+  String? notes,
+  String? photoUrl,
+  int? servings,
+}) {
+  return CookingLog(
+    id: id ?? 'log_001',
+    recipeId: recipeId ?? 'recipe_001',
+    recipeName: recipeName ?? 'Test Recipe',
+    recipeImageUrl: recipeImageUrl,
+    userId: userId ?? 'user_001',
+    cookedAt: cookedAt ?? DateTime(2025, 6, 15, 12, 0, 0),
+    personalRating: personalRating ?? 4,
+    notes: notes ?? 'Turned out great!',
+    photoUrl: photoUrl,
+    servings: servings ?? 2,
+  );
 }

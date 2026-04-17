@@ -17,6 +17,7 @@ import '../../providers/recipe_provider.dart';
 import '../../providers/shopping_list_provider.dart';
 import '../../providers/collection_provider.dart';
 import '../../providers/activity_provider.dart';
+import '../../providers/cooking_log_provider.dart';
 import '../../models/shopping_list.dart';
 import '../../utils/category_helpers.dart';
 import '../../widgets/gradient_button.dart';
@@ -26,19 +27,41 @@ import '../../widgets/unit_converter_sheet.dart';
 import 'widgets/ingredient_list_view.dart';
 import 'widgets/step_overview_list.dart';
 
-class RecipeDetailScreen extends StatelessWidget {
+class RecipeDetailScreen extends StatefulWidget {
   final Recipe recipe;
 
   const RecipeDetailScreen({super.key, required this.recipe});
 
   @override
+  State<RecipeDetailScreen> createState() => _RecipeDetailScreenState();
+}
+
+class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
+  late final RatingProvider _ratingProvider;
+  late final CommentProvider _commentProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    _ratingProvider = RatingProvider();
+    _commentProvider = CommentProvider();
+  }
+
+  @override
+  void dispose() {
+    _ratingProvider.dispose();
+    _commentProvider.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => RatingProvider()),
-        ChangeNotifierProvider(create: (_) => CommentProvider()),
+        ChangeNotifierProvider.value(value: _ratingProvider),
+        ChangeNotifierProvider.value(value: _commentProvider),
       ],
-      child: _RecipeDetailBody(recipe: recipe),
+      child: _RecipeDetailBody(recipe: widget.recipe),
     );
   }
 }
@@ -55,6 +78,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
   final TextEditingController _commentController = TextEditingController();
   bool _submittingComment = false;
   late int _selectedServings;
+  int _cookCount = 0;
 
   @override
   void initState() {
@@ -66,6 +90,8 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
       final userId = context.read<AuthProvider>().userModel?.uid;
       if (userId != null) {
         context.read<RatingProvider>().loadUserRating(recipeId, userId);
+        context.read<CookingLogProvider>().init(userId);
+        _loadCookCount(recipeId);
       }
       context.read<CommentProvider>().listenToComments(recipeId);
     });
@@ -75,6 +101,44 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
   void dispose() {
     _commentController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadCookCount(String recipeId) async {
+    final count = await context
+        .read<CookingLogProvider>()
+        .getCookCount(recipeId);
+    if (mounted) setState(() => _cookCount = count);
+  }
+
+  Future<void> _showLogCookSheet(BuildContext context, Recipe recipe) async {
+    final cookingLogProvider = context.read<CookingLogProvider>();
+    final l10n = AppLocalizations.of(context)!;
+
+    final result = await showModalBottomSheet<_LogCookResult>(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => _LogCookSheet(initialServings: _selectedServings),
+    );
+
+    if (result == null || !mounted) return;
+
+    try {
+      await cookingLogProvider.logCook(
+        recipe,
+        personalRating: result.rating > 0 ? result.rating : null,
+        notes: result.notes,
+        servings: result.servings,
+      );
+      if (mounted) {
+        _showSnackBar(l10n.cookLogged);
+        await _loadCookCount(recipe.id!);
+      }
+    } catch (_) {
+      if (mounted) _showSnackBar(l10n.error);
+    }
   }
 
   String _scaledAmount(String originalAmount, int originalServings) {
@@ -690,6 +754,32 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                   ),
                   const SizedBox(height: 12),
                   GradientButton(
+                    text: l10n.iCookedThis,
+                    icon: Icons.outdoor_grill,
+                    onPressed: context.read<AuthProvider>().isAuthenticated
+                        ? () => _showLogCookSheet(context, liveRecipe)
+                        : null,
+                    trailing: _cookCount > 0
+                        ? Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.25),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              '×$_cookCount',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                  const SizedBox(height: 12),
+                  GradientButton(
                     text: l10n.addToShoppingList,
                     icon: Icons.shopping_cart_outlined,
                     onPressed: () => _showAddToShoppingListSheet(context, liveRecipe),
@@ -1298,6 +1388,142 @@ class _StarRatingWidget extends StatelessWidget {
           ),
         );
       }),
+    );
+  }
+}
+
+class _LogCookResult {
+  final int rating;
+  final String? notes;
+  final int servings;
+  const _LogCookResult({required this.rating, required this.notes, required this.servings});
+}
+
+class _LogCookSheet extends StatefulWidget {
+  final int initialServings;
+  const _LogCookSheet({required this.initialServings});
+
+  @override
+  State<_LogCookSheet> createState() => _LogCookSheetState();
+}
+
+class _LogCookSheetState extends State<_LogCookSheet> {
+  late int _servings;
+  int _rating = 0;
+  final _notesController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _servings = widget.initialServings;
+  }
+
+  @override
+  void dispose() {
+    _notesController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: AppTheme.neutralLightOf(context),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              Text(
+                l10n.iCookedThis,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: List.generate(5, (i) {
+                  return GestureDetector(
+                    onTap: () => setState(() => _rating = i + 1),
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 4),
+                      child: Icon(
+                        i < _rating ? Icons.star : Icons.star_border,
+                        size: 32,
+                        color: AppTheme.starColor,
+                      ),
+                    ),
+                  );
+                }),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Text(
+                    l10n.serves(_servings),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.remove_circle_outline),
+                    onPressed: _servings > 1 ? () => setState(() => _servings--) : null,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add_circle_outline),
+                    onPressed: _servings < 20 ? () => setState(() => _servings++) : null,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: _notesController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  hintText: l10n.personalNotes,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  contentPadding: const EdgeInsets.all(12),
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: FilledButton(
+                  onPressed: () {
+                    final notes = _notesController.text.trim();
+                    Navigator.pop(
+                      context,
+                      _LogCookResult(
+                        rating: _rating,
+                        notes: notes.isEmpty ? null : notes,
+                        servings: _servings,
+                      ),
+                    );
+                  },
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppTheme.primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(l10n.logCook),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

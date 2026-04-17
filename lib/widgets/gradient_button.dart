@@ -8,6 +8,7 @@ class GradientButton extends StatelessWidget {
   final double height;
   final double borderRadius;
   final IconData? icon;
+  final Widget? trailing;
 
   const GradientButton({
     super.key,
@@ -16,6 +17,7 @@ class GradientButton extends StatelessWidget {
     this.height = 54,
     this.borderRadius = 14,
     this.icon,
+    this.trailing,
   });
 
   @override
@@ -49,12 +51,13 @@ class GradientButton extends StatelessWidget {
           onTap: onPressed,
           borderRadius: BorderRadius.circular(borderRadius),
           child: Center(
-            child: icon != null
-                ? Row(
+            child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(icon, color: Colors.white, size: 20),
-                      const SizedBox(width: 8),
+                      if (icon != null) ...[
+                        Icon(icon, color: Colors.white, size: 20),
+                        const SizedBox(width: 8),
+                      ],
                       Text(
                         text,
                         style: GoogleFonts.poppins(
@@ -63,15 +66,11 @@ class GradientButton extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
+                      if (trailing != null) ...[
+                        const SizedBox(width: 8),
+                        trailing!,
+                      ],
                     ],
-                  )
-                : Text(
-                    text,
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
                   ),
           ),
         ),

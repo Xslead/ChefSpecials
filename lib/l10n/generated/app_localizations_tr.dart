@@ -1555,4 +1555,36 @@ class AppLocalizationsTr extends AppLocalizations {
   String photoOf(int current, int total) {
     return '$current / $total';
   }
+
+  @override
+  String get cookingHistory => 'Pişirme Geçmişi';
+
+  @override
+  String get iCookedThis => 'Bunu Pişirdim';
+
+  @override
+  String get logCook => 'Kaydet';
+
+  @override
+  String cookedTimes(int count) {
+    return '$count porsiyon';
+  }
+
+  @override
+  String cookedCount(int count) {
+    return '$count× pişirildi';
+  }
+
+  @override
+  String get personalNotes => 'Kişisel notlar (isteğe bağlı)';
+
+  @override
+  String get noCookingHistory => 'Henüz pişirme geçmişi yok';
+
+  @override
+  String get noCookingHistorySubtitle =>
+      'Herhangi bir tarifte \"Bunu Pişirdim\" butonuna basarak pişirmenizi kaydedin';
+
+  @override
+  String get cookLogged => 'Pişirme kaydedildi!';
 }

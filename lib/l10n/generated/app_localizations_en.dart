@@ -1549,4 +1549,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String photoOf(int current, int total) {
     return '$current of $total';
   }
+
+  @override
+  String get cookingHistory => 'Cooking History';
+
+  @override
+  String get iCookedThis => 'I Cooked This';
+
+  @override
+  String get logCook => 'Log Cook';
+
+  @override
+  String cookedTimes(int count) {
+    return '$count serving(s)';
+  }
+
+  @override
+  String cookedCount(int count) {
+    return 'Cooked $count×';
+  }
+
+  @override
+  String get personalNotes => 'Personal notes (optional)';
+
+  @override
+  String get noCookingHistory => 'No cooking history yet';
+
+  @override
+  String get noCookingHistorySubtitle =>
+      'Tap \"I Cooked This\" on any recipe to log your cook';
+
+  @override
+  String get cookLogged => 'Cook logged!';
 }

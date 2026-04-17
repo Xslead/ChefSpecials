@@ -13,7 +13,7 @@ import '../../providers/follow_provider.dart';
 import '../../providers/recipe_form_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../widgets/screen_header.dart';
-import 'widgets/image_picker_tile.dart';
+import 'widgets/multi_image_picker.dart';
 import 'widgets/ingredient_input_list.dart';
 import 'widgets/step_input_list.dart';
 
@@ -83,7 +83,10 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.error)),
+          SnackBar(
+            content: Text(e.toString()),
+            duration: const Duration(seconds: 8),
+          ),
         );
       }
     }
@@ -144,7 +147,7 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                   const SizedBox(height: 20),
 
                   // Image picker
-                  const ImagePickerTile(),
+                  const MultiImagePicker(),
                   const SizedBox(height: 20),
 
                   // Recipe name

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:uuid/uuid.dart';
 
 class StorageService {
@@ -34,6 +35,50 @@ class StorageService {
     try {
       final ref = _storage.refFromURL(url);
       await ref.delete();
+    } catch (_) {}
+  }
+
+  Future<File> compressImage(File file) async {
+    try {
+      final targetPath =
+          '${file.parent.path}/${_uuid.v4()}_compressed.jpg';
+      final result = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path,
+        targetPath,
+        quality: 80,
+        minWidth: 1200,
+        minHeight: 1,
+      );
+      return result != null ? File(result.path) : file;
+    } catch (_) {
+      // Compression unavailable (e.g. x86 emulator) — use original file
+      return file;
+    }
+  }
+
+  Future<List<String>> uploadRecipePhotos(
+    String recipeId,
+    List<File> files,
+  ) async {
+    final urls = <String>[];
+    for (final file in files) {
+      final compressed = await compressImage(file);
+      final fileName = '${_uuid.v4()}.jpg';
+      final ref =
+          _storage.ref().child('recipe_photos/$recipeId/$fileName');
+      await ref.putFile(compressed);
+      urls.add(await ref.getDownloadURL());
+    }
+    return urls;
+  }
+
+  Future<void> deleteRecipePhotos(String recipeId) async {
+    try {
+      final ref = _storage.ref().child('recipe_photos/$recipeId');
+      final result = await ref.listAll();
+      for (final item in result.items) {
+        await item.delete();
+      }
     } catch (_) {}
   }
 }

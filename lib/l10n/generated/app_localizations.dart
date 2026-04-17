@@ -2952,6 +2952,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Get Started'**
   String get getStarted;
+
+  /// No description provided for @addPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Photos'**
+  String get addPhotos;
+
+  /// No description provided for @photoGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo Gallery'**
+  String get photoGallery;
+
+  /// No description provided for @dragToReorder.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to reorder'**
+  String get dragToReorder;
+
+  /// No description provided for @coverPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover'**
+  String get coverPhoto;
+
+  /// No description provided for @morePhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} more'**
+  String morePhotos(int count);
+
+  /// No description provided for @photoOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{current} of {total}'**
+  String photoOf(int current, int total);
 }
 
 class _AppLocalizationsDelegate

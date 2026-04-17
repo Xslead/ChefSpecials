@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -21,6 +20,7 @@ import '../../providers/activity_provider.dart';
 import '../../models/shopping_list.dart';
 import '../../utils/category_helpers.dart';
 import '../../widgets/gradient_button.dart';
+import '../../widgets/photo_carousel.dart';
 import '../../widgets/serving_size_selector.dart';
 import '../../widgets/unit_converter_sheet.dart';
 import 'widgets/ingredient_list_view.dart';
@@ -780,28 +780,19 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
         background: Stack(
           fit: StackFit.expand,
           children: [
-            r.imageUrl != null
-                ? CachedNetworkImage(
-                    imageUrl: r.imageUrl!,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: AppTheme.neutralLight,
-                      child: const Center(child: CircularProgressIndicator()),
-                    ),
-                    errorWidget: (context, url, error) =>
-                        _buildPlaceholderImage(),
-                  )
-                : _buildPlaceholderImage(),
-            // Gradient overlay
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withValues(alpha: 0.4),
-                  ],
+            _buildPhotoArea(r),
+            // Gradient overlay — IgnorePointer so carousel gestures pass through
+            IgnorePointer(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.4),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -818,6 +809,15 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
         child: Icon(Icons.restaurant_menu, size: 80, color: AppTheme.textTertiary),
       ),
     );
+  }
+
+  Widget _buildPhotoArea(Recipe r) {
+    final allPhotos = [
+      if (r.imageUrl != null) r.imageUrl!,
+      ...r.photos,
+    ];
+    if (allPhotos.isEmpty) return _buildPlaceholderImage();
+    return PhotoCarousel(photos: allPhotos, height: 320);
   }
 
   Widget _buildTitleSection(

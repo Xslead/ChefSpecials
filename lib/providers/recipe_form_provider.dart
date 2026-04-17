@@ -29,6 +29,8 @@ class RecipeFormProvider extends ChangeNotifier {
   double? fatGrams;
   bool isPrivate = false;
   List<String> dietaryTags = [];
+  List<File> additionalPhotoFiles = [];
+  List<String> existingAdditionalPhotos = [];
   bool isSubmitting = false;
 
   void prefillFromRecipe(Recipe recipe) {
@@ -43,6 +45,7 @@ class RecipeFormProvider extends ChangeNotifier {
         ? [RecipeStep(order: 1, instruction: '')]
         : List.from(recipe.steps);
     if (recipe.imageUrl != null) existingImageUrl = recipe.imageUrl;
+    existingAdditionalPhotos = List.from(recipe.photos);
     notifyListeners();
   }
 
@@ -151,6 +154,45 @@ class RecipeFormProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearCoverImage() {
+    imageFile = null;
+    existingImageUrl = null;
+    notifyListeners();
+  }
+
+  void addAdditionalPhotos(List<File> files) {
+    additionalPhotoFiles.addAll(files);
+    notifyListeners();
+  }
+
+  void removeAdditionalPhoto(int index) {
+    if (index < existingAdditionalPhotos.length) {
+      existingAdditionalPhotos.removeAt(index);
+    } else {
+      additionalPhotoFiles.removeAt(index - existingAdditionalPhotos.length);
+    }
+    notifyListeners();
+  }
+
+  void reorderAdditionalPhotos(int oldIndex, int newIndex) {
+    final totalExisting = existingAdditionalPhotos.length;
+    final allUrls = [...existingAdditionalPhotos];
+    final allFiles = [...additionalPhotoFiles];
+
+    if (oldIndex < totalExisting && newIndex < totalExisting) {
+      final item = allUrls.removeAt(oldIndex);
+      allUrls.insert(newIndex, item);
+      existingAdditionalPhotos = allUrls;
+    } else if (oldIndex >= totalExisting && newIndex >= totalExisting) {
+      final fi = oldIndex - totalExisting;
+      final ti = newIndex - totalExisting;
+      final item = allFiles.removeAt(fi);
+      allFiles.insert(ti, item);
+      additionalPhotoFiles = allFiles;
+    }
+    notifyListeners();
+  }
+
   void setIsPrivate(bool value) {
     isPrivate = value;
     notifyListeners();
@@ -183,6 +225,8 @@ class RecipeFormProvider extends ChangeNotifier {
     fatGrams = recipe.fatGrams;
     isPrivate = recipe.isPrivate;
     dietaryTags = List.from(recipe.dietaryTags);
+    existingAdditionalPhotos = List.from(recipe.photos);
+    additionalPhotoFiles = [];
     notifyListeners();
   }
 
@@ -190,42 +234,53 @@ class RecipeFormProvider extends ChangeNotifier {
     isSubmitting = true;
     notifyListeners();
 
-    String? imageUrl = existingImageUrl;
-    if (imageFile != null) {
-      imageUrl = await _storageService.uploadRecipeImage(imageFile!, authorId);
+    try {
+      String? imageUrl = existingImageUrl;
+      if (imageFile != null) {
+        imageUrl = await _storageService.uploadRecipeImage(imageFile!, authorId);
+      }
+
+      final List<String> allPhotos = List.from(existingAdditionalPhotos);
+      if (additionalPhotoFiles.isNotEmpty) {
+        final uploaded = await _storageService.uploadRecipePhotos(
+          authorId,
+          additionalPhotoFiles,
+        );
+        allPhotos.addAll(uploaded);
+      }
+
+      final validIngredients = ingredients
+          .where((i) => i.name.isNotEmpty && i.amount.isNotEmpty)
+          .toList();
+      final validSteps = steps
+          .where((s) => s.instruction.isNotEmpty)
+          .toList();
+
+      return Recipe(
+        title: title,
+        description: description,
+        authorId: authorId,
+        authorName: authorName,
+        category: category,
+        servings: servings,
+        prepTimeMinutes: prepTimeMinutes,
+        cookTimeMinutes: cookTimeMinutes,
+        imageUrl: imageUrl,
+        ingredients: validIngredients,
+        steps: validSteps,
+        caloriesPerServing: caloriesPerServing,
+        proteinGrams: proteinGrams,
+        carbsGrams: carbsGrams,
+        fatGrams: fatGrams,
+        createdAt: DateTime.now(),
+        isPrivate: isPrivate,
+        dietaryTags: dietaryTags,
+        photos: allPhotos,
+      );
+    } finally {
+      isSubmitting = false;
+      notifyListeners();
     }
-
-    final validIngredients = ingredients
-        .where((i) => i.name.isNotEmpty && i.amount.isNotEmpty)
-        .toList();
-    final validSteps = steps
-        .where((s) => s.instruction.isNotEmpty)
-        .toList();
-
-    final recipe = Recipe(
-      title: title,
-      description: description,
-      authorId: authorId,
-      authorName: authorName,
-      category: category,
-      servings: servings,
-      prepTimeMinutes: prepTimeMinutes,
-      cookTimeMinutes: cookTimeMinutes,
-      imageUrl: imageUrl,
-      ingredients: validIngredients,
-      steps: validSteps,
-      caloriesPerServing: caloriesPerServing,
-      proteinGrams: proteinGrams,
-      carbsGrams: carbsGrams,
-      fatGrams: fatGrams,
-      createdAt: DateTime.now(),
-      isPrivate: isPrivate,
-      dietaryTags: dietaryTags,
-    );
-
-    isSubmitting = false;
-    notifyListeners();
-    return recipe;
   }
 
   void reset() {
@@ -245,6 +300,8 @@ class RecipeFormProvider extends ChangeNotifier {
     fatGrams = null;
     isPrivate = false;
     dietaryTags = [];
+    additionalPhotoFiles = [];
+    existingAdditionalPhotos = [];
     isSubmitting = false;
     notifyListeners();
   }

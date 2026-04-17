@@ -1533,4 +1533,26 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get getStarted => 'Başlayın';
+
+  @override
+  String get addPhotos => 'Fotoğraf Ekle';
+
+  @override
+  String get photoGallery => 'Fotoğraf Galerisi';
+
+  @override
+  String get dragToReorder => 'Sıralamak için sürükleyin';
+
+  @override
+  String get coverPhoto => 'Kapak';
+
+  @override
+  String morePhotos(int count) {
+    return '+$count daha';
+  }
+
+  @override
+  String photoOf(int current, int total) {
+    return '$current / $total';
+  }
 }

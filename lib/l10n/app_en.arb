@@ -618,5 +618,22 @@
   "setDailyGoals": "Set your daily goals",
   "nutFree": "Nut-Free",
   "skip": "Skip",
-  "getStarted": "Get Started"
+  "getStarted": "Get Started",
+  "addPhotos": "Add Photos",
+  "photoGallery": "Photo Gallery",
+  "dragToReorder": "Drag to reorder",
+  "coverPhoto": "Cover",
+  "morePhotos": "+{count} more",
+  "@morePhotos": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "photoOf": "{current} of {total}",
+  "@photoOf": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  }
 }

@@ -1527,4 +1527,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get getStarted => 'Get Started';
+
+  @override
+  String get addPhotos => 'Add Photos';
+
+  @override
+  String get photoGallery => 'Photo Gallery';
+
+  @override
+  String get dragToReorder => 'Drag to reorder';
+
+  @override
+  String get coverPhoto => 'Cover';
+
+  @override
+  String morePhotos(int count) {
+    return '+$count more';
+  }
+
+  @override
+  String photoOf(int current, int total) {
+    return '$current of $total';
+  }
 }

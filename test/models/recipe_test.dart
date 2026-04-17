@@ -175,6 +175,31 @@ void main() {
         expect(recipe.dietaryTags, isEmpty);
       });
 
+      test('defaults photos to empty list when missing', () {
+        final map = minimalMap();
+        final recipe = Recipe.fromMap(map, 'doc1');
+        expect(recipe.photos, isEmpty);
+      });
+
+      test('defaults photos to empty list when null', () {
+        final map = minimalMap();
+        map['photos'] = null;
+        final recipe = Recipe.fromMap(map, 'doc1');
+        expect(recipe.photos, isEmpty);
+      });
+
+      test('parses photos list correctly', () {
+        final map = fullMap();
+        map['photos'] = [
+          'https://example.com/photo1.jpg',
+          'https://example.com/photo2.jpg',
+        ];
+        final recipe = Recipe.fromMap(map, 'doc1');
+        expect(recipe.photos.length, 2);
+        expect(recipe.photos[0], 'https://example.com/photo1.jpg');
+        expect(recipe.photos[1], 'https://example.com/photo2.jpg');
+      });
+
       test('parses nested ingredients correctly', () {
         final map = fullMap();
         final recipe = Recipe.fromMap(map, 'doc1');
@@ -260,6 +285,29 @@ void main() {
         expect(map['createdAt'], dt.toIso8601String());
         expect(map['isPrivate'], isTrue);
         expect(map['dietaryTags'], ['vegan', 'gluten-free']);
+        expect(map['photos'], isEmpty);
+      });
+
+      test('serializes photos list correctly', () {
+        final recipe = Recipe(
+          title: 'T',
+          description: 'D',
+          authorId: 'a1',
+          authorName: 'Chef',
+          category: 'Cat',
+          servings: 1,
+          prepTimeMinutes: 5,
+          cookTimeMinutes: 5,
+          ingredients: [],
+          steps: [],
+          createdAt: DateTime.now(),
+          photos: [
+            'https://example.com/p1.jpg',
+            'https://example.com/p2.jpg',
+          ],
+        );
+        final map = recipe.toMap();
+        expect(map['photos'], ['https://example.com/p1.jpg', 'https://example.com/p2.jpg']);
       });
 
       test('does not include id in toMap output', () {
@@ -512,6 +560,12 @@ void main() {
             original.copyWith(dietaryTags: ['vegan', 'gluten-free']);
 
         expect(copy.dietaryTags, ['vegan', 'gluten-free']);
+      });
+
+      test('updates photos', () {
+        final copy = original.copyWith(
+            photos: ['https://example.com/p1.jpg']);
+        expect(copy.photos, ['https://example.com/p1.jpg']);
       });
 
       test('updates multiple fields simultaneously', () {

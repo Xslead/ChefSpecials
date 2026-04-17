@@ -618,5 +618,22 @@
   "setDailyGoals": "Günlük hedeflerinizi belirleyin",
   "nutFree": "Fındıksız",
   "skip": "Atla",
-  "getStarted": "Başlayın"
+  "getStarted": "Başlayın",
+  "addPhotos": "Fotoğraf Ekle",
+  "photoGallery": "Fotoğraf Galerisi",
+  "dragToReorder": "Sıralamak için sürükleyin",
+  "coverPhoto": "Kapak",
+  "morePhotos": "+{count} daha",
+  "@morePhotos": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "photoOf": "{current} / {total}",
+  "@photoOf": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  }
 }

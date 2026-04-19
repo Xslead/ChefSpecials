@@ -15,8 +15,15 @@ import '../../../providers/cooking_log_provider.dart';
 
 class RecipeCard extends StatefulWidget {
   final Recipe recipe;
+  final bool showTrendingBadge;
+  final int? trendingRank;
 
-  const RecipeCard({super.key, required this.recipe});
+  const RecipeCard({
+    super.key,
+    required this.recipe,
+    this.showTrendingBadge = false,
+    this.trendingRank,
+  });
 
   @override
   State<RecipeCard> createState() => _RecipeCardState();
@@ -87,6 +94,12 @@ class _RecipeCardState extends State<RecipeCard> {
                     right: 12,
                     child: _buildFavoriteButton(context),
                   ),
+                  if (widget.showTrendingBadge)
+                    Positioned(
+                      bottom: 12,
+                      left: 12,
+                      child: _buildTrendingBadge(),
+                    ),
                 ],
               ),
               // Content section
@@ -400,6 +413,44 @@ class _RecipeCardState extends State<RecipeCard> {
               color: isFav ? AppTheme.errorColor : Colors.white,
               size: 20,
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTrendingBadge() {
+    final rank = widget.trendingRank;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppTheme.radiusS),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            color: Colors.deepOrange.withValues(alpha: 0.85),
+            borderRadius: BorderRadius.circular(AppTheme.radiusS),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.local_fire_department,
+                size: 14,
+                color: Colors.white,
+              ),
+              if (rank != null) ...[
+                const SizedBox(width: 4),
+                Text(
+                  '#$rank',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
       ),

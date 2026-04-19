@@ -41,4 +41,12 @@ class AppConstants {
     'Low Carb',
     'Halal',
   ];
+
+  // Seasonal tags (stored alongside dietaryTags on a Recipe)
+  static const List<String> defaultSeasonalTags = [
+    'Spring',
+    'Summer',
+    'Autumn',
+    'Winter',
+  ];
 }

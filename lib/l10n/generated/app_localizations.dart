@@ -3042,6 +3042,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cook logged!'**
   String get cookLogged;
+
+  /// No description provided for @popularThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular This Week'**
+  String get popularThisWeek;
+
+  /// No description provided for @trendingRecipes.
+  ///
+  /// In en, this message translates to:
+  /// **'Trending Recipes'**
+  String get trendingRecipes;
+
+  /// No description provided for @popularNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Now'**
+  String get popularNow;
+
+  /// No description provided for @thisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get thisWeek;
+
+  /// No description provided for @thisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This Month'**
+  String get thisMonth;
+
+  /// No description provided for @allTime.
+  ///
+  /// In en, this message translates to:
+  /// **'All Time'**
+  String get allTime;
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See All'**
+  String get seeAll;
+
+  /// No description provided for @spring.
+  ///
+  /// In en, this message translates to:
+  /// **'Spring'**
+  String get spring;
+
+  /// No description provided for @summer.
+  ///
+  /// In en, this message translates to:
+  /// **'Summer'**
+  String get summer;
+
+  /// No description provided for @autumn.
+  ///
+  /// In en, this message translates to:
+  /// **'Autumn'**
+  String get autumn;
+
+  /// No description provided for @winter.
+  ///
+  /// In en, this message translates to:
+  /// **'Winter'**
+  String get winter;
 }
 
 class _AppLocalizationsDelegate

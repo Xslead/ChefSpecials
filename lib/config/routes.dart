@@ -46,6 +46,7 @@ import '../screens/admin/admin_audit_log_screen.dart';
 import '../screens/auth/banned_screen.dart';
 import '../screens/onboarding/onboarding_screen.dart';
 import '../screens/cooking_history/cooking_history_screen.dart';
+import '../screens/trending/trending_recipes_screen.dart';
 import '../providers/onboarding_provider.dart';
 import '../models/meal_entry.dart';
 
@@ -358,6 +359,11 @@ final GoRouter router = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/cooking-history',
       builder: (context, state) => const CookingHistoryScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/trending',
+      builder: (context, state) => const TrendingRecipesScreen(),
     ),
   ],
 );

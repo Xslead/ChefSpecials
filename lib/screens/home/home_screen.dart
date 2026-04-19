@@ -10,6 +10,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../providers/favorite_provider.dart';
 import '../../providers/activity_provider.dart';
+import '../../providers/trending_provider.dart';
 import '../../widgets/empty_state.dart';
 import 'widgets/recipe_card.dart';
 
@@ -47,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
         context.read<FavoriteProvider>().listenToFavorites(user.uid);
         context.read<ActivityProvider>().init(user.uid);
       }
+      context.read<TrendingProvider>().loadTrending();
     });
   }
 
@@ -79,8 +81,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final recipeProvider = context.watch<RecipeProvider>();
+    final trendingProvider = context.watch<TrendingProvider>();
     final allPublic = recipeProvider.allRecipes.where((r) => !r.isPrivate).toList();
     final filteredRecipes = _applyLocalFilters(allPublic);
+    final hasActiveFilter = _activeFilterCount > 0;
+    final trendingIds = trendingProvider.trendingIds;
 
     return Scaffold(
       body: Column(
@@ -96,12 +101,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       )
                     : ListView.builder(
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-                        itemCount: filteredRecipes.length,
+                        itemCount: filteredRecipes.length + (hasActiveFilter ? 0 : 1),
                         itemBuilder: (context, index) {
+                          if (!hasActiveFilter && index == 0) {
+                            return _buildDiscoverySections(context, l10n, trendingProvider);
+                          }
+                          final recipeIndex = hasActiveFilter ? index : index - 1;
+                          final recipe = filteredRecipes[recipeIndex];
+                          final isTrending =
+                              recipe.id != null && trendingIds.contains(recipe.id);
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16),
                             child: RecipeCard(
-                              recipe: filteredRecipes[index],
+                              recipe: recipe,
+                              showTrendingBadge: isTrending,
                             ),
                           );
                         },
@@ -614,6 +627,74 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildDiscoverySections(
+    BuildContext context,
+    AppLocalizations l10n,
+    TrendingProvider provider,
+  ) {
+    if (provider.trendingRecipes.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Row(
+            children: [
+              const Icon(
+                Icons.local_fire_department,
+                color: Colors.deepOrange,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  l10n.popularThisWeek,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: -0.2,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => context.push('/trending'),
+                child: Text(
+                  l10n.seeAll,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.primaryColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          height: 210,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: provider.trendingRecipes.length,
+            separatorBuilder: (_, _) => const SizedBox(width: 12),
+            itemBuilder: (context, index) {
+              final recipe = provider.trendingRecipes[index];
+              return SizedBox(
+                width: 200,
+                child: _CompactTrendingCard(
+                  recipe: recipe,
+                  rank: index + 1,
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
   String _localizeCategory(String category, AppLocalizations l10n) {
     switch (category) {
       case 'Breakfast':
@@ -635,5 +716,147 @@ class _HomeScreenState extends State<HomeScreen> {
       default:
         return category;
     }
+  }
+}
+
+class _CompactTrendingCard extends StatelessWidget {
+  final Recipe recipe;
+  final int rank;
+
+  const _CompactTrendingCard({required this.recipe, required this.rank});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.push('/recipe/${recipe.id}', extra: recipe),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppTheme.surfaceOf(context),
+          borderRadius: BorderRadius.circular(AppTheme.radiusL),
+          border: Border.all(
+            color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
+          ),
+          boxShadow: [AppTheme.shadowOf(context)],
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                SizedBox(
+                  height: 120,
+                  width: double.infinity,
+                  child: recipe.imageUrl != null && recipe.imageUrl!.isNotEmpty
+                      ? Image.network(
+                          recipe.imageUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(
+                            color: AppTheme.neutralLightOf(context),
+                            child: Icon(
+                              Icons.restaurant,
+                              size: 40,
+                              color: AppTheme.textTertiaryOf(context),
+                            ),
+                          ),
+                        )
+                      : Container(
+                          color: AppTheme.neutralLightOf(context),
+                          child: Icon(
+                            Icons.restaurant,
+                            size: 40,
+                            color: AppTheme.textTertiaryOf(context),
+                          ),
+                        ),
+                ),
+                Positioned(
+                  top: 8,
+                  left: 8,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.deepOrange.withValues(alpha: 0.9),
+                      borderRadius: BorderRadius.circular(AppTheme.radiusS),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.local_fire_department,
+                          size: 12,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          '#$rank',
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    recipe.title,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      height: 1.2,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.star,
+                        size: 12,
+                        color: AppTheme.starColor,
+                      ),
+                      const SizedBox(width: 3),
+                      Text(
+                        recipe.averageRating > 0
+                            ? recipe.averageRating.toStringAsFixed(1)
+                            : '-',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.textSecondaryOf(context),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(
+                        Icons.schedule,
+                        size: 12,
+                        color: AppTheme.textTertiaryOf(context),
+                      ),
+                      const SizedBox(width: 3),
+                      Text(
+                        '${recipe.prepTimeMinutes + recipe.cookTimeMinutes}m',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: AppTheme.textSecondaryOf(context),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

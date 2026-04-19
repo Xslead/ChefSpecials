@@ -1581,4 +1581,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cookLogged => 'Cook logged!';
+
+  @override
+  String get popularThisWeek => 'Popular This Week';
+
+  @override
+  String get trendingRecipes => 'Trending Recipes';
+
+  @override
+  String get popularNow => 'Popular Now';
+
+  @override
+  String get thisWeek => 'This Week';
+
+  @override
+  String get thisMonth => 'This Month';
+
+  @override
+  String get allTime => 'All Time';
+
+  @override
+  String get seeAll => 'See All';
+
+  @override
+  String get spring => 'Spring';
+
+  @override
+  String get summer => 'Summer';
+
+  @override
+  String get autumn => 'Autumn';
+
+  @override
+  String get winter => 'Winter';
 }

@@ -1587,4 +1587,37 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get cookLogged => 'Pişirme kaydedildi!';
+
+  @override
+  String get popularThisWeek => 'Bu Hafta Popüler';
+
+  @override
+  String get trendingRecipes => 'Trend Tarifler';
+
+  @override
+  String get popularNow => 'Şimdi Popüler';
+
+  @override
+  String get thisWeek => 'Bu Hafta';
+
+  @override
+  String get thisMonth => 'Bu Ay';
+
+  @override
+  String get allTime => 'Tüm Zamanlar';
+
+  @override
+  String get seeAll => 'Tümünü Gör';
+
+  @override
+  String get spring => 'İlkbahar';
+
+  @override
+  String get summer => 'Yaz';
+
+  @override
+  String get autumn => 'Sonbahar';
+
+  @override
+  String get winter => 'Kış';
 }

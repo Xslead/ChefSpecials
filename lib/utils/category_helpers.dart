@@ -44,6 +44,21 @@ String localizeDietaryTag(String tag, AppLocalizations l10n) {
   }
 }
 
+String localizeSeasonalTag(String tag, AppLocalizations l10n) {
+  switch (tag) {
+    case 'Spring':
+      return l10n.spring;
+    case 'Summer':
+      return l10n.summer;
+    case 'Autumn':
+      return l10n.autumn;
+    case 'Winter':
+      return l10n.winter;
+    default:
+      return tag;
+  }
+}
+
 String localizeFoodCategory(String category, AppLocalizations l10n) {
   switch (category) {
     case 'Protein':

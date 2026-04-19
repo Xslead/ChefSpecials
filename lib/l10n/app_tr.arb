@@ -654,5 +654,16 @@
   "personalNotes": "Kişisel notlar (isteğe bağlı)",
   "noCookingHistory": "Henüz pişirme geçmişi yok",
   "noCookingHistorySubtitle": "Herhangi bir tarifte \"Bunu Pişirdim\" butonuna basarak pişirmenizi kaydedin",
-  "cookLogged": "Pişirme kaydedildi!"
+  "cookLogged": "Pişirme kaydedildi!",
+  "popularThisWeek": "Bu Hafta Popüler",
+  "trendingRecipes": "Trend Tarifler",
+  "popularNow": "Şimdi Popüler",
+  "thisWeek": "Bu Hafta",
+  "thisMonth": "Bu Ay",
+  "allTime": "Tüm Zamanlar",
+  "seeAll": "Tümünü Gör",
+  "spring": "İlkbahar",
+  "summer": "Yaz",
+  "autumn": "Sonbahar",
+  "winter": "Kış"
 }

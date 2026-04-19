@@ -665,5 +665,22 @@
   "spring": "İlkbahar",
   "summer": "Yaz",
   "autumn": "Sonbahar",
-  "winter": "Kış"
+  "winter": "Kış",
+  "substitutions": "Alternatifler",
+  "substitutesFor": "{ingredient} için alternatifler",
+  "@substitutesFor": {
+    "placeholders": {
+      "ingredient": { "type": "String" }
+    }
+  },
+  "ratio": "Oran",
+  "suggestSubstitution": "Alternatif Öner",
+  "noSubstitutions": "Alternatif bulunamadı",
+  "substituteName": "Alternatif adı",
+  "verified": "Onaylı",
+  "communitySubmitted": "Topluluk önerisi",
+  "thankYouSubstitution": "Teşekkürler! Önerin incelenmek üzere gönderildi.",
+  "notesOptional": "Notlar (isteğe bağlı)",
+  "submit": "Gönder",
+  "filterAll": "Tümü"
 }

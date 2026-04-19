@@ -3108,6 +3108,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Winter'**
   String get winter;
+
+  /// No description provided for @substitutions.
+  ///
+  /// In en, this message translates to:
+  /// **'Substitutions'**
+  String get substitutions;
+
+  /// No description provided for @substitutesFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Substitutes for {ingredient}'**
+  String substitutesFor(String ingredient);
+
+  /// No description provided for @ratio.
+  ///
+  /// In en, this message translates to:
+  /// **'Ratio'**
+  String get ratio;
+
+  /// No description provided for @suggestSubstitution.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest a Substitution'**
+  String get suggestSubstitution;
+
+  /// No description provided for @noSubstitutions.
+  ///
+  /// In en, this message translates to:
+  /// **'No substitutions available'**
+  String get noSubstitutions;
+
+  /// No description provided for @substituteName.
+  ///
+  /// In en, this message translates to:
+  /// **'Substitute name'**
+  String get substituteName;
+
+  /// No description provided for @communitySubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Community submitted'**
+  String get communitySubmitted;
+
+  /// No description provided for @thankYouSubstitution.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks! Your suggestion was submitted for review.'**
+  String get thankYouSubstitution;
+
+  /// No description provided for @notesOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get notesOptional;
+
+  /// No description provided for @submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
 }
 
 class _AppLocalizationsDelegate

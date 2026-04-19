@@ -14,6 +14,7 @@ class AppConstants {
   static const String commentsCollection = 'comments';
   static const String ratingsCollection = 'ratings';
   static const String foodItemsCollection = 'food_items';
+  static const String substitutionsCollection = 'substitutions';
 
   // Storage paths
   static const String recipeImagesPath = 'recipe_images';

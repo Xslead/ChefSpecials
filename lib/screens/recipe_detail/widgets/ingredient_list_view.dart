@@ -7,12 +7,14 @@ class IngredientListView extends StatelessWidget {
   final List<Ingredient> ingredients;
   final double? scaleFactor;
   final void Function(Ingredient)? onIngredientTap;
+  final void Function(Ingredient)? onSubstitutionTap;
 
   const IngredientListView({
     super.key,
     required this.ingredients,
     this.scaleFactor,
     this.onIngredientTap,
+    this.onSubstitutionTap,
   });
 
   String _formatAmount(Ingredient ingredient) {
@@ -54,10 +56,15 @@ class IngredientListView extends StatelessWidget {
                     color: AppTheme.textSecondary,
                   ),
                 ),
-                if (onIngredientTap != null) ...[
-                  const SizedBox(width: 4),
-                  Icon(Icons.swap_horiz, size: 16, color: AppTheme.textTertiary),
-                ],
+                if (onSubstitutionTap != null)
+                  IconButton(
+                    icon: const Icon(Icons.swap_horiz, size: 18),
+                    color: AppTheme.textTertiary,
+                    visualDensity: VisualDensity.compact,
+                    padding: const EdgeInsets.all(4),
+                    constraints: const BoxConstraints(),
+                    onPressed: () => onSubstitutionTap!(ingredient),
+                  ),
               ],
             ),
             dense: true,

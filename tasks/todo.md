@@ -996,71 +996,71 @@ Status: PUSHED (Push 25)
 ### Task 9: Seasonal & Trending Recipes (Push 26)
 
 **Service: TrendingService**
-- [ ] Create `lib/services/trending_service.dart` — no own Firestore collection, computes from existing data
-- [ ] `getTrendingRecipes({int limit = 10, String timeWindow = '7d'})` → Future\<List\<Recipe\>\>
+- [x] Create `lib/services/trending_service.dart` — no own Firestore collection, computes from existing data
+- [x] `getTrendingRecipes({int limit = 10, String timeWindow = '7d'})` → Future\<List\<Recipe\>\>
   - Score = (recentFavorites x 3) + (ratingCount x 2) + (averageRating x 1) + recency bonus (+5 if created in last 48h)
   - Sort by score desc, return top N
-- [ ] `getSeasonalRecipes(int month, {int limit = 10})` → Future\<List\<Recipe\>\> — map months to seasons (Dec-Feb=Winter, Mar-May=Spring, Jun-Aug=Summer, Sep-Nov=Autumn), query matching seasonal category tag
-- [ ] `getSeasonalIngredients(int month)` → List\<String\> — hard-coded month-to-ingredients map
-- [ ] Accept optional `FirebaseFirestore`
+- [x] `getSeasonalRecipes(int month, {int limit = 10})` → Future\<List\<Recipe\>\> — map months to seasons (Dec-Feb=Winter, Mar-May=Spring, Jun-Aug=Summer, Sep-Nov=Autumn), query matching seasonal category tag
+- [x] `getSeasonalIngredients(int month)` → List\<String\> — hard-coded month-to-ingredients map
+- [x] Accept optional `FirebaseFirestore`
 
 **Provider: TrendingProvider**
-- [ ] Create `lib/providers/trending_provider.dart`
-- [ ] Holds: trendingRecipes, seasonalRecipes, seasonalIngredients, loading, lastRefreshed
-- [ ] `loadTrending()` — cache for 1 hour (check lastRefreshed)
-- [ ] `loadSeasonal()` / `loadSeasonalIngredients()` / `refresh()`
-- [ ] Register in `main.dart` MultiProvider
+- [x] Create `lib/providers/trending_provider.dart`
+- [x] Holds: trendingRecipes, seasonalRecipes, seasonalIngredients, loading, lastRefreshed
+- [x] `loadTrending()` — cache for 1 hour (check lastRefreshed)
+- [x] `loadSeasonal()` / `loadSeasonalIngredients()` / `refresh()`
+- [x] Register in `main.dart` MultiProvider
 
 **HomeScreen Modifications**
-- [ ] "Popular This Week" section: horizontal scrollable compact RecipeCards (~200px wide), max 10, "See All" → TrendingRecipesScreen
-- [ ] "What's in Season" section: horizontal chip list of seasonal ingredients, tap chip → SearchScreen pre-filtered
-- [ ] "Popular Now" badge on RecipeCard for trending recipes (flame icon badge on card corner)
+- [x] "Popular This Week" section: horizontal scrollable compact RecipeCards (~200px wide), max 10, "See All" → TrendingRecipesScreen
+- [x] "What's in Season" section: horizontal chip list of seasonal ingredients, tap chip → SearchScreen pre-filtered
+- [x] "Popular Now" badge on RecipeCard for trending recipes (flame icon badge on card corner)
 
 **Screen: TrendingRecipesScreen**
-- [ ] Create `lib/screens/trending/trending_recipes_screen.dart`
-- [ ] AppBar: "Trending Recipes", filter chips: "This Week" / "This Month" / "All Time"
-- [ ] ListView of RecipeCard with trending rank badge (#1, #2, #3...)
+- [x] Create `lib/screens/trending/trending_recipes_screen.dart`
+- [x] AppBar: "Trending Recipes", filter chips: "This Week" / "This Month" / "All Time"
+- [x] ListView of RecipeCard with trending rank badge (#1, #2, #3...)
 
 **RecipeCard Modifications**
-- [ ] Add optional `showTrendingBadge` (bool) and `trendingRank` (int?) params
-- [ ] Flame icon overlay + "#1" rank badge
+- [x] Add optional `showTrendingBadge` (bool) and `trendingRank` (int?) params
+- [x] Flame icon overlay + "#1" rank badge
 
 **Seasonal Tags**
-- [ ] Add "Spring", "Summer", "Autumn", "Winter" to category or dietary tag system (new SeasonalTag enum or extend DietaryTag)
+- [x] Add "Spring", "Summer", "Autumn", "Winter" to category or dietary tag system (new SeasonalTag enum or extend DietaryTag)
 
 **Route**
-- [ ] Add GoRoute path `/trending` under parentNavigatorKey
+- [x] Add GoRoute path `/trending` under parentNavigatorKey
 
 **l10n**
-- [ ] Add keys:
+- [x] Add keys:
   - `popularThisWeek` / `trendingRecipes` / `whatsInSeason` / `popularNow`
   - `thisWeek` / `thisMonth` / `allTime` / `seeAll`
   - `spring` / `summer` / `autumn` / `winter`
 
 **Tests**
-- [ ] `test/services/trending_service_test.dart` — score calculation, sort order, time window filtering, seasonal ingredients for all 12 months
-- [ ] `test/providers/trending_provider_test.dart` — loadTrending populates list, caching prevents re-fetch within 1 hour, refresh forces reload
+- [x] `test/services/trending_service_test.dart` — score calculation, sort order, time window filtering, seasonal ingredients for all 12 months
+- [x] `test/providers/trending_provider_test.dart` — loadTrending populates list, caching prevents re-fetch within 1 hour, refresh forces reload
 
 ---
 
 ### Task 10: Ingredient Substitution Suggestions (Push 27)
 
 **Model: IngredientSubstitution**
-- [ ] Create `lib/models/ingredient_substitution.dart`
-- [ ] Fields: `id`, `originalIngredient` (lowercase normalized), `substituteName`, `ratio` (e.g. "1:1"), `notes` (String?), `dietaryTags` (List\<String\>), `submittedBy` (String?), `isVerified` (bool)
-- [ ] `fromMap()`, `toMap()`
-- [ ] Firestore collection: `substitutions`
+- [x] Create `lib/models/ingredient_substitution.dart`
+- [x] Fields: `id`, `originalIngredient` (lowercase normalized), `substituteName`, `ratio` (e.g. "1:1"), `notes` (String?), `dietaryTags` (List\<String\>), `submittedBy` (String?), `isVerified` (bool)
+- [x] `fromMap()`, `toMap()`
+- [x] Firestore collection: `substitutions`
 
 **Service: SubstitutionService**
-- [ ] Create `lib/services/substitution_service.dart`
-- [ ] `getSubstitutions(String ingredientName)` — query where originalIngredient == name.toLowerCase().trim()
-- [ ] `getSubstitutionsByTag(String ingredientName, String dietaryTag)` — array-contains filter
-- [ ] `submitSubstitution(IngredientSubstitution sub)` — add with isVerified: false
-- [ ] `getAllSubstitutions()` / `verifySubstitution(String id)` / `deleteSubstitution(String id)`
-- [ ] Accept optional `FirebaseFirestore`
+- [x] Create `lib/services/substitution_service.dart`
+- [x] `getSubstitutions(String ingredientName)` — query where originalIngredient == name.toLowerCase().trim()
+- [x] `getSubstitutionsByTag(String ingredientName, String dietaryTag)` — array-contains filter
+- [x] `submitSubstitution(IngredientSubstitution sub)` — add with isVerified: false
+- [x] `getAllSubstitutions()` / `verifySubstitution(String id)` / `deleteSubstitution(String id)`
+- [x] Accept optional `FirebaseFirestore`
 
 **Seed Firestore**
-- [ ] 50+ substitution entries:
+- [x] 50+ substitution entries:
   - Butter → coconut oil (1:1, vegan), applesauce (1/2 cup per 1 cup, low-fat), Greek yogurt
   - Eggs → flax egg, chia egg, mashed banana, unsweetened applesauce
   - Milk → oat milk, almond milk, soy milk, coconut milk
@@ -1073,28 +1073,28 @@ Status: PUSHED (Push 25)
   - Soy sauce → coconut aminos, tamari
 
 **Widget: SubstitutionSheet**
-- [ ] Create `lib/widgets/substitution_sheet.dart` — showModalBottomSheet
-- [ ] Header: "Substitutes for {ingredientName}"
-- [ ] Optional FilterChip row (Vegan, Gluten-Free, Keto, Dairy-Free)
-- [ ] ListView of substitution cards: name (bold), ratio, notes, dietary chips, verified checkmark
-- [ ] "Suggest a Substitution" TextButton → form dialog (name, ratio, notes, tags) → service.submitSubstitution()
+- [x] Create `lib/widgets/substitution_sheet.dart` — showModalBottomSheet
+- [x] Header: "Substitutes for {ingredientName}"
+- [x] Optional FilterChip row (Vegan, Gluten-Free, Keto, Dairy-Free)
+- [x] ListView of substitution cards: name (bold), ratio, notes, dietary chips, verified checkmark
+- [x] "Suggest a Substitution" TextButton → form dialog (name, ratio, notes, tags) → service.submitSubstitution()
 
 **RecipeDetailScreen Modifications**
-- [ ] Each ingredient row: trailing swap icon button → opens SubstitutionSheet for that ingredient
-- [ ] If no substitutions found, show "No substitutions available"
+- [x] Each ingredient row: trailing swap icon button → opens SubstitutionSheet for that ingredient
+- [x] If no substitutions found, show "No substitutions available"
 
 **Firestore Rules**
-- [ ] Anyone can read, authenticated can create (isVerified: false), only admins can update isVerified or delete
+- [x] Anyone can read, authenticated can create (isVerified: false), only admins can update isVerified or delete
 
 **l10n**
-- [ ] Add keys:
+- [x] Add keys:
   - `substitutions` / `substitutesFor` / `ratio` / `suggestSubstitution` / `noSubstitutions`
   - `substituteName` / `verified` / `communitySubmitted` / `thankYouSubstitution`
 
 **Tests**
-- [ ] `test/models/ingredient_substitution_test.dart` — fromMap/toMap, dietaryTags list serialization
-- [ ] `test/services/substitution_service_test.dart` — getSubstitutions, getSubstitutionsByTag, submitSubstitution with isVerified false
-- [ ] `test/widgets/substitution_sheet_test.dart` — loads/displays substitutions, filter chips, suggest form
+- [x] `test/models/ingredient_substitution_test.dart` — fromMap/toMap, dietaryTags list serialization
+- [x] `test/services/substitution_service_test.dart` — getSubstitutions, getSubstitutionsByTag, submitSubstitution with isVerified false
+- [x] `test/widgets/substitution_sheet_test.dart` — loads/displays substitutions, filter chips, suggest form
 
 ---
 

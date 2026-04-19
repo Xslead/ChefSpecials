@@ -23,6 +23,7 @@ import '../../utils/category_helpers.dart';
 import '../../widgets/gradient_button.dart';
 import '../../widgets/photo_carousel.dart';
 import '../../widgets/serving_size_selector.dart';
+import '../../widgets/substitution_sheet.dart';
 import '../../widgets/unit_converter_sheet.dart';
 import 'widgets/ingredient_list_view.dart';
 import 'widgets/step_overview_list.dart';
@@ -732,6 +733,12 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                         context,
                         initialValue: scaledValue,
                         initialUnit: ingredient.unit,
+                      );
+                    },
+                    onSubstitutionTap: (ingredient) {
+                      SubstitutionSheet.show(
+                        context,
+                        ingredientName: ingredient.name,
                       );
                     },
                   ),

@@ -1255,7 +1255,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get nonVegan => 'Vegan Değil';
 
   @override
-  String get verified => 'Doğrulanmış';
+  String get verified => 'Onaylı';
 
   @override
   String nutriScoreLabel(String score) {
@@ -1620,4 +1620,40 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get winter => 'Kış';
+
+  @override
+  String get substitutions => 'Alternatifler';
+
+  @override
+  String substitutesFor(String ingredient) {
+    return '$ingredient için alternatifler';
+  }
+
+  @override
+  String get ratio => 'Oran';
+
+  @override
+  String get suggestSubstitution => 'Alternatif Öner';
+
+  @override
+  String get noSubstitutions => 'Alternatif bulunamadı';
+
+  @override
+  String get substituteName => 'Alternatif adı';
+
+  @override
+  String get communitySubmitted => 'Topluluk önerisi';
+
+  @override
+  String get thankYouSubstitution =>
+      'Teşekkürler! Önerin incelenmek üzere gönderildi.';
+
+  @override
+  String get notesOptional => 'Notlar (isteğe bağlı)';
+
+  @override
+  String get submit => 'Gönder';
+
+  @override
+  String get filterAll => 'Tümü';
 }

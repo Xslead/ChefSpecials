@@ -25,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final Set<String> _selectedDietaryTags = {};
   String? _selectedCategory;
   String _sortBy = 'newest';
+  String? _lastSyncedUid;
 
   int get _activeFilterCount =>
       (_selectedCategory != null ? 1 : 0) +
@@ -42,14 +43,15 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       context.read<RecipeProvider>().ensureInitialized();
-      final user = context.read<AuthProvider>().userModel;
-      if (user != null) {
-        context.read<FavoriteProvider>().listenToFavorites(user.uid);
-        context.read<ActivityProvider>().init(user.uid);
-      }
-      context.read<TrendingProvider>().loadTrending();
     });
+  }
+
+  void _syncUserBoundProviders(String uid) {
+    context.read<FavoriteProvider>().listenToFavorites(uid);
+    context.read<ActivityProvider>().init(uid);
+    context.read<TrendingProvider>().loadTrending(force: true);
   }
 
   List<Recipe> _applyLocalFilters(List<Recipe> recipes) {
@@ -82,6 +84,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final l10n = AppLocalizations.of(context)!;
     final recipeProvider = context.watch<RecipeProvider>();
     final trendingProvider = context.watch<TrendingProvider>();
+    final authUid = context.select<AuthProvider, String?>((a) => a.userModel?.uid);
+    if (authUid != null && authUid != _lastSyncedUid) {
+      _lastSyncedUid = authUid;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _syncUserBoundProviders(authUid);
+      });
+    }
     final allPublic = recipeProvider.allRecipes.where((r) => !r.isPrivate).toList();
     final filteredRecipes = _applyLocalFilters(allPublic);
     final hasActiveFilter = _activeFilterCount > 0;

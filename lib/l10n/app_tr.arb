@@ -682,5 +682,52 @@
   "thankYouSubstitution": "Teşekkürler! Önerin incelenmek üzere gönderildi.",
   "notesOptional": "Notlar (isteğe bağlı)",
   "submit": "Gönder",
-  "filterAll": "Tümü"
+  "filterAll": "Tümü",
+  "achievements": "Başarımlar",
+  "achievementUnlocked": "Başarım Kazanıldı!",
+  "unlockedOn": "{date} tarihinde kazanıldı",
+  "@unlockedOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "progress": "İlerleme",
+  "awesome": "Harika!",
+  "viewAllAchievements": "Tüm başarımları gör",
+  "achievementsUnlocked": "{total} başarımın {unlocked} tanesi kazanıldı",
+  "@achievementsUnlocked": {
+    "placeholders": {
+      "unlocked": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "noAchievementsYet": "Henüz başarım kazanılmadı",
+  "categoryCooking": "Pişirme",
+  "categorySocial": "Sosyal",
+  "categoryHealth": "Sağlık",
+  "categoryExploration": "Keşif",
+  "achievementFirstRecipe": "İlk Tarif",
+  "achievementFirstRecipeDesc": "İlk tarifini paylaş",
+  "achievementRecipeMaster": "Tarif Ustası",
+  "achievementRecipeMasterDesc": "10 tarif paylaş",
+  "achievementStreak7": "7 Günlük Seri",
+  "achievementStreak7Desc": "Üst üste 7 gün öğün kaydet",
+  "achievementStreak30": "30 Günlük Seri",
+  "achievementStreak30Desc": "Üst üste 30 gün öğün kaydet",
+  "achievementTopRated": "En Yüksek Puan",
+  "achievementTopRatedDesc": "5 yıldızlık ortalama puana ulaş",
+  "achievementHomeChef": "Ev Şefi",
+  "achievementHomeChefDesc": "10 farklı tarif pişir",
+  "achievementHealthNut": "Sağlık Tutkunu",
+  "achievementHealthNutDesc": "Bir hafta boyunca tüm makro hedeflerine ulaş",
+  "achievementHydrationHero": "Su Kahramanı",
+  "achievementHydrationHeroDesc": "Üst üste 7 gün su hedefine ulaş",
+  "achievementSocialButterfly": "Sosyal Kelebek",
+  "achievementSocialButterflyDesc": "10 takipçi kazan",
+  "achievementSmartShopper": "Akıllı Alışverişçi",
+  "achievementSmartShopperDesc": "5 alışveriş listesi oluştur",
+  "achievementCollector": "Koleksiyoncu",
+  "achievementCollectorDesc": "3 tarif koleksiyonu oluştur",
+  "achievementExplorer": "Kaşif",
+  "achievementExplorerDesc": "5 farklı kategoriden tarif dene"
 }

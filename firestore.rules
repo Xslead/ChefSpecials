@@ -140,6 +140,15 @@ service cloud.firestore {
       allow update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
 
+    // User achievements — owner can read own; users can create their own unlock
+    // records; only admins can modify/delete.
+    match /user_achievements/{achievementId} {
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
     // Community ingredient substitutions.
     // Anyone can read; authenticated users can submit (must be unverified);
     // admins can create verified entries (for seeding) and edit/delete.

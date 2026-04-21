@@ -9,6 +9,7 @@ import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/comment.dart';
 import '../../models/recipe.dart';
+import '../../providers/achievement_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/comment_provider.dart';
 import '../../providers/rating_provider.dart';
@@ -113,6 +114,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
 
   Future<void> _showLogCookSheet(BuildContext context, Recipe recipe) async {
     final cookingLogProvider = context.read<CookingLogProvider>();
+    final achievementProvider = context.read<AchievementProvider>();
     final l10n = AppLocalizations.of(context)!;
 
     final result = await showModalBottomSheet<_LogCookResult>(
@@ -136,6 +138,9 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
       if (mounted) {
         _showSnackBar(l10n.cookLogged);
         await _loadCookCount(recipe.id!);
+      }
+      if (mounted) {
+        await achievementProvider.triggerCheck(context);
       }
     } catch (_) {
       if (mounted) _showSnackBar(l10n.error);
@@ -542,6 +547,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     final l10n = AppLocalizations.of(context)!;
     final messenger = ScaffoldMessenger.of(context);
     final collectionProvider = context.read<CollectionProvider>();
+    final achievementProvider = context.read<AchievementProvider>();
     final name = await showDialog<String>(
       context: context,
       builder: (ctx) {
@@ -578,6 +584,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
           messenger.showSnackBar(
             SnackBar(content: Text(l10n.addedToCollection(name))),
           );
+          await achievementProvider.triggerCheck(context);
         }
       } catch (e) {
         if (mounted) {
@@ -592,6 +599,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     final userId = context.read<AuthProvider>().userModel?.uid;
     final messenger = ScaffoldMessenger.of(context);
     final shoppingProvider = context.read<ShoppingListProvider>();
+    final achievementProvider = context.read<AchievementProvider>();
     if (userId == null) return;
     final name = await showDialog<String>(
       context: context,
@@ -636,6 +644,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
           messenger.showSnackBar(
             SnackBar(content: Text(l10n.addedToList(name))),
           );
+          await achievementProvider.triggerCheck(context);
         }
       } catch (e) {
         if (mounted) {

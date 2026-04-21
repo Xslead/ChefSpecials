@@ -682,5 +682,52 @@
   "thankYouSubstitution": "Thanks! Your suggestion was submitted for review.",
   "notesOptional": "Notes (optional)",
   "submit": "Submit",
-  "filterAll": "All"
+  "filterAll": "All",
+  "achievements": "Achievements",
+  "achievementUnlocked": "Achievement Unlocked!",
+  "unlockedOn": "Unlocked on {date}",
+  "@unlockedOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "progress": "Progress",
+  "awesome": "Awesome!",
+  "viewAllAchievements": "View all achievements",
+  "achievementsUnlocked": "{unlocked} of {total} unlocked",
+  "@achievementsUnlocked": {
+    "placeholders": {
+      "unlocked": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "noAchievementsYet": "No achievements unlocked yet",
+  "categoryCooking": "Cooking",
+  "categorySocial": "Social",
+  "categoryHealth": "Health",
+  "categoryExploration": "Exploration",
+  "achievementFirstRecipe": "First Recipe",
+  "achievementFirstRecipeDesc": "Publish your first recipe",
+  "achievementRecipeMaster": "Recipe Master",
+  "achievementRecipeMasterDesc": "Publish 10 recipes",
+  "achievementStreak7": "7-Day Streak",
+  "achievementStreak7Desc": "Log meals for 7 consecutive days",
+  "achievementStreak30": "30-Day Streak",
+  "achievementStreak30Desc": "Log meals for 30 consecutive days",
+  "achievementTopRated": "Top Rated",
+  "achievementTopRatedDesc": "Reach a 5-star average rating",
+  "achievementHomeChef": "Home Chef",
+  "achievementHomeChefDesc": "Cook 10 different recipes",
+  "achievementHealthNut": "Health Nut",
+  "achievementHealthNutDesc": "Hit all macro targets for a week",
+  "achievementHydrationHero": "Hydration Hero",
+  "achievementHydrationHeroDesc": "Hit your water goal 7 days in a row",
+  "achievementSocialButterfly": "Social Butterfly",
+  "achievementSocialButterflyDesc": "Gain 10 followers",
+  "achievementSmartShopper": "Smart Shopper",
+  "achievementSmartShopperDesc": "Create 5 shopping lists",
+  "achievementCollector": "Collector",
+  "achievementCollectorDesc": "Create 3 recipe collections",
+  "achievementExplorer": "Explorer",
+  "achievementExplorerDesc": "Try recipes from 5 categories"
 }

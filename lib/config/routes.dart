@@ -47,6 +47,7 @@ import '../screens/auth/banned_screen.dart';
 import '../screens/onboarding/onboarding_screen.dart';
 import '../screens/cooking_history/cooking_history_screen.dart';
 import '../screens/trending/trending_recipes_screen.dart';
+import '../screens/achievements/achievements_screen.dart';
 import '../providers/onboarding_provider.dart';
 import '../models/meal_entry.dart';
 
@@ -364,6 +365,11 @@ final GoRouter router = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/trending',
       builder: (context, state) => const TrendingRecipesScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/achievements',
+      builder: (context, state) => const AchievementsScreen(),
     ),
   ],
 );

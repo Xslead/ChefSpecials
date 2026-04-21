@@ -1650,4 +1650,117 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filterAll => 'All';
+
+  @override
+  String get achievements => 'Achievements';
+
+  @override
+  String get achievementUnlocked => 'Achievement Unlocked!';
+
+  @override
+  String unlockedOn(String date) {
+    return 'Unlocked on $date';
+  }
+
+  @override
+  String get progress => 'Progress';
+
+  @override
+  String get awesome => 'Awesome!';
+
+  @override
+  String get viewAllAchievements => 'View all achievements';
+
+  @override
+  String achievementsUnlocked(int unlocked, int total) {
+    return '$unlocked of $total unlocked';
+  }
+
+  @override
+  String get noAchievementsYet => 'No achievements unlocked yet';
+
+  @override
+  String get categoryCooking => 'Cooking';
+
+  @override
+  String get categorySocial => 'Social';
+
+  @override
+  String get categoryHealth => 'Health';
+
+  @override
+  String get categoryExploration => 'Exploration';
+
+  @override
+  String get achievementFirstRecipe => 'First Recipe';
+
+  @override
+  String get achievementFirstRecipeDesc => 'Publish your first recipe';
+
+  @override
+  String get achievementRecipeMaster => 'Recipe Master';
+
+  @override
+  String get achievementRecipeMasterDesc => 'Publish 10 recipes';
+
+  @override
+  String get achievementStreak7 => '7-Day Streak';
+
+  @override
+  String get achievementStreak7Desc => 'Log meals for 7 consecutive days';
+
+  @override
+  String get achievementStreak30 => '30-Day Streak';
+
+  @override
+  String get achievementStreak30Desc => 'Log meals for 30 consecutive days';
+
+  @override
+  String get achievementTopRated => 'Top Rated';
+
+  @override
+  String get achievementTopRatedDesc => 'Reach a 5-star average rating';
+
+  @override
+  String get achievementHomeChef => 'Home Chef';
+
+  @override
+  String get achievementHomeChefDesc => 'Cook 10 different recipes';
+
+  @override
+  String get achievementHealthNut => 'Health Nut';
+
+  @override
+  String get achievementHealthNutDesc => 'Hit all macro targets for a week';
+
+  @override
+  String get achievementHydrationHero => 'Hydration Hero';
+
+  @override
+  String get achievementHydrationHeroDesc =>
+      'Hit your water goal 7 days in a row';
+
+  @override
+  String get achievementSocialButterfly => 'Social Butterfly';
+
+  @override
+  String get achievementSocialButterflyDesc => 'Gain 10 followers';
+
+  @override
+  String get achievementSmartShopper => 'Smart Shopper';
+
+  @override
+  String get achievementSmartShopperDesc => 'Create 5 shopping lists';
+
+  @override
+  String get achievementCollector => 'Collector';
+
+  @override
+  String get achievementCollectorDesc => 'Create 3 recipe collections';
+
+  @override
+  String get achievementExplorer => 'Explorer';
+
+  @override
+  String get achievementExplorerDesc => 'Try recipes from 5 categories';
 }

@@ -1101,9 +1101,9 @@ Status: PUSHED (Push 25)
 ### Task 11: Achievement Badges & Gamification (Push 28)
 
 **Model: Achievement**
-- [ ] Create `lib/models/achievement.dart`
-- [ ] Fields: `id` (predefined badge ID), `title`, `description`, `iconName`, `criteria` (Map\<String, dynamic\>), `category` ("cooking"/"social"/"health"/"exploration")
-- [ ] Static definition: `static const List<Achievement> allAchievements = [...]` with 12+ badges:
+- [x] Create `lib/models/achievement.dart`
+- [x] Fields: `id` (predefined badge ID), `title`, `description`, `iconName`, `criteria` (Map\<String, dynamic\>), `category` ("cooking"/"social"/"health"/"exploration")
+- [x] Static definition: `static const List<Achievement> allAchievements = [...]` with 12+ badges:
   1. `first_recipe` — "First Recipe" / publish 1 recipe
   2. `recipe_master` — "Recipe Master" / publish 10 recipes
   3. `streak_7` — "7-Day Streak" / log meals 7 consecutive days
@@ -1118,60 +1118,60 @@ Status: PUSHED (Push 25)
   12. `explorer` — "Explorer" / try recipes from 5 categories
 
 **Model: UserAchievement**
-- [ ] Create `lib/models/user_achievement.dart`
-- [ ] Fields: `id`, `achievementId`, `userId`, `unlockedAt` (DateTime)
-- [ ] `fromMap()`, `toMap()`
-- [ ] Firestore collection: `user_achievements`
+- [x] Create `lib/models/user_achievement.dart`
+- [x] Fields: `id`, `achievementId`, `userId`, `unlockedAt` (DateTime)
+- [x] `fromMap()`, `toMap()`
+- [x] Firestore collection: `user_achievements`
 
 **Service: AchievementService**
-- [ ] Create `lib/services/achievement_service.dart`
-- [ ] `getUserAchievements(String userId)` / `streamUserAchievements(String userId)`
-- [ ] `unlockAchievement(String userId, String achievementId)` — check for duplicates first
-- [ ] `checkAndUnlockAchievements(String userId, {required Map<String, dynamic> context})` → Future\<List\<Achievement\>\> — check all criteria against context, unlock newly met ones, return newly unlocked
-- [ ] `getProgress(String userId, Achievement achievement)` → Future\<double\> (0.0–1.0)
-- [ ] Accept optional `FirebaseFirestore`
+- [x] Create `lib/services/achievement_service.dart`
+- [x] `getUserAchievements(String userId)` / `streamUserAchievements(String userId)`
+- [x] `unlockAchievement(String userId, String achievementId)` — check for duplicates first
+- [x] `checkAndUnlockAchievements(String userId, {required Map<String, dynamic> context})` → Future\<List\<Achievement\>\> — check all criteria against context, unlock newly met ones, return newly unlocked
+- [x] `getProgress(String userId, Achievement achievement)` → Future\<double\> (0.0–1.0)
+- [x] Accept optional `FirebaseFirestore`
 
 **Provider: AchievementProvider**
-- [ ] Create `lib/providers/achievement_provider.dart`
-- [ ] Holds: unlockedAchievements, progressMap, newlyUnlocked (for celebration UI)
-- [ ] `init(String userId)` — subscribe to stream, load initial progress
-- [ ] `checkAchievements()` — gather stats from other providers, call service, update newlyUnlocked
-- [ ] `getProgress(String achievementId)` / `clearNewlyUnlocked()`
-- [ ] Call checkAchievements() after key user actions (publish recipe, log meal, gain follower, etc.)
-- [ ] Register in `main.dart` MultiProvider
+- [x] Create `lib/providers/achievement_provider.dart`
+- [x] Holds: unlockedAchievements, progressMap, newlyUnlocked (for celebration UI)
+- [x] `init(String userId)` — subscribe to stream, load initial progress
+- [x] `checkAchievements()` — gather stats from other providers, call service, update newlyUnlocked
+- [x] `getProgress(String achievementId)` / `clearNewlyUnlocked()`
+- [x] Call checkAchievements() after key user actions (publish recipe, log meal, gain follower, etc.)
+- [x] Register in `main.dart` MultiProvider
 
 **Screen: AchievementsScreen**
-- [ ] Create `lib/screens/achievements/achievements_screen.dart`
-- [ ] AppBar: "Achievements", GridView.builder (2 columns)
-- [ ] Each cell: icon, title, unlocked → full color + gold border + "Unlocked on {date}", locked → greyed + dashed border + progress bar
-- [ ] Tap card → bottom sheet with full description, criteria, progress
-- [ ] Category filter chips: All, Cooking, Social, Health, Exploration
+- [x] Create `lib/screens/achievements/achievements_screen.dart`
+- [x] AppBar: "Achievements", GridView.builder (2 columns)
+- [x] Each cell: icon, title, unlocked → full color + gold border + "Unlocked on {date}", locked → greyed + dashed border + progress bar
+- [x] Tap card → bottom sheet with full description, criteria, progress
+- [x] Category filter chips: All, Cooking, Social, Health, Exploration
 
 **Achievement Celebration Widget**
-- [ ] Overlay when `newlyUnlocked` is not empty: dark semi-transparent background, centered card with animated icon, title, description, confetti/sparkle animation, "Awesome!" dismiss button
-- [ ] Show in main shell/scaffold, call `clearNewlyUnlocked()` on dismiss
+- [x] Overlay when `newlyUnlocked` is not empty: dark semi-transparent background, centered card with animated icon, title, description, confetti/sparkle animation, "Awesome!" dismiss button
+- [x] Show in main shell/scaffold, call `clearNewlyUnlocked()` on dismiss
 
 **ProfileScreen Modifications**
-- [ ] "Achievements" section: 3 most recent unlocked badges as small icons, "View All" → AchievementsScreen
-- [ ] "X of 12 achievements unlocked" count
+- [x] "Achievements" section: 3 most recent unlocked badges as small icons, "View All" → AchievementsScreen
+- [x] "X of 12 achievements unlocked" count
 
 **Route**
-- [ ] Add GoRoute path `/achievements` under parentNavigatorKey
+- [x] Add GoRoute path `/achievements` under parentNavigatorKey
 
 **Firestore Rules**
-- [ ] `user_achievements` — owner can read own, system/admin can write
+- [x] `user_achievements` — owner can read own, system/admin can write
 
 **l10n**
-- [ ] Add keys:
+- [x] Add keys:
   - `achievements` / `achievementUnlocked` / `unlockedOn` / `progress` / `awesome`
   - All 12 badge names and their Turkish translations
   - `viewAllAchievements` / `achievementsUnlocked`
 
 **Tests**
-- [ ] `test/models/achievement_test.dart` — allAchievements completeness, criteria structure
-- [ ] `test/models/user_achievement_test.dart` — fromMap/toMap round-trip
-- [ ] `test/services/achievement_service_test.dart` — unlockAchievement, no duplicate, checkAndUnlockAchievements with contexts, getProgress
-- [ ] `test/providers/achievement_provider_test.dart` — init loads list, checkAchievements detects new, clearNewlyUnlocked
+- [x] `test/models/achievement_test.dart` — allAchievements completeness, criteria structure
+- [x] `test/models/user_achievement_test.dart` — fromMap/toMap round-trip
+- [x] `test/services/achievement_service_test.dart` — unlockAchievement, no duplicate, checkAndUnlockAchievements with contexts, getProgress
+- [x] `test/providers/achievement_provider_test.dart` — init loads list, checkAchievements detects new, clearNewlyUnlocked
 
 ---
 

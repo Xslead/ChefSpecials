@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/shopping_list.dart';
+import '../../providers/achievement_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/shopping_list_provider.dart';
 import '../../widgets/empty_state.dart';
@@ -40,6 +41,9 @@ class _ShoppingListsScreenState extends State<ShoppingListsScreen> {
     );
     if (name != null && name.isNotEmpty && mounted) {
       await context.read<ShoppingListProvider>().createList(name);
+      if (mounted) {
+        await context.read<AchievementProvider>().triggerCheck(context);
+      }
     }
   }
 

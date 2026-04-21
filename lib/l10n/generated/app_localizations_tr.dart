@@ -1656,4 +1656,117 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get filterAll => 'Tümü';
+
+  @override
+  String get achievements => 'Başarımlar';
+
+  @override
+  String get achievementUnlocked => 'Başarım Kazanıldı!';
+
+  @override
+  String unlockedOn(String date) {
+    return '$date tarihinde kazanıldı';
+  }
+
+  @override
+  String get progress => 'İlerleme';
+
+  @override
+  String get awesome => 'Harika!';
+
+  @override
+  String get viewAllAchievements => 'Tüm başarımları gör';
+
+  @override
+  String achievementsUnlocked(int unlocked, int total) {
+    return '$total başarımın $unlocked tanesi kazanıldı';
+  }
+
+  @override
+  String get noAchievementsYet => 'Henüz başarım kazanılmadı';
+
+  @override
+  String get categoryCooking => 'Pişirme';
+
+  @override
+  String get categorySocial => 'Sosyal';
+
+  @override
+  String get categoryHealth => 'Sağlık';
+
+  @override
+  String get categoryExploration => 'Keşif';
+
+  @override
+  String get achievementFirstRecipe => 'İlk Tarif';
+
+  @override
+  String get achievementFirstRecipeDesc => 'İlk tarifini paylaş';
+
+  @override
+  String get achievementRecipeMaster => 'Tarif Ustası';
+
+  @override
+  String get achievementRecipeMasterDesc => '10 tarif paylaş';
+
+  @override
+  String get achievementStreak7 => '7 Günlük Seri';
+
+  @override
+  String get achievementStreak7Desc => 'Üst üste 7 gün öğün kaydet';
+
+  @override
+  String get achievementStreak30 => '30 Günlük Seri';
+
+  @override
+  String get achievementStreak30Desc => 'Üst üste 30 gün öğün kaydet';
+
+  @override
+  String get achievementTopRated => 'En Yüksek Puan';
+
+  @override
+  String get achievementTopRatedDesc => '5 yıldızlık ortalama puana ulaş';
+
+  @override
+  String get achievementHomeChef => 'Ev Şefi';
+
+  @override
+  String get achievementHomeChefDesc => '10 farklı tarif pişir';
+
+  @override
+  String get achievementHealthNut => 'Sağlık Tutkunu';
+
+  @override
+  String get achievementHealthNutDesc =>
+      'Bir hafta boyunca tüm makro hedeflerine ulaş';
+
+  @override
+  String get achievementHydrationHero => 'Su Kahramanı';
+
+  @override
+  String get achievementHydrationHeroDesc => 'Üst üste 7 gün su hedefine ulaş';
+
+  @override
+  String get achievementSocialButterfly => 'Sosyal Kelebek';
+
+  @override
+  String get achievementSocialButterflyDesc => '10 takipçi kazan';
+
+  @override
+  String get achievementSmartShopper => 'Akıllı Alışverişçi';
+
+  @override
+  String get achievementSmartShopperDesc => '5 alışveriş listesi oluştur';
+
+  @override
+  String get achievementCollector => 'Koleksiyoncu';
+
+  @override
+  String get achievementCollectorDesc => '3 tarif koleksiyonu oluştur';
+
+  @override
+  String get achievementExplorer => 'Kaşif';
+
+  @override
+  String get achievementExplorerDesc => '5 farklı kategoriden tarif dene';
 }

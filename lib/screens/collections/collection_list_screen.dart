@@ -7,6 +7,7 @@ import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/recipe.dart';
 import '../../models/recipe_collection.dart';
+import '../../providers/achievement_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/collection_provider.dart';
 import '../../providers/recipe_provider.dart';
@@ -97,6 +98,9 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
               result['name']!,
               description: desc,
             );
+        if (mounted) {
+          await context.read<AchievementProvider>().triggerCheck(context);
+        }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

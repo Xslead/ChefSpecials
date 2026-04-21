@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../models/achievement.dart';
+import '../../providers/achievement_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/follow_provider.dart';
 import '../../providers/recipe_provider.dart';
@@ -306,6 +308,41 @@ class ProfileScreen extends StatelessWidget {
                           leading: Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
+                              color: AppTheme.starColor
+                                  .withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(
+                              Icons.emoji_events,
+                              color: AppTheme.starColor,
+                              size: 20,
+                            ),
+                          ),
+                          title: Text(
+                            l10n.achievements,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.chevron_right,
+                            color: AppTheme.textTertiaryOf(context),
+                          ),
+                          onTap: () => context.push('/achievements'),
+                          dense: true,
+                        ),
+                        Divider(
+                          height: 1,
+                          indent: 16,
+                          endIndent: 16,
+                          color: AppTheme.neutralLightOf(context)
+                              .withValues(alpha: 0.5),
+                        ),
+                        ListTile(
+                          leading: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
                               color: AppTheme.dinnerColor
                                   .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(10),
@@ -337,6 +374,8 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(height: 24),
+                _buildAchievementsPreview(context, l10n, user.uid),
                 const SizedBox(height: 24),
                 // My Recipes header
                 Padding(
@@ -613,6 +652,110 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAchievementsPreview(
+      BuildContext context, AppLocalizations l10n, String userId) {
+    final provider = context.watch<AchievementProvider>();
+    context.read<AchievementProvider>().init(userId);
+    final recent = provider.unlockedAchievements.take(3).toList();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: GestureDetector(
+        onTap: () => context.push('/achievements'),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppTheme.surfaceOf(context),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
+            ),
+            boxShadow: [AppTheme.shadowOf(context)],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.emoji_events,
+                      size: 20, color: AppTheme.starColor),
+                  const SizedBox(width: 8),
+                  Text(
+                    l10n.achievements,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    l10n.achievementsUnlocked(
+                        provider.unlockedCount, provider.totalCount),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textSecondaryOf(context),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.chevron_right,
+                      size: 18, color: AppTheme.textTertiary),
+                ],
+              ),
+              const SizedBox(height: 12),
+              if (recent.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                    l10n.noAchievementsYet,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppTheme.textTertiaryOf(context),
+                    ),
+                  ),
+                )
+              else
+                Row(
+                  children: [
+                    for (final ua in recent)
+                      Builder(builder: (_) {
+                        final a = Achievement.byId(ua.achievementId);
+                        final color = a?.color ?? AppTheme.starColor;
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: Container(
+                            width: 46,
+                            height: 46,
+                            decoration: BoxDecoration(
+                              gradient: a?.gradient,
+                              color: a == null
+                                  ? AppTheme.starColor.withValues(alpha: 0.15)
+                                  : null,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: color.withValues(alpha: 0.35),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              a?.icon ?? Icons.emoji_events,
+                              size: 22,
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      }),
+                  ],
+                ),
+            ],
+          ),
         ),
       ),
     );

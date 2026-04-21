@@ -3174,6 +3174,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All'**
   String get filterAll;
+
+  /// No description provided for @achievements.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get achievements;
+
+  /// No description provided for @achievementUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievement Unlocked!'**
+  String get achievementUnlocked;
+
+  /// No description provided for @unlockedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocked on {date}'**
+  String unlockedOn(String date);
+
+  /// No description provided for @progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get progress;
+
+  /// No description provided for @awesome.
+  ///
+  /// In en, this message translates to:
+  /// **'Awesome!'**
+  String get awesome;
+
+  /// No description provided for @viewAllAchievements.
+  ///
+  /// In en, this message translates to:
+  /// **'View all achievements'**
+  String get viewAllAchievements;
+
+  /// No description provided for @achievementsUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'{unlocked} of {total} unlocked'**
+  String achievementsUnlocked(int unlocked, int total);
+
+  /// No description provided for @noAchievementsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No achievements unlocked yet'**
+  String get noAchievementsYet;
+
+  /// No description provided for @categoryCooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking'**
+  String get categoryCooking;
+
+  /// No description provided for @categorySocial.
+  ///
+  /// In en, this message translates to:
+  /// **'Social'**
+  String get categorySocial;
+
+  /// No description provided for @categoryHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get categoryHealth;
+
+  /// No description provided for @categoryExploration.
+  ///
+  /// In en, this message translates to:
+  /// **'Exploration'**
+  String get categoryExploration;
+
+  /// No description provided for @achievementFirstRecipe.
+  ///
+  /// In en, this message translates to:
+  /// **'First Recipe'**
+  String get achievementFirstRecipe;
+
+  /// No description provided for @achievementFirstRecipeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish your first recipe'**
+  String get achievementFirstRecipeDesc;
+
+  /// No description provided for @achievementRecipeMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe Master'**
+  String get achievementRecipeMaster;
+
+  /// No description provided for @achievementRecipeMasterDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish 10 recipes'**
+  String get achievementRecipeMasterDesc;
+
+  /// No description provided for @achievementStreak7.
+  ///
+  /// In en, this message translates to:
+  /// **'7-Day Streak'**
+  String get achievementStreak7;
+
+  /// No description provided for @achievementStreak7Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Log meals for 7 consecutive days'**
+  String get achievementStreak7Desc;
+
+  /// No description provided for @achievementStreak30.
+  ///
+  /// In en, this message translates to:
+  /// **'30-Day Streak'**
+  String get achievementStreak30;
+
+  /// No description provided for @achievementStreak30Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Log meals for 30 consecutive days'**
+  String get achievementStreak30Desc;
+
+  /// No description provided for @achievementTopRated.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Rated'**
+  String get achievementTopRated;
+
+  /// No description provided for @achievementTopRatedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach a 5-star average rating'**
+  String get achievementTopRatedDesc;
+
+  /// No description provided for @achievementHomeChef.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Chef'**
+  String get achievementHomeChef;
+
+  /// No description provided for @achievementHomeChefDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Cook 10 different recipes'**
+  String get achievementHomeChefDesc;
+
+  /// No description provided for @achievementHealthNut.
+  ///
+  /// In en, this message translates to:
+  /// **'Health Nut'**
+  String get achievementHealthNut;
+
+  /// No description provided for @achievementHealthNutDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Hit all macro targets for a week'**
+  String get achievementHealthNutDesc;
+
+  /// No description provided for @achievementHydrationHero.
+  ///
+  /// In en, this message translates to:
+  /// **'Hydration Hero'**
+  String get achievementHydrationHero;
+
+  /// No description provided for @achievementHydrationHeroDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Hit your water goal 7 days in a row'**
+  String get achievementHydrationHeroDesc;
+
+  /// No description provided for @achievementSocialButterfly.
+  ///
+  /// In en, this message translates to:
+  /// **'Social Butterfly'**
+  String get achievementSocialButterfly;
+
+  /// No description provided for @achievementSocialButterflyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Gain 10 followers'**
+  String get achievementSocialButterflyDesc;
+
+  /// No description provided for @achievementSmartShopper.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Shopper'**
+  String get achievementSmartShopper;
+
+  /// No description provided for @achievementSmartShopperDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create 5 shopping lists'**
+  String get achievementSmartShopperDesc;
+
+  /// No description provided for @achievementCollector.
+  ///
+  /// In en, this message translates to:
+  /// **'Collector'**
+  String get achievementCollector;
+
+  /// No description provided for @achievementCollectorDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create 3 recipe collections'**
+  String get achievementCollectorDesc;
+
+  /// No description provided for @achievementExplorer.
+  ///
+  /// In en, this message translates to:
+  /// **'Explorer'**
+  String get achievementExplorer;
+
+  /// No description provided for @achievementExplorerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Try recipes from 5 categories'**
+  String get achievementExplorerDesc;
 }
 
 class _AppLocalizationsDelegate

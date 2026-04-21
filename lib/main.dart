@@ -20,6 +20,7 @@ import 'providers/activity_provider.dart';
 import 'providers/admin_provider.dart';
 import 'providers/cooking_log_provider.dart';
 import 'providers/trending_provider.dart';
+import 'providers/achievement_provider.dart';
 import 'app.dart';
 
 @pragma('vm:entry-point')
@@ -57,6 +58,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AdminProvider()),
         ChangeNotifierProvider(create: (_) => CookingLogProvider()),
         ChangeNotifierProvider(create: (_) => TrendingProvider()),
+        ChangeNotifierProvider(create: (_) => AchievementProvider()),
       ],
       child: const ChefSpecialsApp(),
     ),

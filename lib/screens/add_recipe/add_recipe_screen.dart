@@ -7,6 +7,7 @@ import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../utils/category_helpers.dart';
 import '../../models/recipe.dart';
+import '../../providers/achievement_provider.dart';
 import '../../providers/activity_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/follow_provider.dart';
@@ -76,6 +77,9 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
             followerIds: followerIds,
           );
         }
+      }
+      if (mounted) {
+        await context.read<AchievementProvider>().triggerCheck(context);
       }
       if (mounted) {
         context.go('/home');

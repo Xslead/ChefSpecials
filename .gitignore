@@ -12,7 +12,6 @@ pubspec.lock
 *.g.dart
 *.freezed.dart
 *.mocks.dart
-lib/generated_plugin_registrant.dart
 lib/firebase_options.dart
 
 # Firebase

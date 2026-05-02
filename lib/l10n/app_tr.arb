@@ -729,5 +729,21 @@
   "achievementCollector": "Koleksiyoncu",
   "achievementCollectorDesc": "3 tarif koleksiyonu oluştur",
   "achievementExplorer": "Kaşif",
-  "achievementExplorerDesc": "5 farklı kategoriden tarif dene"
+  "achievementExplorerDesc": "5 farklı kategoriden tarif dene",
+  "cookingTime": "Pişirme Süresi",
+  "quickUnder15": "Hızlı (< 15 dk)",
+  "medium15to30": "15–30 dk",
+  "standard30to60": "30–60 dk",
+  "longOver60": "60+ dk",
+  "calorieRange": "Kalori Aralığı",
+  "difficulty": "Zorluk",
+  "easy": "Kolay",
+  "medium": "Orta",
+  "hard": "Zor",
+  "maxIngredients": "Maks. Malzeme Sayısı",
+  "recentSearches": "Son Aramalar",
+  "searchByIngredients": "Malzemeye Göre Ara",
+  "addIngredient": "Malzeme ekle...",
+  "bestMatches": "En İyi Eşleşmeler",
+  "rating": "Puan"
 }

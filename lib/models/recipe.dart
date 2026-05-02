@@ -136,6 +136,13 @@ class Recipe {
     );
   }
 
+  String get difficultyLevel {
+    final total = prepTimeMinutes + cookTimeMinutes;
+    if (total <= 20) return 'Easy';
+    if (total <= 45) return 'Medium';
+    return 'Hard';
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'title': title,

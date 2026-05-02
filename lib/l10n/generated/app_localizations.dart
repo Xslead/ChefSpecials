@@ -3390,6 +3390,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try recipes from 5 categories'**
   String get achievementExplorerDesc;
+
+  /// No description provided for @cookingTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking Time'**
+  String get cookingTime;
+
+  /// No description provided for @quickUnder15.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick (< 15 min)'**
+  String get quickUnder15;
+
+  /// No description provided for @medium15to30.
+  ///
+  /// In en, this message translates to:
+  /// **'15–30 min'**
+  String get medium15to30;
+
+  /// No description provided for @standard30to60.
+  ///
+  /// In en, this message translates to:
+  /// **'30–60 min'**
+  String get standard30to60;
+
+  /// No description provided for @longOver60.
+  ///
+  /// In en, this message translates to:
+  /// **'60+ min'**
+  String get longOver60;
+
+  /// No description provided for @calorieRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Calorie Range'**
+  String get calorieRange;
+
+  /// No description provided for @difficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty'**
+  String get difficulty;
+
+  /// No description provided for @easy.
+  ///
+  /// In en, this message translates to:
+  /// **'Easy'**
+  String get easy;
+
+  /// No description provided for @medium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get medium;
+
+  /// No description provided for @hard.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard'**
+  String get hard;
+
+  /// No description provided for @maxIngredients.
+  ///
+  /// In en, this message translates to:
+  /// **'Max Ingredients'**
+  String get maxIngredients;
+
+  /// No description provided for @recentSearches.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Searches'**
+  String get recentSearches;
+
+  /// No description provided for @searchByIngredients.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by Ingredients'**
+  String get searchByIngredients;
+
+  /// No description provided for @addIngredient.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an ingredient...'**
+  String get addIngredient;
+
+  /// No description provided for @bestMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Matches'**
+  String get bestMatches;
+
+  /// No description provided for @rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get rating;
 }
 
 class _AppLocalizationsDelegate

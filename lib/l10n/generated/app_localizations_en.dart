@@ -1763,4 +1763,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get achievementExplorerDesc => 'Try recipes from 5 categories';
+
+  @override
+  String get cookingTime => 'Cooking Time';
+
+  @override
+  String get quickUnder15 => 'Quick (< 15 min)';
+
+  @override
+  String get medium15to30 => '15–30 min';
+
+  @override
+  String get standard30to60 => '30–60 min';
+
+  @override
+  String get longOver60 => '60+ min';
+
+  @override
+  String get calorieRange => 'Calorie Range';
+
+  @override
+  String get difficulty => 'Difficulty';
+
+  @override
+  String get easy => 'Easy';
+
+  @override
+  String get medium => 'Medium';
+
+  @override
+  String get hard => 'Hard';
+
+  @override
+  String get maxIngredients => 'Max Ingredients';
+
+  @override
+  String get recentSearches => 'Recent Searches';
+
+  @override
+  String get searchByIngredients => 'Search by Ingredients';
+
+  @override
+  String get addIngredient => 'Add an ingredient...';
+
+  @override
+  String get bestMatches => 'Best Matches';
+
+  @override
+  String get rating => 'Rating';
 }

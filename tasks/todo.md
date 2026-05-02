@@ -1175,84 +1175,47 @@ Status: PUSHED (Push 25)
 
 ---
 
-### Task 12: Recipe Versioning & Edit History (Push 29)
-
-**Model: RecipeVersion**
-- [ ] Create `lib/models/recipe_version.dart`
-- [ ] Fields: `id`, `recipeId`, `versionNumber` (int, starts at 1), `changes` (Map — diff: {"title": {"old": "...", "new": "..."}}), `snapshot` (Map — full toMap() for revert), `editedAt` (DateTime), `editedBy` (String)
-- [ ] `fromMap()`, `toMap()`
-- [ ] Firestore: subcollection `recipes/{recipeId}/versions/{versionId}`
-
-**Service: RecipeVersionService**
-- [ ] Create `lib/services/recipe_version_service.dart`
-- [ ] `saveVersion(String recipeId, Recipe oldRecipe, Recipe newRecipe, String userId)` — compute diff, determine next versionNumber, save to subcollection
-- [ ] `getVersionHistory(String recipeId)` → ordered by versionNumber desc
-- [ ] `getVersion(String recipeId, String versionId)` → Future\<RecipeVersion?\>
-- [ ] `revertToVersion(String recipeId, String versionId)` — read snapshot, update main recipe, save new version recording revert
-
-**RecipeService Modifications**
-- [ ] On recipe update, call `RecipeVersionService.saveVersion()` with old and new data before saving
-
-**Screen: RecipeVersionHistoryScreen**
-- [ ] Create `lib/screens/recipe_detail/version_history_screen.dart`
-- [ ] Timeline-style ListView: version badge (#1, #2...), date + editor name, change summary, "Revert" button (owner only)
-- [ ] Tap entry → detailed diff view (old → new for each changed field)
-
-**RecipeDetailScreen Modifications**
-- [ ] "Edit History" in overflow menu (owner only) → RecipeVersionHistoryScreen
-
-**Route**
-- [ ] Add GoRoute path `/recipe/:id/versions`
-
-**l10n**
-- [ ] Add keys:
-  - `editHistory` / `version` / `editedBy` / `revertToVersion` / `confirmRevert` / `changedFields`
-
-**Tests**
-- [ ] `test/models/recipe_version_test.dart` — fromMap/toMap, diff structure
-- [ ] `test/services/recipe_version_service_test.dart` — saveVersion diff, versionNumber increments, revertToVersion restores, getVersionHistory ordering
-
----
-
-### Task 13: Advanced Search & Filters (Push 30)
+### Task 12: Advanced Search & Filters (Push 30)
 
 **SearchProvider Enhancements**
-- [ ] Add filter fields: `cookTimeRange` (RangeValues?), `calorieRange` (RangeValues?), `difficultyLevel` (String?), `maxIngredientCount` (int?), `sortBy` (String)
-- [ ] Apply all active filters simultaneously
-- [ ] `searchHistory` (List\<String\>) persisted in SharedPreferences — last 10 searches
-- [ ] Search suggestions: matching recipe titles + recent history as user types
+- [x] Add filter fields: `cookTimeRange` (RangeValues?), `calorieRange` (RangeValues?), `difficultyLevel` (String?), `maxIngredientCount` (int?), `sortBy` (String)
+- [x] Apply all active filters simultaneously
+- [x] `searchHistory` (List\<String\>) persisted in SharedPreferences — last 10 searches
+- [x] Search suggestions: matching recipe titles + recent history as user types
 
 **SearchScreen Enhancements**
-- [ ] "Filters" button → filter bottom sheet:
+- [x] "Filters" button → filter bottom sheet:
   - Cooking time RangeSlider (0–120+ min) + preset chips: Quick (<15), Medium (15-30), Standard (30-60), Long (60+)
   - Calorie range RangeSlider (0–1000+ cal)
   - Difficulty: SegmentedButton (Easy / Medium / Hard)
   - Max ingredients: Slider (1-20)
   - Sort by: ChoiceChip row (Newest, Popular, Rating, Cook Time, Calories)
   - "Apply Filters" + "Clear All" buttons
-- [ ] Active filter count badge on Filters button
-- [ ] Empty search field → recent search history as chips (tap to re-search, X to remove)
-- [ ] Auto-complete suggestions dropdown as user types
+- [x] Active filter count badge on Filters button
+- [x] Empty search field → recent search history as chips (tap to re-search, X to remove)
+- [x] Auto-complete suggestions dropdown as user types
 
 **"Search by Ingredients" Feature**
-- [ ] Tab/button on SearchScreen for ingredient-based search
-- [ ] Chip input pattern: add ingredient names one by one
-- [ ] Filter: recipes where ALL entered ingredients exist (case-insensitive contains)
-- [ ] Sort by matching ingredient count (best matches first)
+- [x] Tab/button on SearchScreen for ingredient-based search
+- [x] Chip input pattern: add ingredient names one by one
+- [x] Filter: recipes where ALL entered ingredients exist (case-insensitive contains)
+- [x] Sort by matching ingredient count (best matches first)
 
 **l10n**
-- [ ] Add keys:
+- [x] Add keys:
   - `filters` / `cookingTime` / `quickUnder15` / `medium15to30` / `standard30to60` / `longOver60`
   - `calorieRange` / `difficulty` / `easy` / `medium` / `hard` / `maxIngredients`
   - `sortBy` / `popular` / `applyFilters` / `clearAll` / `recentSearches`
   - `searchByIngredients` / `addIngredient` / `bestMatches`
 
 **Tests**
-- [ ] `test/providers/search_provider_test.dart` — multi-filter combos, cookTime range, calorie range, difficulty, sort options, search history persistence, ingredient-based matching, suggestions
+- [x] `test/providers/search_provider_test.dart` — multi-filter combos, cookTime range, calorie range, difficulty, sort options, search history persistence, ingredient-based matching, suggestions (57 tests)
+
+Status: PUSHED
 
 ---
 
-### Task 14: Offline Support & Caching (Push 31)
+### Task 13: Offline Support & Caching (Push 31)
 
 **Dependencies**
 - [ ] `flutter pub add hive hive_flutter connectivity_plus`
@@ -1301,7 +1264,7 @@ Status: PUSHED (Push 25)
 
 ---
 
-### Task 15: Recipe Video Support (Push 32)
+### Task 14: Recipe Video Support (Push 32)
 
 **Dependencies**
 - [ ] `flutter pub add video_player chewie video_compress`
@@ -1336,7 +1299,7 @@ Status: PUSHED (Push 25)
 
 ---
 
-### Task 16: Social Features Enhancement (Push 33)
+### Task 15: Social Features Enhancement (Push 33)
 
 **Recipe Likes (separate from favorites)**
 - [ ] Add likeCount + likedBy to Recipe model, or separate `likes` collection
@@ -1375,7 +1338,7 @@ Status: PUSHED (Push 25)
 
 ---
 
-### Task 17: Recipe Cost Estimation (Push 34)
+### Task 16: Recipe Cost Estimation (Push 34)
 
 **Model Updates**
 - [ ] FoodItem: add `pricePerUnit` (double?), `currency` (String, default "TRY")
@@ -1403,7 +1366,7 @@ Status: PUSHED (Push 25)
 
 ---
 
-### Task 18: Accessibility & Performance (Push 35)
+### Task 17: Accessibility & Performance (Push 35)
 
 **Accessibility**
 - [ ] Semantic labels: audit all screens, add Semantics widgets, semanticLabel on Icons/Images
@@ -1423,7 +1386,7 @@ Status: PUSHED (Push 25)
 
 ---
 
-### Task 19: Recipe AI Suggestions (Push 36)
+### Task 18: Recipe AI Suggestions (Push 36)
 
 **Rule-Based Recommendation (no external AI API for MVP)**
 - [ ] "Similar Recipes" on RecipeDetailScreen: same category, overlapping tags/ingredients, score by overlap, top 5
@@ -1444,7 +1407,7 @@ Status: PUSHED (Push 25)
 
 ---
 
-### Task 20: Multi-Language Recipe Content (Push 37)
+### Task 19: Multi-Language Recipe Content (Push 37)
 
 - [ ] Recipe model: add `translations` (Map\<String, Map\<String, String\>\>?) — language code → {title, description, steps, ingredients}
 - [ ] `TranslationService` — submit/fetch translations
@@ -1454,7 +1417,7 @@ Status: PUSHED (Push 25)
 
 ---
 
-### Task 21: Widgets & Quick Actions (Push 38)
+### Task 20: Widgets & Quick Actions (Push 38)
 
 - [ ] iOS/Android home screen widgets (home_widget package): daily nutrition summary, quick "Add Meal" action
 - [ ] Quick Actions (quick_actions package): iOS 3D Touch + Android App Shortcuts (Add Recipe, Track Meal, Shopping List)
@@ -1463,7 +1426,7 @@ Status: PUSHED (Push 25)
 
 ---
 
-### Task 22: Data Export & Backup (Push 39)
+### Task 21: Data Export & Backup (Push 39)
 
 - [ ] Export recipes as JSON (serialize → save to downloads or share)
 - [ ] Export as PDF cookbook (pdf package: formatted with images, ingredients, steps)
@@ -1476,7 +1439,7 @@ Status: PUSHED (Push 25)
 
 ---
 
-### Task 23: App Store Preparation (Push 40)
+### Task 22: App Store Preparation (Push 40)
 
 - [ ] App icon: flutter_launcher_icons from high-res source (adaptive Android + standard iOS)
 - [ ] Splash screen: flutter_native_splash (logo centered, theme background, light + dark variants)

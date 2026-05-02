@@ -729,5 +729,21 @@
   "achievementCollector": "Collector",
   "achievementCollectorDesc": "Create 3 recipe collections",
   "achievementExplorer": "Explorer",
-  "achievementExplorerDesc": "Try recipes from 5 categories"
+  "achievementExplorerDesc": "Try recipes from 5 categories",
+  "cookingTime": "Cooking Time",
+  "quickUnder15": "Quick (< 15 min)",
+  "medium15to30": "15–30 min",
+  "standard30to60": "30–60 min",
+  "longOver60": "60+ min",
+  "calorieRange": "Calorie Range",
+  "difficulty": "Difficulty",
+  "easy": "Easy",
+  "medium": "Medium",
+  "hard": "Hard",
+  "maxIngredients": "Max Ingredients",
+  "recentSearches": "Recent Searches",
+  "searchByIngredients": "Search by Ingredients",
+  "addIngredient": "Add an ingredient...",
+  "bestMatches": "Best Matches",
+  "rating": "Rating"
 }

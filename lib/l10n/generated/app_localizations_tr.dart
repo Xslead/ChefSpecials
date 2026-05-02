@@ -1769,4 +1769,52 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get achievementExplorerDesc => '5 farklı kategoriden tarif dene';
+
+  @override
+  String get cookingTime => 'Pişirme Süresi';
+
+  @override
+  String get quickUnder15 => 'Hızlı (< 15 dk)';
+
+  @override
+  String get medium15to30 => '15–30 dk';
+
+  @override
+  String get standard30to60 => '30–60 dk';
+
+  @override
+  String get longOver60 => '60+ dk';
+
+  @override
+  String get calorieRange => 'Kalori Aralığı';
+
+  @override
+  String get difficulty => 'Zorluk';
+
+  @override
+  String get easy => 'Kolay';
+
+  @override
+  String get medium => 'Orta';
+
+  @override
+  String get hard => 'Zor';
+
+  @override
+  String get maxIngredients => 'Maks. Malzeme Sayısı';
+
+  @override
+  String get recentSearches => 'Son Aramalar';
+
+  @override
+  String get searchByIngredients => 'Malzemeye Göre Ara';
+
+  @override
+  String get addIngredient => 'Malzeme ekle...';
+
+  @override
+  String get bestMatches => 'En İyi Eşleşmeler';
+
+  @override
+  String get rating => 'Puan';
 }

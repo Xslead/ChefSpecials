@@ -78,7 +78,7 @@ class MultiImagePicker extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 2),
         itemCount: items.length + 1,
-        separatorBuilder: (_, _i) => const SizedBox(width: 8),
+        separatorBuilder: (_, i) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           if (index == items.length) {
             return _AddMoreButton(
@@ -276,9 +276,9 @@ class _PhotoThumbnail extends StatelessWidget {
         fit: BoxFit.cover,
         width: double.infinity,
         height: double.infinity,
-        placeholder: (_, _u) =>
+        placeholder: (_, url) =>
             const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-        errorWidget: (_, _u, _e) => const Icon(Icons.broken_image),
+        errorWidget: (_, url, err) => const Icon(Icons.broken_image),
       );
     } else {
       return const Center(

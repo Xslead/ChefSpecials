@@ -50,11 +50,11 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
           height: widget.height,
           width: double.infinity,
           fit: BoxFit.cover,
-          placeholder: (_, _u) => Container(
+          placeholder: (_, url) => Container(
             color: AppTheme.neutralLight,
             child: const Center(child: CircularProgressIndicator()),
           ),
-          errorWidget: (_, _u, _e) => _placeholder(),
+          errorWidget: (_, url, err) => _placeholder(),
         ),
       );
     }
@@ -80,11 +80,11 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
                 child: CachedNetworkImage(
                   imageUrl: photos[index],
                   fit: BoxFit.cover,
-                  placeholder: (_, _u) => Container(
+                  placeholder: (_, url) => Container(
                     color: AppTheme.neutralLight,
                     child: const Center(child: CircularProgressIndicator()),
                   ),
-                  errorWidget: (_, _u, _e) => _placeholder(),
+                  errorWidget: (_, url, err) => _placeholder(),
                 ),
               );
             },

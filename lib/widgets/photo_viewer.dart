@@ -20,11 +20,11 @@ class PhotoViewer extends StatefulWidget {
       PageRouteBuilder(
         opaque: false,
         barrierColor: Colors.black,
-        pageBuilder: (_, _a, _b) => PhotoViewer(
+        pageBuilder: (_, a, b) => PhotoViewer(
           photos: photos,
           initialIndex: initialIndex,
         ),
-        transitionsBuilder: (_, animation, _a, child) =>
+        transitionsBuilder: (_, animation, secondaryAnimation, child) =>
             FadeTransition(opacity: animation, child: child),
         transitionDuration: const Duration(milliseconds: 200),
       ),
@@ -73,10 +73,10 @@ class _PhotoViewerState extends State<PhotoViewer> {
                   child: CachedNetworkImage(
                     imageUrl: widget.photos[index],
                     fit: BoxFit.contain,
-                    placeholder: (_, _u) => const Center(
+                    placeholder: (_, url) => const Center(
                       child: CircularProgressIndicator(color: Colors.white),
                     ),
-                    errorWidget: (_, _u, _e) => const Icon(
+                    errorWidget: (_, url, err) => const Icon(
                       Icons.broken_image,
                       color: Colors.white54,
                       size: 60,

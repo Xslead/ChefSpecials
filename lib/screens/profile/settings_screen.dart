@@ -40,7 +40,7 @@ class SettingsScreen extends StatelessWidget {
                       title: l10n.editProfile,
                       onTap: () => context.push('/edit-profile'),
                     ),
-                    _Divider(context),
+                    buildDivider(context),
                     _SettingsTile(
                       icon: Icons.notifications_outlined,
                       iconColor: AppTheme.snackColor,
@@ -65,7 +65,7 @@ class SettingsScreen extends StatelessWidget {
                       onTap: () =>
                           context.read<ThemeProvider>().toggleTheme(),
                     ),
-                    _Divider(context),
+                    buildDivider(context),
                     _SettingsTile(
                       icon: Icons.language_outlined,
                       iconColor: AppTheme.secondaryColor,
@@ -222,7 +222,7 @@ class _SettingsTile extends StatelessWidget {
   }
 }
 
-Widget _Divider(BuildContext context) => Divider(
+Widget buildDivider(BuildContext context) => Divider(
       height: 1,
       indent: 16,
       endIndent: 16,

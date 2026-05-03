@@ -51,7 +51,8 @@ class GradientButton extends StatelessWidget {
           onTap: onPressed,
           borderRadius: BorderRadius.circular(borderRadius),
           child: Center(
-            child: Row(
+            child: (icon != null || trailing != null)
+                ? Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (icon != null) ...[
@@ -71,6 +72,14 @@ class GradientButton extends StatelessWidget {
                         trailing!,
                       ],
                     ],
+                  )
+                : Text(
+                    text,
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
           ),
         ),

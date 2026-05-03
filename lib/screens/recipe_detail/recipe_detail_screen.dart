@@ -139,7 +139,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
         _showSnackBar(l10n.cookLogged);
         await _loadCookCount(recipe.id!);
       }
-      if (mounted) {
+      if (context.mounted) {
         await achievementProvider.triggerCheck(context);
       }
     } catch (_) {
@@ -584,6 +584,8 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
           messenger.showSnackBar(
             SnackBar(content: Text(l10n.addedToCollection(name))),
           );
+        }
+        if (context.mounted) {
           await achievementProvider.triggerCheck(context);
         }
       } catch (e) {
@@ -644,6 +646,8 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
           messenger.showSnackBar(
             SnackBar(content: Text(l10n.addedToList(name))),
           );
+        }
+        if (context.mounted) {
           await achievementProvider.triggerCheck(context);
         }
       } catch (e) {

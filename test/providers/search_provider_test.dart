@@ -641,11 +641,11 @@ void main() {
   group('SearchProvider — multi-filter combos', () {
     test('query + cookTime filter combined', () async {
       await recipeService.createRecipe(_makeRecipe(
-          title: 'Quick Pasta', category: 'Dinner', cookTimeMinutes: 15));
+          title: 'Quick Pasta', category: 'Dinner', prepTimeMinutes: 0, cookTimeMinutes: 15));
       await recipeService.createRecipe(_makeRecipe(
-          title: 'Long Pasta', category: 'Dinner', cookTimeMinutes: 90));
+          title: 'Long Pasta', category: 'Dinner', prepTimeMinutes: 0, cookTimeMinutes: 90));
       await recipeService.createRecipe(_makeRecipe(
-          title: 'Quick Soup', category: 'Soup', cookTimeMinutes: 10));
+          title: 'Quick Soup', category: 'Soup', prepTimeMinutes: 0, cookTimeMinutes: 10));
 
       await provider.loadRecipes();
 

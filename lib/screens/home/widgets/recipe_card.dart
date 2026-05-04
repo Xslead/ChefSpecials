@@ -94,6 +94,22 @@ class _RecipeCardState extends State<RecipeCard> {
                     right: 12,
                     child: _buildFavoriteButton(context),
                   ),
+                  // Play button overlay for recipes with video
+                  if (recipe.videoUrl != null)
+                    Center(
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.45),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.play_arrow_rounded,
+                          color: Colors.white,
+                          size: 36,
+                        ),
+                      ),
+                    ),
                   if (widget.showTrendingBadge)
                     Positioned(
                       bottom: 12,

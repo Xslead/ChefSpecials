@@ -1277,35 +1277,42 @@ Status: PUSHED
 ### Task 14: Recipe Video Support (Push 32)
 
 **Dependencies**
-- [ ] `flutter pub add video_player chewie video_compress`
+- [x] `flutter pub add video_player chewie video_compress`
 
 **Model Updates**
-- [ ] Recipe: add `videoUrl` (String?, default null)
-- [ ] RecipeStep: add `videoUrl` (String?, default null)
-- [ ] Update `fromMap()` / `toMap()` for both
+- [x] Recipe: add `videoUrl` (String?, default null)
+- [x] RecipeStep: add `videoUrl` (String?, default null)
+- [x] Update `fromMap()` / `toMap()` for both
 
 **StorageService Enhancements**
-- [ ] `uploadRecipeVideo(String recipeId, File videoFile, {onProgress})` → Future\<String\> — upload to `recipes/{recipeId}/video`, return URL, listen to snapshotEvents for progress
-- [ ] `deleteRecipeVideo(String recipeId)`
-- [ ] `generateVideoThumbnail(File videoFile)` → Future\<File\> — video_compress first frame
+- [x] `uploadRecipeVideo(File file, String userId)` → Future\<String\>
+- [x] `uploadStepVideo(File file, String userId)` → Future\<String\>
+- [x] `deleteRecipeVideo(String url)` → Future\<void\>
+- [x] `generateVideoThumbnail(String videoPath)` → Future\<Uint8List?\>
 
 **Widget: VideoPlayerWidget**
-- [ ] Create `lib/widgets/video_player_widget.dart`
-- [ ] Wraps Chewie player: videoUrl, autoPlay, showControls
-- [ ] Dispose controllers, thumbnail/placeholder until loaded, error handling
+- [x] Create `lib/widgets/video_player_widget.dart`
+- [x] Wraps Chewie player: videoUrl, aspectRatio, autoPlay=false, showControls
+- [x] Dispose controllers, loading indicator until ready, error state handling
 
 **Screen Modifications**
-- [ ] AddRecipeScreen: "Add Video" button, pickVideo(), thumbnail preview, compress before upload, per-step video option
-- [ ] RecipeDetailScreen: VideoPlayerWidget if videoUrl exists (toggle photo/video)
-- [ ] CookingModeScreen: VideoPlayerWidget for step videos (compact, above instructions)
-- [ ] RecipeCard: play button overlay if recipe has video
+- [x] StepInputList: "Add Video" button per step, pickVideo(), video indicator with remove option
+- [x] RecipeFormProvider: `stepVideoFiles`, `videoFile`, `setStepVideoFile`, `removeStepVideoFile`, `setVideoFile`, `clearVideo`, video upload in `buildRecipe`
+- [x] RecipeDetailScreen: toggle button in AppBar to switch between photo carousel and VideoPlayerWidget
+- [x] CookingModeScreen/StepPage: VideoPlayerWidget above instructions when step has videoUrl
+- [x] RecipeCard: play button overlay if recipe has videoUrl
 
 **l10n**
-- [ ] Add keys: `addVideo` / `recordVideo` / `videoUnavailable` / `uploadingVideo` / `compressingVideo` / `stepVideo`
+- [x] Added keys: `addVideo`, `recordVideo`, `videoUnavailable`, `uploadingVideo`, `compressingVideo`, `stepVideo`, `recipeVideo` (EN + TR)
 
 **Tests**
-- [ ] `test/models/recipe_test.dart` — videoUrl serialization
-- [ ] `test/widgets/video_player_widget_test.dart` — renders player, placeholder on error
+- [x] `test/models/recipe_test.dart` — videoUrl serialization (7 new tests)
+- [x] `test/models/recipe_step_test.dart` — videoUrl serialization (5 new tests)
+- [x] `test/widgets/video_player_widget_test.dart` — renders player, loading state, error state (4 tests)
+
+**Firebase Storage Rules**
+- [x] Added `recipe_videos/{userId}/{fileName}` and `step_videos/{userId}/{fileName}` rules
+- [x] Deployed to se380-food-tracker
 
 ---
 

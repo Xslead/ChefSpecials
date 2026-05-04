@@ -25,6 +25,7 @@ class Recipe {
   final bool isPrivate;
   final List<String> dietaryTags;
   final List<String> photos;
+  final String? videoUrl;
 
   Recipe({
     this.id,
@@ -50,6 +51,7 @@ class Recipe {
     this.isPrivate = false,
     this.dietaryTags = const [],
     this.photos = const [],
+    this.videoUrl,
   });
 
   factory Recipe.fromMap(Map<String, dynamic> map, String docId) {
@@ -81,6 +83,7 @@ class Recipe {
       isPrivate: map['isPrivate'] as bool? ?? false,
       dietaryTags: List<String>.from(map['dietaryTags'] ?? []),
       photos: List<String>.from(map['photos'] ?? []),
+      videoUrl: map['videoUrl'] as String?,
     );
   }
 
@@ -108,6 +111,7 @@ class Recipe {
     bool? isPrivate,
     List<String>? dietaryTags,
     List<String>? photos,
+    String? videoUrl,
   }) {
     return Recipe(
       id: id ?? this.id,
@@ -133,6 +137,7 @@ class Recipe {
       isPrivate: isPrivate ?? this.isPrivate,
       dietaryTags: dietaryTags ?? this.dietaryTags,
       photos: photos ?? this.photos,
+      videoUrl: videoUrl ?? this.videoUrl,
     );
   }
 
@@ -164,6 +169,7 @@ class Recipe {
       'isPrivate': isPrivate,
       'dietaryTags': dietaryTags,
       'photos': photos,
+      'videoUrl': videoUrl,
     };
   }
 }

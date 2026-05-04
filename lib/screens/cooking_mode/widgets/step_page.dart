@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../config/theme.dart';
 import '../../../models/recipe_step.dart';
+import '../../../widgets/video_player_widget.dart';
 import 'countdown_timer_widget.dart';
 
 class StepPage extends StatelessWidget {
@@ -42,8 +43,11 @@ class StepPage extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Step image
-          if (step.imageUrl != null && step.imageUrl!.isNotEmpty) ...[
+          // Step video (takes priority over image when available)
+          if (step.videoUrl != null && step.videoUrl!.isNotEmpty) ...[
+            VideoPlayerWidget(videoUrl: step.videoUrl!),
+            const SizedBox(height: 24),
+          ] else if (step.imageUrl != null && step.imageUrl!.isNotEmpty) ...[
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: CachedNetworkImage(

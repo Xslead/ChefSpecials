@@ -21,8 +21,11 @@ class RecipeFormProvider extends ChangeNotifier {
   int cookTimeMinutes = 0;
   File? imageFile;
   String? existingImageUrl;
+  File? videoFile;
+  String? existingVideoUrl;
   List<Ingredient> ingredients = [];
   List<RecipeStep> steps = [RecipeStep(order: 1, instruction: '')];
+  Map<int, File> stepVideoFiles = {};
   int? caloriesPerServing;
   double? proteinGrams;
   double? carbsGrams;
@@ -46,6 +49,29 @@ class RecipeFormProvider extends ChangeNotifier {
         : List.from(recipe.steps);
     if (recipe.imageUrl != null) existingImageUrl = recipe.imageUrl;
     existingAdditionalPhotos = List.from(recipe.photos);
+    existingVideoUrl = recipe.videoUrl;
+    notifyListeners();
+  }
+
+  void setVideoFile(File file) {
+    videoFile = file;
+    existingVideoUrl = null;
+    notifyListeners();
+  }
+
+  void clearVideo() {
+    videoFile = null;
+    existingVideoUrl = null;
+    notifyListeners();
+  }
+
+  void setStepVideoFile(int index, File file) {
+    stepVideoFiles[index] = file;
+    notifyListeners();
+  }
+
+  void removeStepVideoFile(int index) {
+    stepVideoFiles.remove(index);
     notifyListeners();
   }
 
@@ -116,12 +142,23 @@ class RecipeFormProvider extends ChangeNotifier {
   void removeStep(int index) {
     if (steps.length > 1) {
       steps.removeAt(index);
+      // Shift step video file indices
+      final shifted = <int, File>{};
+      for (final entry in stepVideoFiles.entries) {
+        if (entry.key < index) {
+          shifted[entry.key] = entry.value;
+        } else if (entry.key > index) {
+          shifted[entry.key - 1] = entry.value;
+        }
+      }
+      stepVideoFiles = shifted;
       for (int i = 0; i < steps.length; i++) {
         steps[i] = RecipeStep(
           order: i + 1,
           instruction: steps[i].instruction,
           imageUrl: steps[i].imageUrl,
           timerSeconds: steps[i].timerSeconds,
+          videoUrl: steps[i].videoUrl,
         );
       }
       _recalculatePrepTime();
@@ -136,6 +173,7 @@ class RecipeFormProvider extends ChangeNotifier {
       instruction: instruction ?? old.instruction,
       imageUrl: old.imageUrl,
       timerSeconds: timerSeconds ?? old.timerSeconds,
+      videoUrl: old.videoUrl,
     );
     _recalculatePrepTime();
     notifyListeners();
@@ -215,6 +253,7 @@ class RecipeFormProvider extends ChangeNotifier {
     prepTimeMinutes = recipe.prepTimeMinutes;
     cookTimeMinutes = recipe.cookTimeMinutes;
     existingImageUrl = recipe.imageUrl;
+    existingVideoUrl = recipe.videoUrl;
     ingredients = List.from(recipe.ingredients);
     steps = recipe.steps.isNotEmpty
         ? List.from(recipe.steps)
@@ -227,6 +266,7 @@ class RecipeFormProvider extends ChangeNotifier {
     dietaryTags = List.from(recipe.dietaryTags);
     existingAdditionalPhotos = List.from(recipe.photos);
     additionalPhotoFiles = [];
+    stepVideoFiles = {};
     notifyListeners();
   }
 
@@ -238,6 +278,11 @@ class RecipeFormProvider extends ChangeNotifier {
       String? imageUrl = existingImageUrl;
       if (imageFile != null) {
         imageUrl = await _storageService.uploadRecipeImage(imageFile!, authorId);
+      }
+
+      String? recipeVideoUrl = existingVideoUrl;
+      if (videoFile != null) {
+        recipeVideoUrl = await _storageService.uploadRecipeVideo(videoFile!, authorId);
       }
 
       final List<String> allPhotos = List.from(existingAdditionalPhotos);
@@ -252,9 +297,27 @@ class RecipeFormProvider extends ChangeNotifier {
       final validIngredients = ingredients
           .where((i) => i.name.isNotEmpty && i.amount.isNotEmpty)
           .toList();
-      final validSteps = steps
+      final rawValidSteps = steps
           .where((s) => s.instruction.isNotEmpty)
           .toList();
+
+      // Upload step videos
+      final processedSteps = <RecipeStep>[];
+      for (int i = 0; i < rawValidSteps.length; i++) {
+        final step = rawValidSteps[i];
+        final stepVideoFile = stepVideoFiles[steps.indexOf(step)];
+        String? stepVideoUrl = step.videoUrl;
+        if (stepVideoFile != null) {
+          stepVideoUrl = await _storageService.uploadStepVideo(stepVideoFile, authorId);
+        }
+        processedSteps.add(RecipeStep(
+          order: step.order,
+          instruction: step.instruction,
+          imageUrl: step.imageUrl,
+          timerSeconds: step.timerSeconds,
+          videoUrl: stepVideoUrl,
+        ));
+      }
 
       return Recipe(
         title: title,
@@ -267,7 +330,7 @@ class RecipeFormProvider extends ChangeNotifier {
         cookTimeMinutes: cookTimeMinutes,
         imageUrl: imageUrl,
         ingredients: validIngredients,
-        steps: validSteps,
+        steps: processedSteps,
         caloriesPerServing: caloriesPerServing,
         proteinGrams: proteinGrams,
         carbsGrams: carbsGrams,
@@ -276,6 +339,7 @@ class RecipeFormProvider extends ChangeNotifier {
         isPrivate: isPrivate,
         dietaryTags: dietaryTags,
         photos: allPhotos,
+        videoUrl: recipeVideoUrl,
       );
     } finally {
       isSubmitting = false;
@@ -292,8 +356,11 @@ class RecipeFormProvider extends ChangeNotifier {
     cookTimeMinutes = 0;
     imageFile = null;
     existingImageUrl = null;
+    videoFile = null;
+    existingVideoUrl = null;
     ingredients = [];
     steps = [RecipeStep(order: 1, instruction: '')];
+    stepVideoFiles = {};
     caloriesPerServing = null;
     proteinGrams = null;
     carbsGrams = null;

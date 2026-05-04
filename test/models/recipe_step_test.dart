@@ -144,5 +144,49 @@ void main() {
         expect(step.imageUrl, '');
       });
     });
+
+    group('videoUrl', () {
+      test('fromMap parses videoUrl when present', () {
+        final map = {
+          'order': 1,
+          'instruction': 'Fry the onions',
+          'videoUrl': 'https://example.com/step1.mp4',
+        };
+        final step = RecipeStep.fromMap(map);
+        expect(step.videoUrl, 'https://example.com/step1.mp4');
+      });
+
+      test('fromMap sets videoUrl to null when absent', () {
+        final map = {'order': 1, 'instruction': 'Chop'};
+        final step = RecipeStep.fromMap(map);
+        expect(step.videoUrl, isNull);
+      });
+
+      test('toMap includes videoUrl when set', () {
+        final step = RecipeStep(
+          order: 1,
+          instruction: 'Boil',
+          videoUrl: 'https://example.com/boil.mp4',
+        );
+        expect(step.toMap()['videoUrl'], 'https://example.com/boil.mp4');
+      });
+
+      test('toMap includes videoUrl key as null when not set', () {
+        final step = RecipeStep(order: 1, instruction: 'Mix');
+        expect(step.toMap().containsKey('videoUrl'), isTrue);
+        expect(step.toMap()['videoUrl'], isNull);
+      });
+
+      test('round-trip preserves videoUrl', () {
+        final map = {
+          'order': 2,
+          'instruction': 'Simmer',
+          'videoUrl': 'https://example.com/simmer.mp4',
+        };
+        final step = RecipeStep.fromMap(map);
+        expect(RecipeStep.fromMap(step.toMap()).videoUrl,
+            'https://example.com/simmer.mp4');
+      });
+    });
   });
 }

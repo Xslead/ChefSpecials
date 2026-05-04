@@ -712,5 +712,88 @@ void main() {
         expect(recipe.steps.length, 30);
       });
     });
+
+    group('videoUrl', () {
+      test('fromMap parses videoUrl when present', () {
+        final map = fullMap();
+        map['videoUrl'] = 'https://example.com/recipe.mp4';
+        final recipe = Recipe.fromMap(map, 'doc1');
+        expect(recipe.videoUrl, 'https://example.com/recipe.mp4');
+      });
+
+      test('fromMap sets videoUrl to null when absent', () {
+        final recipe = Recipe.fromMap(minimalMap(), 'doc1');
+        expect(recipe.videoUrl, isNull);
+      });
+
+      test('fromMap sets videoUrl to null when explicitly null', () {
+        final map = fullMap();
+        map['videoUrl'] = null;
+        final recipe = Recipe.fromMap(map, 'doc1');
+        expect(recipe.videoUrl, isNull);
+      });
+
+      test('toMap includes videoUrl when set', () {
+        final recipe = Recipe(
+          title: 'T',
+          description: 'D',
+          authorId: 'a1',
+          authorName: 'Chef',
+          category: 'Cat',
+          servings: 1,
+          prepTimeMinutes: 5,
+          cookTimeMinutes: 5,
+          ingredients: [],
+          steps: [],
+          createdAt: DateTime.now(),
+          videoUrl: 'https://example.com/video.mp4',
+        );
+        expect(recipe.toMap()['videoUrl'], 'https://example.com/video.mp4');
+      });
+
+      test('toMap includes videoUrl key as null when not set', () {
+        final recipe = Recipe(
+          title: 'T',
+          description: 'D',
+          authorId: 'a1',
+          authorName: 'Chef',
+          category: 'Cat',
+          servings: 1,
+          prepTimeMinutes: 5,
+          cookTimeMinutes: 5,
+          ingredients: [],
+          steps: [],
+          createdAt: DateTime.now(),
+        );
+        expect(recipe.toMap().containsKey('videoUrl'), isTrue);
+        expect(recipe.toMap()['videoUrl'], isNull);
+      });
+
+      test('copyWith sets videoUrl', () {
+        final recipe = Recipe(
+          title: 'T',
+          description: 'D',
+          authorId: 'a1',
+          authorName: 'Chef',
+          category: 'Cat',
+          servings: 1,
+          prepTimeMinutes: 5,
+          cookTimeMinutes: 5,
+          ingredients: [],
+          steps: [],
+          createdAt: DateTime.now(),
+        );
+        final copy = recipe.copyWith(videoUrl: 'https://example.com/v.mp4');
+        expect(copy.videoUrl, 'https://example.com/v.mp4');
+        expect(copy.title, recipe.title);
+      });
+
+      test('round-trip preserves videoUrl', () {
+        final map = fullMap();
+        map['videoUrl'] = 'https://example.com/roundtrip.mp4';
+        final recipe = Recipe.fromMap(map, 'doc1');
+        expect(recipe.toMap()['videoUrl'], 'https://example.com/roundtrip.mp4');
+      });
+    });
   });
 }

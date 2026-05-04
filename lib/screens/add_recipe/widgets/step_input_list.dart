@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../../config/theme.dart';
@@ -7,6 +10,81 @@ import '../../../providers/recipe_form_provider.dart';
 
 class StepInputList extends StatelessWidget {
   const StepInputList({super.key});
+
+  Future<void> _pickStepVideo(
+      BuildContext context, int index, RecipeFormProvider formProvider) async {
+    final picker = ImagePicker();
+    final video = await picker.pickVideo(source: ImageSource.gallery);
+    if (video != null && context.mounted) {
+      formProvider.setStepVideoFile(index, File(video.path));
+    }
+  }
+
+  Widget _buildVideoRow(
+    BuildContext context,
+    int index,
+    RecipeFormProvider formProvider,
+    AppLocalizations l10n,
+  ) {
+    final hasVideo = formProvider.stepVideoFiles.containsKey(index);
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: () => _pickStepVideo(context, index, formProvider),
+          child: Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: hasVideo
+                  ? AppTheme.primaryColor.withValues(alpha: 0.08)
+                  : AppTheme.neutralSoftOf(context),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: hasVideo
+                    ? AppTheme.primaryColor.withValues(alpha: 0.3)
+                    : Colors.transparent,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.video_library_outlined,
+                  size: 14,
+                  color: hasVideo
+                      ? AppTheme.primaryColor
+                      : AppTheme.textTertiaryOf(context),
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  hasVideo ? l10n.stepVideo : l10n.addVideo,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight:
+                        hasVideo ? FontWeight.w600 : FontWeight.w400,
+                    color: hasVideo
+                        ? AppTheme.primaryColor
+                        : AppTheme.textTertiaryOf(context),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (hasVideo) ...[
+          const SizedBox(width: 6),
+          GestureDetector(
+            onTap: () => formProvider.removeStepVideoFile(index),
+            child: Icon(
+              Icons.close,
+              size: 14,
+              color: AppTheme.textTertiaryOf(context),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,6 +256,8 @@ class StepInputList extends StatelessWidget {
                             );
                           },
                         ),
+                        const SizedBox(height: 8),
+                        _buildVideoRow(context, index, formProvider, l10n),
                       ],
                     ),
                   ),

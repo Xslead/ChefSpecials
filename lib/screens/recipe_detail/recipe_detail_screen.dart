@@ -26,6 +26,7 @@ import '../../widgets/photo_carousel.dart';
 import '../../widgets/serving_size_selector.dart';
 import '../../widgets/substitution_sheet.dart';
 import '../../widgets/unit_converter_sheet.dart';
+import '../../widgets/video_player_widget.dart';
 import 'widgets/ingredient_list_view.dart';
 import 'widgets/step_overview_list.dart';
 
@@ -79,6 +80,7 @@ class _RecipeDetailBody extends StatefulWidget {
 class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
   final TextEditingController _commentController = TextEditingController();
   bool _submittingComment = false;
+  bool _showRecipeVideo = false;
   late int _selectedServings;
   int _cookCount = 0;
 
@@ -856,6 +858,15 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
       expandedHeight: 320,
       pinned: true,
       actions: [
+        if (r.videoUrl != null)
+          _buildGlassCircleButton(
+            icon: _showRecipeVideo
+                ? Icons.photo_outlined
+                : Icons.play_circle_outline,
+            iconColor: Colors.white,
+            onPressed: () =>
+                setState(() => _showRecipeVideo = !_showRecipeVideo),
+          ),
         Builder(builder: (ctx) {
           final favProvider = ctx.watch<FavoriteProvider>();
           final isFav = r.id != null && favProvider.isFavorite(r.id!);
@@ -922,6 +933,9 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
   }
 
   Widget _buildPhotoArea(Recipe r) {
+    if (_showRecipeVideo && r.videoUrl != null) {
+      return VideoPlayerWidget(videoUrl: r.videoUrl!);
+    }
     final allPhotos = [
       if (r.imageUrl != null) r.imageUrl!,
       ...r.photos,

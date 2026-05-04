@@ -3528,6 +3528,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pending Sync'**
   String get pendingSync;
+
+  /// No description provided for @addVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Video'**
+  String get addVideo;
+
+  /// No description provided for @recordVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Record Video'**
+  String get recordVideo;
+
+  /// No description provided for @videoUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Video unavailable'**
+  String get videoUnavailable;
+
+  /// No description provided for @uploadingVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading video...'**
+  String get uploadingVideo;
+
+  /// No description provided for @compressingVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Compressing video...'**
+  String get compressingVideo;
+
+  /// No description provided for @stepVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Step Video'**
+  String get stepVideo;
+
+  /// No description provided for @recipeVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe Video'**
+  String get recipeVideo;
 }
 
 class _AppLocalizationsDelegate

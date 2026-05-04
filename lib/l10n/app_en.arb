@@ -752,5 +752,12 @@
   "storageAndCache": "Storage & Cache",
   "cacheSize": "Cache Size",
   "clearCache": "Clear Cache",
-  "pendingSync": "Pending Sync"
+  "pendingSync": "Pending Sync",
+  "addVideo": "Add Video",
+  "recordVideo": "Record Video",
+  "videoUnavailable": "Video unavailable",
+  "uploadingVideo": "Uploading video...",
+  "compressingVideo": "Compressing video...",
+  "stepVideo": "Step Video",
+  "recipeVideo": "Recipe Video"
 }

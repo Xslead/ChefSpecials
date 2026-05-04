@@ -1832,4 +1832,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pendingSync => 'Pending Sync';
+
+  @override
+  String get addVideo => 'Add Video';
+
+  @override
+  String get recordVideo => 'Record Video';
+
+  @override
+  String get videoUnavailable => 'Video unavailable';
+
+  @override
+  String get uploadingVideo => 'Uploading video...';
+
+  @override
+  String get compressingVideo => 'Compressing video...';
+
+  @override
+  String get stepVideo => 'Step Video';
+
+  @override
+  String get recipeVideo => 'Recipe Video';
 }

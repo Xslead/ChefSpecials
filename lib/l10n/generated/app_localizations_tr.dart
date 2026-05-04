@@ -1839,4 +1839,25 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get pendingSync => 'Bekleyen Senkronizasyon';
+
+  @override
+  String get addVideo => 'Video Ekle';
+
+  @override
+  String get recordVideo => 'Video Kaydet';
+
+  @override
+  String get videoUnavailable => 'Video kullanılamıyor';
+
+  @override
+  String get uploadingVideo => 'Video yükleniyor...';
+
+  @override
+  String get compressingVideo => 'Video sıkıştırılıyor...';
+
+  @override
+  String get stepVideo => 'Adım Videosu';
+
+  @override
+  String get recipeVideo => 'Tarif Videosu';
 }

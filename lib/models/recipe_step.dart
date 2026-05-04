@@ -3,12 +3,14 @@ class RecipeStep {
   final String instruction;
   final String? imageUrl;
   final int? timerSeconds;
+  final String? videoUrl;
 
   RecipeStep({
     required this.order,
     required this.instruction,
     this.imageUrl,
     this.timerSeconds,
+    this.videoUrl,
   });
 
   factory RecipeStep.fromMap(Map<String, dynamic> map) {
@@ -17,6 +19,7 @@ class RecipeStep {
       instruction: map['instruction'] as String,
       imageUrl: map['imageUrl'] as String?,
       timerSeconds: map['timerSeconds'] as int?,
+      videoUrl: map['videoUrl'] as String?,
     );
   }
 
@@ -26,6 +29,7 @@ class RecipeStep {
       'instruction': instruction,
       'imageUrl': imageUrl,
       'timerSeconds': timerSeconds,
+      'videoUrl': videoUrl,
     };
   }
 }

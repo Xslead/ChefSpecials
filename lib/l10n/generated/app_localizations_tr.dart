@@ -1817,4 +1817,26 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get rating => 'Puan';
+
+  @override
+  String get youreOffline => 'Çevrimdışısınız';
+
+  @override
+  String get changesSyncWhenConnected =>
+      'Bağlantı kurulduğunda değişiklikler senkronize edilecek';
+
+  @override
+  String get backOnline => 'Çevrimiçi — Senkronize ediliyor...';
+
+  @override
+  String get storageAndCache => 'Depolama ve Önbellek';
+
+  @override
+  String get cacheSize => 'Önbellek Boyutu';
+
+  @override
+  String get clearCache => 'Önbelleği Temizle';
+
+  @override
+  String get pendingSync => 'Bekleyen Senkronizasyon';
 }

@@ -745,5 +745,12 @@
   "searchByIngredients": "Malzemeye Göre Ara",
   "addIngredient": "Malzeme ekle...",
   "bestMatches": "En İyi Eşleşmeler",
-  "rating": "Puan"
+  "rating": "Puan",
+  "youreOffline": "Çevrimdışısınız",
+  "changesSyncWhenConnected": "Bağlantı kurulduğunda değişiklikler senkronize edilecek",
+  "backOnline": "Çevrimiçi — Senkronize ediliyor...",
+  "storageAndCache": "Depolama ve Önbellek",
+  "cacheSize": "Önbellek Boyutu",
+  "clearCache": "Önbelleği Temizle",
+  "pendingSync": "Bekleyen Senkronizasyon"
 }

@@ -1811,4 +1811,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rating => 'Rating';
+
+  @override
+  String get youreOffline => 'You\'re Offline';
+
+  @override
+  String get changesSyncWhenConnected => 'Changes will sync when connected';
+
+  @override
+  String get backOnline => 'Back Online — Syncing...';
+
+  @override
+  String get storageAndCache => 'Storage & Cache';
+
+  @override
+  String get cacheSize => 'Cache Size';
+
+  @override
+  String get clearCache => 'Clear Cache';
+
+  @override
+  String get pendingSync => 'Pending Sync';
 }

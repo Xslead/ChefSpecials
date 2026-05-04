@@ -1,13 +1,18 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/food_item.dart';
+import '../services/cache_service.dart';
 import '../services/food_item_service.dart';
 
 class FoodItemProvider extends ChangeNotifier {
   final FoodItemService _foodItemService;
+  final CacheService? _cacheService;
 
-  FoodItemProvider({FoodItemService? foodItemService})
-      : _foodItemService = foodItemService ?? FoodItemService();
+  FoodItemProvider({
+    FoodItemService? foodItemService,
+    CacheService? cacheService,
+  })  : _foodItemService = foodItemService ?? FoodItemService(),
+        _cacheService = cacheService;
 
   List<FoodItem> _foodItems = [];
   List<FoodItem> _searchResults = [];
@@ -46,7 +51,9 @@ class FoodItemProvider extends ChangeNotifier {
       if (_filterVegan && !item.isVegan) return false;
       if (_filterVegetarian && !item.isVegetarian) return false;
       if (_filterGlutenFree && !item.isGlutenFree) return false;
-      if (_filterNutriScore != null && item.nutriScore != _filterNutriScore) return false;
+      if (_filterNutriScore != null && item.nutriScore != _filterNutriScore) {
+        return false;
+      }
       return true;
     }).toList();
 
@@ -56,16 +63,37 @@ class FoodItemProvider extends ChangeNotifier {
       case 'protein':
         result.sort((a, b) => b.protein.compareTo(a.protein));
       default:
-        result.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        result.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     }
     return result;
   }
 
-  void setFilterVegan(bool value) { _filterVegan = value; notifyListeners(); }
-  void setFilterVegetarian(bool value) { _filterVegetarian = value; notifyListeners(); }
-  void setFilterGlutenFree(bool value) { _filterGlutenFree = value; notifyListeners(); }
-  void setFilterNutriScore(String? value) { _filterNutriScore = value; notifyListeners(); }
-  void setSortBy(String value) { _sortBy = value; notifyListeners(); }
+  void setFilterVegan(bool value) {
+    _filterVegan = value;
+    notifyListeners();
+  }
+
+  void setFilterVegetarian(bool value) {
+    _filterVegetarian = value;
+    notifyListeners();
+  }
+
+  void setFilterGlutenFree(bool value) {
+    _filterGlutenFree = value;
+    notifyListeners();
+  }
+
+  void setFilterNutriScore(String? value) {
+    _filterNutriScore = value;
+    notifyListeners();
+  }
+
+  void setSortBy(String value) {
+    _sortBy = value;
+    notifyListeners();
+  }
+
   void clearFilters() {
     _filterVegan = false;
     _filterVegetarian = false;
@@ -84,6 +112,17 @@ class FoodItemProvider extends ChangeNotifier {
 
   void listenToFoodItems() {
     _isLoading = true;
+
+    // Serve cached items immediately when loading the "All" category
+    if (_selectedCategory == 'All' && _foodItems.isEmpty && _cacheService != null) {
+      final cached = _cacheService.getCachedFoodItems();
+      if (cached.isNotEmpty) {
+        _foodItems = cached;
+        _isLoading = false;
+        notifyListeners();
+      }
+    }
+
     _subscription?.cancel();
 
     final stream = _selectedCategory == 'All'
@@ -95,9 +134,16 @@ class FoodItemProvider extends ChangeNotifier {
         _foodItems = items;
         _isLoading = false;
         notifyListeners();
+        // Only cache the full "All" list — partial category lists would corrupt it
+        if (_selectedCategory == 'All') {
+          _cacheService?.cacheFoodItems(items);
+        }
       },
       onError: (error) {
         _isLoading = false;
+        if (_foodItems.isEmpty) {
+          _foodItems = _cacheService?.getCachedFoodItems() ?? [];
+        }
         notifyListeners();
       },
     );
@@ -117,7 +163,15 @@ class FoodItemProvider extends ChangeNotifier {
     }
     _isLoading = true;
     notifyListeners();
-    _searchResults = await _foodItemService.searchFoodItems(query);
+    try {
+      _searchResults = await _foodItemService.searchFoodItems(query);
+    } catch (_) {
+      // Fall back to searching the cached list offline
+      final lower = query.toLowerCase();
+      _searchResults = (_cacheService?.getCachedFoodItems() ?? _foodItems)
+          .where((f) => f.name.toLowerCase().contains(lower))
+          .toList();
+    }
     _isLoading = false;
     notifyListeners();
   }

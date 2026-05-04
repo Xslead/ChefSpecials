@@ -745,5 +745,12 @@
   "searchByIngredients": "Search by Ingredients",
   "addIngredient": "Add an ingredient...",
   "bestMatches": "Best Matches",
-  "rating": "Rating"
+  "rating": "Rating",
+  "youreOffline": "You're Offline",
+  "changesSyncWhenConnected": "Changes will sync when connected",
+  "backOnline": "Back Online — Syncing...",
+  "storageAndCache": "Storage & Cache",
+  "cacheSize": "Cache Size",
+  "clearCache": "Clear Cache",
+  "pendingSync": "Pending Sync"
 }

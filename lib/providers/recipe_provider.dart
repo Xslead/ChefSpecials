@@ -1,13 +1,22 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../models/recipe.dart';
+import '../services/cache_service.dart';
+import '../services/connectivity_service.dart';
 import '../services/recipe_service.dart';
 
 class RecipeProvider extends ChangeNotifier {
   final RecipeService _recipeService;
+  final CacheService? _cacheService;
+  final ConnectivityService? _connectivityService;
 
-  RecipeProvider({RecipeService? recipeService})
-      : _recipeService = recipeService ?? RecipeService();
+  RecipeProvider({
+    RecipeService? recipeService,
+    CacheService? cacheService,
+    ConnectivityService? connectivityService,
+  })  : _recipeService = recipeService ?? RecipeService(),
+        _cacheService = cacheService,
+        _connectivityService = connectivityService;
 
   List<Recipe> _recipes = [];
   String? _selectedCategory;
@@ -27,6 +36,7 @@ class RecipeProvider extends ChangeNotifier {
         ? pub.toList()
         : pub.where((r) => r.category == _selectedCategory).toList();
   }
+
   List<Recipe> get allRecipes => _recipes;
   String? get selectedCategory => _selectedCategory;
   bool get isLoading => _isLoading;
@@ -40,18 +50,32 @@ class RecipeProvider extends ChangeNotifier {
 
   void _listenToRecipes() {
     _isLoading = true;
+
+    // Serve cached data immediately so UI isn't empty while stream loads
+    if (_recipes.isEmpty && _cacheService != null) {
+      final cached = _cacheService.getCachedRecipes();
+      if (cached.isNotEmpty) {
+        _recipes = cached;
+        _isLoading = false;
+        notifyListeners();
+      }
+    }
+
     _subscription?.cancel();
     _subscription = _recipeService.getRecipesStream().listen(
       (recipes) {
         _recipes = recipes;
         _isLoading = false;
         notifyListeners();
+        _cacheService?.cacheRecipes(recipes);
       },
       onError: (error) {
         debugPrint('RecipeProvider stream error: $error');
         _isLoading = false;
+        if (_recipes.isEmpty) {
+          _recipes = _cacheService?.getCachedRecipes() ?? [];
+        }
         notifyListeners();
-        // Restart stream after delay so it recovers from transient errors
         Future.delayed(const Duration(seconds: 3), () {
           if (_initialized) _listenToRecipes();
         });
@@ -65,9 +89,7 @@ class RecipeProvider extends ChangeNotifier {
 
   void updateAuthorName(String authorId, String newName) {
     _recipes = _recipes.map((r) {
-      if (r.authorId == authorId) {
-        return r.copyWith(authorName: newName);
-      }
+      if (r.authorId == authorId) return r.copyWith(authorName: newName);
       return r;
     }).toList();
     _authorNameController.add(MapEntry(authorId, newName));
@@ -80,6 +102,18 @@ class RecipeProvider extends ChangeNotifier {
   }
 
   Future<String> createRecipe(Recipe recipe) async {
+    final isOnline = await _connectivityService?.isOnline() ?? true;
+    if (!isOnline) {
+      final tempId = 'offline_${DateTime.now().millisecondsSinceEpoch}';
+      final offline = recipe.copyWith(id: tempId);
+      _recipes = [offline, ..._recipes];
+      notifyListeners();
+      await _cacheService?.queueOfflineAction({
+        'type': 'create_recipe',
+        'recipe': {...recipe.toMap(), 'id': tempId},
+      });
+      return tempId;
+    }
     return await _recipeService.createRecipe(recipe);
   }
 

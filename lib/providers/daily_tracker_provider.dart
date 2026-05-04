@@ -4,13 +4,22 @@ import 'package:intl/intl.dart';
 import '../models/daily_log.dart';
 import '../models/meal_entry.dart';
 import '../models/nutrition_goal.dart';
+import '../services/cache_service.dart';
+import '../services/connectivity_service.dart';
 import '../services/daily_tracker_service.dart';
 
 class DailyTrackerProvider extends ChangeNotifier {
   final DailyTrackerService _service;
+  final CacheService? _cacheService;
+  final ConnectivityService? _connectivityService;
 
-  DailyTrackerProvider({DailyTrackerService? dailyTrackerService})
-      : _service = dailyTrackerService ?? DailyTrackerService();
+  DailyTrackerProvider({
+    DailyTrackerService? dailyTrackerService,
+    CacheService? cacheService,
+    ConnectivityService? connectivityService,
+  })  : _service = dailyTrackerService ?? DailyTrackerService(),
+        _cacheService = cacheService,
+        _connectivityService = connectivityService;
 
   DailyLog? _dailyLog;
   NutritionGoal? _nutritionGoal;
@@ -47,8 +56,8 @@ class DailyTrackerProvider extends ChangeNotifier {
 
   Future<void> loadWeeklyCalories(DateTime referenceDate) async {
     if (_userId == null) return;
-    final weekStart = referenceDate.subtract(
-        Duration(days: referenceDate.weekday - 1)); // Monday
+    final weekStart =
+        referenceDate.subtract(Duration(days: referenceDate.weekday - 1));
     final weekKey = DateFormat('yyyy-MM-dd').format(weekStart);
     if (_loadedWeekKey == weekKey) return;
     _loadedWeekKey = weekKey;
@@ -69,22 +78,28 @@ class DailyTrackerProvider extends ChangeNotifier {
   void _listenToLog() {
     _logSubscription?.cancel();
     if (_userId == null) return;
-    // Only show loading spinner on first load, not on date switches
-    if (_dailyLog == null && !_isLoading) {
-      _isLoading = true;
-    }
-    // Clear current data immediately so UI shows fresh state for new date
+    if (_dailyLog == null && !_isLoading) _isLoading = true;
     _dailyLog = null;
+
+    // Immediately serve cached log so the UI isn't blank
+    final cached = _cacheService?.getCachedDailyLog(dateString);
+    if (cached != null) {
+      _dailyLog = cached;
+      _isLoading = false;
+      notifyListeners();
+    }
+
     _logSubscription = _service.getDailyLog(_userId!, dateString).listen(
       (log) {
         _dailyLog = log;
         _isLoading = false;
-        // Update the weekly cache for this date
         _weeklyCalories[dateString] = log?.totalCalories ?? 0;
         notifyListeners();
+        if (log != null) _cacheService?.cacheDailyLog(log);
       },
       onError: (_) {
         _isLoading = false;
+        _dailyLog ??= _cacheService?.getCachedDailyLog(dateString);
         notifyListeners();
       },
     );
@@ -104,24 +119,39 @@ class DailyTrackerProvider extends ChangeNotifier {
 
   Future<void> addMealEntry(MealEntry entry) async {
     if (_userId == null) return;
-    final currentMeals = List<MealEntry>.from(_dailyLog?.meals ?? []);
-    currentMeals.add(entry);
 
-    if (_dailyLog?.id != null) {
+    final isOnline = await _connectivityService?.isOnline() ?? true;
+    final currentMeals = List<MealEntry>.from(_dailyLog?.meals ?? [])
+      ..add(entry);
+
+    if (!isOnline) {
+      // Optimistic local update
+      _dailyLog = (_dailyLog ??
+              DailyLog(userId: _userId!, date: dateString, meals: []))
+          .copyWith(meals: currentMeals);
+      notifyListeners();
+      await _cacheService?.cacheDailyLog(_dailyLog!);
+      await _cacheService?.queueOfflineAction({
+        'type': 'add_meal_entry',
+        'userId': _userId,
+        'dateString': dateString,
+        'entry': entry.toMap(),
+      });
+      return;
+    }
+
+    if (_dailyLog?.id?.isNotEmpty == true) {
       final updated = _dailyLog!.copyWith(meals: currentMeals);
       await _service.updateDailyLog(_dailyLog!.id!, updated);
     } else {
-      final newLog = DailyLog(
-        userId: _userId!,
-        date: dateString,
-        meals: currentMeals,
-      );
+      final newLog =
+          DailyLog(userId: _userId!, date: dateString, meals: currentMeals);
       await _service.createDailyLog(newLog);
     }
   }
 
   Future<void> removeMealEntry(int index) async {
-    if (_dailyLog?.id == null) return;
+    if (_dailyLog?.id?.isNotEmpty != true) return;
     final currentMeals = List<MealEntry>.from(_dailyLog!.meals);
     if (index < 0 || index >= currentMeals.length) return;
     currentMeals.removeAt(index);
@@ -139,17 +169,13 @@ class DailyTrackerProvider extends ChangeNotifier {
       await _service.updateDailyLog(_dailyLog!.id!, updated);
     } else {
       final newLog = DailyLog(
-        userId: _userId!,
-        date: dateString,
-        meals: [],
-        waterMl: newWater,
-      );
+          userId: _userId!, date: dateString, meals: [], waterMl: newWater);
       await _service.createDailyLog(newLog);
     }
   }
 
   Future<void> removeWater(int ml) async {
-    if (_userId == null || _dailyLog?.id == null) return;
+    if (_userId == null || _dailyLog?.id?.isNotEmpty != true) return;
     final currentWater = _dailyLog?.waterMl ?? 0;
     final newWater = (currentWater - ml).clamp(0, double.maxFinite).toInt();
     final updated = _dailyLog!.copyWith(waterMl: newWater);
@@ -160,7 +186,6 @@ class DailyTrackerProvider extends ChangeNotifier {
     await _service.setNutritionGoal(goal);
   }
 
-  // Helpers for UI
   List<MealEntry> mealsOfType(MealType type) =>
       _dailyLog?.mealsOfType(type) ?? [];
 

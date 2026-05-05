@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../config/theme.dart';
 import '../../models/recipe.dart';
@@ -36,7 +37,7 @@ class _CookingModeScreenState extends State<CookingModeScreen> {
   Future<void> _onFinish(BuildContext context, AppLocalizations l10n) async {
     final isAuthenticated = context.read<AuthProvider>().isAuthenticated;
     if (!isAuthenticated) {
-      Navigator.of(context).pop();
+      context.pop();
       return;
     }
 
@@ -186,8 +187,15 @@ class _CookingModeScreenState extends State<CookingModeScreen> {
         );
       },
     );
-    notesController.dispose();
-    if (context.mounted) Navigator.of(context).pop();
+    // notesController is a local variable; do not dispose here because the
+    // modal's exit animation is still running and TextField.dispose() will
+    // call removeListener on it — disposing early causes a FlutterError.
+    // The GC will reclaim it once _onFinish returns and all closures are gone.
+    if (context.mounted) {
+      // Let the modal's dismiss animation finish before popping this screen.
+      await Future.delayed(const Duration(milliseconds: 300));
+      if (context.mounted) context.pop();
+    }
   }
 
   void _goToPage(int page) {

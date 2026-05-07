@@ -1383,8 +1383,8 @@ Status: DONE
 
 ### Task 17: Multi-Language Recipe Content (Push 37)
 
-- [ ] Recipe model: add `translations` (Map\<String, Map\<String, String\>\>?) — language code → {title, description, steps, ingredients}
-- [ ] `TranslationService` — submit/fetch translations
-- [ ] UI: language toggle on RecipeDetailScreen, translation request button
-- [ ] Community translation submission form
-- [ ] l10n keys for translation feature
+- [x] Recipe model: add `translations` (Map\<String, Map\<String, String\>\>?) — language code → {title, description, steps, ingredients}
+- [x] `TranslationService` — submit/fetch translations
+- [x] UI: language toggle on RecipeDetailScreen, translation request button
+- [x] Community translation submission form
+- [x] l10n keys for translation feature

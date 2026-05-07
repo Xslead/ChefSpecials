@@ -759,5 +759,63 @@
   "uploadingVideo": "Uploading video...",
   "compressingVideo": "Compressing video...",
   "stepVideo": "Step Video",
-  "recipeVideo": "Recipe Video"
+  "recipeVideo": "Recipe Video",
+
+  "like": "Like",
+  "unlike": "Unlike",
+  "likes": "{count} likes",
+  "@likes": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "report": "Report",
+  "reportRecipe": "Report Recipe",
+  "reportComment": "Report Comment",
+  "reportUser": "Report User",
+  "reportContent": "Report Content",
+  "reportReasonSpam": "Spam",
+  "reportReasonInappropriate": "Inappropriate Content",
+  "reportReasonHarassment": "Harassment",
+  "reportReasonMisinformation": "Misinformation",
+  "reportReasonOther": "Other",
+  "reportSubmitted": "Report submitted. Thank you.",
+  "blockUser": "Block User",
+  "unblockUser": "Unblock User",
+  "blockUserConfirmTitle": "Block User",
+  "blockUserConfirmBody": "You won't see their content and they won't be able to interact with you.",
+  "userBlocked": "User blocked.",
+  "userUnblocked": "User unblocked.",
+  "reply": "Reply",
+  "replies": "{count} replies",
+  "@replies": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "viewReplies": "View {count} replies",
+  "@viewReplies": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "hideReplies": "Hide replies",
+  "replyingTo": "Replying to {name}",
+  "@replyingTo": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "cancelReply": "Cancel reply",
+  "adminReports": "Reports",
+  "pendingReports": "Pending",
+  "allReports": "All",
+  "dismiss": "Dismiss",
+  "approve": "Approve",
+  "reportReviewed": "Report reviewed.",
+  "reportDescriptionHint": "Add details (optional)...",
+  "viewProfile": "View Profile",
+  "blockedUsers": "Blocked Users",
+  "noBlockedUsers": "You haven't blocked anyone.",
+  "privacy": "Privacy"
 }

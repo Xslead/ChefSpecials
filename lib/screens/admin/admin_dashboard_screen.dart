@@ -169,6 +169,15 @@ class _DashboardBodyState extends State<_DashboardBody> {
                               _buildDivider(context),
                               _buildNavTile(
                                 context: context,
+                                icon: Icons.flag_outlined,
+                                color: AppTheme.errorColor,
+                                title: l10n.adminReports,
+                                onTap: () =>
+                                    context.push('/admin/reports'),
+                              ),
+                              _buildDivider(context),
+                              _buildNavTile(
+                                context: context,
                                 icon: Icons.history,
                                 color: AppTheme.textSecondaryOf(context),
                                 title: l10n.auditLog,

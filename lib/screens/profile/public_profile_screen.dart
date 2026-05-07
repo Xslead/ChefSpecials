@@ -9,10 +9,13 @@ import 'package:provider/provider.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/recipe.dart';
+import '../../models/report.dart';
 import '../../models/user_model.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/block_provider.dart';
 import '../../providers/follow_provider.dart';
 import '../../providers/recipe_provider.dart';
+import '../../services/report_service.dart';
 import '../../services/user_service.dart';
 import '../home/widgets/recipe_card.dart';
 
@@ -64,6 +67,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
 
     if (currentUser != null) {
       context.read<FollowProvider>().initialize(currentUser.uid, userName: currentUser.fullName, userAvatar: currentUser.photoUrl);
+      context.read<BlockProvider>().initialize(currentUser.uid);
     }
 
     final isOwnProfile = currentUser?.uid == widget.userId;
@@ -91,6 +95,161 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _blockUser(
+      BuildContext context, AppLocalizations l10n, bool currentlyBlocked) async {
+    final blockProvider = context.read<BlockProvider>();
+    if (currentlyBlocked) {
+      await blockProvider.unblockUser(widget.userId);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(l10n.userUnblocked)));
+      }
+    } else {
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Text(l10n.blockUserConfirmTitle),
+          content: Text(l10n.blockUserConfirmBody),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              style: TextButton.styleFrom(foregroundColor: AppTheme.errorColor),
+              child: Text(l10n.blockUser),
+            ),
+          ],
+        ),
+      );
+      if (confirmed == true && context.mounted) {
+        await context.read<BlockProvider>().blockUser(widget.userId);
+        if (context.mounted) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(l10n.userBlocked)));
+        }
+      }
+    }
+  }
+
+  Future<void> _reportUser(BuildContext context, AppLocalizations l10n) async {
+    final currentUserId = context.read<AuthProvider>().userModel?.uid;
+    if (currentUserId == null) return;
+    final targetName = _user?.fullName ?? widget.initialName;
+
+    String? selectedReason;
+    final descController = TextEditingController();
+    final reasons = [
+      l10n.reportReasonSpam,
+      l10n.reportReasonInappropriate,
+      l10n.reportReasonHarassment,
+      l10n.reportReasonMisinformation,
+      l10n.reportReasonOther,
+    ];
+
+    final result = await showDialog<Map<String, String?>>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Text(l10n.reportUser),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...reasons.map((r) => InkWell(
+                      onTap: () =>
+                          setDialogState(() => selectedReason = r),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 4),
+                        child: Row(
+                          children: [
+                            Icon(
+                              selectedReason == r
+                                  ? Icons.radio_button_checked
+                                  : Icons.radio_button_unchecked,
+                              size: 20,
+                              color: selectedReason == r
+                                  ? AppTheme.primaryColor
+                                  : AppTheme.textTertiary,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(r,
+                                style: const TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                      ),
+                    )),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: descController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    hintText: l10n.reportDescriptionHint,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    contentPadding: const EdgeInsets.all(10),
+                    isDense: true,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: selectedReason == null
+                  ? null
+                  : () => Navigator.pop(ctx, {
+                        'reason': selectedReason,
+                        'description': descController.text.trim().isEmpty
+                            ? null
+                            : descController.text.trim(),
+                      }),
+              child: Text(l10n.report),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (result == null || !context.mounted) return;
+    final reporterName =
+        context.read<AuthProvider>().userModel?.fullName;
+    try {
+      await ReportService().submitReport(Report(
+        reporterId: currentUserId,
+        reporterName: reporterName,
+        targetType: 'user',
+        targetId: widget.userId,
+        targetName: targetName,
+        reason: result['reason']!,
+        description: result['description'],
+        createdAt: DateTime.now(),
+      ));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.reportSubmitted)),
+        );
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(l10n.error)));
+      }
+    }
   }
 
   Widget _buildHeader(
@@ -131,7 +290,7 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              if (!isOwnProfile && !_loadingUser)
+              if (!isOwnProfile && !_loadingUser) ...[
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 200),
                   child: isFollowing
@@ -166,6 +325,50 @@ class _PublicProfileScreenState extends State<PublicProfileScreen> {
                               style: const TextStyle(fontSize: 13)),
                         ),
                 ),
+                Builder(builder: (ctx) {
+                  final isBlocked =
+                      ctx.watch<BlockProvider>().isBlocked(widget.userId);
+                  return PopupMenuButton<String>(
+                    icon: const Icon(Icons.more_vert),
+                    onSelected: (value) {
+                      if (value == 'block') {
+                        _blockUser(context, l10n, isBlocked);
+                      } else if (value == 'report') {
+                        _reportUser(context, l10n);
+                      }
+                    },
+                    itemBuilder: (_) => [
+                      PopupMenuItem(
+                        value: 'block',
+                        child: Row(
+                          children: [
+                            Icon(
+                              isBlocked
+                                  ? Icons.person_add_outlined
+                                  : Icons.block,
+                              size: 18,
+                              color: AppTheme.errorColor,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(isBlocked ? l10n.unblockUser : l10n.blockUser),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 'report',
+                        child: Row(
+                          children: [
+                            const Icon(Icons.flag_outlined,
+                                size: 18, color: AppTheme.errorColor),
+                            const SizedBox(width: 8),
+                            Text(l10n.reportUser),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+              ],
             ],
           ),
         ),

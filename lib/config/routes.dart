@@ -33,6 +33,7 @@ import '../screens/collections/collection_detail_screen.dart';
 import '../screens/import_recipe/import_recipe_screen.dart';
 import '../screens/meal_planner/meal_planner_screen.dart';
 import '../screens/reports/reports_screen.dart';
+import '../screens/profile/blocked_users_screen.dart';
 import '../screens/profile/notification_settings_screen.dart';
 import '../screens/profile/settings_screen.dart';
 import '../screens/activity/activity_screen.dart';
@@ -43,6 +44,7 @@ import '../screens/admin/admin_categories_screen.dart';
 import '../screens/admin/admin_announcements_screen.dart';
 import '../screens/admin/admin_appeals_screen.dart';
 import '../screens/admin/admin_audit_log_screen.dart';
+import '../screens/admin/admin_reports_screen.dart';
 import '../screens/auth/banned_screen.dart';
 import '../screens/onboarding/onboarding_screen.dart';
 import '../screens/cooking_history/cooking_history_screen.dart';
@@ -313,6 +315,11 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,
+      path: '/blocked-users',
+      builder: (context, state) => const BlockedUsersScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
       path: '/announcements',
       builder: (context, state) => const ActivityScreen(),
     ),
@@ -350,6 +357,11 @@ final GoRouter router = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/admin/audit-log',
       builder: (context, state) => const AdminAuditLogScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/admin/reports',
+      builder: (context, state) => const AdminReportsScreen(),
     ),
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,

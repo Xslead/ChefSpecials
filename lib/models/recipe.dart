@@ -26,6 +26,7 @@ class Recipe {
   final List<String> dietaryTags;
   final List<String> photos;
   final String? videoUrl;
+  final int likeCount;
 
   Recipe({
     this.id,
@@ -52,6 +53,7 @@ class Recipe {
     this.dietaryTags = const [],
     this.photos = const [],
     this.videoUrl,
+    this.likeCount = 0,
   });
 
   factory Recipe.fromMap(Map<String, dynamic> map, String docId) {
@@ -84,6 +86,7 @@ class Recipe {
       dietaryTags: List<String>.from(map['dietaryTags'] ?? []),
       photos: List<String>.from(map['photos'] ?? []),
       videoUrl: map['videoUrl'] as String?,
+      likeCount: map['likeCount'] as int? ?? 0,
     );
   }
 
@@ -112,6 +115,7 @@ class Recipe {
     List<String>? dietaryTags,
     List<String>? photos,
     String? videoUrl,
+    int? likeCount,
   }) {
     return Recipe(
       id: id ?? this.id,
@@ -138,6 +142,7 @@ class Recipe {
       dietaryTags: dietaryTags ?? this.dietaryTags,
       photos: photos ?? this.photos,
       videoUrl: videoUrl ?? this.videoUrl,
+      likeCount: likeCount ?? this.likeCount,
     );
   }
 

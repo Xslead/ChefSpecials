@@ -1853,4 +1853,124 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recipeVideo => 'Recipe Video';
+
+  @override
+  String get like => 'Like';
+
+  @override
+  String get unlike => 'Unlike';
+
+  @override
+  String likes(int count) {
+    return '$count likes';
+  }
+
+  @override
+  String get report => 'Report';
+
+  @override
+  String get reportRecipe => 'Report Recipe';
+
+  @override
+  String get reportComment => 'Report Comment';
+
+  @override
+  String get reportUser => 'Report User';
+
+  @override
+  String get reportContent => 'Report Content';
+
+  @override
+  String get reportReasonSpam => 'Spam';
+
+  @override
+  String get reportReasonInappropriate => 'Inappropriate Content';
+
+  @override
+  String get reportReasonHarassment => 'Harassment';
+
+  @override
+  String get reportReasonMisinformation => 'Misinformation';
+
+  @override
+  String get reportReasonOther => 'Other';
+
+  @override
+  String get reportSubmitted => 'Report submitted. Thank you.';
+
+  @override
+  String get blockUser => 'Block User';
+
+  @override
+  String get unblockUser => 'Unblock User';
+
+  @override
+  String get blockUserConfirmTitle => 'Block User';
+
+  @override
+  String get blockUserConfirmBody =>
+      'You won\'t see their content and they won\'t be able to interact with you.';
+
+  @override
+  String get userBlocked => 'User blocked.';
+
+  @override
+  String get userUnblocked => 'User unblocked.';
+
+  @override
+  String get reply => 'Reply';
+
+  @override
+  String replies(int count) {
+    return '$count replies';
+  }
+
+  @override
+  String viewReplies(int count) {
+    return 'View $count replies';
+  }
+
+  @override
+  String get hideReplies => 'Hide replies';
+
+  @override
+  String replyingTo(String name) {
+    return 'Replying to $name';
+  }
+
+  @override
+  String get cancelReply => 'Cancel reply';
+
+  @override
+  String get adminReports => 'Reports';
+
+  @override
+  String get pendingReports => 'Pending';
+
+  @override
+  String get allReports => 'All';
+
+  @override
+  String get dismiss => 'Dismiss';
+
+  @override
+  String get approve => 'Approve';
+
+  @override
+  String get reportReviewed => 'Report reviewed.';
+
+  @override
+  String get reportDescriptionHint => 'Add details (optional)...';
+
+  @override
+  String get viewProfile => 'View Profile';
+
+  @override
+  String get blockedUsers => 'Blocked Users';
+
+  @override
+  String get noBlockedUsers => 'You haven\'t blocked anyone.';
+
+  @override
+  String get privacy => 'Privacy';
 }

@@ -11,6 +11,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../models/user_model.dart';
 import '../../utils/category_helpers.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/block_provider.dart';
 import '../../providers/feed_provider.dart';
 import '../../providers/follow_provider.dart';
 import '../../providers/recipe_provider.dart';
@@ -174,6 +175,7 @@ class _FeedBodyState extends State<_FeedBody> {
     if (currentUser != null) {
       context.read<FollowProvider>().initialize(currentUser.uid,
           userName: currentUser.fullName, userAvatar: currentUser.photoUrl);
+      context.read<BlockProvider>().initialize(currentUser.uid);
     }
     final followProvider = context.read<FollowProvider>();
     _followingIdSet = Set.from(followProvider.followingIds);
@@ -376,7 +378,10 @@ class _FeedBodyState extends State<_FeedBody> {
       );
     }
 
-    final items = feedProvider.displayedRecipes;
+    final blockedIds = context.watch<BlockProvider>().blockedUserIds;
+    final items = feedProvider.displayedRecipes
+        .where((r) => !blockedIds.contains(r.authorId))
+        .toList();
 
     if (items.isEmpty) {
       return EmptyState(
@@ -410,7 +415,13 @@ class _FeedBodyState extends State<_FeedBody> {
 
   Widget _buildSearchResults(
       BuildContext context, AppLocalizations l10n, FeedProvider feedProvider) {
-    final filteredRecipes = feedProvider.displayedRecipes;
+    final blockedIds = context.read<BlockProvider>().blockedUserIds;
+    final filteredRecipes = feedProvider.displayedRecipes
+        .where((r) => !blockedIds.contains(r.authorId))
+        .toList();
+    final searchedUsers = feedProvider.searchedUsers
+        .where((u) => !blockedIds.contains(u.uid))
+        .toList();
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(0, 8, 0, 100),
@@ -424,7 +435,7 @@ class _FeedBodyState extends State<_FeedBody> {
                   color: AppTheme.primaryColor, strokeWidth: 2),
             ),
           )
-        else if (feedProvider.searchedUsers.isNotEmpty) ...[
+        else if (searchedUsers.isNotEmpty) ...[
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
             child: Text(
@@ -440,10 +451,10 @@ class _FeedBodyState extends State<_FeedBody> {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: feedProvider.searchedUsers.length,
+              itemCount: searchedUsers.length,
               separatorBuilder: (_, _) => const SizedBox(width: 12),
               itemBuilder: (context, index) =>
-                  _buildUserCard(feedProvider.searchedUsers[index]),
+                  _buildUserCard(searchedUsers[index]),
             ),
           ),
           const SizedBox(height: 16),

@@ -27,9 +27,12 @@ class CommentService {
 
     await _db.runTransaction((tx) async {
       tx.set(newCommentRef, comment.toMap());
-      tx.update(recipeRef, {
-        'commentCount': FieldValue.increment(1),
-      });
+      // Only increment commentCount for top-level comments
+      if (comment.parentCommentId == null) {
+        tx.update(recipeRef, {
+          'commentCount': FieldValue.increment(1),
+        });
+      }
     });
   }
 

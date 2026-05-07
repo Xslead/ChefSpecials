@@ -19,6 +19,10 @@ import '../../providers/shopping_list_provider.dart';
 import '../../providers/collection_provider.dart';
 import '../../providers/activity_provider.dart';
 import '../../providers/cooking_log_provider.dart';
+import '../../providers/block_provider.dart';
+import '../../providers/like_provider.dart';
+import '../../models/report.dart';
+import '../../services/report_service.dart';
 import '../../models/shopping_list.dart';
 import '../../utils/category_helpers.dart';
 import '../../widgets/gradient_button.dart';
@@ -83,6 +87,9 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
   bool _showRecipeVideo = false;
   late int _selectedServings;
   int _cookCount = 0;
+  String? _replyToCommentId;
+  String? _replyToAuthorName;
+  final Set<String> _expandedReplies = {};
 
   @override
   void initState() {
@@ -95,6 +102,7 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
       if (userId != null) {
         context.read<RatingProvider>().loadUserRating(recipeId, userId);
         context.read<CookingLogProvider>().init(userId);
+        context.read<LikeProvider>().initialize(userId);
         _loadCookCount(recipeId);
       }
       context.read<CommentProvider>().listenToComments(recipeId);
@@ -714,6 +722,8 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildTitleSection(context, l10n, theme, liveRecipe),
+                  const SizedBox(height: 12),
+                  _buildLikeReportRow(context, l10n, liveRecipe),
                   const SizedBox(height: 16),
                   _buildTimeRow(context, l10n, theme, liveRecipe),
                   if (_hasNutrition(liveRecipe)) ...[
@@ -1165,6 +1175,204 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
   }
 
 
+  Widget _buildLikeReportRow(
+    BuildContext context,
+    AppLocalizations l10n,
+    Recipe r,
+  ) {
+    final likeProvider = context.watch<LikeProvider>();
+    final userId = context.read<AuthProvider>().userModel?.uid;
+    final isLiked = r.id != null && likeProvider.isLiked(r.id!);
+    final isOwner = _isOwner(r);
+
+    return Row(
+      children: [
+        InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: userId == null || r.id == null
+              ? null
+              : () => likeProvider.toggleLike(r.id!, userId),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
+                  color: isLiked ? AppTheme.primaryColor : AppTheme.textTertiary,
+                  size: 20,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  l10n.likes(r.likeCount),
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: isLiked ? AppTheme.primaryColor : AppTheme.textTertiary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const Spacer(),
+        if (!isOwner && userId != null)
+          IconButton(
+            icon: const Icon(Icons.flag_outlined, size: 20),
+            color: AppTheme.textTertiary,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+            tooltip: l10n.reportRecipe,
+            onPressed: () => _showReportDialog(context, l10n, r),
+          ),
+      ],
+    );
+  }
+
+  Future<void> _showReportDialog(
+    BuildContext context,
+    AppLocalizations l10n,
+    Recipe r,
+  ) async {
+    final userModel = context.read<AuthProvider>().userModel;
+    final userId = userModel?.uid;
+    if (userId == null) return;
+
+    String? selectedReason;
+    final descController = TextEditingController();
+    final reasons = [
+      l10n.reportReasonSpam,
+      l10n.reportReasonInappropriate,
+      l10n.reportReasonHarassment,
+      l10n.reportReasonMisinformation,
+      l10n.reportReasonOther,
+    ];
+
+    final result = await showDialog<Map<String, String?>>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Text(l10n.reportRecipe),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...reasons.map((reason) => InkWell(
+                      onTap: () =>
+                          setDialogState(() => selectedReason = reason),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 4),
+                        child: Row(
+                          children: [
+                            Icon(
+                              selectedReason == reason
+                                  ? Icons.radio_button_checked
+                                  : Icons.radio_button_unchecked,
+                              size: 20,
+                              color: selectedReason == reason
+                                  ? AppTheme.primaryColor
+                                  : AppTheme.textTertiary,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(reason,
+                                style: const TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                      ),
+                    )),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: descController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    hintText: l10n.reportDescriptionHint,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    contentPadding: const EdgeInsets.all(10),
+                    isDense: true,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: selectedReason == null
+                  ? null
+                  : () => Navigator.pop(ctx, {
+                        'reason': selectedReason,
+                        'description': descController.text.trim().isEmpty
+                            ? null
+                            : descController.text.trim(),
+                      }),
+              child: Text(l10n.report),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (result == null || !mounted) return;
+
+    try {
+      await ReportService().submitReport(Report(
+        reporterId: userId,
+        reporterName: userModel?.fullName,
+        targetType: 'recipe',
+        targetId: r.id!,
+        targetAuthorId: r.authorId,
+        targetName: r.title,
+        reason: result['reason']!,
+        description: result['description'],
+        createdAt: DateTime.now(),
+      ));
+      if (mounted) _showSnackBar(l10n.reportSubmitted);
+    } catch (_) {
+      if (mounted) _showSnackBar(l10n.error);
+    }
+  }
+
+  Future<void> _onSendReply(Recipe r) async {
+    final commentProvider = context.read<CommentProvider>();
+    final user = context.read<AuthProvider>().userModel;
+    if (user == null || _replyToCommentId == null) return;
+
+    final text = _commentController.text.trim();
+    if (text.isEmpty) return;
+
+    final parentId = _replyToCommentId!;
+    setState(() => _submittingComment = true);
+    try {
+      await commentProvider.addComment(Comment(
+        recipeId: r.id!,
+        userId: user.uid,
+        authorName: user.fullName,
+        text: text,
+        createdAt: DateTime.now(),
+        parentCommentId: parentId,
+      ));
+      _commentController.clear();
+      setState(() {
+        _expandedReplies.add(parentId);
+        _replyToCommentId = null;
+        _replyToAuthorName = null;
+      });
+    } catch (_) {
+      if (mounted) _showSnackBar(AppLocalizations.of(context)!.error);
+    } finally {
+      if (mounted) setState(() => _submittingComment = false);
+    }
+  }
+
   Widget _buildRatingsSection(
     BuildContext context,
     AppLocalizations l10n,
@@ -1241,15 +1449,55 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     ThemeData theme,
     Recipe r,
   ) {
-    final comments = context.watch<CommentProvider>().comments;
+    final commentProvider = context.watch<CommentProvider>();
+    final blockedIds = context.watch<BlockProvider>().blockedUserIds;
+    final topLevel = commentProvider.topLevelComments
+        .where((c) => !blockedIds.contains(c.userId))
+        .toList();
     final userId = context.read<AuthProvider>().userModel?.uid;
     final hasMyTextComment = userId != null &&
-        comments.any((c) => c.userId == userId && c.text.isNotEmpty);
+        topLevel.any((c) => c.userId == userId && c.text.isNotEmpty);
+    final isReplying = _replyToCommentId != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (userId != null)
+        if (userId != null) ...[
+          if (isReplying)
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.reply,
+                      size: 14, color: AppTheme.primaryColor),
+                  const SizedBox(width: 6),
+                  Text(
+                    l10n.replyingTo(_replyToAuthorName ?? ''),
+                    style: TextStyle(
+                        fontSize: 12, color: AppTheme.primaryColor),
+                  ),
+                  const Spacer(),
+                  GestureDetector(
+                    onTap: () => setState(() {
+                      _replyToCommentId = null;
+                      _replyToAuthorName = null;
+                      _commentController.clear();
+                    }),
+                    child: Text(
+                      l10n.cancelReply,
+                      style: TextStyle(
+                          fontSize: 12, color: AppTheme.errorColor),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -1257,11 +1505,13 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                 child: TextField(
                   controller: _commentController,
                   decoration: InputDecoration(
-                    hintText: hasMyTextComment
-                        ? l10n.deleteCommentToWriteNew
-                        : l10n.writeComment,
+                    hintText: isReplying
+                        ? l10n.reply
+                        : (hasMyTextComment
+                            ? l10n.deleteCommentToWriteNew
+                            : l10n.writeComment),
                     hintStyle: TextStyle(
-                      color: hasMyTextComment
+                      color: hasMyTextComment && !isReplying
                           ? AppTheme.starColor
                           : AppTheme.textTertiary,
                       fontSize: 13,
@@ -1287,7 +1537,9 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : IconButton.filled(
-                      onPressed: () => _onSendPressed(r),
+                      onPressed: () => isReplying
+                          ? _onSendReply(r)
+                          : _onSendPressed(r),
                       icon: const Icon(Icons.send),
                       style: IconButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -1297,8 +1549,9 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                     ),
             ],
           ),
+        ],
         const SizedBox(height: 16),
-        if (comments.isEmpty)
+        if (topLevel.isEmpty)
           Center(
             child: Text(
               l10n.noComments,
@@ -1309,88 +1562,248 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
             ),
           )
         else
-          ...comments.map((c) {
-            final isMyComment = c.userId == userId;
-            return Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppTheme.neutralSoft,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: AppTheme.neutralLight.withValues(alpha: 0.5),
-                ),
-                boxShadow: [AppTheme.warmShadowLight()],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          ...topLevel.map((c) => _buildCommentCard(
+              context, l10n, theme, r, c, userId, commentProvider)),
+      ],
+    );
+  }
+
+  Widget _buildCommentCard(
+    BuildContext context,
+    AppLocalizations l10n,
+    ThemeData theme,
+    Recipe r,
+    Comment c,
+    String? userId,
+    CommentProvider commentProvider,
+  ) {
+    final isMyComment = c.userId == userId;
+    final blockedIds = context.read<BlockProvider>().blockedUserIds;
+    final replies = commentProvider.repliesFor(c.id ?? '')
+        .where((r) => !blockedIds.contains(r.userId))
+        .toList();
+    final replyCount = replies.length;
+    final isExpanded = _expandedReplies.contains(c.id);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(bottom: 4),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppTheme.neutralSoft,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppTheme.neutralLight.withValues(alpha: 0.5),
+            ),
+            boxShadow: [AppTheme.warmShadowLight()],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 14,
-                        backgroundColor:
-                            theme.colorScheme.primary.withValues(alpha: 0.15),
-                        child: Text(
-                          c.authorName.isNotEmpty
-                              ? c.authorName[0].toUpperCase()
-                              : '?',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
-                          ),
-                        ),
+                  CircleAvatar(
+                    radius: 14,
+                    backgroundColor:
+                        theme.colorScheme.primary.withValues(alpha: 0.15),
+                    child: Text(
+                      c.authorName.isNotEmpty
+                          ? c.authorName[0].toUpperCase()
+                          : '?',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.primary,
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              c.authorName,
-                              style: const TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                            if (c.stars > 0)
-                              Row(
-                                children: List.generate(5, (i) => Icon(
-                                  i < c.stars ? Icons.star : Icons.star_border,
-                                  size: 13,
-                                  color: AppTheme.starColor,
-                                )),
-                              ),
-                          ],
-                        ),
-                      ),
-                      Text(
-                        _formatDate(c.createdAt),
-                        style: const TextStyle(
-                          fontSize: 11,
-                          color: AppTheme.textTertiary,
-                        ),
-                      ),
-                      if (isMyComment) ...[
-                        const SizedBox(width: 4),
-                        GestureDetector(
-                          onTap: () => _deleteReview(c.id!, r.id!),
-                          child: Icon(
-                            Icons.delete_outline,
-                            size: 18,
-                            color: AppTheme.errorColor,
-                          ),
-                        ),
-                      ],
-                    ],
+                    ),
                   ),
-                  if (c.text.isNotEmpty) ...[
-                    const SizedBox(height: 6),
-                    Text(c.text, style: const TextStyle(fontSize: 14)),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          c.authorName,
+                          style:
+                              const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        if (c.stars > 0)
+                          Row(
+                            children: List.generate(
+                                5,
+                                (i) => Icon(
+                                      i < c.stars
+                                          ? Icons.star
+                                          : Icons.star_border,
+                                      size: 13,
+                                      color: AppTheme.starColor,
+                                    )),
+                          ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    _formatDate(c.createdAt),
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: AppTheme.textTertiary,
+                    ),
+                  ),
+                  if (isMyComment) ...[
+                    const SizedBox(width: 4),
+                    GestureDetector(
+                      onTap: () => _deleteReview(c.id!, r.id!),
+                      child: const Icon(
+                        Icons.delete_outline,
+                        size: 18,
+                        color: AppTheme.errorColor,
+                      ),
+                    ),
                   ],
                 ],
               ),
-            );
-          }),
+              if (c.text.isNotEmpty) ...[
+                const SizedBox(height: 6),
+                Text(c.text, style: const TextStyle(fontSize: 14)),
+              ],
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  if (userId != null)
+                    TextButton.icon(
+                      onPressed: () => setState(() {
+                        _replyToCommentId = c.id;
+                        _replyToAuthorName = c.authorName;
+                        _commentController.clear();
+                      }),
+                      icon: const Icon(Icons.reply, size: 15),
+                      label: Text(l10n.reply),
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        textStyle: const TextStyle(fontSize: 12),
+                        minimumSize: Size.zero,
+                      ),
+                    ),
+                  if (replyCount > 0)
+                    TextButton(
+                      onPressed: () => setState(() {
+                        if (isExpanded) {
+                          _expandedReplies.remove(c.id);
+                        } else {
+                          _expandedReplies.add(c.id!);
+                        }
+                      }),
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        textStyle: const TextStyle(fontSize: 12),
+                        minimumSize: Size.zero,
+                      ),
+                      child: Text(isExpanded
+                          ? l10n.hideReplies
+                          : l10n.viewReplies(replyCount)),
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        if (isExpanded)
+          Padding(
+            padding: const EdgeInsets.only(left: 24, bottom: 8),
+            child: Column(
+              children: replies
+                  .map((reply) =>
+                      _buildReplyCard(context, theme, reply, userId))
+                  .toList(),
+            ),
+          ),
+        const SizedBox(height: 8),
       ],
+    );
+  }
+
+  Widget _buildReplyCard(
+    BuildContext context,
+    ThemeData theme,
+    Comment reply,
+    String? userId,
+  ) {
+    final isMyReply = reply.userId == userId;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppTheme.neutralSoft,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: AppTheme.neutralLight.withValues(alpha: 0.4),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 11,
+                backgroundColor:
+                    theme.colorScheme.secondary.withValues(alpha: 0.15),
+                child: Text(
+                  reply.authorName.isNotEmpty
+                      ? reply.authorName[0].toUpperCase()
+                      : '?',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.secondary,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  reply.authorName,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 12),
+                ),
+              ),
+              Text(
+                _formatDate(reply.createdAt),
+                style: const TextStyle(
+                    fontSize: 10, color: AppTheme.textTertiary),
+              ),
+              if (isMyReply) ...[
+                const SizedBox(width: 4),
+                GestureDetector(
+                  onTap: () async {
+                    final commentProvider =
+                        context.read<CommentProvider>();
+                    await commentProvider.deleteComment(
+                      commentId: reply.id!,
+                      recipeId: reply.recipeId,
+                    );
+                  },
+                  child: const Icon(
+                    Icons.delete_outline,
+                    size: 15,
+                    color: AppTheme.errorColor,
+                  ),
+                ),
+              ],
+            ],
+          ),
+          if (reply.text.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(reply.text, style: const TextStyle(fontSize: 13)),
+          ],
+        ],
+      ),
     );
   }
 

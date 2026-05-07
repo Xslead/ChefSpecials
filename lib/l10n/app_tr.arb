@@ -759,5 +759,63 @@
   "uploadingVideo": "Video yükleniyor...",
   "compressingVideo": "Video sıkıştırılıyor...",
   "stepVideo": "Adım Videosu",
-  "recipeVideo": "Tarif Videosu"
+  "recipeVideo": "Tarif Videosu",
+
+  "like": "Beğen",
+  "unlike": "Beğeniyi Geri Al",
+  "likes": "{count} beğeni",
+  "@likes": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "report": "Şikayet Et",
+  "reportRecipe": "Tarifi Şikayet Et",
+  "reportComment": "Yorumu Şikayet Et",
+  "reportUser": "Kullanıcıyı Şikayet Et",
+  "reportContent": "İçeriği Şikayet Et",
+  "reportReasonSpam": "Spam",
+  "reportReasonInappropriate": "Uygunsuz İçerik",
+  "reportReasonHarassment": "Taciz",
+  "reportReasonMisinformation": "Yanlış Bilgi",
+  "reportReasonOther": "Diğer",
+  "reportSubmitted": "Şikayetiniz iletildi. Teşekkür ederiz.",
+  "blockUser": "Kullanıcıyı Engelle",
+  "unblockUser": "Engeli Kaldır",
+  "blockUserConfirmTitle": "Kullanıcıyı Engelle",
+  "blockUserConfirmBody": "Bu kullanıcının içeriklerini görmeyeceksiniz ve onlarla etkileşime giremeyeceksiniz.",
+  "userBlocked": "Kullanıcı engellendi.",
+  "userUnblocked": "Engel kaldırıldı.",
+  "reply": "Yanıtla",
+  "replies": "{count} yanıt",
+  "@replies": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "viewReplies": "{count} yanıtı gör",
+  "@viewReplies": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "hideReplies": "Yanıtları gizle",
+  "replyingTo": "{name} adlı kullanıcıya yanıt veriyorsunuz",
+  "@replyingTo": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "cancelReply": "Yanıtı iptal et",
+  "adminReports": "Şikayetler",
+  "pendingReports": "Bekleyen",
+  "allReports": "Tümü",
+  "dismiss": "Reddet",
+  "approve": "Onayla",
+  "reportReviewed": "Şikayet incelendi.",
+  "reportDescriptionHint": "Detay ekleyin (isteğe bağlı)...",
+  "viewProfile": "Profili Görüntüle",
+  "blockedUsers": "Engellenen Kullanıcılar",
+  "noBlockedUsers": "Henüz kimseyi engellemediniz.",
+  "privacy": "Gizlilik"
 }

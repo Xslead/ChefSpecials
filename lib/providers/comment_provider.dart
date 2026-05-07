@@ -14,6 +14,14 @@ class CommentProvider extends ChangeNotifier {
 
   List<Comment> get comments => _comments;
 
+  List<Comment> get topLevelComments =>
+      _comments.where((c) => c.parentCommentId == null).toList();
+
+  List<Comment> repliesFor(String commentId) =>
+      _comments.where((c) => c.parentCommentId == commentId).toList();
+
+  int replyCount(String commentId) => repliesFor(commentId).length;
+
   void listenToComments(String recipeId) {
     _subscription?.cancel();
     _subscription = _service.getCommentsStream(recipeId).listen((comments) {

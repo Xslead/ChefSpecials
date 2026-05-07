@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../providers/block_provider.dart';
+
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/connectivity_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/theme_provider.dart';
+import '../../services/cache_service.dart';
 import '../../widgets/screen_header.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -84,6 +88,60 @@ class SettingsScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 24),
+                _SectionLabel(label: l10n.privacy),
+                const SizedBox(height: 8),
+                _SettingsCard(
+                  children: [
+                    _SettingsTile(
+                      icon: Icons.block_outlined,
+                      iconColor: AppTheme.errorColor,
+                      title: l10n.blockedUsers,
+                      trailing: Consumer<BlockProvider>(
+                        builder: (context2, bp, _) {
+                          final count = bp.blockedUserIds.length;
+                          if (count == 0) return Icon(Icons.chevron_right, color: AppTheme.textTertiaryOf(context2));
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: AppTheme.errorColor.withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  '$count',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppTheme.errorColor,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Icon(Icons.chevron_right, color: AppTheme.textTertiaryOf(context2)),
+                            ],
+                          );
+                        },
+                      ),
+                      onTap: () => context.push('/blocked-users'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                _SectionLabel(label: l10n.storageAndCache),
+                const SizedBox(height: 8),
+                _SettingsCard(
+                  children: [
+                    _SettingsTile(
+                      icon: Icons.storage_outlined,
+                      iconColor: AppTheme.primaryColor,
+                      title: l10n.storageAndCache,
+                      onTap: () => _showCacheSheet(context, l10n),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
                 _SettingsCard(
                   children: [
                     _SettingsTile(
@@ -99,6 +157,21 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showCacheSheet(BuildContext context, AppLocalizations l10n) {
+    final cacheService = context.read<CacheService>();
+    final connectivityProvider = context.read<ConnectivityProvider>();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _CacheSheet(
+        cacheService: cacheService,
+        connectivityProvider: connectivityProvider,
+        l10n: l10n,
       ),
     );
   }
@@ -228,3 +301,148 @@ Widget buildDivider(BuildContext context) => Divider(
       endIndent: 16,
       color: AppTheme.neutralLightOf(context).withValues(alpha: 0.5),
     );
+
+class _CacheSheet extends StatefulWidget {
+  final CacheService cacheService;
+  final ConnectivityProvider connectivityProvider;
+  final AppLocalizations l10n;
+
+  const _CacheSheet({
+    required this.cacheService,
+    required this.connectivityProvider,
+    required this.l10n,
+  });
+
+  @override
+  State<_CacheSheet> createState() => _CacheSheetState();
+}
+
+class _CacheSheetState extends State<_CacheSheet> {
+  late int _cacheBytes;
+  late int _pendingCount;
+
+  @override
+  void initState() {
+    super.initState();
+    _refresh();
+  }
+
+  void _refresh() {
+    setState(() {
+      _cacheBytes = widget.cacheService.getCacheSize();
+      _pendingCount = widget.cacheService.getOfflineQueue().length;
+    });
+  }
+
+  String _formatBytes(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = widget.l10n;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1E293B) : Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      padding: EdgeInsets.only(
+        left: 20,
+        right: 20,
+        top: 20,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 32,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppTheme.neutralLightOf(context),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(Icons.storage_outlined,
+                    color: AppTheme.primaryColor, size: 20),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                l10n.storageAndCache,
+                style: const TextStyle(
+                    fontSize: 17, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          _CacheInfoRow(
+            label: l10n.cacheSize,
+            value: _formatBytes(_cacheBytes),
+          ),
+          const SizedBox(height: 8),
+          _CacheInfoRow(
+            label: l10n.pendingSync,
+            value: '$_pendingCount',
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () async {
+                await widget.cacheService.clearAllCaches();
+                _refresh();
+              },
+              icon: const Icon(Icons.delete_outline, size: 18),
+              label: Text(l10n.clearCache),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppTheme.errorColor,
+                side: const BorderSide(color: AppTheme.errorColor),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CacheInfoRow extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _CacheInfoRow({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label,
+            style: TextStyle(
+                fontSize: 14,
+                color: AppTheme.textSecondaryOf(context))),
+        Text(value,
+            style: const TextStyle(
+                fontSize: 14, fontWeight: FontWeight.w600)),
+      ],
+    );
+  }
+}

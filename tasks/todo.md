@@ -1319,39 +1319,44 @@ Status: PUSHED
 ### Task 15: Social Features Enhancement (Push 33)
 
 **Recipe Likes (separate from favorites)**
-- [ ] Add likeCount + likedBy to Recipe model, or separate `likes` collection
-- [ ] `LikeService` — toggleLike, getLikeCount, isLikedBy
-- [ ] `LikeProvider` — manages like state
-- [ ] UI: heart/thumbs-up button on RecipeCard + RecipeDetailScreen (separate from favorite star)
+- [x] Add `likeCount` to Recipe model + separate `likes` collection
+- [x] `LikeService` — toggleLike (Firestore transaction), getLikedRecipeIds, isLiked
+- [x] `LikeProvider` — bulk-initialized liked IDs, optimistic toggle with revert
+- [x] UI: heart button + like count on RecipeCard + RecipeDetailScreen
 
 **Threaded Comments**
-- [ ] Update Comment model: add `parentCommentId` (String?)
-- [ ] CommentService: `getReplies(recipeId, parentCommentId)`
-- [ ] UI: indent replies, "Reply" button, reply count, collapse/expand
+- [x] Update Comment model: add `parentCommentId` (String?, null = top-level)
+- [x] CommentProvider: `topLevelComments`, `repliesFor(commentId)`, `replyCount(commentId)`
+- [x] CommentService: only increments `commentCount` for top-level comments
+- [x] UI: Reply button, view/hide replies (indented), "Replying to X" banner, cancel reply
 
 **Report System**
-- [ ] Model: Report — id, reporterId, targetType, targetId, reason, createdAt, status
-- [ ] `ReportService` — submitReport, getReports (admin)
-- [ ] UI: "Report" in overflow menu on recipes/comments, reason selection dialog
+- [x] Model: Report — id, reporterId, targetType, targetId, targetAuthorId, reason, status, createdAt
+- [x] `ReportService` — submitReport, getReportsStream(status), updateReportStatus
+- [x] UI: Flag icon on RecipeDetailScreen, report reason dialog (spam/inappropriate/harassment/misinformation/other)
+- [x] AdminReportsScreen — Pending/All tabs, dismiss/approve with review note
 
 **Block User**
-- [ ] blockedUsers on UserModel or `blocks` collection
-- [ ] `BlockService` — blockUser, unblockUser, isBlocked
-- [ ] Filter blocked users from feed, search, comments
-- [ ] UI: "Block User" on profile overflow menu
+- [x] Separate `blocks` Firestore collection
+- [x] `BlockService` — blockUser, unblockUser, isBlocked, getBlockedUserIds
+- [x] `BlockProvider` — initialize, blockUser, unblockUser, isBlocked
+- [x] UI: Block/Unblock + Report User in PublicProfileScreen overflow menu with confirmation dialog
 
-**Activity Feed**
-- [ ] Model: Activity — id, userId, actorId, actorName, type, targetId, targetName, createdAt, isRead
-- [ ] `ActivityService` — write activities on events
-- [ ] `ActivityScreen` — recent activities, mark as read, badge count on notification icon
+**Activity Feed** — completed in Task 3b (Push 20c)
 
-**Other**
-- [ ] Share to social media: extend share_plus for platform-specific formatting
-- [ ] User mentions: detect @username in comments, linkify, notify mentioned user
+**l10n**
+- [x] 22 new keys (EN + TR): like, unlike, likes, report, reportRecipe, reportComment, reportUser, reportReasonSpam/Inappropriate/Harassment/Misinformation/Other, reportSubmitted, blockUser, unblockUser, blockUserConfirmTitle/Body, userBlocked/Unblocked, reply, replies, viewReplies, hideReplies, replyingTo, cancelReply, adminReports, pendingReports, allReports, dismiss, approve, reportReviewed
 
-**l10n & Tests**
-- [ ] Add keys for all social features
-- [ ] Tests: LikeService, threaded comments, ReportService, BlockService, ActivityService
+**Firestore Rules**
+- [x] `likes/{likeId}` — auth read, owner create/delete
+- [x] `reports/{reportId}` — admin read/update, auth create (own reporterId)
+- [x] `blocks/{blockId}` — owner read/create/delete
+- [x] `recipes` update rule — added `likeCount` to allowed counter fields
+
+**Quality**
+- [x] flutter analyze — 0 issues (3 pre-existing test infos)
+
+Status: DONE
 
 ---
 

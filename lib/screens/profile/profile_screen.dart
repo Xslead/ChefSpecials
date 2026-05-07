@@ -9,10 +9,8 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../models/achievement.dart';
 import '../../providers/achievement_provider.dart';
 import '../../providers/auth_provider.dart';
-import '../../providers/connectivity_provider.dart';
 import '../../providers/follow_provider.dart';
 import '../../providers/recipe_provider.dart';
-import '../../services/cache_service.dart';
 import '../../widgets/empty_state.dart';
 import '../home/widgets/privacy_badge.dart';
 import '../home/widgets/recipe_card.dart';
@@ -369,44 +367,6 @@ class ProfileScreen extends StatelessWidget {
                           onTap: () => context.push('/reports'),
                           dense: true,
                         ),
-                        Divider(
-                          height: 1,
-                          indent: 16,
-                          endIndent: 16,
-                          color: AppTheme.neutralLightOf(context)
-                              .withValues(alpha: 0.5),
-                        ),
-                        ListTile(
-                          leading: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: AppTheme.primaryColor
-                                  .withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Icon(
-                              Icons.storage_outlined,
-                              color: AppTheme.primaryColor,
-                              size: 20,
-                            ),
-                          ),
-                          title: Text(
-                            l10n.storageAndCache,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          trailing: Icon(
-                            Icons.chevron_right,
-                            color: AppTheme.textTertiaryOf(context),
-                          ),
-                          onTap: () => _showCacheSheet(context, l10n),
-                          dense: true,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -502,20 +462,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  void _showCacheSheet(BuildContext context, AppLocalizations l10n) {
-    final cacheService = context.read<CacheService>();
-    final connectivityProvider = context.read<ConnectivityProvider>();
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => _CacheSheet(
-        cacheService: cacheService,
-        connectivityProvider: connectivityProvider,
-        l10n: l10n,
-      ),
-    );
-  }
 
   Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
     return Container(
@@ -866,151 +812,6 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _CacheSheet extends StatefulWidget {
-  final CacheService cacheService;
-  final ConnectivityProvider connectivityProvider;
-  final AppLocalizations l10n;
-
-  const _CacheSheet({
-    required this.cacheService,
-    required this.connectivityProvider,
-    required this.l10n,
-  });
-
-  @override
-  State<_CacheSheet> createState() => _CacheSheetState();
-}
-
-class _CacheSheetState extends State<_CacheSheet> {
-  late int _cacheBytes;
-  late int _pendingCount;
-
-  @override
-  void initState() {
-    super.initState();
-    _refresh();
-  }
-
-  void _refresh() {
-    setState(() {
-      _cacheBytes = widget.cacheService.getCacheSize();
-      _pendingCount = widget.cacheService.getOfflineQueue().length;
-    });
-  }
-
-  String _formatBytes(int bytes) {
-    if (bytes < 1024) return '$bytes B';
-    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = widget.l10n;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E293B) : Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      padding: EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: 20,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 32,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: AppTheme.neutralLightOf(context),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.storage_outlined,
-                    color: AppTheme.primaryColor, size: 20),
-              ),
-              const SizedBox(width: 10),
-              Text(
-                l10n.storageAndCache,
-                style: const TextStyle(
-                    fontSize: 17, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          _InfoRow(
-            label: l10n.cacheSize,
-            value: _formatBytes(_cacheBytes),
-          ),
-          const SizedBox(height: 8),
-          _InfoRow(
-            label: l10n.pendingSync,
-            value: '$_pendingCount',
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: () async {
-                await widget.cacheService.clearAllCaches();
-                _refresh();
-              },
-              icon: const Icon(Icons.delete_outline, size: 18),
-              label: Text(l10n.clearCache),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AppTheme.errorColor,
-                side: const BorderSide(color: AppTheme.errorColor),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _InfoRow extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _InfoRow({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label,
-            style: TextStyle(
-                fontSize: 14,
-                color: AppTheme.textSecondaryOf(context))),
-        Text(value,
-            style: const TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w600)),
-      ],
     );
   }
 }

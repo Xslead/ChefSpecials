@@ -7,6 +7,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../models/recipe.dart';
 import '../../utils/category_helpers.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/block_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../providers/favorite_provider.dart';
 import '../../providers/activity_provider.dart';
@@ -52,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<FavoriteProvider>().listenToFavorites(uid);
     context.read<ActivityProvider>().init(uid);
     context.read<TrendingProvider>().loadTrending(force: true);
+    context.read<BlockProvider>().initialize(uid);
   }
 
   List<Recipe> _applyLocalFilters(List<Recipe> recipes) {
@@ -92,7 +94,10 @@ class _HomeScreenState extends State<HomeScreen> {
         _syncUserBoundProviders(authUid);
       });
     }
-    final allPublic = recipeProvider.allRecipes.where((r) => !r.isPrivate).toList();
+    final blockedIds = context.watch<BlockProvider>().blockedUserIds;
+    final allPublic = recipeProvider.allRecipes
+        .where((r) => !r.isPrivate && !blockedIds.contains(r.authorId))
+        .toList();
     final filteredRecipes = _applyLocalFilters(allPublic);
     final hasActiveFilter = _activeFilterCount > 0;
     final trendingIds = trendingProvider.trendingIds;
@@ -642,7 +647,11 @@ class _HomeScreenState extends State<HomeScreen> {
     AppLocalizations l10n,
     TrendingProvider provider,
   ) {
-    if (provider.trendingRecipes.isEmpty) return const SizedBox.shrink();
+    final blockedIds = context.read<BlockProvider>().blockedUserIds;
+    final trending = provider.trendingRecipes
+        .where((r) => !blockedIds.contains(r.authorId))
+        .toList();
+    if (trending.isEmpty) return const SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -686,10 +695,10 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 210,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: provider.trendingRecipes.length,
+            itemCount: trending.length,
             separatorBuilder: (_, _) => const SizedBox(width: 12),
             itemBuilder: (context, index) {
-              final recipe = provider.trendingRecipes[index];
+              final recipe = trending[index];
               return SizedBox(
                 width: 200,
                 child: _CompactTrendingCard(

@@ -6,6 +6,7 @@ class Comment {
   final String text;
   final int stars; // 0 means the user didn't rate when commenting
   final DateTime createdAt;
+  final String? parentCommentId; // null = top-level comment
 
   Comment({
     this.id,
@@ -15,7 +16,10 @@ class Comment {
     required this.text,
     this.stars = 0,
     required this.createdAt,
+    this.parentCommentId,
   });
+
+  bool get isReply => parentCommentId != null;
 
   factory Comment.fromMap(Map<String, dynamic> map, String docId) {
     return Comment(
@@ -26,6 +30,7 @@ class Comment {
       text: map['text'] as String,
       stars: map['stars'] as int? ?? 0,
       createdAt: DateTime.parse(map['createdAt'] as String),
+      parentCommentId: map['parentCommentId'] as String?,
     );
   }
 
@@ -37,6 +42,7 @@ class Comment {
       'text': text,
       'stars': stars,
       'createdAt': createdAt.toIso8601String(),
+      'parentCommentId': parentCommentId,
     };
   }
 }

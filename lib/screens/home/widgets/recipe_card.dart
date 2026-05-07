@@ -12,6 +12,7 @@ import '../../../utils/category_helpers.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/favorite_provider.dart';
 import '../../../providers/cooking_log_provider.dart';
+import '../../../providers/like_provider.dart';
 
 class RecipeCard extends StatefulWidget {
   final Recipe recipe;
@@ -33,6 +34,16 @@ class _RecipeCardState extends State<RecipeCard> {
   bool _isPressed = false;
 
   Recipe get recipe => widget.recipe;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final uid = context.read<AuthProvider>().userModel?.uid;
+      if (uid != null) context.read<LikeProvider>().initialize(uid);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -295,6 +306,9 @@ class _RecipeCardState extends State<RecipeCard> {
         ? context.watch<CookingLogProvider>().getCookCountFromCache(recipe.id!)
         : 0;
     final l10n = AppLocalizations.of(context)!;
+    final likeProvider = context.watch<LikeProvider>();
+    final uid = context.read<AuthProvider>().userModel?.uid;
+    final isLiked = recipe.id != null && likeProvider.isLiked(recipe.id!);
 
     return Row(
       children: [
@@ -332,6 +346,25 @@ class _RecipeCardState extends State<RecipeCard> {
         const SizedBox(width: 3),
         Text(
           '${recipe.commentCount}',
+          style: TextStyle(
+            fontSize: 12,
+            color: AppTheme.textSecondaryOf(context),
+          ),
+        ),
+        const SizedBox(width: 10),
+        GestureDetector(
+          onTap: uid != null && recipe.id != null
+              ? () => likeProvider.toggleLike(recipe.id!, uid)
+              : null,
+          child: Icon(
+            isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
+            size: 14,
+            color: isLiked ? AppTheme.primaryColor : AppTheme.textTertiaryOf(context),
+          ),
+        ),
+        const SizedBox(width: 3),
+        Text(
+          '${recipe.likeCount}',
           style: TextStyle(
             fontSize: 12,
             color: AppTheme.textSecondaryOf(context),

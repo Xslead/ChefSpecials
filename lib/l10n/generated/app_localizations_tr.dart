@@ -1860,4 +1860,124 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get recipeVideo => 'Tarif Videosu';
+
+  @override
+  String get like => 'Beğen';
+
+  @override
+  String get unlike => 'Beğeniyi Geri Al';
+
+  @override
+  String likes(int count) {
+    return '$count beğeni';
+  }
+
+  @override
+  String get report => 'Şikayet Et';
+
+  @override
+  String get reportRecipe => 'Tarifi Şikayet Et';
+
+  @override
+  String get reportComment => 'Yorumu Şikayet Et';
+
+  @override
+  String get reportUser => 'Kullanıcıyı Şikayet Et';
+
+  @override
+  String get reportContent => 'İçeriği Şikayet Et';
+
+  @override
+  String get reportReasonSpam => 'Spam';
+
+  @override
+  String get reportReasonInappropriate => 'Uygunsuz İçerik';
+
+  @override
+  String get reportReasonHarassment => 'Taciz';
+
+  @override
+  String get reportReasonMisinformation => 'Yanlış Bilgi';
+
+  @override
+  String get reportReasonOther => 'Diğer';
+
+  @override
+  String get reportSubmitted => 'Şikayetiniz iletildi. Teşekkür ederiz.';
+
+  @override
+  String get blockUser => 'Kullanıcıyı Engelle';
+
+  @override
+  String get unblockUser => 'Engeli Kaldır';
+
+  @override
+  String get blockUserConfirmTitle => 'Kullanıcıyı Engelle';
+
+  @override
+  String get blockUserConfirmBody =>
+      'Bu kullanıcının içeriklerini görmeyeceksiniz ve onlarla etkileşime giremeyeceksiniz.';
+
+  @override
+  String get userBlocked => 'Kullanıcı engellendi.';
+
+  @override
+  String get userUnblocked => 'Engel kaldırıldı.';
+
+  @override
+  String get reply => 'Yanıtla';
+
+  @override
+  String replies(int count) {
+    return '$count yanıt';
+  }
+
+  @override
+  String viewReplies(int count) {
+    return '$count yanıtı gör';
+  }
+
+  @override
+  String get hideReplies => 'Yanıtları gizle';
+
+  @override
+  String replyingTo(String name) {
+    return '$name adlı kullanıcıya yanıt veriyorsunuz';
+  }
+
+  @override
+  String get cancelReply => 'Yanıtı iptal et';
+
+  @override
+  String get adminReports => 'Şikayetler';
+
+  @override
+  String get pendingReports => 'Bekleyen';
+
+  @override
+  String get allReports => 'Tümü';
+
+  @override
+  String get dismiss => 'Reddet';
+
+  @override
+  String get approve => 'Onayla';
+
+  @override
+  String get reportReviewed => 'Şikayet incelendi.';
+
+  @override
+  String get reportDescriptionHint => 'Detay ekleyin (isteğe bağlı)...';
+
+  @override
+  String get viewProfile => 'Profili Görüntüle';
+
+  @override
+  String get blockedUsers => 'Engellenen Kullanıcılar';
+
+  @override
+  String get noBlockedUsers => 'Henüz kimseyi engellemediniz.';
+
+  @override
+  String get privacy => 'Gizlilik';
 }

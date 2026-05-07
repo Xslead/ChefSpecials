@@ -3792,6 +3792,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Privacy'**
   String get privacy;
+
+  /// No description provided for @originalLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Original Language'**
+  String get originalLanguage;
+
+  /// No description provided for @addTranslation.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Translation'**
+  String get addTranslation;
+
+  /// No description provided for @translations.
+  ///
+  /// In en, this message translates to:
+  /// **'Translations'**
+  String get translations;
+
+  /// No description provided for @translatedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Translated Title'**
+  String get translatedTitle;
+
+  /// No description provided for @translatedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Translated Description'**
+  String get translatedDescription;
+
+  /// No description provided for @selectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get selectLanguage;
+
+  /// No description provided for @allLanguagesAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'All languages already added'**
+  String get allLanguagesAdded;
+
+  /// No description provided for @translationAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation added'**
+  String get translationAdded;
+
+  /// No description provided for @ingredientNames.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredient Names'**
+  String get ingredientNames;
+
+  /// No description provided for @stepInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Step Instructions'**
+  String get stepInstructions;
+
+  /// No description provided for @ingredient.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredient'**
+  String get ingredient;
+
+  /// No description provided for @step.
+  ///
+  /// In en, this message translates to:
+  /// **'Step'**
+  String get step;
 }
 
 class _AppLocalizationsDelegate

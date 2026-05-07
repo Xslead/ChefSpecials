@@ -4,6 +4,7 @@ import '../models/ingredient.dart';
 import '../utils/unit_converter.dart';
 import '../models/recipe_step.dart';
 import '../models/recipe.dart';
+import '../models/recipe_translation.dart';
 import '../models/food_item.dart';
 import '../services/storage_service.dart';
 
@@ -35,6 +36,8 @@ class RecipeFormProvider extends ChangeNotifier {
   List<File> additionalPhotoFiles = [];
   List<String> existingAdditionalPhotos = [];
   bool isSubmitting = false;
+  String originalLanguage = 'en';
+  Map<String, RecipeTranslation> translations = {};
 
   void prefillFromRecipe(Recipe recipe) {
     title = recipe.title;
@@ -50,6 +53,23 @@ class RecipeFormProvider extends ChangeNotifier {
     if (recipe.imageUrl != null) existingImageUrl = recipe.imageUrl;
     existingAdditionalPhotos = List.from(recipe.photos);
     existingVideoUrl = recipe.videoUrl;
+    originalLanguage = recipe.originalLanguage;
+    translations = recipe.translations != null ? Map.from(recipe.translations!) : {};
+    notifyListeners();
+  }
+
+  void setOriginalLanguage(String code) {
+    originalLanguage = code;
+    notifyListeners();
+  }
+
+  void addTranslation(String langCode, RecipeTranslation t) {
+    translations[langCode] = t;
+    notifyListeners();
+  }
+
+  void removeTranslation(String langCode) {
+    translations.remove(langCode);
     notifyListeners();
   }
 
@@ -267,6 +287,8 @@ class RecipeFormProvider extends ChangeNotifier {
     existingAdditionalPhotos = List.from(recipe.photos);
     additionalPhotoFiles = [];
     stepVideoFiles = {};
+    originalLanguage = recipe.originalLanguage;
+    translations = recipe.translations != null ? Map.from(recipe.translations!) : {};
     notifyListeners();
   }
 
@@ -340,6 +362,8 @@ class RecipeFormProvider extends ChangeNotifier {
         dietaryTags: dietaryTags,
         photos: allPhotos,
         videoUrl: recipeVideoUrl,
+        originalLanguage: originalLanguage,
+        translations: translations.isEmpty ? null : Map.from(translations),
       );
     } finally {
       isSubmitting = false;
@@ -370,6 +394,8 @@ class RecipeFormProvider extends ChangeNotifier {
     additionalPhotoFiles = [];
     existingAdditionalPhotos = [];
     isSubmitting = false;
+    originalLanguage = 'en';
+    translations = {};
     notifyListeners();
   }
 }

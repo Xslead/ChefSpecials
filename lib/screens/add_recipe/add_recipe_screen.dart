@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../config/constants.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../models/recipe_translation.dart';
 import '../../utils/category_helpers.dart';
 import '../../models/recipe.dart';
 import '../../providers/achievement_provider.dart';
@@ -14,6 +15,7 @@ import '../../providers/follow_provider.dart';
 import '../../providers/recipe_form_provider.dart';
 import '../../providers/recipe_provider.dart';
 import '../../widgets/screen_header.dart';
+import 'widgets/add_translation_sheet.dart';
 import 'widgets/multi_image_picker.dart';
 import 'widgets/ingredient_input_list.dart';
 import 'widgets/step_input_list.dart';
@@ -192,6 +194,23 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                   ),
                   const SizedBox(height: 16),
 
+                  // Original language
+                  _buildSectionLabel(l10n.originalLanguage, context),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<String>(
+                    initialValue: formProvider.originalLanguage,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.language, color: AppTheme.textTertiary),
+                    ),
+                    items: kSupportedLanguages.entries
+                        .map((e) => DropdownMenuItem(value: e.key, child: Text(e.value)))
+                        .toList(),
+                    onChanged: (v) {
+                      if (v != null) context.read<RecipeFormProvider>().setOriginalLanguage(v);
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
                   // Category
                   _buildSectionLabel(l10n.category, context),
                   const SizedBox(height: 8),
@@ -345,6 +364,9 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
                     _buildNutritionCard(l10n, formProvider, context),
                     const SizedBox(height: 24),
                   ],
+
+                  // Translations
+                  _buildTranslationsSection(context, l10n, formProvider),
                 ],
               ),
             ),
@@ -416,6 +438,71 @@ class _AddRecipeFormState extends State<_AddRecipeForm> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTranslationsSection(
+    BuildContext context,
+    AppLocalizations l10n,
+    RecipeFormProvider formProvider,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionLabel(l10n.translations, context),
+        const SizedBox(height: 12),
+        if (formProvider.translations.isNotEmpty) ...[
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: formProvider.translations.entries.map((e) {
+              final langName = kSupportedLanguages[e.key] ?? e.key;
+              return Chip(
+                avatar: const Icon(Icons.language, size: 16),
+                label: Text(langName),
+                deleteIcon: const Icon(Icons.close, size: 16),
+                onDeleted: () => formProvider.removeTranslation(e.key),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 12),
+        ],
+        OutlinedButton.icon(
+          onPressed: () => _openAddTranslationSheet(context, formProvider, l10n),
+          icon: const Icon(Icons.add, size: 18),
+          label: Text(l10n.addTranslation),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppTheme.primaryColor,
+            side: const BorderSide(color: AppTheme.primaryColor),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            minimumSize: const Size(double.infinity, 46),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _openAddTranslationSheet(
+    BuildContext context,
+    RecipeFormProvider formProvider,
+    AppLocalizations l10n,
+  ) {
+    AddTranslationSheet.show(
+      context,
+      originalLanguage: formProvider.originalLanguage,
+      alreadyAdded: formProvider.translations.keys.toList(),
+      originalTitle: formProvider.title,
+      originalDescription: formProvider.description,
+      ingredients:
+          formProvider.ingredients.where((i) => i.name.isNotEmpty).toList(),
+      steps: formProvider.steps.where((s) => s.instruction.isNotEmpty).toList(),
+      onSave: (langCode, translation) {
+        formProvider.addTranslation(langCode, translation);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.translationAdded)),
+        );
+      },
     );
   }
 

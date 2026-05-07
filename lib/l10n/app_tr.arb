@@ -817,5 +817,18 @@
   "viewProfile": "Profili Görüntüle",
   "blockedUsers": "Engellenen Kullanıcılar",
   "noBlockedUsers": "Henüz kimseyi engellemediniz.",
-  "privacy": "Gizlilik"
+  "privacy": "Gizlilik",
+
+  "originalLanguage": "Orijinal Dil",
+  "addTranslation": "Çeviri Ekle",
+  "translations": "Çeviriler",
+  "translatedTitle": "Çevrilmiş Başlık",
+  "translatedDescription": "Çevrilmiş Açıklama",
+  "selectLanguage": "Dil Seçin",
+  "allLanguagesAdded": "Tüm diller zaten eklendi",
+  "translationAdded": "Çeviri eklendi",
+  "ingredientNames": "Malzeme İsimleri",
+  "stepInstructions": "Adım Talimatları",
+  "ingredient": "Malzeme",
+  "step": "Adım"
 }

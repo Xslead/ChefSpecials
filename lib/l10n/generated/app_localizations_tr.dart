@@ -1980,4 +1980,40 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get privacy => 'Gizlilik';
+
+  @override
+  String get originalLanguage => 'Orijinal Dil';
+
+  @override
+  String get addTranslation => 'Çeviri Ekle';
+
+  @override
+  String get translations => 'Çeviriler';
+
+  @override
+  String get translatedTitle => 'Çevrilmiş Başlık';
+
+  @override
+  String get translatedDescription => 'Çevrilmiş Açıklama';
+
+  @override
+  String get selectLanguage => 'Dil Seçin';
+
+  @override
+  String get allLanguagesAdded => 'Tüm diller zaten eklendi';
+
+  @override
+  String get translationAdded => 'Çeviri eklendi';
+
+  @override
+  String get ingredientNames => 'Malzeme İsimleri';
+
+  @override
+  String get stepInstructions => 'Adım Talimatları';
+
+  @override
+  String get ingredient => 'Malzeme';
+
+  @override
+  String get step => 'Adım';
 }

@@ -817,5 +817,18 @@
   "viewProfile": "View Profile",
   "blockedUsers": "Blocked Users",
   "noBlockedUsers": "You haven't blocked anyone.",
-  "privacy": "Privacy"
+  "privacy": "Privacy",
+
+  "originalLanguage": "Original Language",
+  "addTranslation": "Add Translation",
+  "translations": "Translations",
+  "translatedTitle": "Translated Title",
+  "translatedDescription": "Translated Description",
+  "selectLanguage": "Select Language",
+  "allLanguagesAdded": "All languages already added",
+  "translationAdded": "Translation added",
+  "ingredientNames": "Ingredient Names",
+  "stepInstructions": "Step Instructions",
+  "ingredient": "Ingredient",
+  "step": "Step"
 }

@@ -26,7 +26,7 @@ void main() {
     await tempDir.delete(recursive: true);
   });
 
-  Recipe _makeRecipe(String id) => Recipe(
+  Recipe makeRecipe(String id) => Recipe(
         id: id,
         title: 'Test Recipe $id',
         description: 'desc',
@@ -45,7 +45,7 @@ void main() {
         createdAt: DateTime(2024, 1, 1),
       );
 
-  FoodItem _makeFoodItem(String id) => FoodItem(
+  FoodItem makeFoodItem(String id) => FoodItem(
         id: id,
         name: 'Test Food $id',
         category: 'Grains',
@@ -62,7 +62,7 @@ void main() {
         createdAt: DateTime(2024, 1, 1),
       );
 
-  DailyLog _makeDailyLog(String date) => DailyLog(
+  DailyLog makeDailyLog(String date) => DailyLog(
         id: 'log_$date',
         userId: 'user1',
         date: date,
@@ -82,7 +82,7 @@ void main() {
 
   group('cacheRecipes / getCachedRecipes', () {
     test('stores and retrieves recipes', () async {
-      final recipes = [_makeRecipe('r1'), _makeRecipe('r2')];
+      final recipes = [makeRecipe('r1'), makeRecipe('r2')];
       await cacheService.cacheRecipes(recipes);
 
       final cached = cacheService.getCachedRecipes();
@@ -91,8 +91,8 @@ void main() {
     });
 
     test('clears previous cache on re-cache', () async {
-      await cacheService.cacheRecipes([_makeRecipe('old')]);
-      await cacheService.cacheRecipes([_makeRecipe('new1'), _makeRecipe('new2')]);
+      await cacheService.cacheRecipes([makeRecipe('old')]);
+      await cacheService.cacheRecipes([makeRecipe('new1'), makeRecipe('new2')]);
 
       final cached = cacheService.getCachedRecipes();
       expect(cached.map((r) => r.id), isNot(contains('old')));
@@ -106,7 +106,7 @@ void main() {
 
   group('cacheFoodItems / getCachedFoodItems', () {
     test('stores and retrieves food items', () async {
-      final items = [_makeFoodItem('f1'), _makeFoodItem('f2')];
+      final items = [makeFoodItem('f1'), makeFoodItem('f2')];
       await cacheService.cacheFoodItems(items);
 
       final cached = cacheService.getCachedFoodItems();
@@ -121,7 +121,7 @@ void main() {
 
   group('cacheDailyLog / getCachedDailyLog', () {
     test('stores and retrieves a daily log', () async {
-      final log = _makeDailyLog('2024-01-15');
+      final log = makeDailyLog('2024-01-15');
       await cacheService.cacheDailyLog(log);
 
       final cached = cacheService.getCachedDailyLog('2024-01-15');
@@ -135,7 +135,7 @@ void main() {
     });
 
     test('overwrites existing log for same date', () async {
-      await cacheService.cacheDailyLog(_makeDailyLog('2024-01-15'));
+      await cacheService.cacheDailyLog(makeDailyLog('2024-01-15'));
       final updated = DailyLog(id: 'log2', userId: 'user1', date: '2024-01-15', meals: []);
       await cacheService.cacheDailyLog(updated);
 
@@ -172,16 +172,16 @@ void main() {
     });
 
     test('returns positive value after caching data', () async {
-      await cacheService.cacheRecipes([_makeRecipe('r1')]);
+      await cacheService.cacheRecipes([makeRecipe('r1')]);
       expect(cacheService.getCacheSize(), greaterThan(0));
     });
   });
 
   group('clearAllCaches', () {
     test('clears all cached data', () async {
-      await cacheService.cacheRecipes([_makeRecipe('r1')]);
-      await cacheService.cacheFoodItems([_makeFoodItem('f1')]);
-      await cacheService.cacheDailyLog(_makeDailyLog('2024-01-15'));
+      await cacheService.cacheRecipes([makeRecipe('r1')]);
+      await cacheService.cacheFoodItems([makeFoodItem('f1')]);
+      await cacheService.cacheDailyLog(makeDailyLog('2024-01-15'));
 
       await cacheService.clearAllCaches();
 

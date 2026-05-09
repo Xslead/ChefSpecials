@@ -14,6 +14,7 @@ class AuthProvider extends ChangeNotifier {
   UserModel? _userModel;
   bool _isLoading = false;
   String? _error;
+  StreamSubscription<User?>? _authSub;
   StreamSubscription<UserModel?>? _userSub;
 
   User? get firebaseUser => _firebaseUser;
@@ -26,7 +27,7 @@ class AuthProvider extends ChangeNotifier {
   AuthProvider({AuthService? authService, UserService? userService})
       : _authService = authService ?? AuthService(),
         _userService = userService ?? UserService() {
-    _authService.authStateChanges.listen(_onAuthStateChanged);
+    _authSub = _authService.authStateChanges.listen(_onAuthStateChanged);
   }
 
   void _onAuthStateChanged(User? user) {
@@ -168,6 +169,7 @@ class AuthProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    _authSub?.cancel();
     _userSub?.cancel();
     super.dispose();
   }

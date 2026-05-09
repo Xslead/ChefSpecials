@@ -24,7 +24,7 @@ class FeedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isAuthenticated = context.watch<AuthProvider>().isAuthenticated;
+    final isAuthenticated = context.select<AuthProvider, bool>((a) => a.isAuthenticated);
     if (!isAuthenticated) {
       return const _LoginRequiredView();
     }

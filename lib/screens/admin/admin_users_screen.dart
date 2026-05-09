@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -138,7 +139,7 @@ class _UsersBodyState extends State<_UsersBody> {
                     AppTheme.primaryColor.withValues(alpha: 0.1),
                 backgroundImage: user.photoUrl != null &&
                         user.photoUrl!.isNotEmpty
-                    ? NetworkImage(user.photoUrl!)
+                    ? CachedNetworkImageProvider(user.photoUrl!)
                     : null,
                 child: user.photoUrl == null || user.photoUrl!.isEmpty
                     ? Text(

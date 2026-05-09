@@ -377,6 +377,59 @@ class AppTheme {
     );
   }
 
+  // ─── High Contrast Themes ───
+  static ThemeData get highContrastLightTheme {
+    return lightTheme.copyWith(
+      colorScheme: lightTheme.colorScheme.copyWith(
+        surface: Colors.white,
+        onSurface: Colors.black,
+      ),
+      scaffoldBackgroundColor: Colors.white,
+      textTheme: lightTheme.textTheme.apply(
+        bodyColor: Colors.black,
+        displayColor: Colors.black,
+      ),
+      cardTheme: CardThemeData(
+        elevation: 0,
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: Colors.black, width: 1.5),
+        ),
+      ),
+      dividerTheme: const DividerThemeData(
+        color: Colors.black,
+        thickness: 1.5,
+      ),
+    );
+  }
+
+  static ThemeData get highContrastDarkTheme {
+    return darkTheme.copyWith(
+      colorScheme: darkTheme.colorScheme.copyWith(
+        surface: Colors.black,
+        onSurface: Colors.white,
+      ),
+      scaffoldBackgroundColor: Colors.black,
+      textTheme: darkTheme.textTheme.apply(
+        bodyColor: Colors.white,
+        displayColor: Colors.white,
+      ),
+      cardTheme: CardThemeData(
+        elevation: 0,
+        color: Colors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: Colors.white, width: 1.5),
+        ),
+      ),
+      dividerTheme: const DividerThemeData(
+        color: Colors.white,
+        thickness: 1.5,
+      ),
+    );
+  }
+
   // ─── Shared input decoration builder ───
   static InputDecorationTheme _buildInputDecoration(Brightness brightness) {
     final isDark = brightness == Brightness.dark;

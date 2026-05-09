@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -344,10 +345,10 @@ class _CollectionListScreenState extends State<CollectionListScreen> {
           child: Stack(
             children: [
               Positioned.fill(
-                child: Image.network(
-                  coverRecipes.first.imageUrl!,
+                child: CachedNetworkImage(
+                  imageUrl: coverRecipes.first.imageUrl!,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) =>
+                  errorWidget: (_, _, _) =>
                       _buildFolderIcon(context),
                 ),
               ),

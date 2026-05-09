@@ -29,21 +29,39 @@ class RecipeService {
     return Recipe.fromMap(doc.data()!, doc.id);
   }
 
-  Stream<List<Recipe>> getRecipesStream() {
-    return _recipesRef
+  Stream<List<Recipe>> getRecipesStream({int? limit}) {
+    Query<Map<String, dynamic>> query =
+        _recipesRef.orderBy('createdAt', descending: true);
+    if (limit != null) query = query.limit(limit);
+    return query.snapshots().map((snapshot) {
+      final recipes = <Recipe>[];
+      for (final doc in snapshot.docs) {
+        try {
+          recipes.add(Recipe.fromMap(doc.data(), doc.id));
+        } catch (e) {
+          // Skip malformed documents so one bad doc doesn't break the stream
+        }
+      }
+      return recipes;
+    });
+  }
+
+  Future<List<Recipe>> loadMoreRecipes({
+    required DateTime beforeCreatedAt,
+    int limit = 10,
+  }) async {
+    final snapshot = await _recipesRef
         .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-          final recipes = <Recipe>[];
-          for (final doc in snapshot.docs) {
-            try {
-              recipes.add(Recipe.fromMap(doc.data(), doc.id));
-            } catch (e) {
-              // Skip malformed documents so one bad doc doesn't break the stream
-            }
-          }
-          return recipes;
-        });
+        .where('createdAt', isLessThan: Timestamp.fromDate(beforeCreatedAt))
+        .limit(limit)
+        .get();
+    final recipes = <Recipe>[];
+    for (final doc in snapshot.docs) {
+      try {
+        recipes.add(Recipe.fromMap(doc.data(), doc.id));
+      } catch (_) {}
+    }
+    return recipes;
   }
 
   Stream<List<Recipe>> getRecipesByCategory(String category) {

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +6,7 @@ import '../../config/constants.dart';
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/recipe.dart';
+import '../../models/user_model.dart';
 import '../../utils/category_helpers.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/block_provider.dart';
@@ -27,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _selectedCategory;
   String _sortBy = 'newest';
   String? _lastSyncedUid;
+  late ScrollController _scrollController;
 
   int get _activeFilterCount =>
       (_selectedCategory != null ? 1 : 0) +
@@ -43,10 +46,25 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController()..addListener(_onScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       context.read<RecipeProvider>().ensureInitialized();
     });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!mounted) return;
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      context.read<RecipeProvider>().loadMore();
+    }
   }
 
   void _syncUserBoundProviders(String uid) {
@@ -86,7 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final l10n = AppLocalizations.of(context)!;
     final recipeProvider = context.watch<RecipeProvider>();
     final trendingProvider = context.watch<TrendingProvider>();
-    final authUid = context.select<AuthProvider, String?>((a) => a.userModel?.uid);
+    final authUser = context.select<AuthProvider, UserModel?>((a) => a.userModel);
+    final authUid = authUser?.uid;
     if (authUid != null && authUid != _lastSyncedUid) {
       _lastSyncedUid = authUid;
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -105,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: Column(
         children: [
-          _buildHeader(context, l10n),
+          _buildHeader(context, l10n, authUser),
           Expanded(
             child: recipeProvider.isLoading
                 ? const Center(child: CircularProgressIndicator())
@@ -115,9 +134,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: l10n.noRecipes,
                       )
                     : ListView.builder(
+                        controller: _scrollController,
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-                        itemCount: filteredRecipes.length + (hasActiveFilter ? 0 : 1),
+                        itemCount: filteredRecipes.length +
+                            (hasActiveFilter ? 0 : 1) +
+                            (recipeProvider.isLoadingMore ? 1 : 0),
                         itemBuilder: (context, index) {
+                          if (recipeProvider.isLoadingMore &&
+                              index ==
+                                  filteredRecipes.length +
+                                      (hasActiveFilter ? 0 : 1)) {
+                            return const Padding(
+                              padding: EdgeInsets.all(24),
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          }
                           if (!hasActiveFilter && index == 0) {
                             return _buildDiscoverySections(context, l10n, trendingProvider);
                           }
@@ -125,11 +156,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           final recipe = filteredRecipes[recipeIndex];
                           final isTrending =
                               recipe.id != null && trendingIds.contains(recipe.id);
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: RecipeCard(
-                              recipe: recipe,
-                              showTrendingBadge: isTrending,
+                          return RepaintBoundary(
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: RecipeCard(
+                                recipe: recipe,
+                                showTrendingBadge: isTrending,
+                              ),
                             ),
                           );
                         },
@@ -152,8 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
-    final user = context.watch<AuthProvider>().userModel;
+  Widget _buildHeader(BuildContext context, AppLocalizations l10n, UserModel? user) {
     final firstName = user?.firstName ?? '';
 
     return Container(
@@ -202,7 +234,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const Spacer(),
-                  Stack(
+                  Tooltip(
+                    message: 'Notifications',
+                    child: Stack(
                     children: [
                       IconButton(
                         icon: const Icon(Icons.notifications_outlined),
@@ -244,20 +278,30 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  IconButton(
+                  ),
+                  Tooltip(
+                    message: 'Collections',
+                    child: IconButton(
                     icon: const Icon(Icons.folder_outlined),
                     color: AppTheme.textSecondaryOf(context),
                     onPressed: () => context.push('/collections'),
                   ),
-                  IconButton(
+                  ),
+                  Tooltip(
+                    message: 'Shopping List',
+                    child: IconButton(
                     icon: const Icon(Icons.shopping_cart_outlined),
                     color: AppTheme.textSecondaryOf(context),
                     onPressed: () => context.push('/shopping-lists'),
                   ),
-                  IconButton(
+                  ),
+                  Tooltip(
+                    message: 'Favorites',
+                    child: IconButton(
                     icon: const Icon(Icons.favorite_outline),
                     color: AppTheme.textSecondaryOf(context),
                     onPressed: () => context.push('/favorites'),
+                  ),
                   ),
                 ],
               ),
@@ -767,10 +811,10 @@ class _CompactTrendingCard extends StatelessWidget {
                   height: 120,
                   width: double.infinity,
                   child: recipe.imageUrl != null && recipe.imageUrl!.isNotEmpty
-                      ? Image.network(
-                          recipe.imageUrl!,
+                      ? CachedNetworkImage(
+                          imageUrl: recipe.imageUrl!,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => Container(
+                          errorWidget: (_, _, _) => Container(
                             color: AppTheme.neutralLightOf(context),
                             child: Icon(
                               Icons.restaurant,

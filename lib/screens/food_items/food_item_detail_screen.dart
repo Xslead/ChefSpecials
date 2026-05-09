@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -71,10 +72,10 @@ class FoodItemDetailScreen extends StatelessWidget {
             ? Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.network(
-                    foodItem.imageUrl!,
+                  CachedNetworkImage(
+                    imageUrl: foodItem.imageUrl!,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, _, _) => _buildPlaceholderImage(context),
+                    errorWidget: (_, _, _) => _buildPlaceholderImage(context),
                   ),
                   Container(
                     decoration: BoxDecoration(

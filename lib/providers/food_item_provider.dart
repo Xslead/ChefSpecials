@@ -30,8 +30,21 @@ class FoodItemProvider extends ChangeNotifier {
   String? _filterNutriScore;
   String _sortBy = 'name'; // name, calories, protein
 
-  List<FoodItem> get foodItems => _applyFilters(_foodItems);
-  List<FoodItem> get searchResults => _applyFilters(_searchResults);
+  // Cached filter results — recomputed only when source data or filters change
+  bool _filtersDirty = true;
+  List<FoodItem> _cachedFoodItems = [];
+  List<FoodItem> _cachedSearchResults = [];
+
+  List<FoodItem> get foodItems {
+    if (_filtersDirty) _rebuildCache();
+    return _cachedFoodItems;
+  }
+
+  List<FoodItem> get searchResults {
+    if (_filtersDirty) _rebuildCache();
+    return _cachedSearchResults;
+  }
+
   String get selectedCategory => _selectedCategory;
   bool get isLoading => _isLoading;
   String get searchQuery => _searchQuery;
@@ -45,6 +58,16 @@ class FoodItemProvider extends ChangeNotifier {
       (_filterVegetarian ? 1 : 0) +
       (_filterGlutenFree ? 1 : 0) +
       (_filterNutriScore != null ? 1 : 0);
+
+  void _rebuildCache() {
+    _cachedFoodItems = _applyFilters(_foodItems);
+    _cachedSearchResults = _applyFilters(_searchResults);
+    _filtersDirty = false;
+  }
+
+  void _invalidate() {
+    _filtersDirty = true;
+  }
 
   List<FoodItem> _applyFilters(List<FoodItem> items) {
     var result = items.where((item) {
@@ -71,26 +94,31 @@ class FoodItemProvider extends ChangeNotifier {
 
   void setFilterVegan(bool value) {
     _filterVegan = value;
+    _invalidate();
     notifyListeners();
   }
 
   void setFilterVegetarian(bool value) {
     _filterVegetarian = value;
+    _invalidate();
     notifyListeners();
   }
 
   void setFilterGlutenFree(bool value) {
     _filterGlutenFree = value;
+    _invalidate();
     notifyListeners();
   }
 
   void setFilterNutriScore(String? value) {
     _filterNutriScore = value;
+    _invalidate();
     notifyListeners();
   }
 
   void setSortBy(String value) {
     _sortBy = value;
+    _invalidate();
     notifyListeners();
   }
 
@@ -100,6 +128,7 @@ class FoodItemProvider extends ChangeNotifier {
     _filterGlutenFree = false;
     _filterNutriScore = null;
     _sortBy = 'name';
+    _invalidate();
     notifyListeners();
   }
 
@@ -118,6 +147,7 @@ class FoodItemProvider extends ChangeNotifier {
       final cached = _cacheService.getCachedFoodItems();
       if (cached.isNotEmpty) {
         _foodItems = cached;
+        _invalidate();
         _isLoading = false;
         notifyListeners();
       }
@@ -132,6 +162,7 @@ class FoodItemProvider extends ChangeNotifier {
     _subscription = stream.listen(
       (items) {
         _foodItems = items;
+        _invalidate();
         _isLoading = false;
         notifyListeners();
         // Only cache the full "All" list — partial category lists would corrupt it
@@ -143,6 +174,7 @@ class FoodItemProvider extends ChangeNotifier {
         _isLoading = false;
         if (_foodItems.isEmpty) {
           _foodItems = _cacheService?.getCachedFoodItems() ?? [];
+          _invalidate();
         }
         notifyListeners();
       },
@@ -158,6 +190,7 @@ class FoodItemProvider extends ChangeNotifier {
     _searchQuery = query;
     if (query.isEmpty) {
       _searchResults = [];
+      _invalidate();
       notifyListeners();
       return;
     }
@@ -172,6 +205,7 @@ class FoodItemProvider extends ChangeNotifier {
           .where((f) => f.name.toLowerCase().contains(lower))
           .toList();
     }
+    _invalidate();
     _isLoading = false;
     notifyListeners();
   }

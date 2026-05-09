@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -255,7 +256,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     ? Image.file(_imageFile!, fit: BoxFit.cover)
                                     : (currentPhotoUrl != null &&
                                             currentPhotoUrl.isNotEmpty
-                                        ? Image.network(currentPhotoUrl,
+                                        ? CachedNetworkImage(
+                                            imageUrl: currentPhotoUrl,
                                             fit: BoxFit.cover)
                                         : Container(
                                             color: AppTheme.primaryColor

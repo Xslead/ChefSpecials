@@ -50,7 +50,10 @@ class _RecipeCardState extends State<RecipeCard> {
     final l10n = AppLocalizations.of(context)!;
     final totalTime = recipe.prepTimeMinutes + recipe.cookTimeMinutes;
 
-    return GestureDetector(
+    return Semantics(
+      label: '${recipe.title} by ${recipe.authorName}',
+      button: true,
+      child: GestureDetector(
       onTapDown: (_) => setState(() => _isPressed = true),
       onTapUp: (_) {
         setState(() => _isPressed = false);
@@ -285,7 +288,8 @@ class _RecipeCardState extends State<RecipeCard> {
           ),
         ),
       ),
-    );
+    ),
+  );
   }
 
   void _navigateToAuthor(BuildContext context) {
@@ -302,13 +306,12 @@ class _RecipeCardState extends State<RecipeCard> {
   }
 
   Widget _buildRatingRow(BuildContext context) {
-    final cookCount = recipe.id != null
-        ? context.watch<CookingLogProvider>().getCookCountFromCache(recipe.id!)
-        : 0;
+    final cookCount = context.select<CookingLogProvider, int>(
+        (p) => recipe.id != null ? p.getCookCountFromCache(recipe.id!) : 0);
     final l10n = AppLocalizations.of(context)!;
-    final likeProvider = context.watch<LikeProvider>();
+    final isLiked = context.select<LikeProvider, bool>(
+        (p) => recipe.id != null && p.isLiked(recipe.id!));
     final uid = context.read<AuthProvider>().userModel?.uid;
-    final isLiked = recipe.id != null && likeProvider.isLiked(recipe.id!);
 
     return Row(
       children: [
@@ -354,7 +357,7 @@ class _RecipeCardState extends State<RecipeCard> {
         const SizedBox(width: 10),
         GestureDetector(
           onTap: uid != null && recipe.id != null
-              ? () => likeProvider.toggleLike(recipe.id!, uid)
+              ? () => context.read<LikeProvider>().toggleLike(recipe.id!, uid)
               : null,
           child: Icon(
             isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
@@ -438,14 +441,13 @@ class _RecipeCardState extends State<RecipeCard> {
   }
 
   Widget _buildFavoriteButton(BuildContext context) {
-    final favoriteProvider = context.watch<FavoriteProvider>();
-    final isFav =
-        recipe.id != null && favoriteProvider.isFavorite(recipe.id!);
+    final isFav = context.select<FavoriteProvider, bool>(
+        (p) => recipe.id != null && p.isFavorite(recipe.id!));
 
     return GestureDetector(
       onTap: () {
         if (recipe.id != null) {
-          favoriteProvider.toggleFavorite(recipe.id!);
+          context.read<FavoriteProvider>().toggleFavorite(recipe.id!);
         }
       },
       child: ClipOval(

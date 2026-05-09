@@ -10,6 +10,7 @@ import 'package:chef_specials/models/cooking_log.dart';
 import 'package:chef_specials/providers/auth_provider.dart';
 import 'package:chef_specials/providers/cooking_log_provider.dart';
 import 'package:chef_specials/providers/favorite_provider.dart';
+import 'package:chef_specials/providers/like_provider.dart';
 import 'package:chef_specials/screens/home/widgets/recipe_card.dart';
 
 /// A minimal FavoriteProvider for testing that does not connect to Firebase.
@@ -50,6 +51,13 @@ class FakeCookingLogProvider extends ChangeNotifier
   bool get isLoading => false;
   @override
   int getCookCountFromCache(String recipeId) => 0;
+  @override
+  dynamic noSuchMethod(Invocation invocation) => null;
+}
+
+class FakeLikeProvider extends ChangeNotifier implements LikeProvider {
+  @override
+  bool isLiked(String recipeId) => false;
   @override
   dynamic noSuchMethod(Invocation invocation) => null;
 }
@@ -111,6 +119,9 @@ void main() {
         ),
         ChangeNotifierProvider<CookingLogProvider>(
           create: (_) => FakeCookingLogProvider(),
+        ),
+        ChangeNotifierProvider<LikeProvider>(
+          create: (_) => FakeLikeProvider(),
         ),
       ],
       child: MaterialApp(

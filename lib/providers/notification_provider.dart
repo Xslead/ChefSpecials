@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,8 +9,13 @@ import '../services/notification_service.dart';
 class NotificationProvider extends ChangeNotifier {
   final NotificationService _service;
 
-  NotificationProvider({NotificationService? service})
-      : _service = service ?? NotificationService();
+  NotificationProvider({
+    NotificationService? service,
+    Stream<User?>? authStream,
+  }) : _service = service ?? NotificationService() {
+    _authSub = (authStream ?? FirebaseAuth.instance.authStateChanges())
+        .listen(_onAuthChanged);
+  }
 
   // Meal reminder notification IDs
   static const _breakfastId = 1001;
@@ -41,6 +49,10 @@ class NotificationProvider extends ChangeNotifier {
   bool _isInitialized = false;
   bool _permissionDenied = false;
 
+  String? _currentUserId;
+  StreamSubscription<User?>? _authSub;
+  StreamSubscription<String>? _tokenRefreshSub;
+
   // Getters
   bool get breakfastEnabled => _breakfastEnabled;
   TimeOfDay get breakfastTime => _breakfastTime;
@@ -53,15 +65,68 @@ class NotificationProvider extends ChangeNotifier {
   bool get followerAlerts => _followerAlerts;
   bool get permissionDenied => _permissionDenied;
 
-  Future<void> init(String userId) async {
-    if (_isInitialized) return;
+  Future<void> _onAuthChanged(User? user) async {
+    if (user == null) {
+      await _tokenRefreshSub?.cancel();
+      _tokenRefreshSub = null;
+      _currentUserId = null;
+      _isInitialized = false;
+      return;
+    }
+    await _bootstrap(user.uid);
+  }
 
+  /// Non-prompting bootstrap that runs on every login.
+  /// - Initializes the service (idempotent).
+  /// - Loads stored toggle state.
+  /// - If permission is already granted, saves the current FCM token and
+  ///   listens for token rotations so Firestore never holds a stale token.
+  /// - Does NOT trigger the OS permission popup — that stays opt-in via
+  ///   the Notification Settings screen.
+  Future<void> _bootstrap(String userId) async {
+    _currentUserId = userId;
+    await _service.initialize();
+    await _loadFromPrefs();
+
+    final settings = await _service.currentSettings();
+    final authorized =
+        settings.authorizationStatus == AuthorizationStatus.authorized ||
+            settings.authorizationStatus == AuthorizationStatus.provisional;
+    _permissionDenied = !authorized;
+
+    if (authorized) {
+      final token = await _service.getFcmToken();
+      if (token != null) {
+        await _service.saveFcmToken(userId, token);
+      }
+      await _tokenRefreshSub?.cancel();
+      _tokenRefreshSub = _service.tokenRefreshStream.listen((rotated) async {
+        final uid = _currentUserId;
+        if (uid != null) await _service.saveFcmToken(uid, rotated);
+      });
+    }
+
+    _isInitialized = true;
+    notifyListeners();
+  }
+
+  /// Prompts for permission. Called from the Notification Settings screen.
+  /// Safe to call repeatedly — the OS will only show the dialog once per
+  /// install. After that the user must enable notifications via system
+  /// Settings (see [openSystemSettings]).
+  Future<void> init(String userId) async {
+    if (_isInitialized && !_permissionDenied) return;
+
+    _currentUserId = userId;
     await _service.initialize();
     await _loadFromPrefs();
 
     final settings = await _service.requestPermission();
-    if (settings.authorizationStatus != AuthorizationStatus.authorized &&
-        settings.authorizationStatus != AuthorizationStatus.provisional) {
+    final authorized =
+        settings.authorizationStatus == AuthorizationStatus.authorized ||
+            settings.authorizationStatus == AuthorizationStatus.provisional;
+
+    if (!authorized) {
       _permissionDenied = true;
       _isInitialized = true;
       notifyListeners();
@@ -71,11 +136,15 @@ class NotificationProvider extends ChangeNotifier {
     _permissionDenied = false;
     _isInitialized = true;
 
-    // Save FCM token
     final token = await _service.getFcmToken();
     if (token != null) {
       await _service.saveFcmToken(userId, token);
     }
+    await _tokenRefreshSub?.cancel();
+    _tokenRefreshSub = _service.tokenRefreshStream.listen((rotated) async {
+      final uid = _currentUserId;
+      if (uid != null) await _service.saveFcmToken(uid, rotated);
+    });
 
     notifyListeners();
   }
@@ -86,6 +155,10 @@ class NotificationProvider extends ChangeNotifier {
     notifyListeners();
     await init(userId);
   }
+
+  Future<void> openSystemSettings() => _service.openSystemSettings();
+
+  Future<NotificationSettings> currentSettings() => _service.currentSettings();
 
   Future<void> _loadFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();
@@ -127,6 +200,16 @@ class NotificationProvider extends ChangeNotifier {
     await prefs.setBool(_keyNewRecipeAlerts, _newRecipeAlerts);
     await prefs.setBool(_keyCommentAlerts, _commentAlerts);
     await prefs.setBool(_keyFollowerAlerts, _followerAlerts);
+  }
+
+  Future<void> _mirrorToFirestore(Map<String, dynamic> prefs) async {
+    final uid = _currentUserId;
+    if (uid == null) return;
+    try {
+      await _service.savePreferences(uid, prefs);
+    } catch (_) {
+      // Non-fatal — the local SharedPreferences value is already saved.
+    }
   }
 
   Future<void> toggleBreakfastReminder(bool enabled) async {
@@ -253,23 +336,20 @@ class NotificationProvider extends ChangeNotifier {
     _commentAlerts = enabled;
     notifyListeners();
     await _saveToPrefs();
-
-    if (enabled) {
-      await _service.subscribeToTopic('comments');
-    } else {
-      await _service.unsubscribeFromTopic('comments');
-    }
+    await _mirrorToFirestore({'notifyOnComment': enabled});
   }
 
   Future<void> toggleFollowerAlerts(bool enabled) async {
     _followerAlerts = enabled;
     notifyListeners();
     await _saveToPrefs();
+    await _mirrorToFirestore({'notifyOnFollow': enabled});
+  }
 
-    if (enabled) {
-      await _service.subscribeToTopic('followers');
-    } else {
-      await _service.unsubscribeFromTopic('followers');
-    }
+  @override
+  void dispose() {
+    _authSub?.cancel();
+    _tokenRefreshSub?.cancel();
+    super.dispose();
   }
 }

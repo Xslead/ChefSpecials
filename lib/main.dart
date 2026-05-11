@@ -85,7 +85,10 @@ void main() async {
         ChangeNotifierProvider(create: (_) => CollectionProvider()),
         ChangeNotifierProvider(create: (_) => MealPlanProvider()),
         ChangeNotifierProvider(create: (_) => ReportsProvider()),
-        ChangeNotifierProvider(create: (_) => NotificationProvider()),
+        ChangeNotifierProvider(
+          create: (_) => NotificationProvider(),
+          lazy: false,
+        ),
         ChangeNotifierProvider(create: (_) => ActivityProvider()),
         ChangeNotifierProvider(create: (_) => AdminProvider()),
         ChangeNotifierProvider(create: (_) => CookingLogProvider()),

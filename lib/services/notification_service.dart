@@ -1,3 +1,4 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -29,7 +30,12 @@ class NotificationService {
     importance: Importance.high,
   );
 
+  bool _initialized = false;
+
   Future<void> initialize() async {
+    if (_initialized) return;
+    _initialized = true;
+
     tz.initializeTimeZones();
 
     const androidSettings =
@@ -46,13 +52,11 @@ class NotificationService {
 
     await _localNotifications.initialize(settings: settings);
 
-    // Create Android notification channel
     await _localNotifications
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(_androidChannel);
 
-    // Listen for foreground FCM messages
     FirebaseMessaging.onMessage.listen(_onForegroundMessage);
   }
 
@@ -63,6 +67,16 @@ class NotificationService {
       sound: true,
     );
   }
+
+  Future<NotificationSettings> currentSettings() async {
+    return await _messaging.getNotificationSettings();
+  }
+
+  Future<void> openSystemSettings() async {
+    await AppSettings.openAppSettings(type: AppSettingsType.notification);
+  }
+
+  Stream<String> get tokenRefreshStream => _messaging.onTokenRefresh;
 
   Future<String?> getFcmToken() async {
     try {
@@ -77,6 +91,13 @@ class NotificationService {
     await _firestore.collection('users').doc(userId).update({
       'fcmToken': token,
     });
+  }
+
+  Future<void> savePreferences(
+    String userId,
+    Map<String, dynamic> prefs,
+  ) async {
+    await _firestore.collection('users').doc(userId).update(prefs);
   }
 
   Future<void> subscribeToTopic(String topic) async {

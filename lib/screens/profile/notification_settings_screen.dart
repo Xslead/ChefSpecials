@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -136,13 +137,20 @@ class _NotificationSettingsScreenState
                   ),
                   const SizedBox(height: 8),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       final userId =
                           context.read<AuthProvider>().userModel?.uid;
-                      if (userId != null) {
-                        context
-                            .read<NotificationProvider>()
-                            .recheckPermission(userId);
+                      if (userId == null) return;
+                      final provider = context.read<NotificationProvider>();
+                      final settings = await provider.currentSettings();
+                      // Once the OS has recorded an explicit denial it will
+                      // silently no-op every subsequent requestPermission()
+                      // call, so we send the user to system Settings.
+                      if (settings.authorizationStatus ==
+                          AuthorizationStatus.denied) {
+                        await provider.openSystemSettings();
+                      } else {
+                        await provider.recheckPermission(userId);
                       }
                     },
                     child: Container(

@@ -224,14 +224,6 @@
   },
   "favoritesEmptySubtitle": "Tariflerdeki kalp ikonuna dokunarak buraya kaydedin",
   "shoppingListEmptySubtitle": "Baslamak icin herhangi bir tariften malzeme ekleyin",
-  "importRecipe": "Tarif İçe Aktar",
-  "importFromUrl": "URL'den İçe Aktar",
-  "importUrlDescription": "Herhangi bir tarif sitesinden bağlantı yapıştırın, detayları sizin için dolduralım.",
-  "recipeUrl": "Tarif URL'si",
-  "importUrlHint": "https://www.ornek.com/tarif/...",
-  "importButton": "İçe Aktar",
-  "importError": "Bu URL'den tarif içe aktarılamadı. Bir tarif sitesi olduğundan emin olun.",
-  "supportedSites": "Desteklenen Siteler",
   "shareRecipe": "Tarifi Paylaş",
   "shareRecipeText": "ChefSpecials'da {author} tarafından \"{title}\" tarifine göz at!\n\n{ingredients}\n\nChefSpecials'ta aç:\n{link}",
   "@shareRecipeText": {
@@ -817,18 +809,5 @@
   "viewProfile": "Profili Görüntüle",
   "blockedUsers": "Engellenen Kullanıcılar",
   "noBlockedUsers": "Henüz kimseyi engellemediniz.",
-  "privacy": "Gizlilik",
-
-  "originalLanguage": "Orijinal Dil",
-  "addTranslation": "Çeviri Ekle",
-  "translations": "Çeviriler",
-  "translatedTitle": "Çevrilmiş Başlık",
-  "translatedDescription": "Çevrilmiş Açıklama",
-  "selectLanguage": "Dil Seçin",
-  "allLanguagesAdded": "Tüm diller zaten eklendi",
-  "translationAdded": "Çeviri eklendi",
-  "ingredientNames": "Malzeme İsimleri",
-  "stepInstructions": "Adım Talimatları",
-  "ingredient": "Malzeme",
-  "step": "Adım"
+  "privacy": "Gizlilik"
 }

@@ -606,32 +606,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Add ingredients from any recipe to get started';
 
   @override
-  String get importRecipe => 'Import Recipe';
-
-  @override
-  String get importFromUrl => 'Import from URL';
-
-  @override
-  String get importUrlDescription =>
-      'Paste a link from any recipe website and we\'ll fill in the details for you.';
-
-  @override
-  String get recipeUrl => 'Recipe URL';
-
-  @override
-  String get importUrlHint => 'https://www.example.com/recipe/...';
-
-  @override
-  String get importButton => 'Import';
-
-  @override
-  String get importError =>
-      'Couldn\'t import a recipe from this URL. Make sure it\'s a recipe website.';
-
-  @override
-  String get supportedSites => 'Supported Sites';
-
-  @override
   String get shareRecipe => 'Share Recipe';
 
   @override
@@ -1973,40 +1947,4 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacy => 'Privacy';
-
-  @override
-  String get originalLanguage => 'Original Language';
-
-  @override
-  String get addTranslation => 'Add Translation';
-
-  @override
-  String get translations => 'Translations';
-
-  @override
-  String get translatedTitle => 'Translated Title';
-
-  @override
-  String get translatedDescription => 'Translated Description';
-
-  @override
-  String get selectLanguage => 'Select Language';
-
-  @override
-  String get allLanguagesAdded => 'All languages already added';
-
-  @override
-  String get translationAdded => 'Translation added';
-
-  @override
-  String get ingredientNames => 'Ingredient Names';
-
-  @override
-  String get stepInstructions => 'Step Instructions';
-
-  @override
-  String get ingredient => 'Ingredient';
-
-  @override
-  String get step => 'Step';
 }

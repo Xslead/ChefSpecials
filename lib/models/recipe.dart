@@ -1,6 +1,5 @@
 import 'ingredient.dart';
 import 'recipe_step.dart';
-import 'recipe_translation.dart';
 
 class Recipe {
   final String? id;
@@ -28,8 +27,6 @@ class Recipe {
   final List<String> photos;
   final String? videoUrl;
   final int likeCount;
-  final String originalLanguage;
-  final Map<String, RecipeTranslation>? translations;
 
   Recipe({
     this.id,
@@ -57,8 +54,6 @@ class Recipe {
     this.photos = const [],
     this.videoUrl,
     this.likeCount = 0,
-    this.originalLanguage = 'en',
-    this.translations,
   });
 
   factory Recipe.fromMap(Map<String, dynamic> map, String docId) {
@@ -92,17 +87,6 @@ class Recipe {
       photos: List<String>.from(map['photos'] ?? []),
       videoUrl: map['videoUrl'] as String?,
       likeCount: map['likeCount'] as int? ?? 0,
-      originalLanguage: map['originalLanguage'] as String? ?? 'en',
-      translations: _parseTranslations(map['translations']),
-    );
-  }
-
-  static Map<String, RecipeTranslation>? _parseTranslations(dynamic raw) {
-    if (raw == null) return null;
-    final map = raw as Map<String, dynamic>;
-    if (map.isEmpty) return null;
-    return map.map(
-      (k, v) => MapEntry(k, RecipeTranslation.fromMap(v as Map<String, dynamic>)),
     );
   }
 
@@ -132,8 +116,6 @@ class Recipe {
     List<String>? photos,
     String? videoUrl,
     int? likeCount,
-    String? originalLanguage,
-    Map<String, RecipeTranslation>? translations,
   }) {
     return Recipe(
       id: id ?? this.id,
@@ -161,8 +143,6 @@ class Recipe {
       photos: photos ?? this.photos,
       videoUrl: videoUrl ?? this.videoUrl,
       likeCount: likeCount ?? this.likeCount,
-      originalLanguage: originalLanguage ?? this.originalLanguage,
-      translations: translations ?? this.translations,
     );
   }
 
@@ -195,9 +175,6 @@ class Recipe {
       'dietaryTags': dietaryTags,
       'photos': photos,
       'videoUrl': videoUrl,
-      'originalLanguage': originalLanguage,
-      if (translations != null && translations!.isNotEmpty)
-        'translations': translations!.map((k, v) => MapEntry(k, v.toMap())),
     };
   }
 }

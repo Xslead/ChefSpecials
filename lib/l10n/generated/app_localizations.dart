@@ -1232,54 +1232,6 @@ abstract class AppLocalizations {
   /// **'Add ingredients from any recipe to get started'**
   String get shoppingListEmptySubtitle;
 
-  /// No description provided for @importRecipe.
-  ///
-  /// In en, this message translates to:
-  /// **'Import Recipe'**
-  String get importRecipe;
-
-  /// No description provided for @importFromUrl.
-  ///
-  /// In en, this message translates to:
-  /// **'Import from URL'**
-  String get importFromUrl;
-
-  /// No description provided for @importUrlDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Paste a link from any recipe website and we\'ll fill in the details for you.'**
-  String get importUrlDescription;
-
-  /// No description provided for @recipeUrl.
-  ///
-  /// In en, this message translates to:
-  /// **'Recipe URL'**
-  String get recipeUrl;
-
-  /// No description provided for @importUrlHint.
-  ///
-  /// In en, this message translates to:
-  /// **'https://www.example.com/recipe/...'**
-  String get importUrlHint;
-
-  /// No description provided for @importButton.
-  ///
-  /// In en, this message translates to:
-  /// **'Import'**
-  String get importButton;
-
-  /// No description provided for @importError.
-  ///
-  /// In en, this message translates to:
-  /// **'Couldn\'t import a recipe from this URL. Make sure it\'s a recipe website.'**
-  String get importError;
-
-  /// No description provided for @supportedSites.
-  ///
-  /// In en, this message translates to:
-  /// **'Supported Sites'**
-  String get supportedSites;
-
   /// No description provided for @shareRecipe.
   ///
   /// In en, this message translates to:
@@ -3792,78 +3744,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Privacy'**
   String get privacy;
-
-  /// No description provided for @originalLanguage.
-  ///
-  /// In en, this message translates to:
-  /// **'Original Language'**
-  String get originalLanguage;
-
-  /// No description provided for @addTranslation.
-  ///
-  /// In en, this message translates to:
-  /// **'Add Translation'**
-  String get addTranslation;
-
-  /// No description provided for @translations.
-  ///
-  /// In en, this message translates to:
-  /// **'Translations'**
-  String get translations;
-
-  /// No description provided for @translatedTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Translated Title'**
-  String get translatedTitle;
-
-  /// No description provided for @translatedDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Translated Description'**
-  String get translatedDescription;
-
-  /// No description provided for @selectLanguage.
-  ///
-  /// In en, this message translates to:
-  /// **'Select Language'**
-  String get selectLanguage;
-
-  /// No description provided for @allLanguagesAdded.
-  ///
-  /// In en, this message translates to:
-  /// **'All languages already added'**
-  String get allLanguagesAdded;
-
-  /// No description provided for @translationAdded.
-  ///
-  /// In en, this message translates to:
-  /// **'Translation added'**
-  String get translationAdded;
-
-  /// No description provided for @ingredientNames.
-  ///
-  /// In en, this message translates to:
-  /// **'Ingredient Names'**
-  String get ingredientNames;
-
-  /// No description provided for @stepInstructions.
-  ///
-  /// In en, this message translates to:
-  /// **'Step Instructions'**
-  String get stepInstructions;
-
-  /// No description provided for @ingredient.
-  ///
-  /// In en, this message translates to:
-  /// **'Ingredient'**
-  String get ingredient;
-
-  /// No description provided for @step.
-  ///
-  /// In en, this message translates to:
-  /// **'Step'**
-  String get step;
 }
 
 class _AppLocalizationsDelegate

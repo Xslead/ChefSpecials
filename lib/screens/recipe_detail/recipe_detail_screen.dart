@@ -7,7 +7,6 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../config/theme.dart';
 import '../../l10n/generated/app_localizations.dart';
-import '../../models/recipe_translation.dart';
 import '../../models/comment.dart';
 import '../../models/ingredient.dart';
 import '../../models/recipe.dart';
@@ -89,7 +88,6 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
   bool _submittingComment = false;
   bool _showRecipeVideo = false;
   late int _selectedServings;
-  String? _selectedLangCode;
   int _cookCount = 0;
   String? _replyToCommentId;
   String? _replyToAuthorName;
@@ -727,11 +725,6 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                 children: [
                   _buildTitleSection(context, l10n, theme, liveRecipe),
                   const SizedBox(height: 12),
-                  if (liveRecipe.translations != null &&
-                      liveRecipe.translations!.isNotEmpty) ...[
-                    _buildLanguageChips(context, liveRecipe),
-                    const SizedBox(height: 4),
-                  ],
                   _buildLikeReportRow(context, l10n, liveRecipe),
                   const SizedBox(height: 16),
                   _buildTimeRow(context, l10n, theme, liveRecipe),
@@ -845,83 +838,9 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     );
   }
 
-  List<Ingredient> _displayIngredients(Recipe r) {
-    if (_selectedLangCode == null) return r.ingredients;
-    final t = r.translations?[_selectedLangCode!];
-    if (t == null || t.ingredientNames.isEmpty) return r.ingredients;
-    return r.ingredients.asMap().entries.map((e) {
-      final name = e.key < t.ingredientNames.length ? t.ingredientNames[e.key] : '';
-      return Ingredient(
-        name: name.isNotEmpty ? name : e.value.name,
-        amount: e.value.amount,
-        unit: e.value.unit,
-        foodItemId: e.value.foodItemId,
-        caloriesPer100: e.value.caloriesPer100,
-        proteinPer100: e.value.proteinPer100,
-        carbsPer100: e.value.carbsPer100,
-        fatPer100: e.value.fatPer100,
-      );
-    }).toList();
-  }
+  List<Ingredient> _displayIngredients(Recipe r) => r.ingredients;
 
-  List<RecipeStep> _displaySteps(Recipe r) {
-    if (_selectedLangCode == null) return r.steps;
-    final t = r.translations?[_selectedLangCode!];
-    if (t == null || t.stepInstructions.isEmpty) return r.steps;
-    return r.steps.asMap().entries.map((e) {
-      final instruction =
-          e.key < t.stepInstructions.length ? t.stepInstructions[e.key] : '';
-      return RecipeStep(
-        order: e.value.order,
-        instruction: instruction.isNotEmpty ? instruction : e.value.instruction,
-        imageUrl: e.value.imageUrl,
-        timerSeconds: e.value.timerSeconds,
-        videoUrl: e.value.videoUrl,
-      );
-    }).toList();
-  }
-
-  Widget _buildLanguageChips(BuildContext context, Recipe r) {
-    final allCodes = [r.originalLanguage, ...r.translations!.keys];
-    final currentValue = _selectedLangCode ?? r.originalLanguage;
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: DropdownButton<String>(
-        value: currentValue,
-        underline: const SizedBox.shrink(),
-        isDense: true,
-        icon: Icon(
-          Icons.keyboard_arrow_down,
-          size: 16,
-          color: AppTheme.textTertiaryOf(context),
-        ),
-        selectedItemBuilder: (_) => allCodes.map((code) {
-          final langName = kSupportedLanguages[code] ?? code;
-          return Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.language, size: 14, color: AppTheme.textTertiaryOf(context)),
-              const SizedBox(width: 4),
-              Text(
-                langName,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: AppTheme.textSecondaryOf(context),
-                ),
-              ),
-            ],
-          );
-        }).toList(),
-        items: allCodes.map((code) {
-          final langName = kSupportedLanguages[code] ?? code;
-          return DropdownMenuItem(value: code, child: Text(langName));
-        }).toList(),
-        onChanged: (code) => setState(() {
-          _selectedLangCode = code == r.originalLanguage ? null : code;
-        }),
-      ),
-    );
-  }
+  List<RecipeStep> _displaySteps(Recipe r) => r.steps;
 
   Widget _buildGlassCircleButton({
     required IconData icon,
@@ -1047,17 +966,11 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
     ThemeData theme,
     Recipe r,
   ) {
-    final translatedTitle = _selectedLangCode != null
-        ? (r.translations?[_selectedLangCode!]?.title.isNotEmpty == true
-            ? r.translations![_selectedLangCode!]!.title
-            : r.title)
-        : r.title;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          translatedTitle,
+          r.title,
           style: theme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.bold,
           ),

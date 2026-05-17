@@ -224,14 +224,6 @@
   },
   "favoritesEmptySubtitle": "Tap the heart icon on recipes to save them here",
   "shoppingListEmptySubtitle": "Add ingredients from any recipe to get started",
-  "importRecipe": "Import Recipe",
-  "importFromUrl": "Import from URL",
-  "importUrlDescription": "Paste a link from any recipe website and we'll fill in the details for you.",
-  "recipeUrl": "Recipe URL",
-  "importUrlHint": "https://www.example.com/recipe/...",
-  "importButton": "Import",
-  "importError": "Couldn't import a recipe from this URL. Make sure it's a recipe website.",
-  "supportedSites": "Supported Sites",
   "shareRecipe": "Share Recipe",
   "shareRecipeText": "Check out \"{title}\" by {author} on ChefSpecials!\n\n{ingredients}\n\nOpen in ChefSpecials:\n{link}",
   "@shareRecipeText": {
@@ -817,18 +809,5 @@
   "viewProfile": "View Profile",
   "blockedUsers": "Blocked Users",
   "noBlockedUsers": "You haven't blocked anyone.",
-  "privacy": "Privacy",
-
-  "originalLanguage": "Original Language",
-  "addTranslation": "Add Translation",
-  "translations": "Translations",
-  "translatedTitle": "Translated Title",
-  "translatedDescription": "Translated Description",
-  "selectLanguage": "Select Language",
-  "allLanguagesAdded": "All languages already added",
-  "translationAdded": "Translation added",
-  "ingredientNames": "Ingredient Names",
-  "stepInstructions": "Step Instructions",
-  "ingredient": "Ingredient",
-  "step": "Step"
+  "privacy": "Privacy"
 }

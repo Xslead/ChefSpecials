@@ -30,7 +30,6 @@ import '../screens/shopping_list/shopping_lists_screen.dart';
 import '../screens/shopping_list/shopping_list_detail_screen.dart';
 import '../screens/collections/collection_list_screen.dart';
 import '../screens/collections/collection_detail_screen.dart';
-import '../screens/import_recipe/import_recipe_screen.dart';
 import '../screens/meal_planner/meal_planner_screen.dart';
 import '../screens/reports/reports_screen.dart';
 import '../screens/profile/blocked_users_screen.dart';
@@ -144,11 +143,6 @@ final GoRouter router = GoRouter(
         final initial = state.extra as Recipe?;
         return AddRecipeScreen(initialRecipe: initial);
       },
-    ),
-    GoRoute(
-      parentNavigatorKey: _rootNavigatorKey,
-      path: '/import-recipe',
-      builder: (context, state) => const ImportRecipeScreen(),
     ),
     GoRoute(
       parentNavigatorKey: _rootNavigatorKey,

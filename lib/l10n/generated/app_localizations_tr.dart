@@ -606,32 +606,6 @@ class AppLocalizationsTr extends AppLocalizations {
       'Baslamak icin herhangi bir tariften malzeme ekleyin';
 
   @override
-  String get importRecipe => 'Tarif İçe Aktar';
-
-  @override
-  String get importFromUrl => 'URL\'den İçe Aktar';
-
-  @override
-  String get importUrlDescription =>
-      'Herhangi bir tarif sitesinden bağlantı yapıştırın, detayları sizin için dolduralım.';
-
-  @override
-  String get recipeUrl => 'Tarif URL\'si';
-
-  @override
-  String get importUrlHint => 'https://www.ornek.com/tarif/...';
-
-  @override
-  String get importButton => 'İçe Aktar';
-
-  @override
-  String get importError =>
-      'Bu URL\'den tarif içe aktarılamadı. Bir tarif sitesi olduğundan emin olun.';
-
-  @override
-  String get supportedSites => 'Desteklenen Siteler';
-
-  @override
   String get shareRecipe => 'Tarifi Paylaş';
 
   @override
@@ -1980,40 +1954,4 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get privacy => 'Gizlilik';
-
-  @override
-  String get originalLanguage => 'Orijinal Dil';
-
-  @override
-  String get addTranslation => 'Çeviri Ekle';
-
-  @override
-  String get translations => 'Çeviriler';
-
-  @override
-  String get translatedTitle => 'Çevrilmiş Başlık';
-
-  @override
-  String get translatedDescription => 'Çevrilmiş Açıklama';
-
-  @override
-  String get selectLanguage => 'Dil Seçin';
-
-  @override
-  String get allLanguagesAdded => 'Tüm diller zaten eklendi';
-
-  @override
-  String get translationAdded => 'Çeviri eklendi';
-
-  @override
-  String get ingredientNames => 'Malzeme İsimleri';
-
-  @override
-  String get stepInstructions => 'Adım Talimatları';
-
-  @override
-  String get ingredient => 'Malzeme';
-
-  @override
-  String get step => 'Adım';
 }

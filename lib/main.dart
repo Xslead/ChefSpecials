@@ -24,6 +24,7 @@ import 'providers/trending_provider.dart';
 import 'providers/achievement_provider.dart';
 import 'providers/like_provider.dart';
 import 'providers/block_provider.dart';
+import 'providers/unit_preference_provider.dart';
 import 'services/cache_service.dart';
 import 'services/connectivity_service.dart';
 import 'app.dart';
@@ -96,6 +97,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AchievementProvider()),
         ChangeNotifierProvider(create: (_) => LikeProvider()),
         ChangeNotifierProvider(create: (_) => BlockProvider()),
+        ChangeNotifierProvider(create: (_) => UnitPreferenceProvider()),
       ],
       child: const ChefSpecialsApp(),
     ),

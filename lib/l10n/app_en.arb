@@ -658,22 +658,6 @@
   "summer": "Summer",
   "autumn": "Autumn",
   "winter": "Winter",
-  "substitutions": "Substitutions",
-  "substitutesFor": "Substitutes for {ingredient}",
-  "@substitutesFor": {
-    "placeholders": {
-      "ingredient": { "type": "String" }
-    }
-  },
-  "ratio": "Ratio",
-  "suggestSubstitution": "Suggest a Substitution",
-  "noSubstitutions": "No substitutions available",
-  "substituteName": "Substitute name",
-  "verified": "Verified",
-  "communitySubmitted": "Community submitted",
-  "thankYouSubstitution": "Thanks! Your suggestion was submitted for review.",
-  "notesOptional": "Notes (optional)",
-  "submit": "Submit",
   "filterAll": "All",
   "achievements": "Achievements",
   "achievementUnlocked": "Achievement Unlocked!",
@@ -809,5 +793,10 @@
   "viewProfile": "View Profile",
   "blockedUsers": "Blocked Users",
   "noBlockedUsers": "You haven't blocked anyone.",
-  "privacy": "Privacy"
+  "privacy": "Privacy",
+
+  "units": "Units",
+  "unitSystem": "Unit System",
+  "metric": "Metric",
+  "imperial": "Imperial"
 }

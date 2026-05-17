@@ -3061,66 +3061,6 @@ abstract class AppLocalizations {
   /// **'Winter'**
   String get winter;
 
-  /// No description provided for @substitutions.
-  ///
-  /// In en, this message translates to:
-  /// **'Substitutions'**
-  String get substitutions;
-
-  /// No description provided for @substitutesFor.
-  ///
-  /// In en, this message translates to:
-  /// **'Substitutes for {ingredient}'**
-  String substitutesFor(String ingredient);
-
-  /// No description provided for @ratio.
-  ///
-  /// In en, this message translates to:
-  /// **'Ratio'**
-  String get ratio;
-
-  /// No description provided for @suggestSubstitution.
-  ///
-  /// In en, this message translates to:
-  /// **'Suggest a Substitution'**
-  String get suggestSubstitution;
-
-  /// No description provided for @noSubstitutions.
-  ///
-  /// In en, this message translates to:
-  /// **'No substitutions available'**
-  String get noSubstitutions;
-
-  /// No description provided for @substituteName.
-  ///
-  /// In en, this message translates to:
-  /// **'Substitute name'**
-  String get substituteName;
-
-  /// No description provided for @communitySubmitted.
-  ///
-  /// In en, this message translates to:
-  /// **'Community submitted'**
-  String get communitySubmitted;
-
-  /// No description provided for @thankYouSubstitution.
-  ///
-  /// In en, this message translates to:
-  /// **'Thanks! Your suggestion was submitted for review.'**
-  String get thankYouSubstitution;
-
-  /// No description provided for @notesOptional.
-  ///
-  /// In en, this message translates to:
-  /// **'Notes (optional)'**
-  String get notesOptional;
-
-  /// No description provided for @submit.
-  ///
-  /// In en, this message translates to:
-  /// **'Submit'**
-  String get submit;
-
   /// No description provided for @filterAll.
   ///
   /// In en, this message translates to:
@@ -3744,6 +3684,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Privacy'**
   String get privacy;
+
+  /// No description provided for @units.
+  ///
+  /// In en, this message translates to:
+  /// **'Units'**
+  String get units;
+
+  /// No description provided for @unitSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit System'**
+  String get unitSystem;
+
+  /// No description provided for @metric.
+  ///
+  /// In en, this message translates to:
+  /// **'Metric'**
+  String get metric;
+
+  /// No description provided for @imperial.
+  ///
+  /// In en, this message translates to:
+  /// **'Imperial'**
+  String get imperial;
 }
 
 class _AppLocalizationsDelegate

@@ -658,22 +658,6 @@
   "summer": "Yaz",
   "autumn": "Sonbahar",
   "winter": "Kış",
-  "substitutions": "Alternatifler",
-  "substitutesFor": "{ingredient} için alternatifler",
-  "@substitutesFor": {
-    "placeholders": {
-      "ingredient": { "type": "String" }
-    }
-  },
-  "ratio": "Oran",
-  "suggestSubstitution": "Alternatif Öner",
-  "noSubstitutions": "Alternatif bulunamadı",
-  "substituteName": "Alternatif adı",
-  "verified": "Onaylı",
-  "communitySubmitted": "Topluluk önerisi",
-  "thankYouSubstitution": "Teşekkürler! Önerin incelenmek üzere gönderildi.",
-  "notesOptional": "Notlar (isteğe bağlı)",
-  "submit": "Gönder",
   "filterAll": "Tümü",
   "achievements": "Başarımlar",
   "achievementUnlocked": "Başarım Kazanıldı!",
@@ -809,5 +793,10 @@
   "viewProfile": "Profili Görüntüle",
   "blockedUsers": "Engellenen Kullanıcılar",
   "noBlockedUsers": "Henüz kimseyi engellemediniz.",
-  "privacy": "Gizlilik"
+  "privacy": "Gizlilik",
+
+  "units": "Birimler",
+  "unitSystem": "Birim Sistemi",
+  "metric": "Metrik",
+  "imperial": "Emperyal"
 }

@@ -111,4 +111,40 @@ class UnitConverter {
   static const _volumeUnitLabels = {'100mL', 'mL', 'ml', 'cups', 'cup', 'tbsp', 'tsp', 'fl oz', 'floz', 'L', 'l'};
 
   static bool isVolumeUnit(String unit) => _volumeUnitLabels.contains(unit);
+
+  static const _weightUnitLabels = {'g', 'kg', 'oz', 'lb', 'gram', 'grams'};
+
+  static String formatWithPreference(double amount, String unit, bool isMetric) {
+    final lower = unit.toLowerCase().trim();
+
+    if (_weightUnitLabels.contains(lower)) {
+      final grams = switch (lower) {
+        'kg' => amount * 1000,
+        'oz' => amount * 28.3495,
+        'lb' => amount * 453.592,
+        _ => amount,
+      };
+      if (isMetric) return smartFormat(grams, 'g');
+      final oz = grams / 28.3495;
+      if (oz >= 16) return '${_stripTrailingZeros(oz / 16)} lb';
+      return '${_stripTrailingZeros(oz)} oz';
+    }
+
+    if (_volumeUnitLabels.contains(lower)) {
+      final ml = switch (lower) {
+        'l' => amount * 1000,
+        'cups' || 'cup' => amount * 236.588,
+        'tbsp' => amount * 14.787,
+        'tsp' => amount * 4.929,
+        'fl oz' || 'floz' => amount * 29.5735,
+        _ => amount,
+      };
+      if (isMetric) return smartFormat(ml, 'mL');
+      final flOz = ml / 29.5735;
+      if (flOz >= 8) return '${_stripTrailingZeros(flOz / 8)} cups';
+      return '${_stripTrailingZeros(flOz)} fl oz';
+    }
+
+    return unit.isNotEmpty ? '${_stripTrailingZeros(amount)} $unit' : _stripTrailingZeros(amount);
+  }
 }

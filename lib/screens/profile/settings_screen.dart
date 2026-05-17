@@ -10,6 +10,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/connectivity_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/theme_provider.dart';
+import '../../providers/unit_preference_provider.dart';
 import '../../services/cache_service.dart';
 import '../../widgets/screen_header.dart';
 
@@ -20,8 +21,8 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isEn =
-        context.watch<LocaleProvider>().locale.languageCode == 'en';
+    final isEn = context.watch<LocaleProvider>().locale.languageCode == 'en';
+    final isMetric = context.watch<UnitPreferenceProvider>().isMetric;
 
     return Scaffold(
       body: Column(
@@ -84,6 +85,34 @@ class SettingsScreen extends StatelessWidget {
                       ),
                       onTap: () =>
                           context.read<LocaleProvider>().toggleLocale(),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                _SectionLabel(label: l10n.units),
+                const SizedBox(height: 8),
+                _SettingsCard(
+                  children: [
+                    _SettingsTile(
+                      icon: Icons.straighten_outlined,
+                      iconColor: AppTheme.secondaryColor,
+                      title: l10n.unitSystem,
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            isMetric ? l10n.metric : l10n.imperial,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: AppTheme.textTertiaryOf(context),
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Icon(Icons.chevron_right, color: AppTheme.textTertiaryOf(context)),
+                        ],
+                      ),
+                      onTap: () => context.read<UnitPreferenceProvider>().toggleUnitSystem(),
                     ),
                   ],
                 ),

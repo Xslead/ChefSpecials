@@ -30,8 +30,6 @@ import '../../utils/category_helpers.dart';
 import '../../widgets/gradient_button.dart';
 import '../../widgets/photo_carousel.dart';
 import '../../widgets/serving_size_selector.dart';
-import '../../widgets/substitution_sheet.dart';
-import '../../widgets/unit_converter_sheet.dart';
 import '../../widgets/video_player_widget.dart';
 import 'widgets/ingredient_list_view.dart';
 import 'widgets/step_overview_list.dart';
@@ -750,24 +748,6 @@ class _RecipeDetailBodyState extends State<_RecipeDetailBody> {
                     scaleFactor: liveRecipe.servings > 0
                         ? _selectedServings / liveRecipe.servings
                         : null,
-                    onIngredientTap: (ingredient) {
-                      final parsed = double.tryParse(ingredient.amount);
-                      final scaleFactor = liveRecipe.servings > 0
-                          ? _selectedServings / liveRecipe.servings
-                          : 1.0;
-                      final scaledValue = parsed != null ? parsed * scaleFactor : null;
-                      UnitConverterSheet.show(
-                        context,
-                        initialValue: scaledValue,
-                        initialUnit: ingredient.unit,
-                      );
-                    },
-                    onSubstitutionTap: (ingredient) {
-                      SubstitutionSheet.show(
-                        context,
-                        ingredientName: ingredient.name,
-                      );
-                    },
                   ),
                   const SizedBox(height: 24),
                   Text(

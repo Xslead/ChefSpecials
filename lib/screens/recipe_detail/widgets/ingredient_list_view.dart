@@ -1,45 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../config/theme.dart';
 import '../../../models/ingredient.dart';
+import '../../../providers/unit_preference_provider.dart';
 import '../../../utils/unit_converter.dart';
 
 class IngredientListView extends StatelessWidget {
   final List<Ingredient> ingredients;
   final double? scaleFactor;
-  final void Function(Ingredient)? onIngredientTap;
-  final void Function(Ingredient)? onSubstitutionTap;
 
   const IngredientListView({
     super.key,
     required this.ingredients,
     this.scaleFactor,
-    this.onIngredientTap,
-    this.onSubstitutionTap,
   });
 
-  String _formatAmount(Ingredient ingredient) {
-    final rawAmount = ingredient.amount;
+  String _formatAmount(Ingredient ingredient, bool isMetric) {
     final unit = ingredient.unit ?? '';
+    final parsed = double.tryParse(ingredient.amount);
 
-    if (scaleFactor != null && scaleFactor != 1.0) {
-      final parsed = double.tryParse(rawAmount);
-      if (parsed != null) {
-        final scaled = parsed * scaleFactor!;
-        return UnitConverter.smartFormat(scaled, unit);
-      }
+    if (parsed == null) {
+      return unit.isNotEmpty ? '${ingredient.amount} $unit' : ingredient.amount;
     }
 
-    return unit.isNotEmpty ? '$rawAmount $unit' : rawAmount;
+    final scaled = scaleFactor != null ? parsed * scaleFactor! : parsed;
+    return UnitConverter.formatWithPreference(scaled, unit, isMetric);
   }
 
   @override
   Widget build(BuildContext context) {
+    final isMetric = context.watch<UnitPreferenceProvider>().isMetric;
+
     return Column(
       children: List.generate(ingredients.length, (index) {
         final ingredient = ingredients[index];
-        final subtitle = _formatAmount(ingredient);
+        final subtitle = _formatAmount(ingredient, isMetric);
 
-        final tile = Container(
+        return Container(
           color: index.isEven ? AppTheme.neutralSoft : Colors.transparent,
           child: ListTile(
             leading: const Icon(Icons.fiber_manual_record, size: 10, color: AppTheme.primaryColor),
@@ -47,33 +44,14 @@ class IngredientListView extends StatelessWidget {
               ingredient.name,
               style: const TextStyle(color: AppTheme.textPrimary),
             ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    color: AppTheme.textSecondary,
-                  ),
-                ),
-                if (onSubstitutionTap != null)
-                  IconButton(
-                    icon: const Icon(Icons.swap_horiz, size: 18),
-                    color: AppTheme.textTertiary,
-                    visualDensity: VisualDensity.compact,
-                    padding: const EdgeInsets.all(4),
-                    constraints: const BoxConstraints(),
-                    onPressed: () => onSubstitutionTap!(ingredient),
-                  ),
-              ],
+            trailing: Text(
+              subtitle,
+              style: const TextStyle(color: AppTheme.textSecondary),
             ),
             dense: true,
             visualDensity: VisualDensity.compact,
-            onTap: onIngredientTap != null ? () => onIngredientTap!(ingredient) : null,
           ),
         );
-
-        return tile;
       }),
     );
   }

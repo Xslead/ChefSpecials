@@ -1590,39 +1590,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get winter => 'Winter';
 
   @override
-  String get substitutions => 'Substitutions';
-
-  @override
-  String substitutesFor(String ingredient) {
-    return 'Substitutes for $ingredient';
-  }
-
-  @override
-  String get ratio => 'Ratio';
-
-  @override
-  String get suggestSubstitution => 'Suggest a Substitution';
-
-  @override
-  String get noSubstitutions => 'No substitutions available';
-
-  @override
-  String get substituteName => 'Substitute name';
-
-  @override
-  String get communitySubmitted => 'Community submitted';
-
-  @override
-  String get thankYouSubstitution =>
-      'Thanks! Your suggestion was submitted for review.';
-
-  @override
-  String get notesOptional => 'Notes (optional)';
-
-  @override
-  String get submit => 'Submit';
-
-  @override
   String get filterAll => 'All';
 
   @override
@@ -1947,4 +1914,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacy => 'Privacy';
+
+  @override
+  String get units => 'Units';
+
+  @override
+  String get unitSystem => 'Unit System';
+
+  @override
+  String get metric => 'Metric';
+
+  @override
+  String get imperial => 'Imperial';
 }
